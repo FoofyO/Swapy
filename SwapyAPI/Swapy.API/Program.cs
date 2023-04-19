@@ -1,10 +1,10 @@
 using Swapy.DAL;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Swapy.API
 {
@@ -13,7 +13,7 @@ namespace Swapy.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            
+         
             //Services
 
             builder.Services.AddControllers();
@@ -46,7 +46,6 @@ namespace Swapy.API
             }).AddEntityFrameworkStores<SwapyDbContext>();
 
             var guid = builder.Configuration["JWT-Key"];
-            Console.WriteLine(guid);
             var key = Encoding.ASCII.GetBytes(guid);
 
             builder.Services.AddAuthentication(options =>
