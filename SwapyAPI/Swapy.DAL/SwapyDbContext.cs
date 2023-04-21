@@ -26,6 +26,17 @@ namespace Swapy.DAL
             modelBuilder.ApplyConfiguration<AutoTypes>(new AutoTypesConfiguration());
             modelBuilder.ApplyConfiguration<FuelTypes>(new FuelTypesConfiguration());
             modelBuilder.ApplyConfiguration<TransmissionTypes>(new TransmissionTypesConfiguration());
+            modelBuilder.ApplyConfiguration<Colors>(new ColorsConfiguration());
+            modelBuilder.ApplyConfiguration<ElectronicAttributes>(new ElectronicAttributesConfiguration());
+            modelBuilder.ApplyConfiguration<ElectronicBrands>(new ElectronicBrandsConfiguration());
+            modelBuilder.ApplyConfiguration<ElectronicBrandsTypes>(new ElectronicBrandsTypesConfiguration());
+            modelBuilder.ApplyConfiguration<ElectronicTypes>(new ElectronicTypesConfiguration());
+            modelBuilder.ApplyConfiguration<Memories>(new MemoriesConfiguration());
+            modelBuilder.ApplyConfiguration<MemoriesModels>(new MemoriesModelsConfiguration());
+            modelBuilder.ApplyConfiguration<Models>(new ModelsConfiguration());
+            modelBuilder.ApplyConfiguration<ModelsColors>(new ModelsColorsConfiguration());
+            modelBuilder.ApplyConfiguration<ItemAttributes>(new ItemAttributesConfiguration());
+            modelBuilder.ApplyConfiguration<ItemTypes>(new ItemTypesConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
@@ -37,5 +48,16 @@ namespace Swapy.DAL
         public DbSet<AutoTypes> AutoTypes { get; set; }
         public DbSet<FuelTypes> FuelTypes { get; set; }
         public DbSet<TransmissionTypes> TransmissionTypes { get; set; }
+        public DbSet<Colors> Colors { get; set; }
+        public DbSet<ElectronicAttributes> ElectronicAttributes { get; set; }
+        public DbSet<ElectronicBrands> ElectronicBrands { get; set; }
+        public DbSet<ElectronicBrandsTypes> ElectronicBrandsTypes { get; set; }
+        public DbSet<ElectronicTypes> ElectronicTypes { get; set; }
+        public DbSet<Memories> Memories { get; set; }
+        public DbSet<MemoriesModels> MemoriesModels { get; set; }
+        public DbSet<Models> Models { get; set; }
+        public DbSet<ModelsColors> ModelsColors { get; set; }
+        public DbSet<ItemAttributes> ItemAttributes { get; set; }
+        public DbSet<ItemTypes> ItemTypes { get; set; }
     }
 }
