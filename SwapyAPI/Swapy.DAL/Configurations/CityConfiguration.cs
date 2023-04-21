@@ -19,7 +19,7 @@ namespace Swapy.DAL.Configurations
             builder.HasMany(c => c.Products)
                    .WithOne(p => p.City)
                    .HasForeignKey(p => p.CityId)
-                   .OnDelete(DeleteBehavior.Restrict)
+                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired();
         }
     }

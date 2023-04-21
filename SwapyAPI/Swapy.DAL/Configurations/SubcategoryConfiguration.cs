@@ -18,10 +18,16 @@ namespace Swapy.DAL.Configurations
                    .HasMaxLength(50)
                    .IsRequired();
 
+            builder.HasOne(s => s.PrevSubcategory)
+                   .WithMany(s => s.Subcategories)
+                   .HasForeignKey(s => s.Id)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired(false);
+
             builder.HasMany(s => s.Subcategories)
                    .WithOne(s => s)
                    .HasForeignKey(s => s.Id)
-                   .OnDelete(DeleteBehavior.Cascade)
+                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
 
             builder.HasOne(s => s.Category)
@@ -29,6 +35,12 @@ namespace Swapy.DAL.Configurations
                    .HasForeignKey(s => s.CategoryId)
                    .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
+
+            builder.HasMany(s => s.Products)
+                  .WithOne(c => c.Subcategory)
+                  .HasForeignKey(s => s.SubcategoryId)
+                  .OnDelete(DeleteBehavior.SetNull)
+                  .IsRequired();
         }
     }
 }

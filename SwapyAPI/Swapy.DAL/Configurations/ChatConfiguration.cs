@@ -17,13 +17,19 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(c => c.Seller)
                    .WithMany(u => u.ChatsAsSeller)
                    .HasForeignKey(c => c.SellerId)
-                   .OnDelete(DeleteBehavior.Restrict)
+                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired();
 
             builder.HasOne(c => c.Buyer)
                    .WithMany(u => u.ChatsAsBuyer)
                    .HasForeignKey(c => c.BuyerId)
-                   .OnDelete(DeleteBehavior.Restrict)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired();
+
+            builder.HasMany(c => c.Messages)
+                   .WithOne(m => m.Chat)
+                   .HasForeignKey(m => m.ChatId)
+                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired();
         }
     }

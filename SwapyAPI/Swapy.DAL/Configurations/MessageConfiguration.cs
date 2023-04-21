@@ -38,8 +38,8 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(m => m.Sender)
                    .WithMany(u => u.SentMessages)
                    .HasForeignKey(m => m.SenderId)
-                   .OnDelete(DeleteBehavior.Restrict)
-                   .IsRequired(); ;
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired();
         }
     }
 }
