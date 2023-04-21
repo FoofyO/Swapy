@@ -53,7 +53,7 @@ namespace Swapy.DAL.Configurations
 
             ///builder
             ///   .HasOne(x => x.Product)
-            ///   .WithOne(x => x.AutoAttribute)
+            ///   .WithMany(x => x.AutoAttributes)
             ///   .OnDelete(DeleteBehavior.Cascade);
         }
     }
