@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Swapy.DAL.Configurations;
-using Swapy.DAL.Entities;
 
 namespace Swapy.DAL
 {
@@ -17,25 +15,10 @@ namespace Swapy.DAL
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            modelBuilder.ApplyConfiguration<AutoAttributes>(new AutoAttributesConfiguration());
-            modelBuilder.ApplyConfiguration<AutoBrands>(new AutoBrandsConfiguration());
-            modelBuilder.ApplyConfiguration<AutoBrandsTypes>(new AutoBrandsTypesConfiguration());
-            modelBuilder.ApplyConfiguration<AutoColors>(new AutoColorsConfiguration());
-            modelBuilder.ApplyConfiguration<AutoTypes>(new AutoTypesConfiguration());
-            modelBuilder.ApplyConfiguration<FuelTypes>(new FuelTypesConfiguration());
-            modelBuilder.ApplyConfiguration<TransmissionTypes>(new TransmissionTypesConfiguration());
-
-            base.OnModelCreating(modelBuilder);
+            //modelBuilder.ApplyConfiguration<Task>(new TaskConfiguration());
+            base.OnModelCreating(builder);
         }
-
-        public DbSet<AutoAttributes> AutoAttributes { get; set; }
-        public DbSet<AutoBrands> AutoBrands { get; set; }
-        public DbSet<AutoBrandsTypes> AutoBrandsTypes { get; set; }
-        public DbSet<AutoColors> AutoColors { get; set; }
-        public DbSet<AutoTypes> AutoTypes { get; set; }
-        public DbSet<FuelTypes> FuelTypes { get; set; }
-        public DbSet<TransmissionTypes> TransmissionTypes { get; set; }
     }
 }
