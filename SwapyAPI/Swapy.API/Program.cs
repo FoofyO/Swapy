@@ -1,9 +1,11 @@
 using Swapy.DAL;
 using System.Text;
-using Microsoft.OpenApi.Models;
+using Swapy.DAL.Entities;
+using Swapy.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Swapy.API
@@ -13,8 +15,10 @@ namespace Swapy.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-         
-            //Services
+
+            /// <summary>
+            /// Services setup
+            /// </summary>
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -26,7 +30,10 @@ namespace Swapy.API
                 option.UseSqlServer(builder.Configuration.GetConnectionString("DockerSQL"));
             });
 
-            //Service registration
+
+            /// <summary>
+            /// Services registration
+            /// </summary>
             //builder.Services.AddScoped<IFolderRepository, FolderRepository>();
 
             builder.Services.AddCors(option =>
@@ -39,12 +46,18 @@ namespace Swapy.API
                 });
             });
 
-            ////Configurations for JWToken
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>(option =>
-            {
-                option.SignIn.RequireConfirmedAccount = false;
-            }).AddEntityFrameworkStores<SwapyDbContext>();
+            /// <summary>
+            /// Register Identity Service
+            /// </summary>
+            builder.Services.AddIdentity<User, IdentityRole>(option => option.SignIn.RequireConfirmedAccount = false)
+                .AddEntityFrameworkStores<SwapyDbContext>()
+                .AddDefaultTokenProviders();
 
+
+
+            /// <summary>
+            /// Configurations for JWToken
+            /// </summary>
             var guid = builder.Configuration["JWT-Key"];
             var key = Encoding.ASCII.GetBytes(guid);
 
@@ -66,7 +79,11 @@ namespace Swapy.API
                 };
             });
 
-            //Application
+
+
+            /// <summary>
+            /// Application setup
+            /// </summary>
 
             var app = builder.Build();
 
@@ -79,7 +96,7 @@ namespace Swapy.API
             app.UseCors("Default");
 
             app.UseRouting();
-            
+
             app.UseAuthorization();
             app.UseAuthentication();
             

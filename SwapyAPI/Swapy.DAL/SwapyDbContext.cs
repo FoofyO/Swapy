@@ -1,13 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using Swapy.DAL.Entities;
+using Swapy.DAL.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Swapy.DAL.Configurations;
-using Swapy.DAL.Entities;
 
 namespace Swapy.DAL
 {
@@ -17,47 +12,33 @@ namespace Swapy.DAL
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            modelBuilder.ApplyConfiguration<AutoAttributes>(new AutoAttributesConfiguration());
-            modelBuilder.ApplyConfiguration<AutoBrands>(new AutoBrandsConfiguration());
-            modelBuilder.ApplyConfiguration<AutoBrandsTypes>(new AutoBrandsTypesConfiguration());
-            modelBuilder.ApplyConfiguration<AutoColors>(new AutoColorsConfiguration());
-            modelBuilder.ApplyConfiguration<AutoTypes>(new AutoTypesConfiguration());
-            modelBuilder.ApplyConfiguration<FuelTypes>(new FuelTypesConfiguration());
-            modelBuilder.ApplyConfiguration<TransmissionTypes>(new TransmissionTypesConfiguration());
-            modelBuilder.ApplyConfiguration<Colors>(new ColorsConfiguration());
-            modelBuilder.ApplyConfiguration<ElectronicAttributes>(new ElectronicAttributesConfiguration());
-            modelBuilder.ApplyConfiguration<ElectronicBrands>(new ElectronicBrandsConfiguration());
-            modelBuilder.ApplyConfiguration<ElectronicBrandsTypes>(new ElectronicBrandsTypesConfiguration());
-            modelBuilder.ApplyConfiguration<ElectronicTypes>(new ElectronicTypesConfiguration());
-            modelBuilder.ApplyConfiguration<Memories>(new MemoriesConfiguration());
-            modelBuilder.ApplyConfiguration<MemoriesModels>(new MemoriesModelsConfiguration());
-            modelBuilder.ApplyConfiguration<Models>(new ModelsConfiguration());
-            modelBuilder.ApplyConfiguration<ModelsColors>(new ModelsColorsConfiguration());
-            modelBuilder.ApplyConfiguration<ItemAttributes>(new ItemAttributesConfiguration());
-            modelBuilder.ApplyConfiguration<ItemTypes>(new ItemTypesConfiguration());
-
-            base.OnModelCreating(modelBuilder);
+            builder.ApplyConfiguration(new CityConfiguration());
+            builder.ApplyConfiguration(new LikeConfiguration());
+            builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new ChatConfiguration());
+            builder.ApplyConfiguration(new LikeConfiguration());
+            builder.ApplyConfiguration(new MessageConfiguration());
+            builder.ApplyConfiguration(new ProductConfiguration());
+            builder.ApplyConfiguration(new CategoryConfiguration());
+            builder.ApplyConfiguration(new CurrencyConfiguration());
+            builder.ApplyConfiguration(new SubscribeConfiguration());
+            builder.ApplyConfiguration(new SubcategoryConfiguration());
+            builder.ApplyConfiguration(new ProductImageConfiguration());
+            base.OnModelCreating(builder);
         }
 
-        public DbSet<AutoAttributes> AutoAttributes { get; set; }
-        public DbSet<AutoBrands> AutoBrands { get; set; }
-        public DbSet<AutoBrandsTypes> AutoBrandsTypes { get; set; }
-        public DbSet<AutoColors> AutoColors { get; set; }
-        public DbSet<AutoTypes> AutoTypes { get; set; }
-        public DbSet<FuelTypes> FuelTypes { get; set; }
-        public DbSet<TransmissionTypes> TransmissionTypes { get; set; }
-        public DbSet<Colors> Colors { get; set; }
-        public DbSet<ElectronicAttributes> ElectronicAttributes { get; set; }
-        public DbSet<ElectronicBrands> ElectronicBrands { get; set; }
-        public DbSet<ElectronicBrandsTypes> ElectronicBrandsTypes { get; set; }
-        public DbSet<ElectronicTypes> ElectronicTypes { get; set; }
-        public DbSet<Memories> Memories { get; set; }
-        public DbSet<MemoriesModels> MemoriesModels { get; set; }
-        public DbSet<Models> Models { get; set; }
-        public DbSet<ModelsColors> ModelsColors { get; set; }
-        public DbSet<ItemAttributes> ItemAttributes { get; set; }
-        public DbSet<ItemTypes> ItemTypes { get; set; }
+        public DbSet<Chat> Chats { get; set; }
+        public DbSet<Like> Likes { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
+        public DbSet<Subscribe> Subscribes { get; set; }
+        public DbSet<Subcategory> Subcategories { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
     }
 }
