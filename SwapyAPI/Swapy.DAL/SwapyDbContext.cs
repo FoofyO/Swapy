@@ -1,4 +1,4 @@
-﻿using Swapy.DAL.Entities;
+using Swapy.DAL.Entities;
 using Swapy.DAL.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
