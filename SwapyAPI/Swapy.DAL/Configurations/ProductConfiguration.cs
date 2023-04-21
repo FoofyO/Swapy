@@ -58,6 +58,24 @@ namespace Swapy.DAL.Configurations
                    .HasForeignKey(p => p.UserId)
                    .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
+
+            builder.HasMany(p => p.Images)
+                   .WithOne(p => p.Product)
+                   .HasForeignKey(p => p.ProductId)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired();
+
+            builder.HasOne(p => p.Subcategory)
+                   .WithMany(p => p.Products)
+                   .HasForeignKey(p => p.SubcategoryId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
+
+            builder.HasOne(p => p.Category)
+                   .WithMany(p => p.Products)
+                   .HasForeignKey(p => p.CategoryId)
+                   .OnDelete(DeleteBehavior.NoAction)
+                   .IsRequired();
         }
     }
 }
