@@ -66,7 +66,11 @@ namespace Swapy.DAL.Configurations
                    .IsRequired();
 
             builder.HasOne(p => p.Subcategory)
+<<<<<<< HEAD
                    .WithMany(p => p.)
+=======
+                   .WithMany(p => p.Products)
+>>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
                    .HasForeignKey(p => p.SubcategoryId)
                    .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
@@ -76,6 +80,7 @@ namespace Swapy.DAL.Configurations
                    .HasForeignKey(p => p.CategoryId)
                    .OnDelete(DeleteBehavior.NoAction)
                    .IsRequired();
+<<<<<<< HEAD
 
             builder.HasOne(s => s.AutoAttribute)
                 .WithOne(c => c.Product)
@@ -94,6 +99,8 @@ namespace Swapy.DAL.Configurations
                 .HasForeignKey<ItemAttribute>(s => s.ProductId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
+=======
+>>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         }
     }
 }

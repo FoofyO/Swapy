@@ -41,6 +41,7 @@ namespace Swapy.DAL.Configurations
                   .HasForeignKey(s => s.SubcategoryId)
                   .OnDelete(DeleteBehavior.SetNull)
                   .IsRequired();
+<<<<<<< HEAD
 
             builder.HasOne(s => s.AutoType)
                 .WithOne(c => c.Subcategory)
@@ -53,6 +54,8 @@ namespace Swapy.DAL.Configurations
                 .HasForeignKey<ItemType>(s => s.SubcategoryId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
+=======
+>>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         }
     }
 }

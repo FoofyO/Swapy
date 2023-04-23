@@ -1,13 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+using Swapy.DAL.Entities;
+using Swapy.DAL.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Swapy.DAL.Configurations;
-using Swapy.DAL.Entities;
 
 namespace Swapy.DAL
 {
@@ -17,8 +12,9 @@ namespace Swapy.DAL
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
             modelBuilder.ApplyConfiguration<AutoAttributes>(new AutoAttributesConfiguration());
             modelBuilder.ApplyConfiguration<AutoBrands>(new AutoBrandsConfiguration());
@@ -94,6 +90,23 @@ namespace Swapy.DAL
             base.OnModelCreating(builder);
         }
 
+=======
+            builder.ApplyConfiguration(new CityConfiguration());
+            builder.ApplyConfiguration(new LikeConfiguration());
+            builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new ChatConfiguration());
+            builder.ApplyConfiguration(new LikeConfiguration());
+            builder.ApplyConfiguration(new MessageConfiguration());
+            builder.ApplyConfiguration(new ProductConfiguration());
+            builder.ApplyConfiguration(new CategoryConfiguration());
+            builder.ApplyConfiguration(new CurrencyConfiguration());
+            builder.ApplyConfiguration(new SubscribeConfiguration());
+            builder.ApplyConfiguration(new SubcategoryConfiguration());
+            builder.ApplyConfiguration(new ProductImageConfiguration());
+            base.OnModelCreating(builder);
+        }
+
+>>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         public DbSet<Chat> Chats { get; set; }
         public DbSet<Like> Likes { get; set; }
         public DbSet<User> Users { get; set; }
@@ -105,6 +118,7 @@ namespace Swapy.DAL
         public DbSet<Subscribe> Subscribes { get; set; }
         public DbSet<Subcategory> Subcategories { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+<<<<<<< HEAD
         public DbSet<AutoAttribute> AutoAttributes { get; set; }
         public DbSet<AutoBrand> AutoBrands { get; set; }
         public DbSet<AutoBrandType> AutoBrandsTypes { get; set; }
@@ -124,5 +138,7 @@ namespace Swapy.DAL
         public DbSet<ItemAttribute> ItemAttributes { get; set; }
         public DbSet<ItemType> ItemTypes { get; set; }
 >>>>>>> Stashed changes
+=======
+>>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
     }
 }

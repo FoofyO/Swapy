@@ -9,7 +9,11 @@
 
         public ProductImage() { }
 
+<<<<<<< HEAD
         public ProductImage(string image, Guid productId) : this()
+=======
+        public ProductImage(string image, Guid productId)
+>>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         {
             Image = image;
             ProductId = productId;

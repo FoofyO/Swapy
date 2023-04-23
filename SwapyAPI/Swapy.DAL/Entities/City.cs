@@ -8,6 +8,10 @@
 
         public City() => Products = new List<Product>();
         
+<<<<<<< HEAD
         public City(string name) : this() => Name = name;
+=======
+        public City(string name) => Name = name;
+>>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
     } 
 }

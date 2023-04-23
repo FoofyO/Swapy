@@ -28,7 +28,11 @@ namespace Swapy.DAL.Entities
             SubscribesAsSubscriber = new List<Subscribe>();
         }
 
+<<<<<<< HEAD
         public User(string fullName, string logo) : this()
+=======
+        public User(string fullName, string logo)
+>>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         {
             FullName = fullName;
             Logo = logo;
