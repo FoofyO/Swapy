@@ -13,7 +13,11 @@
 
         public Message() { }
 
+<<<<<<< HEAD
+        public Message(string text, string image, Guid chatId, Guid senderId) : this()
+=======
         public Message(string text, string image, Guid chatId, Guid senderId)
+>>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         {
             Text = text;
             Image = image;

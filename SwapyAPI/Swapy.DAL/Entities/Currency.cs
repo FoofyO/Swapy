@@ -9,7 +9,11 @@
 
         public Currency() => Products = new List<Product>();
 
+<<<<<<< HEAD
+        public Currency(string name, string symbol) : this()
+=======
         public Currency(string name, string symbol)
+>>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         {
             Name = name;
             Symbol = symbol;
