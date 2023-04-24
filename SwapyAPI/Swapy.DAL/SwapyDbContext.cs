@@ -38,7 +38,7 @@ namespace Swapy.DAL
             modelBuilder.ApplyConfiguration<RealEstatesAttributes>(new RealEstatesAttributesConfiguration());
             modelBuilder.ApplyConfiguration<RealEstateTypes>(new RealEstateTypesConfiguration());
 
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder); 
         }
 
         
