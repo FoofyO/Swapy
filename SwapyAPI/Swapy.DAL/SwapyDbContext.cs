@@ -16,6 +16,7 @@ namespace Swapy.DAL
         {
 <<<<<<< HEAD
 <<<<<<< Updated upstream
+            
             modelBuilder.ApplyConfiguration<AutoAttributes>(new AutoAttributesConfiguration());
             modelBuilder.ApplyConfiguration<AutoBrands>(new AutoBrandsConfiguration());
             modelBuilder.ApplyConfiguration<AutoBrandsTypes>(new AutoBrandsTypesConfiguration());
@@ -34,10 +35,13 @@ namespace Swapy.DAL
             modelBuilder.ApplyConfiguration<ModelsColors>(new ModelsColorsConfiguration());
             modelBuilder.ApplyConfiguration<ItemAttributes>(new ItemAttributesConfiguration());
             modelBuilder.ApplyConfiguration<ItemTypes>(new ItemTypesConfiguration());
+            modelBuilder.ApplyConfiguration<RealEstatesAttributes>(new RealEstatesAttributesConfiguration());
+            modelBuilder.ApplyConfiguration<RealEstateTypes>(new RealEstateTypesConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
 
+        
         public DbSet<AutoAttributes> AutoAttributes { get; set; }
         public DbSet<AutoBrands> AutoBrands { get; set; }
         public DbSet<AutoBrandsTypes> AutoBrandsTypes { get; set; }
@@ -56,7 +60,11 @@ namespace Swapy.DAL
         public DbSet<ModelsColors> ModelsColors { get; set; }
         public DbSet<ItemAttributes> ItemAttributes { get; set; }
         public DbSet<ItemTypes> ItemTypes { get; set; }
+        public DbSet<RealEstatesAttributes> RealEstatesAttributes { get; set; }
+        public DbSet<RealEstateTypes> RealEstateTypes { get; set; }
+
 =======
+
             builder.ApplyConfiguration(new CityConfiguration());
             builder.ApplyConfiguration(new LikeConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
@@ -87,6 +95,9 @@ namespace Swapy.DAL
             builder.ApplyConfiguration<ModelColor>(new ModelColorConfiguration());
             builder.ApplyConfiguration<ItemAttribute>(new ItemAttributeConfiguration());
             builder.ApplyConfiguration<ItemType>(new ItemTypeConfiguration());
+            builder.ApplyConfiguration<RealEstatesAttribute>(new RealEstatesAttributeConfiguration());
+            builder.ApplyConfiguration<RealEstateType>(new RealEstateTypeConfiguration());
+
             base.OnModelCreating(builder);
         }
 
@@ -105,7 +116,7 @@ namespace Swapy.DAL
             builder.ApplyConfiguration(new ProductImageConfiguration());
             base.OnModelCreating(builder);
         }
-
+         
 >>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         public DbSet<Chat> Chats { get; set; }
         public DbSet<Like> Likes { get; set; }
@@ -137,8 +148,11 @@ namespace Swapy.DAL
         public DbSet<ModelColor> ModelsColors { get; set; }
         public DbSet<ItemAttribute> ItemAttributes { get; set; }
         public DbSet<ItemType> ItemTypes { get; set; }
+        public DbSet<RealEstateAttribute> RealEstatesAttributes { get; set; }
+        public DbSet<RealEstateType> RealEstateTypes{ get; set; }
+
 >>>>>>> Stashed changes
 =======
 >>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
     }
-}
+} 
