@@ -24,7 +24,7 @@ namespace Swapy.DAL
             modelBuilder.ApplyConfiguration<AutoTypes>(new AutoTypesConfiguration());
             modelBuilder.ApplyConfiguration<FuelTypes>(new FuelTypesConfiguration());
             modelBuilder.ApplyConfiguration<TransmissionTypes>(new TransmissionTypesConfiguration());
-            modelBuilder.ApplyConfiguration<Colors>(new ColorsConfiguration());
+            modelBuilder.ApplyConfiguration<Colors>(new ColorsConfiguration()); 
             modelBuilder.ApplyConfiguration<ElectronicAttributes>(new ElectronicAttributesConfiguration());
             modelBuilder.ApplyConfiguration<ElectronicBrands>(new ElectronicBrandsConfiguration());
             modelBuilder.ApplyConfiguration<ElectronicBrandsTypes>(new ElectronicBrandsTypesConfiguration());
