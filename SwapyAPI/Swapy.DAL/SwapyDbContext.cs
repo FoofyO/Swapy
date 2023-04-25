@@ -3,6 +3,7 @@ using Swapy.DAL.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace Swapy.DAL
 {
@@ -37,6 +38,14 @@ namespace Swapy.DAL
             modelBuilder.ApplyConfiguration<ItemTypes>(new ItemTypesConfiguration());
             modelBuilder.ApplyConfiguration<RealEstatesAttributes>(new RealEstatesAttributesConfiguration());
             modelBuilder.ApplyConfiguration<RealEstateTypes>(new RealEstateTypesConfiguration());
+            modelBuilder.ApplyConfiguration<AnimalAttributes>(new AnimalAttributesConfiguration());
+            modelBuilder.ApplyConfiguration<AnimalBreeds>(new AnimalBreedsConfiguration());
+            modelBuilder.ApplyConfiguration<AnimalTypes>(new AnimalTypesConfiguration());
+            modelBuilder.ApplyConfiguration<TVAttributes>(new TVAttributesConfiguration());
+            modelBuilder.ApplyConfiguration<TVBrands>(new TVBrandsConfiguration());
+            modelBuilder.ApplyConfiguration<TVTypes>(new TVTypesConfiguration());
+            modelBuilder.ApplyConfiguration<ScreenResolutions>(new ScreenResolutionsConfiguration());
+            modelBuilder.ApplyConfiguration<ScreenDiagonals>(new ScreenDiagonalsConfiguration());
 
             base.OnModelCreating(modelBuilder); 
         }
@@ -62,9 +71,17 @@ namespace Swapy.DAL
         public DbSet<ItemTypes> ItemTypes { get; set; }
         public DbSet<RealEstatesAttributes> RealEstatesAttributes { get; set; }
         public DbSet<RealEstateTypes> RealEstateTypes { get; set; }
+        public DbSet<AnimalAttributes> AnimalAttributes { get; set; }
+        public DbSet<AnimalBreeds> AnimalBreeds { get; set; }
+        public DbSet<AnimalTypes> AnimalTypes { get; set; }
+        public DbSet<TVAttributes> TVAttributes { get; set; }
+        public DbSet<TVBrands> TVBrands { get; set; }
+        public DbSet<TVTypes> TVTypes { get; set; }
+        public DbSet<ScreenResolutions> ScreenResolutions { get; set; }
+        public DbSet<ScreenDiagonals> ScreenDiagonals { get; set; }
+
 
 =======
-
             builder.ApplyConfiguration(new CityConfiguration());
             builder.ApplyConfiguration(new LikeConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
@@ -97,11 +114,20 @@ namespace Swapy.DAL
             builder.ApplyConfiguration<ItemType>(new ItemTypeConfiguration());
             builder.ApplyConfiguration<RealEstatesAttribute>(new RealEstatesAttributeConfiguration());
             builder.ApplyConfiguration<RealEstateType>(new RealEstateTypeConfiguration());
-
+            builder.ApplyConfiguration<AnimalAttribute>(new AnimalAttributeConfiguration());
+            builder.ApplyConfiguration<AnimalBreed>(new AnimalBreedConfiguration()); 
+            builder.ApplyConfiguration<AnimalType>(new AnimalTypeConfiguration());
+            builder.ApplyConfiguration<TVAttribute>(new TVAttributeConfiguration());
+            builder.ApplyConfiguration<TVBrand>(new TVBrandConfiguration());
+            builder.ApplyConfiguration<TVType>(new TVTypeConfiguration());
+            builder.ApplyConfiguration<ScreenResolution>(new ScreenResolutionConfiguration());
+            builder.ApplyConfiguration<ScreenDiagonal>(new ScreenDiagonalConfiguration());
+             
             base.OnModelCreating(builder);
-        }
-
+        } 
+          
 =======
+ 
             builder.ApplyConfiguration(new CityConfiguration());
             builder.ApplyConfiguration(new LikeConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
@@ -111,15 +137,15 @@ namespace Swapy.DAL
             builder.ApplyConfiguration(new ProductConfiguration());
             builder.ApplyConfiguration(new CategoryConfiguration());
             builder.ApplyConfiguration(new CurrencyConfiguration());
-            builder.ApplyConfiguration(new SubscribeConfiguration());
+            builder.ApplyConfiguration(new SubscribeConfiguration()); 
             builder.ApplyConfiguration(new SubcategoryConfiguration());
             builder.ApplyConfiguration(new ProductImageConfiguration());
             base.OnModelCreating(builder);
-        }
+        } 
          
 >>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         public DbSet<Chat> Chats { get; set; }
-        public DbSet<Like> Likes { get; set; }
+        public DbSet<Like> Likes { get; set; } 
         public DbSet<User> Users { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Message> Messages { get; set; }
@@ -149,10 +175,19 @@ namespace Swapy.DAL
         public DbSet<ItemAttribute> ItemAttributes { get; set; }
         public DbSet<ItemType> ItemTypes { get; set; }
         public DbSet<RealEstateAttribute> RealEstatesAttributes { get; set; }
-        public DbSet<RealEstateType> RealEstateTypes{ get; set; }
-
->>>>>>> Stashed changes
+        public DbSet<RealEstateType> RealEstateTypes { get; set; }
+        public DbSet<AnimalAttribute> AnimalAttributes { get; set; }
+        public DbSet<AnimalBreed> AnimalBreeds { get; set; } 
+        public DbSet<AnimalTypes> AnimalTypes { get; set; }
+        public DbSet<TVAttribute> TVAttributes { get; set; }
+        public DbSet<TVBrand> TVBrands { get; set; }
+        public DbSet<TVType> TVTypes { get; set; }
+        public DbSet<ScreenResolution> ScreenResolutions { get; set; }
+        public DbSet<ScreenDiagonal> ScreenDiagonals { get; set; }
+         
+>>>>>>> Stashed changes  
 =======
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
+>>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0 
     }
-} 
+}
+ 
