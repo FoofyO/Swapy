@@ -14,7 +14,7 @@ namespace Swapy.DAL.Repositories
             context.TVBrands.Add(item);
             context.SaveChanges();
         }
-        public void Update(TVBrand item)
+        public void Update(TVBrand item) 
         {
             context.TVBrands.Update(item);
             context.SaveChanges();
