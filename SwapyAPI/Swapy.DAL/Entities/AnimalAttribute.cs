@@ -9,9 +9,9 @@
          
         public AnimalAttribute() { }
 
-        public AnimalAttribute(Guid AnimalBreedId, Guid productId)
+        public AnimalAttribute(Guid animalBreedId, Guid productId)
         { 
-            AnimalBreedId = AnimalBreedId;
+            AnimalBreedId = animalBreedId;
             ProductId = productId;
         }
     } 
