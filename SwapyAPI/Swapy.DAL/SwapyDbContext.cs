@@ -3,6 +3,7 @@ using Swapy.DAL.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace Swapy.DAL
 {
@@ -37,6 +38,9 @@ namespace Swapy.DAL
             modelBuilder.ApplyConfiguration<ItemTypes>(new ItemTypesConfiguration());
             modelBuilder.ApplyConfiguration<RealEstatesAttributes>(new RealEstatesAttributesConfiguration());
             modelBuilder.ApplyConfiguration<RealEstateTypes>(new RealEstateTypesConfiguration());
+            modelBuilder.ApplyConfiguration<AnimalAttributes>(new AnimalAttributesConfiguration());
+            modelBuilder.ApplyConfiguration<AnimalBreeds>(new AnimalBreedsConfiguration());
+            modelBuilder.ApplyConfiguration<AnimalTypes>(new AnimalTypesConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
@@ -62,6 +66,9 @@ namespace Swapy.DAL
         public DbSet<ItemTypes> ItemTypes { get; set; }
         public DbSet<RealEstatesAttributes> RealEstatesAttributes { get; set; }
         public DbSet<RealEstateTypes> RealEstateTypes { get; set; }
+        public DbSet<AnimalAttributes> AnimalAttributes { get; set; }
+        public DbSet<AnimalBreeds> AnimalBreeds { get; set; }
+        public DbSet<AnimalTypes> AnimalTypes { get; set; }
 
 =======
 
@@ -97,10 +104,13 @@ namespace Swapy.DAL
             builder.ApplyConfiguration<ItemType>(new ItemTypeConfiguration());
             builder.ApplyConfiguration<RealEstatesAttribute>(new RealEstatesAttributeConfiguration());
             builder.ApplyConfiguration<RealEstateType>(new RealEstateTypeConfiguration());
-
+            builder.ApplyConfiguration<AnimalAttribute>(new AnimalConfiguration());
+            builder.ApplyConfiguration<AnimalBreed>(new AnimalBreedConfiguration()); 
+            builder.ApplyConfiguration<AnimalType>(new AnimalTypeConfiguration());
+             
             base.OnModelCreating(builder);
         }
-
+         
 =======
             builder.ApplyConfiguration(new CityConfiguration());
             builder.ApplyConfiguration(new LikeConfiguration());
@@ -149,10 +159,13 @@ namespace Swapy.DAL
         public DbSet<ItemAttribute> ItemAttributes { get; set; }
         public DbSet<ItemType> ItemTypes { get; set; }
         public DbSet<RealEstateAttribute> RealEstatesAttributes { get; set; }
-        public DbSet<RealEstateType> RealEstateTypes{ get; set; }
+        public DbSet<RealEstateType> RealEstateTypes { get; set; }
+        public DbSet<RealEstateAttribute> AnimalAttributes { get; set; }
+        public DbSet<RealEstateType> AnimalBreeds { get; set; } 
+        public DbSet<RealEstateType> AnimalTypes { get; set; }
 
 >>>>>>> Stashed changes
 =======
 >>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
     }
-} 
+}  
