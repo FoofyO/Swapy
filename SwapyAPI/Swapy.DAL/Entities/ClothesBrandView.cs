@@ -1,22 +1,25 @@
 ﻿namespace Swapy.DAL.Entities
 {
-    public class ProductImage
+    public class ClothesBrandView
     {
         public Guid Id { get; set; }
-        public string Image { get; set; }
-        public Guid ProductId { get; set; }
-        public Product Product { get; set; }
+        public string Name { get; set; }
+        public Guid ClothesBrandId { get; set; }
+        public ClothesBrand ClothesBrand { get; set; }
+        public Guid ClothesViewId { get; set; }
+        public ClothesView ClothesView { get; set; }
 
-        public ProductImage() { }
+        public ICollection<ClothesAttribute> ClothesAttributes { get; set; }
 
-<<<<<<< HEAD
-        public ProductImage(string image, Guid productId) : this()
-=======
-        public ProductImage(string image, Guid productId)
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
-        {
-            Image = image;
-            ProductId = productId;
-        }
+        public ClothesBrandView() => ClothesBrandsViews = new List<ClothesAttribute>();
+          
+        public ClothesBrandView(string name, Guid clothesBrandId, Guid clothesViewId) : this() 
+        {  
+            Name = name; 
+            ClothesBrand = clothesBrandId;
+            ClothesView = clothesViewId;
+             
+        } 
     }
-}
+
+} 

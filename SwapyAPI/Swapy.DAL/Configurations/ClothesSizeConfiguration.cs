@@ -4,26 +4,36 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
-    public class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage>
+    public class ClothesSizeConfiguration : IEntityTypeConfiguration<ClothesSize>
     {
-        public void Configure(EntityTypeBuilder<ProductImage> builder)
+        public void Configure(EntityTypeBuilder<ClothesSize> builder)
         {
-            builder.ToTable("ProductImages");
+            builder.ToTable("ClothesSizes");
 
             builder.HasKey(i => i.Id);
 
-            builder.Property(i => i.Id).HasDefaultValueSql("NEWID()");
+            builder.Property(i => i.Id)
+                .IsRequired
+                .HasDefaultValueSql("NEWID()");
 
-            builder.Property(i => i.Image)
-                   .HasColumnType("NVARCHAR(128)")
-                   .HasMaxLength(128)
-                   .IsRequired(false);
+            builder.Property(x => x.IsShoe)
+                .IsRequired() 
+                .HasColumnType("BIT");
 
-            builder.HasOne(i => i.Product)
-                   .WithMany(p => p.Images)
-                   .HasForeignKey(i => i.ProductId)
+            builder.Property(x => x.IsChild)
+                .IsRequired() 
+                .HasColumnType("BIT");
+ 
+            builder.Property(i => i.Size)
+                   .HasColumnType("NVARCHAR(32)")
+                   .HasMaxLength(32)
+                   .IsRequired();  
+
+            builder.HasOne(i => i.ClothesAttribute)  
+                   .WithMany(p => p.ClothesSize)
+                   .HasForeignKey(i => i.ClothesSizeId)
                    .OnDelete(DeleteBehavior.Cascade)
-                   .IsRequired();
-        }
+                   .IsRequired();       
+        } 
     }
-}
+} 

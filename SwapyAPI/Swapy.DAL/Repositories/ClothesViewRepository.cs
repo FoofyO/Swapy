@@ -3,39 +3,39 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
 {
-    internal class SubcategoryRepository : ISubcategoryRepository
+    internal class ClothesViewRepository : IClothesViewRepository
     {
         private readonly SwapyDbContext context;
 
-        public SubcategoryRepository(SwapyDbContext context) => this.context = context;
+        public ClothesViewRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(Subcategory item)
+        public void Create(ClothesView item)
         {
-            context.Subcategories.Add(item);
+            context.ClothesViews.Add(item);
             context.SaveChanges();
         }
 
-        public void Delete(Subcategory item)
+        public void Delete(ClothesView item)
         {
-            context.Subcategories.Remove(item);
+            context.ClothesViews.Remove(item);
             context.SaveChanges();
         }
 
-        public IEnumerable<Subcategory> GetAll()
+        public IEnumerable<ClothesView> GetAll()
         {
-            return context.Subcategories.ToList();
+            return context.ClothesViews.ToList();
         }
 
-        public Subcategory GetById(Guid id)
+        public ClothesView GetById(Guid id)
         {
-            var item = context.Subcategories.Find(id);
+            var item = context.ClothesViews.Find(id);
             if (item == null) throw new Exception("Not found!");
             return item;
         }
 
-        public void Update(Subcategory item)
+        public void Update(ClothesView item)
         {
-            context.Subcategories.Update(item);
+            context.ClothesViews.Update(item);
             context.SaveChanges();
         }
     }

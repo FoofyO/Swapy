@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface ISubcategoryRepository : IRepository<Subcategory>
+    public interface IClothesViewRepository : IRepository<ClothesView>
     {
     }
 }

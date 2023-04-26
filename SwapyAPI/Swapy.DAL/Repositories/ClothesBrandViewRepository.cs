@@ -3,39 +3,39 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
 {
-    public class ProductImageRepository : IProductImageRepository
+    public class ClothesBrandViewRepository : IClothesBrandViewRepository
     {
         private readonly SwapyDbContext context;
 
-        public ProductImageRepository(SwapyDbContext context) => this.context = context;
+        public ClothesBrandViewRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(ProductImage item)
+        public void Create(ClothesBrandView item)
         {
-            context.ProductImages.Add(item);
+            context.ClothesBrandsViews.Add(item);
             context.SaveChanges();
         }
 
-        public void Delete(ProductImage item)
+        public void Delete(ClothesBrandView item)
         {
-            context.ProductImages.Remove(item);
+            context.ClothesBrandsViews.Remove(item);
             context.SaveChanges();
         }
 
-        public IEnumerable<ProductImage> GetAll()
+        public IEnumerable<ClothesBrandView> GetAll()
         {
-            return context.ProductImages.ToList();
+            return context.ClothesBrandsViews.ToList();
         }
 
-        public ProductImage GetById(Guid id)
+        public ClothesBrandView GetById(Guid id)
         {
-            var item = context.ProductImages.Find(id);
+            var item = context.ClothesBrandsViews.Find(id);
             if (item == null) throw new Exception("Not found!");
             return item;
         }
 
-        public void Update(ProductImage item)
+        public void Update(ClothesBrandView item)
         {
-            context.ProductImages.Update(item);
+            context.ClothesBrandsViews.Update(item);
             context.SaveChanges();
         }
     }

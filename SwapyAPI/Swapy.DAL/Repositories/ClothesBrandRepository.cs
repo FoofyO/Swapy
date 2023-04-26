@@ -3,39 +3,39 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
 {
-    public class CityRepository : ICityRepository
+    public class ClothesBrandRepository : IClothesBrandRepository
     {
         private readonly SwapyDbContext context;
 
-        public CityRepository(SwapyDbContext context) => this.context = context;
+        public ClothesBrandRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(City item)
+        public void Create(ClothesBrand item)
         {
-            context.Cities.Add(item);
+            context.ClothesBrands.Add(item);
             context.SaveChanges();
         }
 
-        public void Delete(City item)
+        public void Delete(ClothesBrand item)
         {
-            context.Cities.Remove(item);
+            context.ClothesBrands.Remove(item);
             context.SaveChanges();
         }
 
-        public IEnumerable<City> GetAll()
+        public IEnumerable<ClothesBrand> GetAll()
         {
-            return context.Cities.ToList();
+            return context.ClothesBrands.ToList();
         }
 
-        public City GetById(Guid id)
+        public ClothesBrand GetById(Guid id)
         {
-            var item = context.Cities.Find(id);
+            var item = context.ClothesBrands.Find(id);
             if (item == null) throw new Exception("Not found!");
             return item;
         }
 
-        public void Update(City item)
+        public void Update(ClothesBrand item)
         {
-            context.Cities.Update(item);
+            context.ClothesBrands.Update(item);
             context.SaveChanges();
         }
     }

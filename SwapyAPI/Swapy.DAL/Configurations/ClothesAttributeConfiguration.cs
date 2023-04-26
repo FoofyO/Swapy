@@ -4,102 +4,46 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
-    public class ProductConfiguration : IEntityTypeConfiguration<Product>
+    public class ClothesAttributeConfiguration : IEntityTypeConfiguration<ClothesAttribute>
     {
-        public void Configure(EntityTypeBuilder<Product> builder)
+        public void Configure(EntityTypeBuilder<ClothesAttribute> builder)
         {
-            builder.ToTable("Products");
+            builder.ToTable("ClothesAttributes");
             builder.HasKey(p => p.Id);
 
-            builder.Property(p => p.Id).HasDefaultValueSql("NEWID()");
+            builder.Property(p => p.Id)
+                .IsRequired()
+                .HasDefaultValueSql("NEWID()");
 
-            builder.Property(p => p.Title)
-                   .HasColumnType("NVARCHAR(100)")
-                   .HasMaxLength(100)
-                   .IsRequired();
-
-            builder.Property(p => p.Description)
-                   .HasColumnType("NVARCHAR(500)")
-                   .HasMaxLength(500)
-                   .IsRequired(false);
-
-            builder.Property(p => p.Price)
-                   .HasColumnType("MONEY(10,2)")
-                   .HasDefaultValue(0)
-                   .HasPrecision(10, 2)
-                   .HasDefaultValueSql("0")
-                   .IsRequired();
-
-            builder.Property(p => p.Reviews)
-                   .HasColumnType("INT")
-                   .HasDefaultValue(0)
-                   .HasDefaultValueSql("0")
-                   .IsRequired();
-
-            builder.Property(p => p.DateTime)
-                   .HasColumnType("DATETIME")
-                   .HasDefaultValueSql("GETDATE()")
-                   .IsRequired();
-
-            builder.HasOne(p => p.City)
-                   .WithMany(c => c.Products)
-                   .HasForeignKey(p => p.CityId)
+            builder.Property(x => x.IsNew)
+                .IsRequired() 
+                .HasColumnType("BIT");
+             
+            builder.HasOne(p => p.ClothesSeason)
+                   .WithMany(u => u.ClothesAttributes)
+                   .HasForeignKey(p => p.ClothesSeasonId) 
                    .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
-
-            builder.HasOne(p => p.Currency)
-                   .WithMany(c => c.Products)
-                   .HasForeignKey(p => p.CurrencyId)
+             
+            builder.HasOne(p => p.ClothesSize)
+                   .WithMany(u => u.ClothesAttributes)
+                   .HasForeignKey(p => p.ClothesSizeId)
                    .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
-
-            builder.HasOne(p => p.User)
-                   .WithMany(u => u.Products)
-                   .HasForeignKey(p => p.UserId)
-                   .OnDelete(DeleteBehavior.Cascade)
+            
+            builder.HasOne(p => p.ClothesTypeView)
+                   .WithMany(u => u.ClothesAttributes)
+                   .HasForeignKey(p => p.ClothesTypeViewId)
+                   .OnDelete(DeleteBehavior.Cascade) 
                    .IsRequired();
+             
+            builder 
+               .HasOne(x => x.Product)
+               .WithOne(x => x.ClothesAttribute)
+               .HasForeignKey<Product>(x => x.ClothesAttributeId)
+               .OnDelete(DeleteBehavior.Cascade);   
+======= 
 
-            builder.HasMany(p => p.Images)
-                   .WithOne(p => p.Product)
-                   .HasForeignKey(p => p.ProductId)
-                   .OnDelete(DeleteBehavior.SetNull)
-                   .IsRequired();
-
-            builder.HasOne(p => p.Subcategory)
-<<<<<<< HEAD
-                   .WithMany(p => p.)
-=======
-                   .WithMany(p => p.Products)
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
-                   .HasForeignKey(p => p.SubcategoryId)
-                   .OnDelete(DeleteBehavior.Cascade)
-                   .IsRequired();
-
-            builder.HasOne(p => p.Category)
-                   .WithMany(p => p.Products)
-                   .HasForeignKey(p => p.CategoryId)
-                   .OnDelete(DeleteBehavior.NoAction)
-                   .IsRequired();
-<<<<<<< HEAD
-
-            builder.HasOne(s => s.AutoAttribute)
-                .WithOne(c => c.Product)
-                .HasForeignKey<AutoAttribute>(s => s.ProductId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
-
-            builder.HasOne(s => s.ElectronicAttribute)
-                .WithOne(c => c.Product)
-                .HasForeignKey<ElectronicAttribute>(s => s.ProductId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
-
-            builder.HasOne(s => s.ItemAttribute)
-                .WithOne(c => c.Product)
-                .HasForeignKey<ItemAttribute>(s => s.ProductId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
-=======
 >>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         }
     }
