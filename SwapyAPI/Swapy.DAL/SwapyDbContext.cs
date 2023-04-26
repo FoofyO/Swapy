@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.Reflection.Emit;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Reflection;
 
 namespace Swapy.DAL
 {
@@ -17,7 +19,7 @@ namespace Swapy.DAL
         {
 <<<<<<< HEAD
 <<<<<<< Updated upstream
-            
+
             modelBuilder.ApplyConfiguration<AutoAttributes>(new AutoAttributesConfiguration());
             modelBuilder.ApplyConfiguration<AutoBrands>(new AutoBrandsConfiguration());
             modelBuilder.ApplyConfiguration<AutoBrandsTypes>(new AutoBrandsTypesConfiguration());
@@ -25,7 +27,7 @@ namespace Swapy.DAL
             modelBuilder.ApplyConfiguration<AutoTypes>(new AutoTypesConfiguration());
             modelBuilder.ApplyConfiguration<FuelTypes>(new FuelTypesConfiguration());
             modelBuilder.ApplyConfiguration<TransmissionTypes>(new TransmissionTypesConfiguration());
-            modelBuilder.ApplyConfiguration<Colors>(new ColorsConfiguration()); 
+            modelBuilder.ApplyConfiguration<Colors>(new ColorsConfiguration());
             modelBuilder.ApplyConfiguration<ElectronicAttributes>(new ElectronicAttributesConfiguration());
             modelBuilder.ApplyConfiguration<ElectronicBrands>(new ElectronicBrandsConfiguration());
             modelBuilder.ApplyConfiguration<ElectronicBrandsTypes>(new ElectronicBrandsTypesConfiguration());
@@ -46,11 +48,19 @@ namespace Swapy.DAL
             modelBuilder.ApplyConfiguration<TVTypes>(new TVTypesConfiguration());
             modelBuilder.ApplyConfiguration<ScreenResolutions>(new ScreenResolutionsConfiguration());
             modelBuilder.ApplyConfiguration<ScreenDiagonals>(new ScreenDiagonalsConfiguration());
+            modelBuilder.ApplyConfiguration<ClothesAttributes>(new ClothesAttributesConfiguration());
+            modelBuilder.ApplyConfiguration<ClothesSizes>(new ClothesSizesConfiguration());
+            modelBuilder.ApplyConfiguration<ClothesSeasons>(new ClothesSeasonsConfiguration());
+            modelBuilder.ApplyConfiguration<ClothesBrandsViews>(new ClothesBrandsViewsConfiguration());
+            modelBuilder.ApplyConfiguration<ClothesBrands>(new ClothesBrandsConfiguration());
+            modelBuilder.ApplyConfiguration<ClothesViews>(new ClothesViewsConfiguration());
+            modelBuilder.ApplyConfiguration<ClothesTypes>(new ClothesTypesConfiguration());
+            modelBuilder.ApplyConfiguration<Genders>(new GendersConfiguration());
 
-            base.OnModelCreating(modelBuilder); 
+            base.OnModelCreating(modelBuilder);
         }
 
-        
+
         public DbSet<AutoAttributes> AutoAttributes { get; set; }
         public DbSet<AutoBrands> AutoBrands { get; set; }
         public DbSet<AutoBrandsTypes> AutoBrandsTypes { get; set; }
@@ -79,14 +89,20 @@ namespace Swapy.DAL
         public DbSet<TVTypes> TVTypes { get; set; }
         public DbSet<ScreenResolutions> ScreenResolutions { get; set; }
         public DbSet<ScreenDiagonals> ScreenDiagonals { get; set; }
-
-
-=======
+        public DbSet<ClothesAttributes> ClothesAttributes { get; set; }
+        public DbSet<ClothesSizes> ClothesSizes { get; set; }
+        public DbSet<ClothesSeasons> ClothesSeasons { get; set; }
+        public DbSet<ClothesBrandsViews> ClothesBrandsViews { get; set; }
+        public DbSet<ClothesBrands> ClothesBrands { get; set; }
+        public DbSet<ClothesViews> ClothesViews { get; set; }
+        public DbSet<ClothesTypes> ClothesTypes { get; set; }
+        public DbSet<Genders> Genders { get; set; }
+======= 
             builder.ApplyConfiguration(new CityConfiguration());
             builder.ApplyConfiguration(new LikeConfiguration());
-            builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new UserConfiguration()); 
             builder.ApplyConfiguration(new ChatConfiguration());
-            builder.ApplyConfiguration(new LikeConfiguration());
+            builder.ApplyConfiguration(new LikeConfiguration()); 
             builder.ApplyConfiguration(new MessageConfiguration());
             builder.ApplyConfiguration(new ProductConfiguration());
             builder.ApplyConfiguration(new CategoryConfiguration());
@@ -122,13 +138,22 @@ namespace Swapy.DAL
             builder.ApplyConfiguration<TVType>(new TVTypeConfiguration());
             builder.ApplyConfiguration<ScreenResolution>(new ScreenResolutionConfiguration());
             builder.ApplyConfiguration<ScreenDiagonal>(new ScreenDiagonalConfiguration());
-             
-            base.OnModelCreating(builder);
-        } 
+            builder.ApplyConfiguration<ClothesAttribute>(new ClothesAttributeConfiguration());
+            builder.ApplyConfiguration<ClothesSizes>(new ClothesSizeConfiguration()); 
+            builder.ApplyConfiguration<ClothesSeason>(new ClothesSeasonConfiguration()); 
+            builder.ApplyConfiguration<ClothesBrandView>(new ClothesBrandViewConfiguration()); 
+            builder.ApplyConfiguration<ClothesBrand>(new ClothesBrandConfiguration()); 
+            builder.ApplyConfiguration<ClothesView>(new ClothesViewConfiguration()); 
+            builder.ApplyConfiguration<ClothesType>(new ClothesTypeConfiguration()); 
+            builder.ApplyConfiguration<Gender>(new GenderConfiguration());  
+                
+               
+            base.OnModelCreating(builder);    
+        }    
           
-=======
- 
-            builder.ApplyConfiguration(new CityConfiguration());
+======= 
+
+builder.ApplyConfiguration(new CityConfiguration()); 
             builder.ApplyConfiguration(new LikeConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new ChatConfiguration());
@@ -145,7 +170,7 @@ namespace Swapy.DAL
          
 >>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         public DbSet<Chat> Chats { get; set; }
-        public DbSet<Like> Likes { get; set; } 
+        public DbSet<Like> Likes { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Message> Messages { get; set; }
@@ -177,17 +202,27 @@ namespace Swapy.DAL
         public DbSet<RealEstateAttribute> RealEstatesAttributes { get; set; }
         public DbSet<RealEstateType> RealEstateTypes { get; set; }
         public DbSet<AnimalAttribute> AnimalAttributes { get; set; }
-        public DbSet<AnimalBreed> AnimalBreeds { get; set; } 
-        public DbSet<AnimalTypes> AnimalTypes { get; set; }
+        public DbSet<AnimalBreed> AnimalBreeds { get; set; }
+        public DbSet<AnimalType> AnimalTypes { get; set; }
         public DbSet<TVAttribute> TVAttributes { get; set; }
         public DbSet<TVBrand> TVBrands { get; set; }
         public DbSet<TVType> TVTypes { get; set; }
         public DbSet<ScreenResolution> ScreenResolutions { get; set; }
         public DbSet<ScreenDiagonal> ScreenDiagonals { get; set; }
-         
->>>>>>> Stashed changes  
+        public DbSet<ClothesAttribute> ClothesAttributes { get; set; }
+        public DbSet<ClothesSize> ClothesSizes { get; set; }
+        public DbSet<ClothesSeason> ClothesSeasons { get; set; }
+        public DbSet<ClothesBrandView> ClothesBrandViews { get; set; }
+        public DbSet<ClothesBrand> ClothesBrands { get; set; }
+        public DbSet<ClothesView> ClothesViews { get; set; }
+        public DbSet<ClothesType> ClothesTypes { get; set; }
+        public DbSet<Gender> Genders { get; set; }
+          
+          
+
+>>>>>>> Stashed changes
 =======
 >>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0 
+
     }
 }
- 
