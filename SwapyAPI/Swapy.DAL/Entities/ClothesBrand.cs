@@ -9,7 +9,6 @@
         public ClothesBrand() => ClothesBrandsViews = new List<ClothesBrandView>();
          
         public ClothesBrand(string name) : this() => Name = name;
-        public ClothesBrand(string name) => Name = name; 
     } 
 }
  

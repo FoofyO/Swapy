@@ -3,40 +3,40 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
 {
-    public class ClothesBrandViewRepository : IClothesBrandViewRepository
+    public class ClothesAttributeRepository : IClothesAttributeRepository
     {
         private readonly SwapyDbContext context;
 
-        public ClothesBrandViewRepository(SwapyDbContext context) => this.context = context;
+        public ClothesAttributeRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(ClothesBrandView item)
+        public void Create(ClothesAttribute item)
         {
-            context.ClothesBrandViews.Add(item);
+            context.ClothesAttributes.Add(item);
             context.SaveChanges();
         }
 
-        public void Delete(ClothesBrandView item)
+        public void Update(ClothesAttribute item)
         {
-            context.ClothesBrandViews.Remove(item);
+            context.ClothesAttributes.Update(item);
+            context.SaveChanges();
+        }
+
+        public void Delete(ClothesAttribute item)
+        {
+            context.ClothesAttributes.Remove(item);
             context.SaveChanges();
         } 
 
-        public IEnumerable<ClothesBrandView> GetAll()
+        public ClothesAttribute GetById(Guid id)
         {
-            return context.ClothesBrandViews.ToList();
-        }
-
-        public ClothesBrandView GetById(Guid id)
-        {
-            var item = context.ClothesBrandViews.Find(id);
+            var item = context.ClothesAttributes.Find(id);
             if (item == null) throw new Exception("Not found!");
             return item;
         }
-
-        public void Update(ClothesBrandView item)
+        
+        public IEnumerable<ClothesAttribute> GetAll()
         {
-            context.ClothesBrandViews.Update(item);
-            context.SaveChanges();
+            return context.ClothesAttributes.ToList();
         }
     }
 }

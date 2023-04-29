@@ -15,15 +15,16 @@ namespace Swapy.DAL.Repositories
             context.SaveChanges();
         }
 
+        public void Update(Chat item)
+        {
+            context.Chats.Update(item);
+            context.SaveChanges();
+        }
+
         public void Delete(Chat item)
         {
             context.Chats.Remove(item);
             context.SaveChanges();
-        }
-
-        public IEnumerable<Chat> GetAll()
-        {
-            return context.Chats.ToList();
         }
 
         public Chat GetById(Guid id)
@@ -32,11 +33,10 @@ namespace Swapy.DAL.Repositories
             if (item == null) throw new Exception("Not found!");
             return item;
         }
-
-        public void Update(Chat item)
+        
+        public IEnumerable<Chat> GetAll()
         {
-            context.Chats.Update(item);
-            context.SaveChanges();
+            return context.Chats.ToList();
         }
     }
 }

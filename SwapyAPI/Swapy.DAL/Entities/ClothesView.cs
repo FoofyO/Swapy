@@ -8,21 +8,18 @@
         public Guid GenderId { get; set; }
         public Gender Gender { get; set; }
         public Guid ClothesTypeId { get; set; }
-        public ClothesType ClothesType { get; set; }
+        public Subcategory ClothesType { get; set; }
 
-        public ICollection<ClothesBrandView> ClothesBrandsViews { get; set; }
+        public ICollection<ClothesBrandView> ClothesBrandViews { get; set; }
          
-        public ClothesView() => ClothesBrandView = new List<ClothesBrandView>();
+        public ClothesView() => ClothesBrandViews = new List<ClothesBrandView>();
 
         public ClothesView(string name, bool isChild, Guid genderId, Guid clothesTypeId) : this()
         { 
             Name = name;
             IsChild = isChild;
-            Gender = genderId;   
-            ClothesType = clothesTypeId;
-               
+            GenderId = genderId;   
+            ClothesTypeId = clothesTypeId;
         }  
     }
-
-     
 }   

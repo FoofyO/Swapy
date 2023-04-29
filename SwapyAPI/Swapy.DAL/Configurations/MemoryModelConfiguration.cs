@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Swapy.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -9,28 +9,28 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<MemoryModel> builder)
         {
             builder.ToTable("MemoriesModels");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(m => m.Id);
 
-            builder.Property(x => x.Id)
-                .IsRequired()
-                .HasDefaultValueSql("NEWID()");
+            builder.Property(m => m.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
-            builder
-                .HasOne(x => x.Memory)
-                .WithMany(x => x.MemoriesModels)
-                .HasForeignKey(x => x.MemoryId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(m => m.Memory)
+                   .WithMany(m => m.MemoriesModels)
+                   .HasForeignKey(m => m.MemoryId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
 
-            builder
-                .HasOne(x => x.Model)
-                .WithMany(x => x.MemoriesModels)
-                .HasForeignKey(x => x.ModelId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(m => m.Model)
+                   .WithMany(m => m.MemoriesModels)
+                   .HasForeignKey(m => m.ModelId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
 
-            builder
-                .HasMany(x => x.ElectronicAttributes)
-                .WithOne(x => x.MemoryModel)
-                .OnDelete(DeleteBehavior.SetNull);
+            builder.HasMany(m => m.ElectronicAttributes)
+                   .WithOne(e => e.MemoryModel)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     }
 }

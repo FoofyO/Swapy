@@ -7,7 +7,7 @@
         public int Rooms { get;  set; }
         public bool IsRent{ get; set; } 
         public Guid RealEstateTypeId { get; set; }
-        public RealEstateType RealEstateType { get; set; }
+        public Subcategory RealEstateType { get; set; }
         public Guid ProductId { get; set; }
         public Product Product { get; set; }
 
@@ -18,8 +18,8 @@
             Area = area;
             Rooms = rooms; 
             IsRent = isRent;
-            RealEstateTypeId = realEstateTypeId;
             ProductId = productId;
+            RealEstateTypeId = realEstateTypeId;
         }
     }
 } 

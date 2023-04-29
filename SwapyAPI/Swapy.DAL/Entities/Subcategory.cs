@@ -8,36 +8,33 @@
         public Category Category { get; set; }
         public Guid PrevSubcategoryId { get; set; }
         public Subcategory PrevSubcategory { get; set; }
-<<<<<<< HEAD
-        public Guid AutoTypeId { get; set; }
-        public AutoType AutoType { get; set; }
-        public Guid ItemTypeId { get; set; }
-        public ItemType ItemType { get; set; }
-=======
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
-        public ICollection<Subcategory> Subcategories { get; set; }
         public ICollection<Product> Products { get; set; }
+        public ICollection<AnimalBreed> AnimalBreeds { get; set; }
+        public ICollection<ClothesView> ClothesViews { get; set; }
+        public ICollection<Subcategory> Subcategories { get; set; }
+        public ICollection<ItemAttribute> ItemAttributes { get; set; }
+        public ICollection<AutoBrandType> AutoBrandTypes { get; set; }
+        public ICollection<ElectronicBrandType> ElectronicBrandsTypes { get; set; }
+        public ICollection<RealEstateAttribute> RealEstateAttributes { get; set; }
 
-        public Subcategory() {
+        public Subcategory() 
+        {
             Products = new List<Product>();
+            ClothesViews = new List<ClothesView>();
+            AnimalBreeds = new List<AnimalBreed>();
             Subcategories = new List<Subcategory>();
+            AutoBrandTypes= new List<AutoBrandType>();
+            ItemAttributes = new List<ItemAttribute>();
+            RealEstateAttributes = new List<RealEstateAttribute>();
+            ElectronicBrandsTypes = new List<ElectronicBrandType>();
         }
 
-<<<<<<< HEAD
-        public Subcategory(string name, Guid categoryId, Guid prevSubcategoryId, Guid autoTypeId, Guid itemTypeId) : this()
+        public Subcategory(string name, Guid categoryId, Guid prevSubcategoryId, ICollection<RealEstateAttribute> realEstateAttributes) : this()
         {
             Name = name;
             CategoryId = categoryId;
             PrevSubcategoryId = prevSubcategoryId;
-            AutoTypeId = autoTypeId;
-            ItemTypeId = itemTypeId;
-=======
-        public Subcategory(string name, Guid categoryId, Guid prevSubcategoryId)
-        {
-            Name = name;
-            CategoryId = categoryId;
-            PrevSubcategoryId = prevSubcategoryId
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
+            RealEstateAttributes = realEstateAttributes;
         }
     }
 }

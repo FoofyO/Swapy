@@ -15,15 +15,16 @@ namespace Swapy.DAL.Repositories
             context.SaveChanges();
         }
 
+        public void Update(City item)
+        {
+            context.Cities.Update(item);
+            context.SaveChanges();
+        }
+
         public void Delete(City item)
         {
             context.Cities.Remove(item);
             context.SaveChanges();
-        }
-
-        public IEnumerable<City> GetAll()
-        {
-            return context.Cities.ToList();
         }
 
         public City GetById(Guid id)
@@ -32,11 +33,10 @@ namespace Swapy.DAL.Repositories
             if (item == null) throw new Exception("Not found!");
             return item;
         }
-
-        public void Update(City item)
+        
+        public IEnumerable<City> GetAll()
         {
-            context.Cities.Update(item);
-            context.SaveChanges();
+            return context.Cities.ToList();
         }
     }
 }

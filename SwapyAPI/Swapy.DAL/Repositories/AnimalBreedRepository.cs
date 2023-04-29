@@ -14,11 +14,13 @@ namespace Swapy.DAL.Repositories
             context.AnimalBreeds.Add(item);
             context.SaveChanges();
         }
+
         public void Update(AnimalBreed item)
         {
             context.AnimalBreeds.Update(item);
             context.SaveChanges();
         }
+
         public void Delete(AnimalBreed item)
         {
             context.AnimalBreeds.Remove(item);

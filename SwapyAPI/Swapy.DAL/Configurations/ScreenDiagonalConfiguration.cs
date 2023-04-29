@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Swapy.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -9,21 +9,22 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<ScreenDiagonal> builder)
         {
             builder.ToTable("ScreenDiagonals");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(s => s.Id);
 
-            builder.Property(x => x.Id)
-                .IsRequired()
-                .HasDefaultValueSql("NEWID()");
+            builder.Property(s => s.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
-            builder.Property(x => x.Name)
-                .IsRequired()
-                .HasMaxLength(32);
+            builder.Property(s => s.Name)
+                   .IsRequired()
+                   .HasMaxLength(32);
 
-            builder
-                .HasMany(x => x.TVAttributes)
-                .WithOne(x => x.ScreenDiagonal)
-                .HasForeignKey(x => x.ScreenDiagonalId)
-                .OnDelete(DeleteBehavior.SetNull);
+            builder.HasMany(s => s.TVAttributes)
+                   .WithOne(s => s.ScreenDiagonal)
+                   .HasForeignKey(s => s.ScreenDiagonalId)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
+
         }
     }
 }

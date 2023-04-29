@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Swapy.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -9,33 +9,31 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<RealEstateAttribute> builder)
         {
             builder.ToTable("RealEstatesAttributes");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(r => r.Id);
 
-            builder.Property(x => x.Id)
-                .IsRequired()
-                .HasDefaultValueSql("NEWID()");
+            builder.Property(r => r.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
-            builder.Property(x => x.Area)
-                .IsRequired();
+            builder.Property(r => r.Area).IsRequired();
 
-            builder.Property(x => x.Rooms)
-                .IsRequired(); 
+            builder.Property(r => r.Rooms).IsRequired(); 
              
-            builder.Property(x => x.IsRent)
-                .IsRequired()
-                .HasColumnType("BIT");
-              
-            builder
-               .HasOne(x => x.RealEstateType)
-               .WithMany(x => x.RealEstateAttributes)
-               .HasForeignKey(p => p.RealEstateTypeId)
-               .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(r => r.IsRent)
+                   .IsRequired()
+                   .HasColumnType("BIT");
 
-            builder
-               .HasOne(x => x.Product)
-               .WithOne(x => x.RealEstateAttribute)
-               .HasForeignKey<Product>(x => x.RealEstateAttributeId)
-               .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(r => r.RealEstateType)
+                   .WithMany(s => s.RealEstateAttributes)
+                   .HasForeignKey(r => r.RealEstateTypeId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired(); ;
+
+            builder.HasOne(r => r.Product)
+                   .WithOne(p => p.RealEstateAttribute)
+                   .HasForeignKey<Product>(p => p.RealEstateAttributeId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
         }
     }
 }

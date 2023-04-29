@@ -6,15 +6,8 @@
         public string Name { get; set; }   
         public ICollection<ClothesAttribute> ClothesAttributes { get; set; }
 
-        public ClothesSeason() {
-            ClothesAttributes = new List<ClothesSeason>();
-        }
+        public ClothesSeason() => ClothesAttributes = new List<ClothesAttribute>();
 
-        public ClothesSeason(string name) : this()
-        {
-            Name = name;
-
-        }
-             
+        public ClothesSeason(string name) : this() => Name = name;
     }
 }     

@@ -3,38 +3,40 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
 {
-    public class TVTypesRepository : ITVTypesRepository
+    public class TVTypesRepository : ITVTypeRepository
     {
         private readonly SwapyDbContext context;
 
         public TVTypesRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(TVTypes item)
+        public void Create(TVType item)
         {
-            context.TVTypess.Add(item);
-            context.SaveChanges();
-        }
-        public void Update(TVTypes item)
-        {
-            context.TVTypess.Update(item);
-            context.SaveChanges();
-        }
-        public void Delete(TVTypes item)
-        {
-            context.TVTypess.Remove(item);
+            context.TVTypes.Add(item);
             context.SaveChanges();
         }
 
-        public TVTypes GetById(Guid id)
+        public void Update(TVType item)
         {
-            var item = context.TVTypess.Find(id);
+            context.TVTypes.Update(item);
+            context.SaveChanges();
+        }
+
+        public void Delete(TVType item)
+        {
+            context.TVTypes.Remove(item);
+            context.SaveChanges();
+        }
+
+        public TVType GetById(Guid id)
+        {
+            var item = context.TVTypes.Find(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<TVTypes> GetAll()
+        public IEnumerable<TVType> GetAll()
         {
-            return context.TVTypess.ToList();
+            return context.TVTypes.ToList();
         }
     }
 }

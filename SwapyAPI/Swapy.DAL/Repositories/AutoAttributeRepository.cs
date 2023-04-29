@@ -14,11 +14,13 @@ namespace Swapy.DAL.Repositories
             context.AutoAttributes.Add(item);
             context.SaveChanges();
         }
+
         public void Update(AutoAttribute item)
         {
             context.AutoAttributes.Update(item);
             context.SaveChanges();
         }
+
         public void Delete(AutoAttribute item)
         {
             context.AutoAttributes.Remove(item);

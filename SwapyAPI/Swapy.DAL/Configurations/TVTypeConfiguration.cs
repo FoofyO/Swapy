@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Swapy.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -9,21 +9,21 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<TVType> builder)
         {
             builder.ToTable("TVTypes");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(t => t.Id);
 
-            builder.Property(x => x.Id)
-                .IsRequired()
-                .HasDefaultValueSql("NEWID()");
+            builder.Property(t => t.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
-            builder.Property(x => x.Name)
-                .IsRequired()
-                .HasMaxLength(32);
-
-            builder
-                .HasMany(x => x.TVAttributes)
-                .WithOne(x => x.TVType)
-                .HasForeignKey(x => x.TVTypeId)
-                .OnDelete(DeleteBehavior.SetNull);
+            builder.Property(t => t.Name)
+                   .IsRequired()
+                   .HasMaxLength(32);
+            
+            builder.HasMany(t => t.TVAttributes)
+                   .WithOne(t => t.TVType)
+                   .HasForeignKey(t => t.TVTypeId)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     }
 }

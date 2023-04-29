@@ -14,11 +14,13 @@ namespace Swapy.DAL.Repositories
             context.ElectronicBrandsTypes.Add(item);
             context.SaveChanges();
         }
+
         public void Update(ElectronicBrandType item)
         {
             context.ElectronicBrandsTypes.Update(item);
             context.SaveChanges();
         }
+
         public void Delete(ElectronicBrandType item)
         {
             context.ElectronicBrandsTypes.Remove(item);

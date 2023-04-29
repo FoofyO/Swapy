@@ -14,11 +14,13 @@ namespace Swapy.DAL.Repositories
             context.ScreenDiagonals.Add(item);
             context.SaveChanges();
         }
+
         public void Update(ScreenDiagonal item)
         {
             context.ScreenDiagonals.Update(item);
             context.SaveChanges();
         }
+
         public void Delete(ScreenDiagonal item)
         {
             context.ScreenDiagonals.Remove(item);

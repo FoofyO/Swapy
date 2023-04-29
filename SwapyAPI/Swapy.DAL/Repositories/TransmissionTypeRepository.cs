@@ -14,11 +14,13 @@ namespace Swapy.DAL.Repositories
             context.TransmissionTypes.Add(item);
             context.SaveChanges();
         }
+
         public void Update(TransmissionType item)
         {
             context.TransmissionTypes.Update(item);
             context.SaveChanges();
         }
+
         public void Delete(TransmissionType item)
         {
             context.TransmissionTypes.Remove(item);

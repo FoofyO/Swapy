@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Swapy.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -9,27 +9,27 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<ItemAttribute> builder)
         {
             builder.ToTable("ItemAttributes");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(i => i.Id);
 
-            builder.Property(x => x.Id)
-                .IsRequired()
-                .HasDefaultValueSql("NEWID()");
+            builder.Property(i => i.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
-            builder.Property(x => x.IsNew)
-                .IsRequired()
-                .HasColumnType("BIT");
+            builder.Property(i => i.IsNew)
+                   .IsRequired()
+                   .HasColumnType("BIT");
 
-            builder
-                .HasOne(x => x.ItemType)
-                .WithMany(x => x.ItemAttributes)
-                .HasForeignKey(x => x.ItemTypeId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(i => i.ItemType)
+                   .WithMany(s => s.ItemAttributes)
+                   .HasForeignKey(i => i.ItemTypeId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired(); ;
 
-            builder
-               .HasOne(x => x.Product)
-               .WithOne(x => x.ItemAttribute)
-               .HasForeignKey<Product>(x => x.ItemAttributeId)
-               .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(i => i.Product)
+                   .WithOne(p => p.ItemAttribute)
+                   .HasForeignKey<Product>(p => p.ItemAttributeId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
         }
     }
 }

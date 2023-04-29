@@ -14,11 +14,13 @@ namespace Swapy.DAL.Repositories
             context.RealEstateAttributes.Add(item);
             context.SaveChanges();
         }
+
         public void Update(RealEstateAttribute item)
         {
             context.RealEstateAttributes.Update(item);
             context.SaveChanges();
         }
+
         public void Delete(RealEstateAttribute item)
         {
             context.RealEstateAttributes.Remove(item);

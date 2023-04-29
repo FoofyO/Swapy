@@ -15,15 +15,16 @@ namespace Swapy.DAL.Repositories
             context.SaveChanges();
         }
 
+        public void Update(ClothesView item)
+        {
+            context.ClothesViews.Update(item);
+            context.SaveChanges();
+        }
+
         public void Delete(ClothesView item)
         {
             context.ClothesViews.Remove(item);
             context.SaveChanges();
-        }
-
-        public IEnumerable<ClothesView> GetAll()
-        {
-            return context.ClothesViews.ToList();
         }
 
         public ClothesView GetById(Guid id)
@@ -33,10 +34,9 @@ namespace Swapy.DAL.Repositories
             return item;
         }
 
-        public void Update(ClothesView item)
+        public IEnumerable<ClothesView> GetAll()
         {
-            context.ClothesViews.Update(item);
-            context.SaveChanges();
+            return context.ClothesViews.ToList();
         }
     }
 }

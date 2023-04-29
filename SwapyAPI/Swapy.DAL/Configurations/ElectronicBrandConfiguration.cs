@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Swapy.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -9,20 +9,20 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<ElectronicBrand> builder)
         {
             builder.ToTable("ElectronicBrands");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(e => e.Id);
 
-            builder.Property(x => x.Id)
-                .IsRequired()
-                .HasDefaultValueSql("NEWID()");
+            builder.Property(e => e.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
-            builder.Property(x => x.Name)
-                .IsRequired()
-                .HasMaxLength(32);
+            builder.Property(e => e.Name)
+                   .IsRequired()
+                   .HasMaxLength(32);
 
-            builder
-                .HasMany(x => x.ElectronicBrandsTypes)
-                .WithOne(x => x.ElectronicBrand)
-                .OnDelete(DeleteBehavior.SetNull);
+            builder.HasMany(e => e.ElectronicBrandsTypes)
+                   .WithOne(e => e.ElectronicBrand)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     }
 }

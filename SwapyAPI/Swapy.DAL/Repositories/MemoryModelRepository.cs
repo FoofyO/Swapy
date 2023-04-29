@@ -14,11 +14,13 @@ namespace Swapy.DAL.Repositories
             context.MemoriesModels.Add(item);
             context.SaveChanges();
         }
+
         public void Update(MemoryModel item)
         {
             context.MemoriesModels.Update(item);
             context.SaveChanges();
         }
+
         public void Delete(MemoryModel item)
         {
             context.MemoriesModels.Remove(item);

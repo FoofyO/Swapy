@@ -15,15 +15,16 @@ namespace Swapy.DAL.Repositories
             context.SaveChanges();
         }
 
+        public void Update(User item)
+        {
+            context.Users.Update(item);
+            context.SaveChanges();
+        }
+
         public void Delete(User item)
         {
             context.Users.Remove(item);
             context.SaveChanges();
-        }
-
-        public IEnumerable<User> GetAll()
-        {
-            return context.Users.ToList();
         }
 
         public User GetById(Guid id)
@@ -32,11 +33,10 @@ namespace Swapy.DAL.Repositories
             if (item == null) throw new Exception("Not found!");
             return item;
         }
-
-        public void Update(User item)
+        
+        public IEnumerable<User> GetAll()
         {
-            context.Users.Update(item);
-            context.SaveChanges();
+            return context.Users.ToList();
         }
     }
 }

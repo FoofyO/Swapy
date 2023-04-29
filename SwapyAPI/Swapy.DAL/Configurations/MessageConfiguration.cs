@@ -9,10 +9,11 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<Message> builder)
         {
             builder.ToTable("Messages");
-
             builder.HasKey(m => m.Id);
 
-            builder.Property(m => m.Id).HasDefaultValueSql("NEWID()");
+            builder.Property(m => m.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
             builder.Property(m => m.Text)
                    .HasColumnType("NVARCHAR(300)")
@@ -39,7 +40,7 @@ namespace Swapy.DAL.Configurations
                    .WithMany(u => u.SentMessages)
                    .HasForeignKey(m => m.SenderId)
                    .OnDelete(DeleteBehavior.SetNull)
-                   .IsRequired();
+                   .IsRequired(false);
         }
     }
 }

@@ -1,4 +1,8 @@
-﻿namespace Swapy.DAL.Configurations
+﻿using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Swapy.DAL.Configurations
 {
     public class ClothesSizeConfiguration : IEntityTypeConfiguration<ClothesSize>
     {
@@ -6,30 +10,30 @@
         {
             builder.ToTable("ClothesSizes");
 
-            builder.HasKey(i => i.Id);
+            builder.HasKey(c => c.Id);
 
-            builder.Property(i => i.Id)
-                .IsRequired
-                .HasDefaultValueSql("NEWID()");
+            builder.Property(c => c.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
-            builder.Property(x => x.IsShoe)
-                .IsRequired() 
-                .HasColumnType("BIT");
+            builder.Property(c => c.IsShoe)
+                   .IsRequired()
+                   .HasColumnType("BIT");
 
-            builder.Property(x => x.IsChild)
-                .IsRequired() 
-                .HasColumnType("BIT");
+            builder.Property(c => c.IsChild)
+                   .IsRequired()
+                   .HasColumnType("BIT");
  
-            builder.Property(i => i.Size)
+            builder.Property(c => c.Size)
                    .HasColumnType("NVARCHAR(32)")
                    .HasMaxLength(32)
-                   .IsRequired();  
+                   .IsRequired();
 
-            builder.HasOne(i => i.ClothesAttribute)  
-                   .WithMany(p => p.ClothesSize)
-                   .HasForeignKey(i => i.ClothesSizeId)
-                   .OnDelete(DeleteBehavior.Cascade)
-                   .IsRequired();       
+            builder.HasMany(c => c.ClothesAttributes)  
+                   .WithOne(c => c.ClothesSize)
+                   .HasForeignKey(c => c.ClothesSizeId)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }  
     }
 } 

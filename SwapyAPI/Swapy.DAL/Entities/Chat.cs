@@ -10,12 +10,8 @@
         public ICollection<Message> Messages { get; set; }
 
         public Chat() => Messages = new List<Message>();
-
-<<<<<<< HEAD
+       
         public Chat(Guid sellerId, Guid buyerId) : this()
-=======
-        public Chat(Guid sellerId, Guid buyerId)
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         {
             SellerId = sellerId;
             BuyerId = buyerId;

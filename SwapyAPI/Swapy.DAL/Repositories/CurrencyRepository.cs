@@ -15,15 +15,16 @@ namespace Swapy.DAL.Repositories
             context.SaveChanges();
         }
 
+        public void Update(Currency item)
+        {
+            context.Currencies.Update(item);
+            context.SaveChanges();
+        }
+
         public void Delete(Currency item)
         {
             context.Currencies.Remove(item);
             context.SaveChanges();
-        }
-
-        public IEnumerable<Currency> GetAll()
-        {
-            return context.Currencies.ToList();
         }
 
         public Currency GetById(Guid id)
@@ -32,11 +33,10 @@ namespace Swapy.DAL.Repositories
             if (item == null) throw new Exception("Not found!");
             return item;
         }
-
-        public void Update(Currency item)
+        
+        public IEnumerable<Currency> GetAll()
         {
-            context.Currencies.Update(item);
-            context.SaveChanges();
+            return context.Currencies.ToList();
         }
     }
 }

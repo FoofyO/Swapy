@@ -10,22 +10,22 @@ namespace Swapy.DAL.Configurations
         {
             builder.ToTable("ClothesSeasons");
 
-            builder.HasKey(i => i.Id);
+            builder.HasKey(c => c.Id);
 
-            builder.Property(i => i.Id)
-                .IsRequired
-                .HasDefaultValueSql("NEWID()");
+            builder.Property(c => c.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
              
-            builder.Property(i => i.Size)
+            builder.Property(c => c.Name)
                    .HasColumnType("NVARCHAR(32)")
                    .HasMaxLength(32)
                    .IsRequired();
 
-            builder.HasOne(i => i.ClothesAttribute)
-                   .WithMany(p => p.ClothesSeason)
+            builder.HasMany(c => c.ClothesAttributes)
+                   .WithOne(c => c.ClothesSeason)
                    .HasForeignKey(i => i.ClothesSeasonId)
-                   .OnDelete(DeleteBehavior.Cascade)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     } 
 }

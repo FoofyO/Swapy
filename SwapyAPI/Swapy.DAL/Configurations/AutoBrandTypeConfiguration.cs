@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Swapy.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -9,28 +9,28 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<AutoBrandType> builder)
         {
             builder.ToTable("AutoBrandsTypes");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(a => a.Id);
 
-            builder.Property(x => x.Id)
-                .IsRequired()
-                .HasDefaultValueSql("NEWID()");
+            builder.Property(a => a.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
-            builder
-                .HasOne(x => x.AutoBrand)
-                .WithMany(x => x.AutoBrandsTypes)
-                .HasForeignKey(p => p.AutoBrandId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(a => a.AutoBrand)
+                   .WithMany(a => a.AutoBrandsTypes)
+                   .HasForeignKey(a => a.AutoBrandId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
 
-            builder
-                .HasOne(x => x.AutoType)
-                .WithMany(x => x.AutoBrandsTypes)
-                .HasForeignKey(p => p.AutoTypeId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(a => a.AutoType)
+                   .WithMany(s => s.AutoBrandTypes)
+                   .HasForeignKey(s => s.AutoTypeId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
 
-            builder
-                .HasMany(x => x.AutoAttributes)
-                .WithOne(x => x.AutoBrandType)
-                .OnDelete(DeleteBehavior.SetNull);
+            builder.HasMany(a => a.AutoAttributes)
+                   .WithOne(a => a.AutoBrandType)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     }
 }

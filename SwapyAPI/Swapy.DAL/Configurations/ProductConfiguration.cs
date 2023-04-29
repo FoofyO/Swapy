@@ -11,7 +11,9 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("Products");
             builder.HasKey(p => p.Id);
 
-            builder.Property(p => p.Id).HasDefaultValueSql("NEWID()");
+            builder.Property(p => p.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
             builder.Property(p => p.Title)
                    .HasColumnType("NVARCHAR(100)")
@@ -63,14 +65,10 @@ namespace Swapy.DAL.Configurations
                    .WithOne(p => p.Product)
                    .HasForeignKey(p => p.ProductId)
                    .OnDelete(DeleteBehavior.SetNull)
-                   .IsRequired();
+                   .IsRequired(false);
 
             builder.HasOne(p => p.Subcategory)
-<<<<<<< HEAD
-                   .WithMany(p => p.)
-=======
                    .WithMany(p => p.Products)
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
                    .HasForeignKey(p => p.SubcategoryId)
                    .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
@@ -78,29 +76,44 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(p => p.Category)
                    .WithMany(p => p.Products)
                    .HasForeignKey(p => p.CategoryId)
-                   .OnDelete(DeleteBehavior.NoAction)
+                   .OnDelete(DeleteBehavior.NoAction) //Category -> Subcategory -> Product
                    .IsRequired();
-<<<<<<< HEAD
 
-            builder.HasOne(s => s.AutoAttribute)
-                .WithOne(c => c.Product)
-                .HasForeignKey<AutoAttribute>(s => s.ProductId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
+            builder.HasOne(p => p.AutoAttribute)
+                   .WithOne(a => a.Product)
+                   .HasForeignKey<AutoAttribute>(s => s.ProductId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
 
-            builder.HasOne(s => s.ElectronicAttribute)
-                .WithOne(c => c.Product)
-                .HasForeignKey<ElectronicAttribute>(s => s.ProductId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
+            builder.HasOne(p => p.ElectronicAttribute)
+                   .WithOne(e => e.Product)
+                   .HasForeignKey<ElectronicAttribute>(s => s.ProductId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
 
-            builder.HasOne(s => s.ItemAttribute)
-                .WithOne(c => c.Product)
-                .HasForeignKey<ItemAttribute>(s => s.ProductId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
-=======
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
+            builder.HasOne(p => p.ItemAttribute)
+                   .WithOne(i => i.Product)
+                   .HasForeignKey<ItemAttribute>(s => s.ProductId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
+
+            builder.HasOne(p => p.AnimalAttribute)
+                   .WithOne(a => a.Product)
+                   .HasForeignKey<AnimalAttribute>(s => s.ProductId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
+
+            builder.HasOne(p => p.TVAttribute)
+                   .WithOne(t => t.Product)
+                   .HasForeignKey<TVAttribute>(s => s.ProductId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
+
+            builder.HasOne(p => p.RealEstateAttribute)
+                   .WithOne(r => r.Product)
+                   .HasForeignKey<RealEstateAttribute>(s => s.ProductId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
         }
     }
 }

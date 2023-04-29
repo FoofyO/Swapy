@@ -6,7 +6,7 @@
         public Guid ElectronicBrandId { get; set; }
         public ElectronicBrand ElectronicBrand { get; set; }
         public Guid ElectronicTypeId { get; set; }
-        public ElectronicType ElectronicType { get; set; }
+        public Subcategory ElectronicType { get; set; }
         public ICollection<Model> Models { get; set; }
 
         public ElectronicBrandType() => Models = new List<Model>();

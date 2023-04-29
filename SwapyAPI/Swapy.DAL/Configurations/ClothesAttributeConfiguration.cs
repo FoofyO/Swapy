@@ -1,4 +1,6 @@
 ﻿using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -10,18 +12,16 @@ namespace Swapy.DAL.Configurations
             builder.HasKey(p => p.Id);
 
             builder.Property(p => p.Id)
-                .IsRequired()
-                .HasDefaultValueSql("NEWID()");
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
             builder.Property(x => x.IsNew)
-
-                .IsRequired() 
-                .HasColumnType("BIT");
+                   .IsRequired()
+                   .HasColumnType("BIT");
              
             builder.HasOne(p => p.ClothesSeason)
                    .WithMany(u => u.ClothesAttributes)
                    .HasForeignKey(p => p.ClothesSeasonId) 
-
                    .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
              
@@ -31,18 +31,17 @@ namespace Swapy.DAL.Configurations
                    .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
             
-            builder.HasOne(p => p.ClothesTypeView)
+            builder.HasOne(p => p.ClothesBrandView)
                    .WithMany(u => u.ClothesAttributes)
-                   .HasForeignKey(p => p.ClothesTypeViewId)
+                   .HasForeignKey(p => p.ClothesBrandViewId)
                    .OnDelete(DeleteBehavior.Cascade) 
                    .IsRequired();
 
-            builder 
-               .HasOne(x => x.Product)
-               .WithOne(x => x.ClothesAttribute)
-               .HasForeignKey<Product>(x => x.ClothesAttributeId)
-               .OnDelete(DeleteBehavior.Cascade);   
- 
+            builder.HasOne(x => x.Product)
+                   .WithOne(x => x.ClothesAttribute)
+                   .HasForeignKey<Product>(x => x.ClothesAttributeId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
         }
     }
 }

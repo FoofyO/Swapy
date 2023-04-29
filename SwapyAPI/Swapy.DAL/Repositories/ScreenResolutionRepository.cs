@@ -14,11 +14,13 @@ namespace Swapy.DAL.Repositories
             context.ScreenResolutions.Add(item);
             context.SaveChanges();
         }
+
         public void Update(ScreenResolution item)
         {
             context.ScreenResolutions.Update(item);
             context.SaveChanges();
         }
+
         public void Delete(ScreenResolution item)
         {
             context.ScreenResolutions.Remove(item);
