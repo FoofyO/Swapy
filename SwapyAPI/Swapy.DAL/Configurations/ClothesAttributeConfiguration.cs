@@ -1,6 +1,4 @@
 ﻿using Swapy.DAL.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -42,9 +40,7 @@ namespace Swapy.DAL.Configurations
                .WithOne(x => x.ClothesAttribute)
                .HasForeignKey<Product>(x => x.ClothesAttributeId)
                .OnDelete(DeleteBehavior.Cascade); 
-======= 
 
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         }
     }
 }
