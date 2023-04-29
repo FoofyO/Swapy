@@ -4,23 +4,27 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
-    public class CityConfiguration : IEntityTypeConfiguration<City>
-    {
-        public void Configure(EntityTypeBuilder<City> builder)
+    public class GenderConfiguration : IEntityTypeConfiguration<Gender>
+    { 
+        public void Configure(EntityTypeBuilder<Gender> builder)
         {
-            builder.ToTable("Cities");
-
+            builder.ToTable("Genders");
             builder.HasKey(c => c.Id);
+             
+            builder.Property(c => c.Id)
+                .isRequired()
+                .HasDefaultValueSql("NEWID()");
 
-            builder.Property(c => c.Id).HasDefaultValueSql("NEWID()");
+            builder.Property(s => s.Type)
+                   .HasColumnType("NVARCHAR(32)")
+                   .HasMaxLength(32)
+                   .IsRequired();  
 
-            builder.Property(c=> c.Name).IsRequired();
-
-            builder.HasMany(c => c.Products)
-                   .WithOne(p => p.City)
-                   .HasForeignKey(p => p.CityId)
+            builder.HasMany(c => c.ClothesBrandView)
+                   .WithOne(p => p.Gender) 
+                   .HasForeignKey(p => p.GenderId)
                    .OnDelete(DeleteBehavior.SetNull)
-                   .IsRequired();
+                   .IsRequired();  
         }
     }
 }

@@ -1,43 +1,28 @@
 ﻿namespace Swapy.DAL.Entities
 {
-    public class Subcategory
+    public class ClothesView
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public Guid CategoryId { get; set; }
-        public Category Category { get; set; }
-        public Guid PrevSubcategoryId { get; set; }
-        public Subcategory PrevSubcategory { get; set; }
-<<<<<<< HEAD
-        public Guid AutoTypeId { get; set; }
-        public AutoType AutoType { get; set; }
-        public Guid ItemTypeId { get; set; }
-        public ItemType ItemType { get; set; }
-=======
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
-        public ICollection<Subcategory> Subcategories { get; set; }
-        public ICollection<Product> Products { get; set; }
+        public bool IsChild { get; set; }
+        public Guid GenderId { get; set; }
+        public Gender Gender { get; set; }
+        public Guid ClothesTypeId { get; set; }
+        public ClothesType ClothesType { get; set; }
 
-        public Subcategory() {
-            Products = new List<Product>();
-            Subcategories = new List<Subcategory>();
-        }
+        public ICollection<ClothesBrandView> ClothesBrandsViews { get; set; }
+         
+        public ClothesView() => ClothesBrandView = new List<ClothesBrandView>();
 
-<<<<<<< HEAD
-        public Subcategory(string name, Guid categoryId, Guid prevSubcategoryId, Guid autoTypeId, Guid itemTypeId) : this()
-        {
+        public ClothesView(string name, bool isChild, Guid genderId, Guid clothesTypeId) : this()
+        { 
             Name = name;
-            CategoryId = categoryId;
-            PrevSubcategoryId = prevSubcategoryId;
-            AutoTypeId = autoTypeId;
-            ItemTypeId = itemTypeId;
-=======
-        public Subcategory(string name, Guid categoryId, Guid prevSubcategoryId)
-        {
-            Name = name;
-            CategoryId = categoryId;
-            PrevSubcategoryId = prevSubcategoryId
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
-        }
+            IsChild = isChild;
+            Gender = genderId;   
+            ClothesType = clothesTypeId;
+               
+        }  
     }
-}
+
+     
+}   

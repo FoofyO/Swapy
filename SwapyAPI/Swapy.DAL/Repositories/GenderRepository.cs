@@ -3,39 +3,39 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
 {
-    internal class SubcategoryRepository : ISubcategoryRepository
+    internal class GenderRepository : IGenderRepository
     {
         private readonly SwapyDbContext context;
 
-        public SubcategoryRepository(SwapyDbContext context) => this.context = context;
+        public GenderRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(Subcategory item)
+        public void Create(Gender item)
         {
-            context.Subcategories.Add(item);
+            context.Gender.Add(item);
             context.SaveChanges();
         }
 
-        public void Delete(Subcategory item)
+        public void Delete(Gender item)
         {
-            context.Subcategories.Remove(item);
+            context.Gender.Remove(item);
             context.SaveChanges();
         }
 
-        public IEnumerable<Subcategory> GetAll()
+        public IEnumerable<Gender> GetAll()
         {
-            return context.Subcategories.ToList();
+            return context.Gender.ToList();
         }
 
-        public Subcategory GetById(Guid id)
+        public Gender GetById(Guid id)
         {
-            var item = context.Subcategories.Find(id);
+            var item = context.Gender.Find(id);
             if (item == null) throw new Exception("Not found!");
             return item;
         }
 
-        public void Update(Subcategory item)
+        public void Update(Gender item)
         {
-            context.Subcategories.Update(item);
+            context.Gender.Update(item);
             context.SaveChanges();
         }
     }

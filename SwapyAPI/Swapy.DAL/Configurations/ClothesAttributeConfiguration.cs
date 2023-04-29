@@ -14,12 +14,14 @@ namespace Swapy.DAL.Configurations
                 .HasDefaultValueSql("NEWID()");
 
             builder.Property(x => x.IsNew)
-                .IsRequired()
-                .HasColumnType("BIT");
 
-            builder.HasOne(p => p.Season)
+                .IsRequired() 
+                .HasColumnType("BIT");
+             
+            builder.HasOne(p => p.ClothesSeason)
                    .WithMany(u => u.ClothesAttributes)
-                   .HasForeignKey(p => p.SeasonId) 
+                   .HasForeignKey(p => p.ClothesSeasonId) 
+
                    .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
              
@@ -34,13 +36,13 @@ namespace Swapy.DAL.Configurations
                    .HasForeignKey(p => p.ClothesTypeViewId)
                    .OnDelete(DeleteBehavior.Cascade) 
                    .IsRequired();
-             
-            builder
+
+            builder 
                .HasOne(x => x.Product)
                .WithOne(x => x.ClothesAttribute)
                .HasForeignKey<Product>(x => x.ClothesAttributeId)
-               .OnDelete(DeleteBehavior.Cascade); 
-
+               .OnDelete(DeleteBehavior.Cascade);   
+ 
         }
     }
 }

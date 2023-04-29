@@ -13,7 +13,7 @@
                 .HasDefaultValueSql("NEWID()");
 
             builder.Property(x => x.IsShoe)
-                .IsRequired()
+                .IsRequired() 
                 .HasColumnType("BIT");
 
             builder.Property(x => x.IsChild)
@@ -21,15 +21,15 @@
                 .HasColumnType("BIT");
  
             builder.Property(i => i.Size)
-                   .HasColumnType("NVARCHAR(128)")
+                   .HasColumnType("NVARCHAR(32)")
                    .HasMaxLength(32)
-                   .IsRequired(false);
+                   .IsRequired();  
 
-            builder.HasOne(i => i.Product)  
+            builder.HasOne(i => i.ClothesAttribute)  
                    .WithMany(p => p.ClothesSize)
                    .HasForeignKey(i => i.ClothesSizeId)
                    .OnDelete(DeleteBehavior.Cascade)
-                   .IsRequired();   
-        }
+                   .IsRequired();       
+        }  
     }
-}
+} 

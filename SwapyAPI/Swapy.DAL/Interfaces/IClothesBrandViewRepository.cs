@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IProductImageRepository : IRepository<ProductImage>
+    public interface IClothesBrandViewRepository : IRepository<ClothesBrandView>
     {
     }
 }
