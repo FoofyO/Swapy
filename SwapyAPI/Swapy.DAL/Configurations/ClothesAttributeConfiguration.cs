@@ -1,6 +1,4 @@
 ﻿using Swapy.DAL.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -16,12 +14,14 @@ namespace Swapy.DAL.Configurations
                 .HasDefaultValueSql("NEWID()");
 
             builder.Property(x => x.IsNew)
+
                 .IsRequired() 
                 .HasColumnType("BIT");
              
             builder.HasOne(p => p.ClothesSeason)
                    .WithMany(u => u.ClothesAttributes)
                    .HasForeignKey(p => p.ClothesSeasonId) 
+
                    .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
              
@@ -36,15 +36,13 @@ namespace Swapy.DAL.Configurations
                    .HasForeignKey(p => p.ClothesTypeViewId)
                    .OnDelete(DeleteBehavior.Cascade) 
                    .IsRequired();
-             
+
             builder 
                .HasOne(x => x.Product)
                .WithOne(x => x.ClothesAttribute)
                .HasForeignKey<Product>(x => x.ClothesAttributeId)
                .OnDelete(DeleteBehavior.Cascade);   
-======= 
-
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
+ 
         }
     }
 }

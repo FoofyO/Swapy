@@ -1,8 +1,4 @@
-﻿using Swapy.DAL.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace Swapy.DAL.Configurations
+﻿namespace Swapy.DAL.Configurations
 {
     public class ClothesSizeConfiguration : IEntityTypeConfiguration<ClothesSize>
     {
@@ -34,6 +30,6 @@ namespace Swapy.DAL.Configurations
                    .HasForeignKey(i => i.ClothesSizeId)
                    .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();       
-        } 
+        }  
     }
 } 
