@@ -15,15 +15,16 @@ namespace Swapy.DAL.Repositories
             context.SaveChanges();
         }
 
+        public void Update(Like item)
+        {
+            context.Likes.Update(item);
+            context.SaveChanges();
+        }
+        
         public void Delete(Like item)
         {
             context.Likes.Remove(item);
             context.SaveChanges();
-        }
-
-        public IEnumerable<Like> GetAll()
-        {
-            return context.Likes.ToList();
         }
 
         public Like GetById(Guid id)
@@ -33,10 +34,9 @@ namespace Swapy.DAL.Repositories
             return item;
         }
 
-        public void Update(Like item)
+        public IEnumerable<Like> GetAll()
         {
-            context.Likes.Update(item);
-            context.SaveChanges();
+            return context.Likes.ToList();
         }
     }
 }

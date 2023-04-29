@@ -18,38 +18,43 @@
         public Subcategory Subcategory { get; set; }
         public Guid CityId { get; set; }
         public City City { get; set; }
-<<<<<<< HEAD
         public Guid AutoAttributeId { get; set; }
         public AutoAttribute AutoAttribute { get; set; }
+        public Guid AnimalAttributeId { get; set; }
+        public AnimalAttribute AnimalAttribute { get; set; }
+        public Guid ClothesAttributeId { get; set; }
+        public ClothesAttribute ClothesAttribute { get; set; }
+        public Guid TVAttributeId { get; set; }
+        public TVAttribute TVAttribute { get; set; }
+        public Guid RealEstateAttributeId { get; set; }
+        public RealEstateAttribute RealEstateAttribute { get; set; }
         public Guid ElectronicAttributeId { get; set; }
         public ElectronicAttribute ElectronicAttribute { get; set; }
         public Guid ItemAttributeId { get; set; }
         public ItemAttribute ItemAttribute { get; set; }
-=======
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         public ICollection<ProductImage> Images { get; set; }
 
         public Product() => Images = new List<ProductImage>();
 
-<<<<<<< HEAD
-        public Product(string title, string description, decimal price, Guid userId, Guid currencyId, Guid categoryId, Guid subcategoryId, Guid cityId, Guid autoAttributeId, Guid electronicAttributeId, Guid itemAttributeId) : this()
-=======
-        public Product(string title, string description, decimal price, Guid userId, Guid currencyId, Guid categoryId, Guid subcategoryId, Guid cityId)
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
+        public Product(string title, string description, decimal price, Guid userId, Guid currencyId, Guid categoryId, Guid subcategoryId, Guid cityId, Guid autoAttributeId, Guid animalAttributeId, Guid clothesAttributeId, Guid tVAttributeId, Guid realEstateAttributeId, Guid electronicAttributeId, Guid itemAttributeId)
         {
             Title = title;
             Description = description;
             Price = price;
             UserId = userId;
+            DateTime = DateTime.Now;
+            Reviews = 0;
             CurrencyId = currencyId;
+            CategoryId = categoryId;
             SubcategoryId = subcategoryId;
             CityId = cityId;
-<<<<<<< HEAD
             AutoAttributeId = autoAttributeId;
+            AnimalAttributeId = animalAttributeId;
+            ClothesAttributeId = clothesAttributeId;
+            TVAttributeId = tVAttributeId;
+            RealEstateAttributeId = realEstateAttributeId;
             ElectronicAttributeId = electronicAttributeId;
             ItemAttributeId = itemAttributeId;
-=======
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         }
     }
 }

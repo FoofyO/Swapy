@@ -11,32 +11,32 @@ namespace Swapy.DAL.Repositories
 
         public void Create(Gender item)
         {
-            context.Gender.Add(item);
+            context.Genders.Add(item);
+            context.SaveChanges();
+        }
+
+        public void Update(Gender item)
+        {
+            context.Genders.Update(item);
             context.SaveChanges();
         }
 
         public void Delete(Gender item)
         {
-            context.Gender.Remove(item);
+            context.Genders.Remove(item);
             context.SaveChanges();
         }
-
-        public IEnumerable<Gender> GetAll()
-        {
-            return context.Gender.ToList();
-        }
-
+        
         public Gender GetById(Guid id)
         {
-            var item = context.Gender.Find(id);
+            var item = context.Genders.Find(id);
             if (item == null) throw new Exception("Not found!");
             return item;
         }
 
-        public void Update(Gender item)
+        public IEnumerable<Gender> GetAll()
         {
-            context.Gender.Update(item);
-            context.SaveChanges();
+            return context.Genders.ToList();
         }
     }
 }

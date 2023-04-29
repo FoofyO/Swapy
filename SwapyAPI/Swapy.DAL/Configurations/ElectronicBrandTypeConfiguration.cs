@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Swapy.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -9,28 +9,28 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<ElectronicBrandType> builder)
         {
             builder.ToTable("ElectronicBrandsTypes");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(e => e.Id);
 
-            builder.Property(x => x.Id)
-                .IsRequired()
-                .HasDefaultValueSql("NEWID()");
+            builder.Property(e => e.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
-            builder
-                .HasOne(x => x.ElectronicBrand)
-                .WithMany(x => x.ElectronicBrandsTypes)
-                .HasForeignKey(x => x.ElectronicBrandId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(e => e.ElectronicBrand)
+                   .WithMany(e => e.ElectronicBrandsTypes)
+                   .HasForeignKey(e => e.ElectronicBrandId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
 
-            builder
-                .HasOne(x => x.ElectronicType)
-                .WithMany(x => x.ElectronicBrandsTypes)
-                .HasForeignKey(x => x.ElectronicTypeId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(e => e.ElectronicType)
+                   .WithMany(s => s.ElectronicBrandsTypes)
+                   .HasForeignKey(e => e.ElectronicTypeId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
 
-            builder
-                .HasMany(x => x.Models)
-                .WithOne(x => x.ElectronicBrandType)
-                .OnDelete(DeleteBehavior.SetNull);
+            builder.HasMany(x => x.Models)
+                   .WithOne(x => x.ElectronicBrandType)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     }
 }

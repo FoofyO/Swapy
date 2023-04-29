@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Swapy.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -9,28 +9,28 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<ModelColor> builder)
         {
             builder.ToTable("ModelsColors");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(m => m.Id);
 
-            builder.Property(x => x.Id)
-                .IsRequired()
-                .HasDefaultValueSql("NEWID()");
+            builder.Property(m => m.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
-            builder
-                .HasOne(x => x.Model)
-                .WithMany(x => x.ModelsColors)
-                .HasForeignKey(x => x.ModelId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(m => m.Model)
+                   .WithMany(m => m.ModelsColors)
+                   .HasForeignKey(m => m.ModelId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
 
-            builder
-                .HasOne(x => x.Color)
-                .WithMany(x => x.ModelsColors)
-                .HasForeignKey(x => x.ColorId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(m => m.Color)
+                   .WithMany(c => c.ModelsColors)
+                   .HasForeignKey(m => m.ColorId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
 
-            builder
-                .HasMany(x => x.ElectronicAttributes)
-                .WithOne(x => x.ModelColor)
-                .OnDelete(DeleteBehavior.SetNull);
+            builder.HasMany(m => m.ElectronicAttributes)
+                   .WithOne(e => e.ModelColor)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     }
 }

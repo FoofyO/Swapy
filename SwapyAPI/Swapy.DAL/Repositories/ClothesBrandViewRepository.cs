@@ -11,32 +11,32 @@ namespace Swapy.DAL.Repositories
 
         public void Create(ClothesBrandView item)
         {
-            context.ClothesBrandsViews.Add(item);
+            context.ClothesBrandViews.Add(item);
+            context.SaveChanges();
+        }
+
+        public void Update(ClothesBrandView item)
+        {
+            context.ClothesBrandViews.Update(item);
             context.SaveChanges();
         }
 
         public void Delete(ClothesBrandView item)
         {
-            context.ClothesBrandsViews.Remove(item);
+            context.ClothesBrandViews.Remove(item);
             context.SaveChanges();
-        }
-
-        public IEnumerable<ClothesBrandView> GetAll()
-        {
-            return context.ClothesBrandsViews.ToList();
         }
 
         public ClothesBrandView GetById(Guid id)
         {
-            var item = context.ClothesBrandsViews.Find(id);
+            var item = context.ClothesBrandViews.Find(id);
             if (item == null) throw new Exception("Not found!");
             return item;
         }
-
-        public void Update(ClothesBrandView item)
+        
+        public IEnumerable<ClothesBrandView> GetAll()
         {
-            context.ClothesBrandsViews.Update(item);
-            context.SaveChanges();
+            return context.ClothesBrandViews.ToList();
         }
     }
 }

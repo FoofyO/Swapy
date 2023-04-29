@@ -9,14 +9,13 @@
         public string Size { get; set; }
         public ICollection<ClothesAttribute> ClothesAttributes { get; set; }
           
-        public ClothesSize() => ClothesAttributes = new List<Product>();
+        public ClothesSize() => ClothesAttributes = new List<ClothesAttribute>();
 
         public ClothesSize(string name, bool isShoe, bool isChild, string size) : this() {
             Name = name;
             IsShoe = isShoe;
             IsChild = isChild;
             Size = size;
-         
         }
     } 
 } 

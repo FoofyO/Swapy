@@ -14,11 +14,13 @@ namespace Swapy.DAL.Repositories
             context.FuelTypes.Add(item);
             context.SaveChanges();
         }
+
         public void Update(FuelType item)
         {
             context.FuelTypes.Update(item);
             context.SaveChanges();
         }
+
         public void Delete(FuelType item)
         {
             context.FuelTypes.Remove(item);

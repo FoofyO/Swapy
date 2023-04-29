@@ -10,11 +10,7 @@
 
         public Subscribe() { }
 
-<<<<<<< HEAD
         public Subscribe(Guid sellerId, Guid subscriberId) : this()
-=======
-        public Subscribe(Guid sellerId, Guid subscriberId)
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
         {
             SellerId = sellerId;
             SubscriberId = subscriberId;

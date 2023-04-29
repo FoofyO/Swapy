@@ -6,7 +6,7 @@
         public Guid AutoBrandId { get; set; }
         public AutoBrand AutoBrand { get; set; }
         public Guid AutoTypeId { get; set; }
-        public AutoType AutoType { get; set; }
+        public Subcategory AutoType { get; set; }
         public ICollection<AutoAttribute> AutoAttributes { get; set; }
 
         public AutoBrandType() => AutoAttributes = new List<AutoAttribute>();

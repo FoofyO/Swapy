@@ -14,11 +14,13 @@ namespace Swapy.DAL.Repositories
             context.AutoBrandsTypes.Add(item);
             context.SaveChanges();
         }
+
         public void Update(AutoBrandType item)
         {
             context.AutoBrandsTypes.Update(item);
             context.SaveChanges();
         }
+
         public void Delete(AutoBrandType item)
         {
             context.AutoBrandsTypes.Remove(item);

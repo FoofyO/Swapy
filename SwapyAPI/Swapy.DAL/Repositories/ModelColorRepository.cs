@@ -14,11 +14,13 @@ namespace Swapy.DAL.Repositories
             context.ModelsColors.Add(item);
             context.SaveChanges();
         }
+
         public void Update(ModelColor item)
         {
             context.ModelsColors.Update(item);
             context.SaveChanges();
         }
+
         public void Delete(ModelColor item)
         {
             context.ModelsColors.Remove(item);

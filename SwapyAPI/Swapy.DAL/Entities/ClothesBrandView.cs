@@ -11,14 +11,13 @@
 
         public ICollection<ClothesAttribute> ClothesAttributes { get; set; }
 
-        public ClothesBrandView() => ClothesBrandsViews = new List<ClothesAttribute>();
+        public ClothesBrandView() => ClothesAttributes = new List<ClothesAttribute>();
           
         public ClothesBrandView(string name, Guid clothesBrandId, Guid clothesViewId) : this() 
         {  
             Name = name; 
-            ClothesBrand = clothesBrandId;
-            ClothesView = clothesViewId;
-             
+            ClothesBrandId = clothesBrandId;
+            ClothesViewId = clothesViewId;
         } 
     }
 

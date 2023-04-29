@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Swapy.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -12,20 +12,20 @@ namespace Swapy.DAL.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id)
-                .IsRequired()
-                .HasDefaultValueSql("NEWID()");
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
                 
-            builder
-               .HasOne(x => x.AnimalBreeds)
-               .WithMany(x => x.AnimalAttributes)
-               .HasForeignKey(p => p.AnimalBreedId)
-               .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.AnimalBreed)
+                   .WithMany(x => x.AnimalAttributes)
+                   .HasForeignKey(p => p.AnimalBreedId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
 
-            builder
-               .HasOne(x => x.Product)
-               .WithOne(x => x.AnimalAttribute)
-               .HasForeignKey<Product>(x => x.AnimalAttributeId)
-               .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Product)
+                   .WithOne(x => x.AnimalAttribute)
+                   .HasForeignKey<Product>(x => x.AnimalAttributeId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
         }
     }
 }

@@ -15,15 +15,16 @@ namespace Swapy.DAL.Repositories
             context.SaveChanges();
         }
 
+        public void Update(Subscribe item)
+        {
+            context.Subscribes.Update(item);
+            context.SaveChanges();
+        }
+        
         public void Delete(Subscribe item)
         {
             context.Subscribes.Remove(item);
             context.SaveChanges();
-        }
-
-        public IEnumerable<Subscribe> GetAll()
-        {
-            return context.Subscribes.ToList();
         }
 
         public Subscribe GetById(Guid id)
@@ -33,10 +34,9 @@ namespace Swapy.DAL.Repositories
             return item;
         }
 
-        public void Update(Subscribe item)
+        public IEnumerable<Subscribe> GetAll()
         {
-            context.Subscribes.Update(item);
-            context.SaveChanges();
+            return context.Subscribes.ToList();
         }
     }
 }

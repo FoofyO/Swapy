@@ -12,7 +12,7 @@ namespace Swapy.DAL.Configurations
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.Id)
-                .isRequired()
+                .IsRequired()
                 .HasDefaultValueSql("NEWID()");
 
             builder.Property(s => s.Name)
@@ -20,11 +20,11 @@ namespace Swapy.DAL.Configurations
                    .HasMaxLength(32)
                    .IsRequired(); 
 
-            builder.HasMany(c => c.ClothesBrandView)
+            builder.HasMany(c => c.ClothesBrandsViews)
                    .WithOne(p => p.ClothesBrand)
                    .HasForeignKey(p => p.ClothesBrandId)
                    .OnDelete(DeleteBehavior.SetNull)
-                   .IsRequired(); 
+                   .IsRequired(false); 
         }
     } 
 } 

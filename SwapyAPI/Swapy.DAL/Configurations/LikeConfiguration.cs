@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Swapy.DAL.Entities;
+
 namespace Swapy.DAL.Configurations
 {
     public class LikeConfiguration : IEntityTypeConfiguration<Like>
@@ -8,10 +9,11 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<Like> builder)
         {
             builder.ToTable("Likes");
-
             builder.HasKey(l => l.Id);
 
-            builder.Property(l => l.Id).HasDefaultValueSql("NEWID()");
+            builder.Property(l => l.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
             builder.HasOne(l => l.Seller)
                    .WithMany(u => u.LikesAsSeller)

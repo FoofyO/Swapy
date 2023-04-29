@@ -14,11 +14,13 @@ namespace Swapy.DAL.Repositories
             context.Models.Add(item);
             context.SaveChanges();
         }
+
         public void Update(Model item)
         {
             context.Models.Update(item);
             context.SaveChanges();
         }
+
         public void Delete(Model item)
         {
             context.Models.Remove(item);

@@ -11,7 +11,9 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("Subcategories");
             builder.HasKey(s => s.Id);
 
-            builder.Property(s => s.Id).HasDefaultValueSql("NEWID()");
+            builder.Property(s => s.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
             builder.Property(s => s.Name)
                    .HasColumnType("NVARCHAR(50)")
@@ -40,22 +42,37 @@ namespace Swapy.DAL.Configurations
                   .WithOne(c => c.Subcategory)
                   .HasForeignKey(s => s.SubcategoryId)
                   .OnDelete(DeleteBehavior.SetNull)
-                  .IsRequired();
-<<<<<<< HEAD
+                  .IsRequired(false);
 
-            builder.HasOne(s => s.AutoType)
-                .WithOne(c => c.Subcategory)
-                .HasForeignKey<AutoType>(s => s.SubcategoryId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
+            builder.HasMany(s => s.AnimalBreeds)
+                   .WithOne(a => a.AnimalType)
+                   .HasForeignKey(a => a.AnimalTypeId)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
 
-            builder.HasOne(s => s.ItemType)
-                .WithOne(c => c.Subcategory)
-                .HasForeignKey<ItemType>(s => s.SubcategoryId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
-=======
->>>>>>> 6f4a051389e9ad7366ae4969384a08f98ef6bfc0
+            builder.HasMany(s => s.ClothesViews)
+                   .WithOne(c => c.ClothesType)
+                   .HasForeignKey(c => c.ClothesTypeId)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
+
+            builder.HasMany(s => s.ItemAttributes)
+                   .WithOne(i => i.ItemType)
+                   .HasForeignKey(i => i.ItemTypeId)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
+
+            builder.HasMany(s => s.RealEstateAttributes)
+                   .WithOne(r => r.RealEstateType)
+                   .HasForeignKey(r => r.RealEstateTypeId)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
+
+            builder.HasMany(s => s.ElectronicBrandsTypes)
+                   .WithOne(e => e.ElectronicType)
+                   .HasForeignKey(e => e.ElectronicTypeId)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     }
 }

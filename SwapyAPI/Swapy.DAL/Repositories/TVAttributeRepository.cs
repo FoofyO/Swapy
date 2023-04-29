@@ -14,11 +14,13 @@ namespace Swapy.DAL.Repositories
             context.TVAttributes.Add(item); 
             context.SaveChanges();
         }
+
         public void Update(TVAttribute item)
         {
             context.TVAttributes.Update(item);
             context.SaveChanges();
         }
+
         public void Delete(TVAttribute item)
         {
             context.TVAttributes.Remove(item);

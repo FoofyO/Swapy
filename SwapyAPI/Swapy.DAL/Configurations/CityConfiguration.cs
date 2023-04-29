@@ -9,10 +9,11 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<City> builder)
         {
             builder.ToTable("Cities");
-
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.Id).HasDefaultValueSql("NEWID()");
+            builder.Property(c => c.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
             builder.Property(c=> c.Name).IsRequired();
 
@@ -20,7 +21,7 @@ namespace Swapy.DAL.Configurations
                    .WithOne(p => p.City)
                    .HasForeignKey(p => p.CityId)
                    .OnDelete(DeleteBehavior.SetNull)
-                   .IsRequired();
+                   .IsRequired(false);
         }
     }
 }

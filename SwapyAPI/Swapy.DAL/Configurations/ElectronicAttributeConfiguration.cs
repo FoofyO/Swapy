@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Swapy.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -9,33 +9,33 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<ElectronicAttribute> builder)
         {
             builder.ToTable("ElectronicAttributes");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(e => e.Id);
 
-            builder.Property(x => x.Id)
-                .IsRequired()
-                .HasDefaultValueSql("NEWID()");
+            builder.Property(e => e.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
-            builder.Property(x => x.IsNew)
-                .IsRequired()
-                .HasColumnType("BIT");
+            builder.Property(e => e.IsNew)
+                   .IsRequired()
+                   .HasColumnType("BIT");
 
-            builder
-                .HasOne(x => x.MemoryModel)
-                .WithMany(x => x.ElectronicAttributes)
-                .HasForeignKey(x => x.MemoryModelId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(e => e.MemoryModel)
+                   .WithMany(m => m.ElectronicAttributes)
+                   .HasForeignKey(e => e.MemoryModelId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
 
-            builder
-                .HasOne(x => x.ModelColor)
-                .WithMany(x => x.ElectronicAttributes)
-                .HasForeignKey(x => x.ModelColorId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(e => e.ModelColor)
+                   .WithMany(m => m.ElectronicAttributes)
+                   .HasForeignKey(e => e.ModelColorId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
 
-            builder
-               .HasOne(x => x.Product)
-               .WithOne(x => x.ElectronicAttribute)
-               .HasForeignKey<Product>(x => x.ElectronicAttributeId)
-               .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(e => e.Product)
+                   .WithOne(p => p.ElectronicAttribute)
+                   .HasForeignKey<Product>(p => p.ElectronicAttributeId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
         }
     }
 }

@@ -10,7 +10,7 @@
         public Guid FuelTypeId { get; set; }
         public FuelType FuelType { get; set; }
         public Guid AutoColorId { get; set; }
-        public AutoColor AutoColor { get; set; }
+        public Color AutoColor { get; set; }
         public Guid TransmissionTypeId { get; set; }
         public TransmissionType TransmissionType { get; set; }
         public Guid AutoBrandTypeId { get; set; }

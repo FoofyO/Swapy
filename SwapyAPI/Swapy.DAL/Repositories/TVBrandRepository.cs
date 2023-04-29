@@ -14,11 +14,13 @@ namespace Swapy.DAL.Repositories
             context.TVBrands.Add(item);
             context.SaveChanges();
         }
+
         public void Update(TVBrand item) 
         {
             context.TVBrands.Update(item);
             context.SaveChanges();
         }
+
         public void Delete(TVBrand item)
         {
             context.TVBrands.Remove(item);

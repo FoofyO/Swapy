@@ -9,10 +9,11 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<Subscribe> builder)
         {
             builder.ToTable("Subscribers");
-
             builder.HasKey(s => s.Id);
 
-            builder.Property(s => s.Id).HasDefaultValueSql("NEWID()");
+            builder.Property(s => s.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
             builder.HasOne(s => s.Seller)
                    .WithMany(u => u.SubscribesAsSeller)

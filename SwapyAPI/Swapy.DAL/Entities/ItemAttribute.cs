@@ -5,7 +5,7 @@
         public Guid Id { get; set; }
         public bool IsNew { get; set; }
         public Guid ItemTypeId { get; set; }
-        public ItemType ItemType { get; set; }
+        public Subcategory ItemType { get; set; }
         public Guid ProductId { get; set; }
         public Product Product { get; set; }
 

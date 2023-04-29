@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Swapy.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -9,26 +9,26 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<AnimalBreed> builder)
         {
             builder.ToTable("AnimalBreedsTypes");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(a => a.Id);
 
-            builder.Property(x => x.Id)
-                .IsRequired()
-                .HasDefaultValueSql("NEWID()");
+            builder.Property(a => a.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
              
-            builder.Property(x => x.Name)
-                .IsRequired()
-                .HasMaxLength(32);
+            builder.Property(a => a.Name)
+                   .IsRequired()
+                   .HasMaxLength(32);
               
-            builder
-                .HasOne(x => x.AnimalType)
-                .WithMany(x => x.AnimalBreeds)
-                .HasForeignKey(p => p.AnimalTypeId) 
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(a => a.AnimalType)
+                   .WithMany(s => s.AnimalBreeds)
+                   .HasForeignKey(a => a.AnimalTypeId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
 
-            builder
-                .HasMany(x => x.AnimalAttributes)
-                .WithOne(x => x.AnimalBreed) 
-                .OnDelete(DeleteBehavior.SetNull);
+            builder.HasMany(a => a.AnimalAttributes)
+                   .WithOne(a => a.AnimalBreed)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     }
 }

@@ -11,7 +11,9 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("Categories");
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.Id).HasDefaultValueSql("NEWID()");
+            builder.Property(c => c.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
             builder.Property(c => c.Name)
                    .HasColumnType("NVARCHAR(50)")
@@ -22,7 +24,7 @@ namespace Swapy.DAL.Configurations
                    .WithOne(e => e.Category)
                    .HasForeignKey(e => e.CategoryId)
                    .OnDelete(DeleteBehavior.SetNull)
-                   .IsRequired();
+                   .IsRequired(false);
         }
     }
 }

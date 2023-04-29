@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Swapy.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Swapy.DAL.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Swapy.DAL.Configurations
 {
@@ -9,20 +9,25 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<Color> builder)
         {
             builder.ToTable("Colors");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(c => c.Id);
 
-            builder.Property(x => x.Id)
-                .IsRequired()
-                .HasDefaultValueSql("NEWID()");
+            builder.Property(c => c.Id)
+                   .IsRequired()
+                   .HasDefaultValueSql("NEWID()");
 
-            builder.Property(x => x.Name)
-                .IsRequired()
-                .HasMaxLength(32);
+            builder.Property(c => c.Name)
+                   .IsRequired()
+                   .HasMaxLength(32);
 
-            builder
-                .HasMany(x => x.ModelsColors)
-                .WithOne(x => x.Color)
-                .OnDelete(DeleteBehavior.SetNull);
+            builder.HasMany(c => c.ModelsColors)
+                   .WithOne(m => m.Color)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
+
+            builder.HasMany(c => c.AutoAttributes)
+                   .WithOne(a => a.AutoColor)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     }
 }

@@ -15,28 +15,28 @@ namespace Swapy.DAL.Repositories
             context.SaveChanges();
         }
          
+        public void Update(ClothesSeason item)
+        {
+            context.ClothesSeasons.Update(item);
+            context.SaveChanges();
+        }
+
         public void Delete(ClothesSeason item)
         {
             context.ClothesSeasons.Remove(item);
             context.SaveChanges();
         }
          
-        public IEnumerable<ClothesSeason> GetAll()
-        {
-            return context.ClothesSeasons.ToList();
-        }
-
         public ClothesSeason GetById(Guid id)
         {
             var item = context.ClothesSeasons.Find(id);
             if (item == null) throw new Exception("Not found!");
             return item;
         }
-
-        public void Update(ClothesSeason item)
+        
+        public IEnumerable<ClothesSeason> GetAll()
         {
-            context.ClothesSeasons.Update(item);
-            context.SaveChanges();
+            return context.ClothesSeasons.ToList();
         }
     }
 }
