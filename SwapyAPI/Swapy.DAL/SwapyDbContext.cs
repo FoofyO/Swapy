@@ -1,4 +1,4 @@
-using Swapy.DAL.Entities;
+using Swapy.Common.Entities;
 using Swapy.DAL.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -67,7 +67,7 @@ namespace Swapy.DAL
         public DbSet<City> Cities { get; set; }
         public DbSet<ClothesAttribute> ClothesAttributes { get; set; }
         public DbSet<ClothesBrand> ClothesBrands { get; set; }
-        public DbSet<ClothesBrandView> ClothesBrandViews { get; set; }
+        public DbSet<ClothesBrandView> ClothesBrandsViews { get; set; }
         public DbSet<ClothesSeason> ClothesSeasons { get; set; }
         public DbSet<ClothesSize> ClothesSizes { get; set; }
         public DbSet<ClothesView> ClothesViews { get; set; }
@@ -83,7 +83,7 @@ namespace Swapy.DAL
         public DbSet<Memory> Memories { get; set; }
         public DbSet<MemoryModel> MemoriesModels { get; set; }
         public DbSet<Message> Messages { get; set; }
-        public DbSet<Entities.Model> Models { get; set; }
+        public DbSet<Model> Models { get; set; }
         public DbSet<ModelColor> ModelsColors { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }

@@ -2,10 +2,10 @@
 {
     public interface IRepository<T>
     {
-        T GetById(Guid id);
-        void Create(T item);
-        void Update(T item);
-        void Delete(T item);
-        IEnumerable<T> GetAll();
+        Task<T> GetByIdAsync(Guid id);
+        Task CreateAsync(T item);
+        Task UpdateAsync(T item);
+        Task DeleteAsync(T item);
+        Task<IEnumerable<T>> GetAllAsync();
     }
 }

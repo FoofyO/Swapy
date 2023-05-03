@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public TVBrandRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(TVBrand item)
+        public async Task CreateAsync(TVBrand item)
         {
-            context.TVBrands.Add(item);
-            context.SaveChanges();
+            await context.TVBrands.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(TVBrand item) 
+        public async Task UpdateAsync(TVBrand item)
         {
             context.TVBrands.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(TVBrand item)
+        public async Task DeleteAsync(TVBrand item)
         {
             context.TVBrands.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public TVBrand GetById(Guid id)
+        public async Task<TVBrand> GetByIdAsync(Guid id)
         {
-            var item = context.TVBrands.Find(id);
+            var item = await context.TVBrands.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<TVBrand> GetAll()
+        public async Task<IEnumerable<TVBrand>> GetAllAsync()
         {
-            return context.TVBrands.ToList();
+            return await context.TVBrands.ToListAsync();
         }
     }
 }

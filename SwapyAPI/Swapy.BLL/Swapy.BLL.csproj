@@ -11,8 +11,15 @@
     <Folder Include="CQRS\CommandHandlers\" />
     <Folder Include="CQRS\Queries\" />
     <Folder Include="CQRS\QueryHandlers\" />
-    <Folder Include="Services\" />
-    <Folder Include="Interfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="11.1.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Swapy.Common\Swapy.Common.csproj" />
   </ItemGroup>
 
 </Project>

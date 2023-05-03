@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public ClothesBrandRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(ClothesBrand item)
+        public async Task CreateAsync(ClothesBrand item)
         {
-            context.ClothesBrands.Add(item);
-            context.SaveChanges();
+            await context.ClothesBrands.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(ClothesBrand item)
+        public async Task UpdateAsync(ClothesBrand item)
         {
             context.ClothesBrands.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(ClothesBrand item)
+        public async Task DeleteAsync(ClothesBrand item)
         {
             context.ClothesBrands.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public ClothesBrand GetById(Guid id)
+        public async Task<ClothesBrand> GetByIdAsync(Guid id)
         {
-            var item = context.ClothesBrands.Find(id);
-            if (item == null) throw new Exception("Not found!");
+            var item = await context.ClothesBrands.FindAsync(id);
+            if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
-        
-        public IEnumerable<ClothesBrand> GetAll()
+
+        public async Task<IEnumerable<ClothesBrand>> GetAllAsync()
         {
-            return context.ClothesBrands.ToList();
+            return await context.ClothesBrands.ToListAsync();
         }
     }
 }

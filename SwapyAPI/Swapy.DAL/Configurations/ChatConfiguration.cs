@@ -1,4 +1,4 @@
-﻿using Swapy.DAL.Entities;
+﻿using Swapy.Common.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -15,17 +15,17 @@ namespace Swapy.DAL.Configurations
                    .IsRequired()
                    .HasDefaultValueSql("NEWID()");
 
-            builder.HasOne(c => c.Seller)
-                   .WithMany(u => u.ChatsAsSeller)
-                   .HasForeignKey(c => c.SellerId)
+            builder.HasOne(c => c.Product)
+                   .WithMany(p => p.Chats)
+                   .HasForeignKey(c => c.ProductId)
                    .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
 
             builder.HasOne(c => c.Buyer)
                    .WithMany(u => u.ChatsAsBuyer)
                    .HasForeignKey(c => c.BuyerId)
-                   .OnDelete(DeleteBehavior.SetNull)
-                   .IsRequired(false);
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired();
 
             builder.HasMany(c => c.Messages)
                    .WithOne(m => m.Chat)

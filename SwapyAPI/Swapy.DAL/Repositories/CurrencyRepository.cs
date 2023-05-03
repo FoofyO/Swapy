@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public CurrencyRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(Currency item)
+        public async Task CreateAsync(Currency item)
         {
-            context.Currencies.Add(item);
-            context.SaveChanges();
+            await context.Currencies.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(Currency item)
+        public async Task UpdateAsync(Currency item)
         {
             context.Currencies.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(Currency item)
+        public async Task DeleteAsync(Currency item)
         {
             context.Currencies.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public Currency GetById(Guid id)
+        public async Task<Currency> GetByIdAsync(Guid id)
         {
-            var item = context.Currencies.Find(id);
-            if (item == null) throw new Exception("Not found!");
+            var item = await context.Currencies.FindAsync(id);
+            if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
-        
-        public IEnumerable<Currency> GetAll()
+
+        public async Task<IEnumerable<Currency>> GetAllAsync()
         {
-            return context.Currencies.ToList();
+            return await context.Currencies.ToListAsync();
         }
     }
 }

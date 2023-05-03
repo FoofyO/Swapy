@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public ElectronicBrandTypeRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(ElectronicBrandType item)
+        public async Task CreateAsync(ElectronicBrandType item)
         {
-            context.ElectronicBrandsTypes.Add(item);
-            context.SaveChanges();
+            await context.ElectronicBrandsTypes.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(ElectronicBrandType item)
+        public async Task UpdateAsync(ElectronicBrandType item)
         {
             context.ElectronicBrandsTypes.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(ElectronicBrandType item)
+        public async Task DeleteAsync(ElectronicBrandType item)
         {
             context.ElectronicBrandsTypes.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public ElectronicBrandType GetById(Guid id)
+        public async Task<ElectronicBrandType> GetByIdAsync(Guid id)
         {
-            var item = context.ElectronicBrandsTypes.Find(id);
+            var item = await context.ElectronicBrandsTypes.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<ElectronicBrandType> GetAll()
+        public async Task<IEnumerable<ElectronicBrandType>> GetAllAsync()
         {
-            return context.ElectronicBrandsTypes.ToList();
+            return await context.ElectronicBrandsTypes.ToListAsync();
         }
     }
 }

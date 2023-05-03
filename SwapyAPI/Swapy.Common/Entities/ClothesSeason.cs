@@ -1,0 +1,13 @@
+﻿namespace Swapy.Common.Entities
+{
+    public class ClothesSeason
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }   
+        public ICollection<ClothesAttribute> ClothesAttributes { get; set; }
+
+        public ClothesSeason() => ClothesAttributes = new List<ClothesAttribute>();
+
+        public ClothesSeason(string name) : this() => Name = name;
+    }
+}     

@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public ChatRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(Chat item)
+        public async Task CreateAsync(Chat item)
         {
-            context.Chats.Add(item);
-            context.SaveChanges();
+            await context.Chats.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(Chat item)
+        public async Task UpdateAsync(Chat item)
         {
             context.Chats.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(Chat item)
+        public async Task DeleteAsync(Chat item)
         {
             context.Chats.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public Chat GetById(Guid id)
+        public async Task<Chat> GetByIdAsync(Guid id)
         {
-            var item = context.Chats.Find(id);
-            if (item == null) throw new Exception("Not found!");
+            var item = await context.Chats.FindAsync(id);
+            if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
-        
-        public IEnumerable<Chat> GetAll()
+
+        public async Task<IEnumerable<Chat>> GetAllAsync()
         {
-            return context.Chats.ToList();
+            return await context.Chats.ToListAsync();
         }
     }
 }

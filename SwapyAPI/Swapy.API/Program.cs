@@ -1,12 +1,16 @@
 using Swapy.DAL;
 using System.Text;
-using Swapy.DAL.Entities;
+using Swapy.BLL.Services;
+using Swapy.DAL.Interfaces;
+using Swapy.BLL.Interfaces;
+using Swapy.Common.Entities;
 using Swapy.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using MediatR;
+using System.Reflection;
 
 namespace Swapy.API
 {
@@ -19,7 +23,6 @@ namespace Swapy.API
             /// <summary>
             /// Services setup
             /// </summary>
-
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -32,10 +35,62 @@ namespace Swapy.API
 
 
             /// <summary>
-            /// Services registration
+            /// Repository registration
             /// </summary>
-            //builder.Services.AddScoped<IFolderRepository, FolderRepository>();
+            builder.Services.AddScoped<IAnimalAttributeRepository, AnimalAttributeRepository>();
+            builder.Services.AddScoped<IAnimalBreedRepository, AnimalBreedRepository>();
+            builder.Services.AddScoped<IAutoAttributeRepository, AutoAttributeRepository>();
+            builder.Services.AddScoped<IAutoBrandRepository, AutoBrandRepository>();
+            builder.Services.AddScoped<IAutoBrandTypeRepository, AutoBrandTypeRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IChatRepository, ChatRepository>();
+            builder.Services.AddScoped<ICityRepository, CityRepository>();
+            builder.Services.AddScoped<IClothesAttributeRepository, ClothesAttributeRepository>();
+            builder.Services.AddScoped<IClothesBrandRepository, ClothesBrandRepository>();
+            builder.Services.AddScoped<IClothesBrandViewRepository, ClothesBrandViewRepository>();
+            builder.Services.AddScoped<IClothesSeasonRepository, ClothesSeasonRepository>();
+            builder.Services.AddScoped<IClothesSizeRepository, ClothesSizeRepository>();
+            builder.Services.AddScoped<IClothesViewRepository, ClothesViewRepository>();
+            builder.Services.AddScoped<IColorRepository, ColorRepository>();
+            builder.Services.AddScoped<ICurrencyRepository, CurrencyRepository>();
+            builder.Services.AddScoped<IElectronicAttributeRepository, ElectronicAttributeRepository>();
+            builder.Services.AddScoped<IElectronicBrandRepository, ElectronicBrandRepository>();
+            builder.Services.AddScoped<IElectronicBrandTypeRepository, ElectronicBrandTypeRepository>();
+            builder.Services.AddScoped<IFuelTypeRepository, FuelTypeRepository>();
+            builder.Services.AddScoped<IGenderRepository, GenderRepository>();
+            builder.Services.AddScoped<IItemAttributeRepository, ItemAttributeRepository>();
+            builder.Services.AddScoped<ILikeRepository, LikeRepository>();
+            builder.Services.AddScoped<IMemoryModelRepository, MemoryModelRepository>();
+            builder.Services.AddScoped<IMemoryRepository, MemoryRepository>();
+            builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+            builder.Services.AddScoped<IModelColorRepository, ModelColorRepository>();
+            builder.Services.AddScoped<IModelRepository, ModelRepository>();
+            builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IRealEstateAttributeRepository, RealEstateAttributeRepository>();
+            builder.Services.AddScoped<IScreenDiagonalRepository, ScreenDiagonalRepository>();
+            builder.Services.AddScoped<IScreenResolutionRepository, ScreenResolutionRepository>();
+            builder.Services.AddScoped<ISubcategoryRepository, SubcategoryRepository>();
+            builder.Services.AddScoped<ISubscribeRepository, SubscribeRepository>();
+            builder.Services.AddScoped<ITransmissionTypeRepository, TransmissionTypeRepository>();
+            builder.Services.AddScoped<ITVAttributeRepository, TVAttributeRepository>();
+            builder.Services.AddScoped<ITVBrandRepository, TVBrandRepository>();
+            builder.Services.AddScoped<ITVTypeRepository, TVTypeRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+
+            /// <summary>
+            /// Service registration
+            /// </summary>
+            builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IChatService, ChatService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+
+
+            /// <summary>
+            /// CORS(Cross - Origin Resource Sharing)
+            /// </summary>
             builder.Services.AddCors(option =>
             {
                 option.AddPolicy("Default", policy =>
@@ -46,13 +101,13 @@ namespace Swapy.API
                 });
             });
 
+
             /// <summary>
             /// Register Identity Service
             /// </summary>
             builder.Services.AddIdentity<User, IdentityRole>(option => option.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<SwapyDbContext>()
                 .AddDefaultTokenProviders();
-
 
 
             /// <summary>
@@ -80,11 +135,15 @@ namespace Swapy.API
             });
 
 
+            /// <summary>
+            /// Configurations for MediatR
+            /// </summary>
+            builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+
 
             /// <summary>
             /// Application setup
             /// </summary>
-
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())

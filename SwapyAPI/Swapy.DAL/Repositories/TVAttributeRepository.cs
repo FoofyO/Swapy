@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -8,35 +9,35 @@ namespace Swapy.DAL.Repositories
         private readonly SwapyDbContext context;
     
         public TVAttributeRepository(SwapyDbContext context) => this.context = context;
-        
-        public void Create(TVAttribute item)
+
+        public async Task CreateAsync(TVAttribute item)
         {
-            context.TVAttributes.Add(item); 
-            context.SaveChanges();
+            await context.TVAttributes.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(TVAttribute item)
+        public async Task UpdateAsync(TVAttribute item)
         {
             context.TVAttributes.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(TVAttribute item)
+        public async Task DeleteAsync(TVAttribute item)
         {
             context.TVAttributes.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
-    
-        public TVAttribute GetById(Guid id)
+
+        public async Task<TVAttribute> GetByIdAsync(Guid id)
         {
-            var item = context.TVAttributes.Find(id);
+            var item = await context.TVAttributes.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
-    
-        public IEnumerable<TVAttribute> GetAll()
+
+        public async Task<IEnumerable<TVAttribute>> GetAllAsync()
         {
-            return context.TVAttributes.ToList();
+            return await context.TVAttributes.ToListAsync();
         }
     }
 } 

@@ -1,42 +1,43 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
 {
-    internal class SubcategoryRepository : ISubcategoryRepository
+    public class SubcategoryRepository : ISubcategoryRepository
     {
         private readonly SwapyDbContext context;
 
         public SubcategoryRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(Subcategory item)
+        public async Task CreateAsync(Subcategory item)
         {
-            context.Subcategories.Add(item);
-            context.SaveChanges();
+            await context.Subcategories.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(Subcategory item)
+        public async Task UpdateAsync(Subcategory item)
         {
             context.Subcategories.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(Subcategory item)
+        public async Task DeleteAsync(Subcategory item)
         {
             context.Subcategories.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public Subcategory GetById(Guid id)
+        public async Task<Subcategory> GetByIdAsync(Guid id)
         {
-            var item = context.Subcategories.Find(id);
-            if (item == null) throw new Exception("Not found!");
+            var item = await context.Subcategories.FindAsync(id);
+            if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
-        
-        public IEnumerable<Subcategory> GetAll()
+
+        public async Task<IEnumerable<Subcategory>> GetAllAsync()
         {
-            return context.Subcategories.ToList();
+            return await context.Subcategories.ToListAsync();
         }
     }
 }

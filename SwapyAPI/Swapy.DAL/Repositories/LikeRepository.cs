@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public LikeRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(Like item)
+        public async Task CreateAsync(Like item)
         {
-            context.Likes.Add(item);
-            context.SaveChanges();
+            await context.Likes.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(Like item)
+        public async Task UpdateAsync(Like item)
         {
             context.Likes.Update(item);
-            context.SaveChanges();
-        }
-        
-        public void Delete(Like item)
-        {
-            context.Likes.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public Like GetById(Guid id)
+        public async Task DeleteAsync(Like item)
         {
-            var item = context.Likes.Find(id);
-            if (item == null) throw new Exception("Not found!");
+            context.Likes.Remove(item);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<Like> GetByIdAsync(Guid id)
+        {
+            var item = await context.Likes.FindAsync(id);
+            if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<Like> GetAll()
+        public async Task<IEnumerable<Like>> GetAllAsync()
         {
-            return context.Likes.ToList();
+            return await context.Likes.ToListAsync();
         }
     }
 }
