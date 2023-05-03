@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public ProductImageRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(ProductImage item)
+        public async Task CreateAsync(ProductImage item)
         {
-            context.ProductImages.Add(item);
-            context.SaveChanges();
+            await context.ProductImages.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(ProductImage item)
+        public async Task UpdateAsync(ProductImage item)
         {
             context.ProductImages.Update(item);
-            context.SaveChanges();
-        }
-        
-        public void Delete(ProductImage item)
-        {
-            context.ProductImages.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public ProductImage GetById(Guid id)
+        public async Task DeleteAsync(ProductImage item)
         {
-            var item = context.ProductImages.Find(id);
-            if (item == null) throw new Exception("Not found!");
+            context.ProductImages.Remove(item);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<ProductImage> GetByIdAsync(Guid id)
+        {
+            var item = await context.ProductImages.FindAsync(id);
+            if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
-        
-        public IEnumerable<ProductImage> GetAll()
+
+        public async Task<IEnumerable<ProductImage>> GetAllAsync()
         {
-            return context.ProductImages.ToList();
+            return await context.ProductImages.ToListAsync();
         }
     }
 }

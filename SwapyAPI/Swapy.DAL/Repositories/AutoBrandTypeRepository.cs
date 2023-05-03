@@ -1,5 +1,6 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
 using Swapy.DAL.Interfaces;
+using Swapy.Common.Entities;
 
 namespace Swapy.DAL.Repositories
 {
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public AutoBrandTypeRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(AutoBrandType item)
+        public async Task CreateAsync(AutoBrandType item)
         {
-            context.AutoBrandsTypes.Add(item);
-            context.SaveChanges();
+            await context.AutoBrandsTypes.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(AutoBrandType item)
+        public async Task UpdateAsync(AutoBrandType item)
         {
             context.AutoBrandsTypes.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(AutoBrandType item)
+        public async Task DeleteAsync(AutoBrandType item)
         {
             context.AutoBrandsTypes.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public AutoBrandType GetById(Guid id)
+        public async Task<AutoBrandType> GetByIdAsync(Guid id)
         {
-            var item = context.AutoBrandsTypes.Find(id);
+            var item = await context.AutoBrandsTypes.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<AutoBrandType> GetAll()
+        public async Task<IEnumerable<AutoBrandType>> GetAllAsync()
         {
-            return context.AutoBrandsTypes.ToList();
+            return await context.AutoBrandsTypes.ToListAsync();
         }
     }
 }

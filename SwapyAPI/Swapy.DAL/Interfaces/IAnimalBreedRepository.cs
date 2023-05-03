@@ -1,4 +1,4 @@
-﻿using Swapy.DAL.Entities;
+﻿using Swapy.Common.Entities;
 
 namespace Swapy.DAL.Interfaces
 {

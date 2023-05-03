@@ -1,4 +1,4 @@
-﻿using Swapy.DAL.Entities;
+﻿using Swapy.Common.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

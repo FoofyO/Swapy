@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public UserRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(User item)
+        public async Task CreateAsync(User item)
         {
-            context.Users.Add(item);
-            context.SaveChanges();
+            await context.Users.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(User item)
+        public async Task UpdateAsync(User item)
         {
             context.Users.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(User item)
+        public async Task DeleteAsync(User item)
         {
             context.Users.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public User GetById(Guid id)
+        public async Task<User> GetByIdAsync(Guid id)
         {
-            var item = context.Users.Find(id);
+            var item = await context.Users.FindAsync(id);
             if (item == null) throw new Exception("Not found!");
             return item;
         }
         
-        public IEnumerable<User> GetAll()
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return context.Users.ToList();
+            return await context.Users.ToListAsync();
         }
     }
 }

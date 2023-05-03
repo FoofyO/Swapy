@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public FuelTypeRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(FuelType item)
+        public async Task CreateAsync(FuelType item)
         {
-            context.FuelTypes.Add(item);
-            context.SaveChanges();
+            await context.FuelTypes.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(FuelType item)
+        public async Task UpdateAsync(FuelType item)
         {
             context.FuelTypes.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(FuelType item)
+        public async Task DeleteAsync(FuelType item)
         {
             context.FuelTypes.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public FuelType GetById(Guid id)
+        public async Task<FuelType> GetByIdAsync(Guid id)
         {
-            var item = context.FuelTypes.Find(id);
+            var item = await context.FuelTypes.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<FuelType> GetAll()
+        public async Task<IEnumerable<FuelType>> GetAllAsync()
         {
-            return context.FuelTypes.ToList();
+            return await context.FuelTypes.ToListAsync();
         }
     }
 }

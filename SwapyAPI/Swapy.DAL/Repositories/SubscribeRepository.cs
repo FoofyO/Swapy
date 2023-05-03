@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public SubscribeRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(Subscribe item)
+        public async Task CreateAsync(Subscribe item)
         {
-            context.Subscribes.Add(item);
-            context.SaveChanges();
+            await context.Subscribes.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(Subscribe item)
+        public async Task UpdateAsync(Subscribe item)
         {
             context.Subscribes.Update(item);
-            context.SaveChanges();
-        }
-        
-        public void Delete(Subscribe item)
-        {
-            context.Subscribes.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public Subscribe GetById(Guid id)
+        public async Task DeleteAsync(Subscribe item)
         {
-            var item = context.Subscribes.Find(id);
-            if (item == null) throw new Exception("Not found!");
+            context.Subscribes.Remove(item);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<Subscribe> GetByIdAsync(Guid id)
+        {
+            var item = await context.Subscribes.FindAsync(id);
+            if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<Subscribe> GetAll()
+        public async Task<IEnumerable<Subscribe>> GetAllAsync()
         {
-            return context.Subscribes.ToList();
+            return await context.Subscribes.ToListAsync();
         }
     }
 }

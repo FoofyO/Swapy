@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public ScreenDiagonalRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(ScreenDiagonal item)
+        public async Task CreateAsync(ScreenDiagonal item)
         {
-            context.ScreenDiagonals.Add(item);
-            context.SaveChanges();
+            await context.ScreenDiagonals.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(ScreenDiagonal item)
+        public async Task UpdateAsync(ScreenDiagonal item)
         {
             context.ScreenDiagonals.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(ScreenDiagonal item)
+        public async Task DeleteAsync(ScreenDiagonal item)
         {
             context.ScreenDiagonals.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public ScreenDiagonal GetById(Guid id)
+        public async Task<ScreenDiagonal> GetByIdAsync(Guid id)
         {
-            var item = context.ScreenDiagonals.Find(id);
+            var item = await context.ScreenDiagonals.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<ScreenDiagonal> GetAll()
+        public async Task<IEnumerable<ScreenDiagonal>> GetAllAsync()
         {
-            return context.ScreenDiagonals.ToList();
+            return await context.ScreenDiagonals.ToListAsync();
         }
     }
 }

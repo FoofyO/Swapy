@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public ElectronicAttributeRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(ElectronicAttribute item)
+        public async Task CreateAsync(ElectronicAttribute item)
         {
-            context.ElectronicAttributes.Add(item);
-            context.SaveChanges();
+            await context.ElectronicAttributes.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(ElectronicAttribute item)
+        public async Task UpdateAsync(ElectronicAttribute item)
         {
             context.ElectronicAttributes.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(ElectronicAttribute item)
+        public async Task DeleteAsync(ElectronicAttribute item)
         {
             context.ElectronicAttributes.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public ElectronicAttribute GetById(Guid id)
+        public async Task<ElectronicAttribute> GetByIdAsync(Guid id)
         {
-            var item = context.ElectronicAttributes.Find(id);
+            var item = await context.ElectronicAttributes.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<ElectronicAttribute> GetAll()
+        public async Task<IEnumerable<ElectronicAttribute>> GetAllAsync()
         {
-            return context.ElectronicAttributes.ToList();
+            return await context.ElectronicAttributes.ToListAsync();
         }
     }
 }

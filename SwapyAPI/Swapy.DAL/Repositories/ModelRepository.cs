@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public ModelRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(Model item)
+        public async Task CreateAsync(Model item)
         {
-            context.Models.Add(item);
-            context.SaveChanges();
+            await context.Models.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(Model item)
+        public async Task UpdateAsync(Model item)
         {
             context.Models.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(Model item)
+        public async Task DeleteAsync(Model item)
         {
             context.Models.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public Model GetById(Guid id)
+        public async Task<Model> GetByIdAsync(Guid id)
         {
-            var item = context.Models.Find(id);
+            var item = await context.Models.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<Model> GetAll()
+        public async Task<IEnumerable<Model>> GetAllAsync()
         {
-            return context.Models.ToList();
+            return await context.Models.ToListAsync();
         }
     }
 }

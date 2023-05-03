@@ -1,42 +1,43 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
 {
-    internal class CategoryRepository : ICategoryRepository
+    public class CategoryRepository : ICategoryRepository
     {
         private readonly SwapyDbContext context;
 
         public CategoryRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(Category item)
+        public async Task CreateAsync(Category item)
         {
-            context.Categories.Add(item);
-            context.SaveChanges();
+            await context.Categories.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(Category item)
+        public async Task UpdateAsync(Category item)
         {
             context.Categories.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(Category item)
+        public async Task DeleteAsync(Category item)
         {
             context.Categories.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public Category GetById(Guid id)
+        public async Task<Category> GetByIdAsync(Guid id)
         {
-            var item = context.Categories.Find(id);
-            if (item == null) throw new Exception("Not found!");
+            var item = await context.Categories.FindAsync(id);
+            if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
-        
-        public IEnumerable<Category> GetAll()
+
+        public async Task<IEnumerable<Category>> GetAllAsync()
         {
-            return context.Categories.ToList();
+            return await context.Categories.ToListAsync();
         }
     }
 }

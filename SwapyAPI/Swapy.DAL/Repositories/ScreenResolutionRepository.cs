@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public ScreenResolutionRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(ScreenResolution item)
+        public async Task CreateAsync(ScreenResolution item)
         {
-            context.ScreenResolutions.Add(item);
-            context.SaveChanges();
+            await context.ScreenResolutions.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(ScreenResolution item)
+        public async Task UpdateAsync(ScreenResolution item)
         {
             context.ScreenResolutions.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(ScreenResolution item)
+        public async Task DeleteAsync(ScreenResolution item)
         {
             context.ScreenResolutions.Remove(item);
-            context.SaveChanges(); 
+            await context.SaveChangesAsync();
         }
 
-        public ScreenResolution GetById(Guid id)
+        public async Task<ScreenResolution> GetByIdAsync(Guid id)
         {
-            var item = context.ScreenResolutions.Find(id);
+            var item = await context.ScreenResolutions.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<ScreenResolution> GetAll()
+        public async Task<IEnumerable<ScreenResolution>> GetAllAsync()
         {
-            return context.ScreenResolutions.ToList();
+            return await context.ScreenResolutions.ToListAsync();
         }
     }
 }

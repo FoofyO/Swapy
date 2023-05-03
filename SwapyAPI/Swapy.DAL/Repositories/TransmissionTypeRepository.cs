@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public TransmissionTypeRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(TransmissionType item)
+        public async Task CreateAsync(TransmissionType item)
         {
-            context.TransmissionTypes.Add(item);
-            context.SaveChanges();
+            await context.TransmissionTypes.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(TransmissionType item)
+        public async Task UpdateAsync(TransmissionType item)
         {
             context.TransmissionTypes.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(TransmissionType item)
+        public async Task DeleteAsync(TransmissionType item)
         {
             context.TransmissionTypes.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public TransmissionType GetById(Guid id)
+        public async Task<TransmissionType> GetByIdAsync(Guid id)
         {
-            var item = context.TransmissionTypes.Find(id);
+            var item = await context.TransmissionTypes.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<TransmissionType> GetAll()
+        public async Task<IEnumerable<TransmissionType>> GetAllAsync()
         {
-            return context.TransmissionTypes.ToList();
+            return await context.TransmissionTypes.ToListAsync();
         }
     }
 }

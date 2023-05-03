@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,39 @@ namespace Swapy.DAL.Repositories
 
         public ProductRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(Product item)
+        public async Task CreateAsync(Product item)
         {
-            context.Products.Add(item);
-            context.SaveChanges();
+            await context.Products.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(Product item)
+        public async Task UpdateAsync(Product item)
         {
             context.Products.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(Product item)
+        public async Task DeleteAsync(Product item)
         {
             context.Products.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public Product GetById(Guid id)
+        public async Task<Product> GetByIdAsync(Guid id)
         {
-            var item = context.Products.Find(id);
-            if (item == null) throw new Exception("Not found!");
+            var item = await context.Products.FindAsync(id);
+            if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
-        
-        public IEnumerable<Product> GetAll()
+
+        public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            return context.Products.ToList();
+            return await context.Products.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetAllByUserId(Guid userId)
+        {
+            return await context.Products.Where(p => p.UserId == userId).ToListAsync();
         }
     }
 }

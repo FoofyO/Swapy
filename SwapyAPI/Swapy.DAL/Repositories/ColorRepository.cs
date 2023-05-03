@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public ColorRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(Color item)
+        public async Task CreateAsync(Color item)
         {
-            context.Colors.Add(item);
-            context.SaveChanges();
+            await context.Colors.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(Color item)
+        public async Task UpdateAsync(Color item)
         {
             context.Colors.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(Color item)
+        public async Task DeleteAsync(Color item)
         {
             context.Colors.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public Color GetById(Guid id)
+        public async Task<Color> GetByIdAsync(Guid id)
         {
-            var item = context.Colors.Find(id);
+            var item = await context.Colors.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<Color> GetAll()
+        public async Task<IEnumerable<Color>> GetAllAsync()
         {
-            return context.Colors.ToList();
+            return await context.Colors.ToListAsync();
         }
     }
 }

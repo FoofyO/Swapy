@@ -1,42 +1,43 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
 {
-    internal class ClothesSeasonRepository : IClothesSeasonRepository
+    public class ClothesSeasonRepository : IClothesSeasonRepository
     {
         private readonly SwapyDbContext context;
 
         public ClothesSeasonRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(ClothesSeason item)
+        public async Task CreateAsync(ClothesSeason item)
         {
-            context.ClothesSeasons.Add(item);
-            context.SaveChanges();
-        }
-         
-        public void Update(ClothesSeason item)
-        {
-            context.ClothesSeasons.Update(item);
-            context.SaveChanges();
+            await context.ClothesSeasons.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(ClothesSeason item)
+        public async Task UpdateAsync(ClothesSeason item)
+        {
+            context.ClothesSeasons.Update(item);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(ClothesSeason item)
         {
             context.ClothesSeasons.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
-         
-        public ClothesSeason GetById(Guid id)
+
+        public async Task<ClothesSeason> GetByIdAsync(Guid id)
         {
-            var item = context.ClothesSeasons.Find(id);
-            if (item == null) throw new Exception("Not found!");
+            var item = await context.ClothesSeasons.FindAsync(id);
+            if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
-        
-        public IEnumerable<ClothesSeason> GetAll()
+
+        public async Task<IEnumerable<ClothesSeason>> GetAllAsync()
         {
-            return context.ClothesSeasons.ToList();
+            return await context.ClothesSeasons.ToListAsync();
         }
     }
 }

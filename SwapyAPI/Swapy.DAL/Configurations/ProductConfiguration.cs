@@ -1,4 +1,4 @@
-﻿using Swapy.DAL.Entities;
+﻿using Swapy.Common.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -60,6 +60,12 @@ namespace Swapy.DAL.Configurations
                    .HasForeignKey(p => p.UserId)
                    .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
+
+            builder.HasMany(p => p.Chats)
+                   .WithOne(c => c.Product)
+                   .HasForeignKey(c => c.ProductId)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
 
             builder.HasMany(p => p.Images)
                    .WithOne(p => p.Product)

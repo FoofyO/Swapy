@@ -16,13 +16,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Swapy.BLL\Swapy.BLL.csproj" />
     <ProjectReference Include="..\Swapy.Common\Swapy.Common.csproj" />
     <ProjectReference Include="..\Swapy.DAL\Swapy.DAL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

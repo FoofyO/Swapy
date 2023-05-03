@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Repositories\" />
-    <Folder Include="Entities\" />
     <Folder Include="Interfaces\" />
     <Folder Include="Configurations\" />
     <Folder Include="Migrations\" />
@@ -28,6 +27,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Swapy.Common\Swapy.Common.csproj" />
   </ItemGroup>
 
 </Project>

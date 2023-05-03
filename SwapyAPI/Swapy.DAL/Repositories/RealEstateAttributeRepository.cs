@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -8,35 +9,35 @@ namespace Swapy.DAL.Repositories
         private readonly SwapyDbContext context;
     
         public RealEstateAttributeRepository(SwapyDbContext context) => this.context = context;
-        
-        public void Create(RealEstateAttribute item)
+
+        public async Task CreateAsync(RealEstateAttribute item)
         {
-            context.RealEstateAttributes.Add(item);
-            context.SaveChanges();
+            await context.RealEstateAttributes.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(RealEstateAttribute item)
+        public async Task UpdateAsync(RealEstateAttribute item)
         {
             context.RealEstateAttributes.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(RealEstateAttribute item)
+        public async Task DeleteAsync(RealEstateAttribute item)
         {
             context.RealEstateAttributes.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
-    
-        public RealEstateAttribute GetById(Guid id)
+
+        public async Task<RealEstateAttribute> GetByIdAsync(Guid id)
         {
-            var item = context.RealEstateAttributes.Find(id);
+            var item = await context.RealEstateAttributes.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
-    
-        public IEnumerable<RealEstateAttribute> GetAll()
+
+        public async Task<IEnumerable<RealEstateAttribute>> GetAllAsync()
         {
-            return context.RealEstateAttributes.ToList();
+            return await context.RealEstateAttributes.ToListAsync();
         }
     }
 }

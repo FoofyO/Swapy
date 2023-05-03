@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
     
         public AnimalAttributeRepository(SwapyDbContext context) => this.context = context;
         
-        public void Create(AnimalAttribute item)
+        public async Task CreateAsync(AnimalAttribute item)
         {
-            context.AnimalAttributes.Add(item); 
-            context.SaveChanges();
+            await context.AnimalAttributes.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(AnimalAttribute item)
+        public async Task UpdateAsync(AnimalAttribute item)
         {
             context.AnimalAttributes.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(AnimalAttribute item)
+        public async Task DeleteAsync(AnimalAttribute item)
         {
             context.AnimalAttributes.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
-    
-        public AnimalAttribute GetById(Guid id)
+
+        public async Task<AnimalAttribute> GetByIdAsync(Guid id)
         {
-            var item = context.AnimalAttributes.Find(id);
+            var item = await context.AnimalAttributes.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
-    
-        public IEnumerable<AnimalAttribute> GetAll()
+
+        public async Task<IEnumerable<AnimalAttribute>> GetAllAsync()
         {
-            return context.AnimalAttributes.ToList();
+            return await context.AnimalAttributes.ToListAsync();
         }
     }
 }

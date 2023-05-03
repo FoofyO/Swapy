@@ -1,42 +1,43 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
 {
-    public class TVTypesRepository : ITVTypeRepository
+    public class TVTypeRepository : ITVTypeRepository
     {
         private readonly SwapyDbContext context;
 
-        public TVTypesRepository(SwapyDbContext context) => this.context = context;
+        public TVTypeRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(TVType item)
+        public async Task CreateAsync(TVType item)
         {
-            context.TVTypes.Add(item);
-            context.SaveChanges();
+            await context.TVTypes.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(TVType item)
+        public async Task UpdateAsync(TVType item)
         {
             context.TVTypes.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(TVType item)
+        public async Task DeleteAsync(TVType item)
         {
             context.TVTypes.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public TVType GetById(Guid id)
+        public async Task<TVType> GetByIdAsync(Guid id)
         {
-            var item = context.TVTypes.Find(id);
+            var item = await context.TVTypes.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<TVType> GetAll()
+        public async Task<IEnumerable<TVType>> GetAllAsync()
         {
-            return context.TVTypes.ToList();
+            return await context.TVTypes.ToListAsync();
         }
     }
 }

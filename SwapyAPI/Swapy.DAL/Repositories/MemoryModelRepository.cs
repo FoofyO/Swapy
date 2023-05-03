@@ -1,4 +1,5 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -9,34 +10,34 @@ namespace Swapy.DAL.Repositories
 
         public MemoryModelRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(MemoryModel item)
+        public async Task CreateAsync(MemoryModel item)
         {
-            context.MemoriesModels.Add(item);
-            context.SaveChanges();
+            await context.MemoriesModels.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(MemoryModel item)
+        public async Task UpdateAsync(MemoryModel item)
         {
             context.MemoriesModels.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(MemoryModel item)
+        public async Task DeleteAsync(MemoryModel item)
         {
             context.MemoriesModels.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public MemoryModel GetById(Guid id)
+        public async Task<MemoryModel> GetByIdAsync(Guid id)
         {
-            var item = context.MemoriesModels.Find(id);
+            var item = await context.MemoriesModels.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<MemoryModel> GetAll()
+        public async Task<IEnumerable<MemoryModel>> GetAllAsync()
         {
-            return context.MemoriesModels.ToList();
+            return await context.MemoriesModels.ToListAsync();
         }
     }
 }

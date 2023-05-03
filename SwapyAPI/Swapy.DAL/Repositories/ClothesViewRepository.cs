@@ -1,42 +1,43 @@
-﻿using Swapy.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
 {
-    internal class ClothesViewRepository : IClothesViewRepository
+    public class ClothesViewRepository : IClothesViewRepository
     {
         private readonly SwapyDbContext context;
 
         public ClothesViewRepository(SwapyDbContext context) => this.context = context;
 
-        public void Create(ClothesView item)
+        public async Task CreateAsync(ClothesView item)
         {
-            context.ClothesViews.Add(item);
-            context.SaveChanges();
+            await context.ClothesViews.AddAsync(item);
+            await context.SaveChangesAsync();
         }
 
-        public void Update(ClothesView item)
+        public async Task UpdateAsync(ClothesView item)
         {
             context.ClothesViews.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public void Delete(ClothesView item)
+        public async Task DeleteAsync(ClothesView item)
         {
             context.ClothesViews.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public ClothesView GetById(Guid id)
+        public async Task<ClothesView> GetByIdAsync(Guid id)
         {
-            var item = context.ClothesViews.Find(id);
-            if (item == null) throw new Exception("Not found!");
+            var item = await context.ClothesViews.FindAsync(id);
+            if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
-        public IEnumerable<ClothesView> GetAll()
+        public async Task<IEnumerable<ClothesView>> GetAllAsync()
         {
-            return context.ClothesViews.ToList();
+            return await context.ClothesViews.ToListAsync();
         }
     }
 }
