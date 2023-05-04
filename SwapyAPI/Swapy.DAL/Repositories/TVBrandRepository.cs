@@ -6,38 +6,38 @@ namespace Swapy.DAL.Repositories
 {
     public class TVBrandRepository : ITVBrandRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
 
-        public TVBrandRepository(SwapyDbContext context) => this.context = context;
+        public TVBrandRepository(SwapyDbContext context) => _context = context;
 
         public async Task CreateAsync(TVBrand item)
         {
-            await context.TVBrands.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.TVBrands.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(TVBrand item)
         {
-            context.TVBrands.Update(item);
-            await context.SaveChangesAsync();
+            _context.TVBrands.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(TVBrand item)
         {
-            context.TVBrands.Remove(item);
-            await context.SaveChangesAsync();
+            _context.TVBrands.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<TVBrand> GetByIdAsync(Guid id)
         {
-            var item = await context.TVBrands.FindAsync(id);
+            var item = await _context.TVBrands.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
         public async Task<IEnumerable<TVBrand>> GetAllAsync()
         {
-            return await context.TVBrands.ToListAsync();
+            return await _context.TVBrands.ToListAsync();
         }
     }
 }

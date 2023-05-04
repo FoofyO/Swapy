@@ -6,38 +6,38 @@ namespace Swapy.DAL.Repositories
 {
     public class MemoryRepository : IMemoryRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
 
-        public MemoryRepository(SwapyDbContext context) => this.context = context;
+        public MemoryRepository(SwapyDbContext context) => _context = context;
 
         public async Task CreateAsync(Memory item)
         {
-            await context.Memories.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.Memories.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Memory item)
         {
-            context.Memories.Update(item);
-            await context.SaveChangesAsync();
+            _context.Memories.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Memory item)
         {
-            context.Memories.Remove(item);
-            await context.SaveChangesAsync();
+            _context.Memories.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Memory> GetByIdAsync(Guid id)
         {
-            var item = await context.Memories.FindAsync(id);
+            var item = await _context.Memories.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
         public async Task<IEnumerable<Memory>> GetAllAsync()
         {
-            return await context.Memories.ToListAsync();
+            return await _context.Memories.ToListAsync();
         }
     }
 }

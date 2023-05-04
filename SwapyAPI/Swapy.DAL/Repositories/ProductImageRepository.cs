@@ -6,38 +6,38 @@ namespace Swapy.DAL.Repositories
 {
     public class ProductImageRepository : IProductImageRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
 
-        public ProductImageRepository(SwapyDbContext context) => this.context = context;
+        public ProductImageRepository(SwapyDbContext context) => _context = context;
 
         public async Task CreateAsync(ProductImage item)
         {
-            await context.ProductImages.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.ProductImages.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(ProductImage item)
         {
-            context.ProductImages.Update(item);
-            await context.SaveChangesAsync();
+            _context.ProductImages.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(ProductImage item)
         {
-            context.ProductImages.Remove(item);
-            await context.SaveChangesAsync();
+            _context.ProductImages.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<ProductImage> GetByIdAsync(Guid id)
         {
-            var item = await context.ProductImages.FindAsync(id);
+            var item = await _context.ProductImages.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
         public async Task<IEnumerable<ProductImage>> GetAllAsync()
         {
-            return await context.ProductImages.ToListAsync();
+            return await _context.ProductImages.ToListAsync();
         }
     }
 }

@@ -6,38 +6,38 @@ namespace Swapy.DAL.Repositories
 {
     public class CityRepository : ICityRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
 
-        public CityRepository(SwapyDbContext context) => this.context = context;
+        public CityRepository(SwapyDbContext context) => _context = context;
 
         public async Task CreateAsync(City item)
         {
-            await context.Cities.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.Cities.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(City item)
         {
-            context.Cities.Update(item);
-            await context.SaveChangesAsync();
+            _context.Cities.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(City item)
         {
-            context.Cities.Remove(item);
-            await context.SaveChangesAsync();
+            _context.Cities.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<City> GetByIdAsync(Guid id)
         {
-            var item = await context.Cities.FindAsync(id);
+            var item = await _context.Cities.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
         public async Task<IEnumerable<City>> GetAllAsync()
         {
-            return await context.Cities.ToListAsync();
+            return await _context.Cities.ToListAsync();
         }
     }
 }

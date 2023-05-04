@@ -6,38 +6,38 @@ namespace Swapy.DAL.Repositories
 {
     public class AutoAttributeRepository : IAutoAttributeRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
     
-        public AutoAttributeRepository(SwapyDbContext context) => this.context = context;
+        public AutoAttributeRepository(SwapyDbContext context) => _context = context;
         
         public async Task CreateAsync(AutoAttribute item)
         {
-            await context.AutoAttributes.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.AutoAttributes.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(AutoAttribute item)
         {
-            context.AutoAttributes.Update(item);
-            await context.SaveChangesAsync();
+            _context.AutoAttributes.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(AutoAttribute item)
         {
-            context.AutoAttributes.Remove(item);
-            await context.SaveChangesAsync();
+            _context.AutoAttributes.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<AutoAttribute> GetByIdAsync(Guid id)
         {
-            var item = await context.AutoAttributes.FindAsync(id);
+            var item = await _context.AutoAttributes.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
         public async Task<IEnumerable<AutoAttribute>> GetAllAsync()
         {
-            return await context.AutoAttributes.ToListAsync();
+            return await _context.AutoAttributes.ToListAsync();
         }
     }
 }

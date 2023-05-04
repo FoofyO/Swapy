@@ -82,10 +82,7 @@ namespace Swapy.API
             /// <summary>
             /// Service registration
             /// </summary>
-            builder.Services.AddScoped<IAccountService, AccountService>();
-            builder.Services.AddScoped<IChatService, ChatService>();
-            builder.Services.AddScoped<IEmailService, EmailService>();
-            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
 
 
             /// <summary>

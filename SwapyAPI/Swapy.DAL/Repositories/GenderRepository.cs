@@ -6,38 +6,38 @@ namespace Swapy.DAL.Repositories
 {
     public class GenderRepository : IGenderRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
 
-        public GenderRepository(SwapyDbContext context) => this.context = context;
+        public GenderRepository(SwapyDbContext context) => _context = context;
 
         public async Task CreateAsync(Gender item)
         {
-            await context.Genders.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.Genders.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Gender item)
         {
-            context.Genders.Update(item);
-            await context.SaveChangesAsync();
+            _context.Genders.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Gender item)
         {
-            context.Genders.Remove(item);
-            await context.SaveChangesAsync();
+            _context.Genders.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Gender> GetByIdAsync(Guid id)
         {
-            var item = await context.Genders.FindAsync(id);
+            var item = await _context.Genders.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
         public async Task<IEnumerable<Gender>> GetAllAsync()
         {
-            return await context.Genders.ToListAsync();
+            return await _context.Genders.ToListAsync();
         }
     }
 }

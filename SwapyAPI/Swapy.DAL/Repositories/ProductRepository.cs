@@ -6,43 +6,43 @@ namespace Swapy.DAL.Repositories
 {
     public class ProductRepository : IProductRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
 
-        public ProductRepository(SwapyDbContext context) => this.context = context;
+        public ProductRepository(SwapyDbContext context) => _context = context;
 
         public async Task CreateAsync(Product item)
         {
-            await context.Products.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.Products.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Product item)
         {
-            context.Products.Update(item);
-            await context.SaveChangesAsync();
+            _context.Products.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Product item)
         {
-            context.Products.Remove(item);
-            await context.SaveChangesAsync();
+            _context.Products.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Product> GetByIdAsync(Guid id)
         {
-            var item = await context.Products.FindAsync(id);
+            var item = await _context.Products.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            return await context.Products.ToListAsync();
+            return await _context.Products.ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> GetAllByUserId(Guid userId)
         {
-            return await context.Products.Where(p => p.UserId == userId).ToListAsync();
+            return await _context.Products.Where(p => p.UserId == userId).ToListAsync();
         }
     }
 }

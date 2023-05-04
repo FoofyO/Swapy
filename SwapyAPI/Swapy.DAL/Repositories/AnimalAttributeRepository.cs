@@ -6,38 +6,38 @@ namespace Swapy.DAL.Repositories
 {
     public class AnimalAttributeRepository : IAnimalAttributeRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
     
-        public AnimalAttributeRepository(SwapyDbContext context) => this.context = context;
+        public AnimalAttributeRepository(SwapyDbContext context) => _context = context;
         
         public async Task CreateAsync(AnimalAttribute item)
         {
-            await context.AnimalAttributes.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.AnimalAttributes.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(AnimalAttribute item)
         {
-            context.AnimalAttributes.Update(item);
-            await context.SaveChangesAsync();
+            _context.AnimalAttributes.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(AnimalAttribute item)
         {
-            context.AnimalAttributes.Remove(item);
-            await context.SaveChangesAsync();
+            _context.AnimalAttributes.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<AnimalAttribute> GetByIdAsync(Guid id)
         {
-            var item = await context.AnimalAttributes.FindAsync(id);
+            var item = await _context.AnimalAttributes.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
         public async Task<IEnumerable<AnimalAttribute>> GetAllAsync()
         {
-            return await context.AnimalAttributes.ToListAsync();
+            return await _context.AnimalAttributes.ToListAsync();
         }
     }
 }

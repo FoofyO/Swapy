@@ -6,38 +6,38 @@ namespace Swapy.DAL.Repositories
 {
     public class ClothesSizeRepository : IClothesSizeRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
 
-        public ClothesSizeRepository(SwapyDbContext context) => this.context = context;
+        public ClothesSizeRepository(SwapyDbContext context) => _context = context;
 
         public async Task CreateAsync(ClothesSize item)
         {
-            await context.ClothesSizes.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.ClothesSizes.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(ClothesSize item)
         {
-            context.ClothesSizes.Update(item);
-            await context.SaveChangesAsync();
+            _context.ClothesSizes.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(ClothesSize item)
         {
-            context.ClothesSizes.Remove(item);
-            await context.SaveChangesAsync();
+            _context.ClothesSizes.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<ClothesSize> GetByIdAsync(Guid id)
         {
-            var item = await context.ClothesSizes.FindAsync(id);
+            var item = await _context.ClothesSizes.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
         public async Task<IEnumerable<ClothesSize>> GetAllAsync()
         {
-            return await context.ClothesSizes.ToListAsync();
+            return await _context.ClothesSizes.ToListAsync();
         }
     }
 }

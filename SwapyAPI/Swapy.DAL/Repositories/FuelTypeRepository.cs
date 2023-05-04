@@ -6,38 +6,38 @@ namespace Swapy.DAL.Repositories
 {
     public class FuelTypeRepository : IFuelTypeRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
 
-        public FuelTypeRepository(SwapyDbContext context) => this.context = context;
+        public FuelTypeRepository(SwapyDbContext context) => _context = context;
 
         public async Task CreateAsync(FuelType item)
         {
-            await context.FuelTypes.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.FuelTypes.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(FuelType item)
         {
-            context.FuelTypes.Update(item);
-            await context.SaveChangesAsync();
+            _context.FuelTypes.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(FuelType item)
         {
-            context.FuelTypes.Remove(item);
-            await context.SaveChangesAsync();
+            _context.FuelTypes.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<FuelType> GetByIdAsync(Guid id)
         {
-            var item = await context.FuelTypes.FindAsync(id);
+            var item = await _context.FuelTypes.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
         public async Task<IEnumerable<FuelType>> GetAllAsync()
         {
-            return await context.FuelTypes.ToListAsync();
+            return await _context.FuelTypes.ToListAsync();
         }
     }
 }

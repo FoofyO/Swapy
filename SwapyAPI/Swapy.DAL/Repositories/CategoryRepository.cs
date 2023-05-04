@@ -6,38 +6,38 @@ namespace Swapy.DAL.Repositories
 {
     public class CategoryRepository : ICategoryRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
 
-        public CategoryRepository(SwapyDbContext context) => this.context = context;
+        public CategoryRepository(SwapyDbContext context) => _context = context;
 
         public async Task CreateAsync(Category item)
         {
-            await context.Categories.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.Categories.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Category item)
         {
-            context.Categories.Update(item);
-            await context.SaveChangesAsync();
+            _context.Categories.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Category item)
         {
-            context.Categories.Remove(item);
-            await context.SaveChangesAsync();
+            _context.Categories.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Category> GetByIdAsync(Guid id)
         {
-            var item = await context.Categories.FindAsync(id);
+            var item = await _context.Categories.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
         public async Task<IEnumerable<Category>> GetAllAsync()
         {
-            return await context.Categories.ToListAsync();
+            return await _context.Categories.ToListAsync();
         }
     }
 }

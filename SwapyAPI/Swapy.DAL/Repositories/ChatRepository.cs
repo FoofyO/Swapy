@@ -6,38 +6,38 @@ namespace Swapy.DAL.Repositories
 {
     public class ChatRepository : IChatRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
 
-        public ChatRepository(SwapyDbContext context) => this.context = context;
+        public ChatRepository(SwapyDbContext context) => _context = context;
 
         public async Task CreateAsync(Chat item)
         {
-            await context.Chats.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.Chats.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Chat item)
         {
-            context.Chats.Update(item);
-            await context.SaveChangesAsync();
+            _context.Chats.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Chat item)
         {
-            context.Chats.Remove(item);
-            await context.SaveChangesAsync();
+            _context.Chats.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Chat> GetByIdAsync(Guid id)
         {
-            var item = await context.Chats.FindAsync(id);
+            var item = await _context.Chats.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
         public async Task<IEnumerable<Chat>> GetAllAsync()
         {
-            return await context.Chats.ToListAsync();
+            return await _context.Chats.ToListAsync();
         }
     }
 }

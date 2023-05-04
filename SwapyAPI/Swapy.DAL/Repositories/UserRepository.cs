@@ -6,38 +6,38 @@ namespace Swapy.DAL.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
 
-        public UserRepository(SwapyDbContext context) => this.context = context;
+        public UserRepository(SwapyDbContext context) => _context = context;
 
         public async Task CreateAsync(User item)
         {
-            await context.Users.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.Users.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(User item)
         {
-            context.Users.Update(item);
-            await context.SaveChangesAsync();
+            _context.Users.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(User item)
         {
-            context.Users.Remove(item);
-            await context.SaveChangesAsync();
+            _context.Users.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<User> GetByIdAsync(Guid id)
         {
-            var item = await context.Users.FindAsync(id);
+            var item = await _context.Users.FindAsync(id);
             if (item == null) throw new Exception("Not found!");
             return item;
         }
         
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await context.Users.ToListAsync();
+            return await _context.Users.ToListAsync();
         }
     }
 }

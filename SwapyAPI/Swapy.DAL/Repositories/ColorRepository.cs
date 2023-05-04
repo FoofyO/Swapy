@@ -6,38 +6,38 @@ namespace Swapy.DAL.Repositories
 {
     public class ColorRepository : IColorRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
 
-        public ColorRepository(SwapyDbContext context) => this.context = context;
+        public ColorRepository(SwapyDbContext context) => _context = context;
 
         public async Task CreateAsync(Color item)
         {
-            await context.Colors.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.Colors.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Color item)
         {
-            context.Colors.Update(item);
-            await context.SaveChangesAsync();
+            _context.Colors.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Color item)
         {
-            context.Colors.Remove(item);
-            await context.SaveChangesAsync();
+            _context.Colors.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Color> GetByIdAsync(Guid id)
         {
-            var item = await context.Colors.FindAsync(id);
+            var item = await _context.Colors.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
         public async Task<IEnumerable<Color>> GetAllAsync()
         {
-            return await context.Colors.ToListAsync();
+            return await _context.Colors.ToListAsync();
         }
     }
 }

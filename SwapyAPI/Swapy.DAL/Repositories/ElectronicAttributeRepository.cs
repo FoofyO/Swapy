@@ -6,38 +6,38 @@ namespace Swapy.DAL.Repositories
 {
     public class ElectronicAttributeRepository : IElectronicAttributeRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
 
-        public ElectronicAttributeRepository(SwapyDbContext context) => this.context = context;
+        public ElectronicAttributeRepository(SwapyDbContext context) => _context = context;
 
         public async Task CreateAsync(ElectronicAttribute item)
         {
-            await context.ElectronicAttributes.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.ElectronicAttributes.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(ElectronicAttribute item)
         {
-            context.ElectronicAttributes.Update(item);
-            await context.SaveChangesAsync();
+            _context.ElectronicAttributes.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(ElectronicAttribute item)
         {
-            context.ElectronicAttributes.Remove(item);
-            await context.SaveChangesAsync();
+            _context.ElectronicAttributes.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<ElectronicAttribute> GetByIdAsync(Guid id)
         {
-            var item = await context.ElectronicAttributes.FindAsync(id);
+            var item = await _context.ElectronicAttributes.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
         public async Task<IEnumerable<ElectronicAttribute>> GetAllAsync()
         {
-            return await context.ElectronicAttributes.ToListAsync();
+            return await _context.ElectronicAttributes.ToListAsync();
         }
     }
 }

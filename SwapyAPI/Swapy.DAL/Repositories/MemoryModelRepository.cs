@@ -6,38 +6,38 @@ namespace Swapy.DAL.Repositories
 {
     public class MemoryModelRepository : IMemoryModelRepository
     {
-        private readonly SwapyDbContext context;
+        private readonly SwapyDbContext _context;
 
-        public MemoryModelRepository(SwapyDbContext context) => this.context = context;
+        public MemoryModelRepository(SwapyDbContext context) => _context = context;
 
         public async Task CreateAsync(MemoryModel item)
         {
-            await context.MemoriesModels.AddAsync(item);
-            await context.SaveChangesAsync();
+            await _context.MemoriesModels.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(MemoryModel item)
         {
-            context.MemoriesModels.Update(item);
-            await context.SaveChangesAsync();
+            _context.MemoriesModels.Update(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(MemoryModel item)
         {
-            context.MemoriesModels.Remove(item);
-            await context.SaveChangesAsync();
+            _context.MemoriesModels.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<MemoryModel> GetByIdAsync(Guid id)
         {
-            var item = await context.MemoriesModels.FindAsync(id);
+            var item = await _context.MemoriesModels.FindAsync(id);
             if (item == null) throw new ArgumentException("Not found!");
             return item;
         }
 
         public async Task<IEnumerable<MemoryModel>> GetAllAsync()
         {
-            return await context.MemoriesModels.ToListAsync();
+            return await _context.MemoriesModels.ToListAsync();
         }
     }
 }
