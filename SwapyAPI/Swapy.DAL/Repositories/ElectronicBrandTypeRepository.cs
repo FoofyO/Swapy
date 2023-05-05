@@ -28,6 +28,8 @@ namespace Swapy.DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task DeleteByIdAsync(Guid id) => await DeleteAsync(await GetByIdAsync(id));
+
         public async Task<ElectronicBrandType> GetByIdAsync(Guid id)
         {
             var item = await _context.ElectronicBrandsTypes.FindAsync(id);

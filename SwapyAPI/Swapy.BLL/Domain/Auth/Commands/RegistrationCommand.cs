@@ -1,8 +1,9 @@
 ﻿using MediatR;
+using Swapy.Common.DTO;
 
-namespace Swapy.BLL.CQRS.Commands
+namespace Swapy.BLL.Domain.Auth.Commands
 {
-    public class RegistrationCommand : IRequest<Unit>
+    public class RegistrationCommand : IRequest<AuthenticationResponseDTO>
     {
         public string FullName { get; set; }
         public string Email { get; set; }
