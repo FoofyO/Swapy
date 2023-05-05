@@ -14,7 +14,9 @@ namespace Swapy.BLL.Services
 
         public TokenService(IConfiguration configuration) => _configuration = configuration;
 
-        public async Task<string> GenerateToken(User user)
+        public async Task<Guid> GenerateRefreshToken() => Guid.NewGuid();
+
+        public async Task<string> GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT-Key"]));
@@ -28,7 +30,7 @@ namespace Swapy.BLL.Services
                     new Claim(JwtRegisteredClaimNames.Name, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(30),
+                Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = credentials
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

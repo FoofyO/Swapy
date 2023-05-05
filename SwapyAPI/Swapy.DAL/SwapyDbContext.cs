@@ -88,6 +88,7 @@ namespace Swapy.DAL
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<RealEstateAttribute> RealEstateAttributes { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<ScreenDiagonal> ScreenDiagonals { get; set; }
         public DbSet<ScreenResolution> ScreenResolutions { get; set; }
         public DbSet<Subcategory> Subcategories { get; set; }

@@ -26,10 +26,12 @@ namespace Swapy.Common.Entities
             SubscribesAsSubscriber = new List<Subscribe>();
         }
 
-        public User(string fullName, string logo) : this()
+        public User(string fullName, string email, string phone, string logo) : this()
         {
-            FullName = fullName;
             Logo = logo;
+            Email = email;
+            FullName = fullName;
+            PhoneNumber = phone;
         }
     }
 }
