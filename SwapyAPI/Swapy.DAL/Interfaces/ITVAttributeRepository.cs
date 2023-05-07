@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface ITVAttributeRepository : IRepository<TVAttribute>
+    public interface ITVAttributeRepository : IAttributeRepositoryy<TVAttribute>
     {
     }
 }

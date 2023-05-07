@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IAnimalAttributeRepository : IRepository<AnimalAttribute>
+    public interface IAnimalAttributeRepository : IAttributeRepositoryy<AnimalAttribute>
     {
     }
 }

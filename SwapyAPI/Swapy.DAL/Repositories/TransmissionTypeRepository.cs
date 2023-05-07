@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Swapy.Common.Entities;
+using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
@@ -33,7 +34,7 @@ namespace Swapy.DAL.Repositories
         public async Task<TransmissionType> GetByIdAsync(Guid id)
         {
             var item = await _context.TransmissionTypes.FindAsync(id);
-            if (item == null) throw new ArgumentException("Not found!");
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
         }
 
