@@ -34,11 +34,13 @@
         public ItemAttribute ItemAttribute { get; set; }
         public ICollection<Chat> Chats { get; set; }
         public ICollection<ProductImage> Images { get; set; }
+        public ICollection<FavoriteProduct> FavoriteProducts { get; set; }
 
         public Product()
         {
             Chats = new List<Chat>();
             Images = new List<ProductImage>();
+            FavoriteProducts = new List<FavoriteProduct>();
         }
 
         public Product(string title, string description, decimal price, Guid userId, Guid currencyId, Guid categoryId, Guid subcategoryId, Guid cityId) : this()

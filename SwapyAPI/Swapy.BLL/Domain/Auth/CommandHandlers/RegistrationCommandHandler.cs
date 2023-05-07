@@ -10,7 +10,7 @@ using Swapy.DAL.Repositories;
 
 namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
-    public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, AuthenticationResponseDTO>
+    public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, AuthResponseDTO>
     {
         private readonly ITokenService _tokenService;
         private readonly UserManager<User> _userManager;
@@ -23,7 +23,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             _refreshTokenRepository = refreshTokenRepository;
         }
 
-        public async Task<AuthenticationResponseDTO> Handle(RegistrationCommand request, CancellationToken cancellationToken)
+        public async Task<AuthResponseDTO> Handle(RegistrationCommand request, CancellationToken cancellationToken)
         {
             var emailExists = await _userManager.FindByEmailAsync(request.Email);
             var phoneExists = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.Phone);
@@ -42,7 +42,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
                 var accessToken = await _tokenService.GenerateJwtToken(user);
                 await _refreshTokenRepository.CreateAsync(new RefreshToken(refreshToken, DateTime.UtcNow.AddDays(30), Guid.Parse(user.Id)));
 
-                var authDTO = new AuthenticationResponseDTO { UserId = Guid.Parse(user.Id), Email = user.Email, Phone = user.PhoneNumber, AccessToken = accessToken, RefreshToken = refreshToken };
+                var authDTO = new AuthResponseDTO { UserId = Guid.Parse(user.Id), Email = user.Email, Phone = user.PhoneNumber, AccessToken = accessToken, RefreshToken = refreshToken };
                 return authDTO;
             }
         }

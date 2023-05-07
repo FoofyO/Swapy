@@ -47,34 +47,33 @@ namespace Swapy.DAL.Repositories
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
             if (await _context.RealEstateAttributes.CountAsync() <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
-            return _context.RealEstateAttributes
-                .Skip(pageSize * (page - 1))
-                .Take(pageSize)
-                .Include(re => re.Product)
-                    .ThenInclude(p => p.Images)
-                .Include(re => re.Product)
-                    .ThenInclude(p => p.City)
-                .Include(re => re.Product)
-                    .ThenInclude(p => p.Currency)
-                .Include(re => re.Product)
-                    .ThenInclude(p => p.Subcategory)
-                .Include(re => re.RealEstateType)
-                .AsQueryable();
+            return _context.RealEstateAttributes.Skip(pageSize * (page - 1))
+                                                .Take(pageSize)
+                                                .Include(re => re.Product)
+                                                    .ThenInclude(p => p.Images)
+                                                .Include(re => re.Product)
+                                                    .ThenInclude(p => p.City)
+                                                .Include(re => re.Product)
+                                                    .ThenInclude(p => p.Currency)
+                                                .Include(re => re.Product)
+                                                    .ThenInclude(p => p.Subcategory)
+                                                .Include(re => re.RealEstateType)
+                                                .AsQueryable();
         }
 
         public async Task<RealEstateAttribute> GetDetailByIdAsync(Guid id)
         {
-            var item = await _context.RealEstateAttributes
-                .Include(re => re.Product)
-                    .ThenInclude(p => p.Images)
-                .Include(re => re.Product)
-                    .ThenInclude(p => p.City)
-                .Include(re => re.Product)
-                    .ThenInclude(p => p.Currency)
-                .Include(re => re.Product)
-                    .ThenInclude(p => p.Subcategory)
-                .Include(re => re.RealEstateType)
-                .FirstOrDefaultAsync(a => a.Id == id);
+            var item = await _context.RealEstateAttributes.Include(re => re.Product)
+                                                            .ThenInclude(p => p.Images)
+                                                          .Include(re => re.Product)
+                                                            .ThenInclude(p => p.City)
+                                                          .Include(re => re.Product)
+                                                            .ThenInclude(p => p.Currency)
+                                                          .Include(re => re.Product)
+                                                            .ThenInclude(p => p.Subcategory)
+                                                          .Include(re => re.RealEstateType)
+                                                          .FirstOrDefaultAsync(a => a.Id == id);
+
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
         }

@@ -29,7 +29,7 @@ namespace Swapy.DAL
             builder.ApplyConfiguration(new ClothesSizeConfiguration());
             builder.ApplyConfiguration(new ClothesViewConfiguration());
             builder.ApplyConfiguration(new ColorConfiguration());
-            builder.ApplyConfiguration(new Configurations.ModelConfiguration());
+            builder.ApplyConfiguration(new ModelConfiguration());
             builder.ApplyConfiguration(new CurrencyConfiguration());
             builder.ApplyConfiguration(new ElectronicAttributeConfiguration());
             builder.ApplyConfiguration(new ElectronicBrandConfiguration());
@@ -44,6 +44,7 @@ namespace Swapy.DAL
             builder.ApplyConfiguration(new ModelColorConfiguration());
             builder.ApplyConfiguration(new ProductConfiguration());
             builder.ApplyConfiguration(new ProductImageConfiguration());
+            builder.ApplyConfiguration(new RefreshTokenConfiguration());
             builder.ApplyConfiguration(new RealEstateAttributeConfiguration());
             builder.ApplyConfiguration(new ScreenDiagonalConfiguration());
             builder.ApplyConfiguration(new ScreenResolutionConfiguration());
@@ -76,6 +77,7 @@ namespace Swapy.DAL
         public DbSet<ElectronicAttribute> ElectronicAttributes { get; set; }
         public DbSet<ElectronicBrand> ElectronicBrands { get; set; }
         public DbSet<ElectronicBrandType> ElectronicBrandsTypes { get; set; }
+        public DbSet<FavoriteProduct> FavoriteProducts { get; set; }
         public DbSet<FuelType> FuelTypes { get; set; }
         public DbSet<Gender> Genders { get; set; }
         public DbSet<ItemAttribute> ItemAttributes { get; set; }

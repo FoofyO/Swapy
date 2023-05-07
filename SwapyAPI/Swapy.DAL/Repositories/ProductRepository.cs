@@ -52,24 +52,23 @@ namespace Swapy.DAL.Repositories
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
             if (await _context.Products.CountAsync() <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
-            return _context.Products
-                .Skip(pageSize * (page - 1))
-                .Take(pageSize)
-                .Include(p => p.Images)
-                .Include(p => p.City)
-                .Include(p => p.Currency)
-                .Include(p => p.Subcategory)
-                .AsQueryable();
+            return _context.Products.Skip(pageSize * (page - 1))
+                                    .Take(pageSize)
+                                    .Include(p => p.Images)
+                                    .Include(p => p.City)
+                                    .Include(p => p.Currency)
+                                    .Include(p => p.Subcategory)
+                                    .AsQueryable();
         }
 
         public async Task<Product> GetDetailByIdAsync(Guid id)
         {
-            var item = await _context.Products
-                .Include(p => p.Images)
-                .Include(p => p.City)
-                .Include(p => p.Currency)
-                .Include(p => p.Subcategory)
-                .FirstOrDefaultAsync(a => a.Id == id);
+            var item = await _context.Products.Include(p => p.Images)
+                                              .Include(p => p.City)
+                                              .Include(p => p.Currency)
+                                              .Include(p => p.Subcategory)
+                                              .FirstOrDefaultAsync(a => a.Id == id);
+
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
         }

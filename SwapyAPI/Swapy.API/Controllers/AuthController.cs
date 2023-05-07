@@ -29,7 +29,7 @@ namespace Swapy.API.Controllers
         [Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<AuthenticationResponseDTO>> LoginAsync(LoginCommand command)
+        public async Task<ActionResult<AuthResponseDTO>> LoginAsync(LoginCommand command)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace Swapy.API.Controllers
         [Route("register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<AuthenticationResponseDTO>> RegisterAsync(RegistrationCommand command)
+        public async Task<ActionResult<AuthResponseDTO>> RegisterAsync(RegistrationCommand command)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace Swapy.API.Controllers
         [Route("refresh/{oldRefreshToken}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<AuthenticationResponseDTO>> RefreshAsync(RefreshTokenCommand command)
+        public async Task<ActionResult<AuthResponseDTO>> RefreshAsync(RefreshTokenCommand command)
         {
             try
             {
@@ -103,6 +103,22 @@ namespace Swapy.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpHead]
+        [Route("")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult Head()
+        {
+            return Ok();
+        }
+
+        [HttpOptions]
+        [Route("")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<string> Options()
+        {
+            return Ok("x3 GET, x2 POST, HEAD, OPTIONS");
         }
     }
 }

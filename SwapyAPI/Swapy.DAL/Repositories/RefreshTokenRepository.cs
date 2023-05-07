@@ -5,7 +5,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
 {
-    public class RefreshTokenRepository : IRefreshToken
+    public class RefreshTokenRepository : IRefreshTokenRepository
     {
         private readonly SwapyDbContext _context;
 
