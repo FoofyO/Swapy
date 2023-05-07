@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IElectronicAttributeRepository : IRepository<ElectronicAttribute>
+    public interface IElectronicAttributeRepository : IAttributeRepositoryy<ElectronicAttribute>
     {
     }
 }

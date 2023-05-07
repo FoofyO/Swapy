@@ -41,7 +41,21 @@
             Images = new List<ProductImage>();
         }
 
-        public Product(string title, string description, decimal price, Guid userId, Guid currencyId, Guid categoryId, Guid subcategoryId, Guid cityId, Guid autoAttributeId, Guid animalAttributeId, Guid clothesAttributeId, Guid tVAttributeId, Guid realEstateAttributeId, Guid electronicAttributeId, Guid itemAttributeId)
+        public Product(string title, string description, decimal price, Guid userId, Guid currencyId, Guid categoryId, Guid subcategoryId, Guid cityId) : this()
+        {
+            Title = title;
+            Description = description;
+            Price = price;
+            UserId = userId;
+            DateTime = DateTime.Now;
+            Reviews = 0;
+            CurrencyId = currencyId;
+            CategoryId = categoryId;
+            SubcategoryId = subcategoryId;
+            CityId = cityId;
+        }
+
+        public Product(string title, string description, decimal price, Guid userId, Guid currencyId, Guid categoryId, Guid subcategoryId, Guid cityId, Guid autoAttributeId, Guid animalAttributeId, Guid clothesAttributeId, Guid tVAttributeId, Guid realEstateAttributeId, Guid electronicAttributeId, Guid itemAttributeId) : this()
         {
             Title = title;
             Description = description;

@@ -1,0 +1,40 @@
+﻿using MediatR;
+using Swapy.BLL.CQRS.Commands;
+using Swapy.BLL.Interfaces;
+using Swapy.BLL.Services;
+using Swapy.Common.Entities;
+using Swapy.DAL.Interfaces;
+using Swapy.DAL.Repositories;
+
+namespace Swapy.BLL.CQRS.CommandHandlers
+{
+    public class AddAutoAttributeCommandHandler : IRequestHandler<AddAutoAttributeCommand, Unit>
+    {
+        private readonly Guid _userId;
+        private readonly IProductRepository _productRepository;
+        private readonly IAutoAttributeRepository _autoAttributeRepository;
+        private readonly ISubcategoryRepository _subcategoryRepository;
+
+        public AddAutoAttributeCommandHandler(Guid userId, IProductRepository productRepository, IAutoAttributeRepository autoAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        {
+            _userId = userId;
+            _productRepository = productRepository;
+            _autoAttributeRepository = autoAttributeRepository;
+            _subcategoryRepository = subcategoryRepository;
+        }
+
+        public async Task<Unit> Handle(AddAutoAttributeCommand request, CancellationToken cancellationToken)
+        {
+            ISubcategoryService subcategoryService = new SubcategoryService(_subcategoryRepository);
+            if (!await subcategoryService.SubcategoryValidationAsync(request.SubcategoryId)) throw new ArgumentException("Invalid subcategory.");
+
+            Product product = new Product(request.Title, request.Description, request.Price, _userId, request.CurrencyId, request.CategoryId, request.SubcategoryId, request.CityId);
+            await _productRepository.CreateAsync(product);
+
+            AutoAttribute autoAttribute = new AutoAttribute(request.Miliage, request.EngineCapacity, request.ReleaseYear, request.IsNew, request.FuelTypeId, request.AutoColorId, request.TransmissionTypeId, request.AutoBrandTypeId, product.Id);
+            await _autoAttributeRepository.CreateAsync(autoAttribute);
+
+            return Unit.Value;
+        }
+    }
+}
