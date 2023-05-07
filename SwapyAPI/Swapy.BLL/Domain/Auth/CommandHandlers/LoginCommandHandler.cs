@@ -11,7 +11,7 @@ using System.Security.Authentication;
 
 namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
-    public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthenticationResponseDTO>
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthResponseDTO>
     {
         private readonly ITokenService _tokenService;
         private readonly UserManager<User> _userManager;
@@ -26,7 +26,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             _refreshTokenRepository = refreshTokenRepository;
         }
 
-        public async Task<AuthenticationResponseDTO> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<AuthResponseDTO> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(request.EmailOrPhone);
 
@@ -43,7 +43,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             var accessToken = await _tokenService.GenerateJwtToken(user);
             await _refreshTokenRepository.CreateAsync(new RefreshToken(refreshToken, DateTime.UtcNow.AddDays(30), Guid.Parse(user.Id)));
 
-            var authDTO = new AuthenticationResponseDTO { UserId = Guid.Parse(user.Id), Email = user.Email, Phone = user.PhoneNumber, AccessToken = accessToken, RefreshToken = refreshToken };
+            var authDTO = new AuthResponseDTO { UserId = Guid.Parse(user.Id), Email = user.Email, Phone = user.PhoneNumber, AccessToken = accessToken, RefreshToken = refreshToken };
             return authDTO;
         }
     }

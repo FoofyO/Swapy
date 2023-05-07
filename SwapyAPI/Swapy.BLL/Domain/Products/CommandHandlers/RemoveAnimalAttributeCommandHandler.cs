@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using Swapy.BLL.CQRS.Commands;
+using Swapy.BLL.Domain.Products.Commands;
 using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
-namespace Swapy.BLL.CQRS.CommandHandlers
+namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class RemoveAnimalAttributeCommandHandler : IRequestHandler<RemoveAnimalAttributeCommand, Unit>
     {

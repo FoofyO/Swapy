@@ -14,15 +14,18 @@ namespace Swapy.Common.Entities
         public ICollection<Chat> ChatsAsBuyer { get; set; }
         public ICollection<Message> SentMessages { get; set; }
         public ICollection<Subscribe> SubscribesAsSeller { get; set; }
+        public ICollection<FavoriteProduct> FavoriteProducts { get; set; }
         public ICollection<Subscribe> SubscribesAsSubscriber { get; set; }
 
         public User()
         {
+            Products = new List<Product>();
             LikesAsLiker = new List<Like>();
             LikesAsSeller = new List<Like>();
             ChatsAsBuyer = new List<Chat>();
             SentMessages = new List<Message>();
             SubscribesAsSeller = new List<Subscribe>();
+            FavoriteProducts = new List<FavoriteProduct>();
             SubscribesAsSubscriber = new List<Subscribe>();
         }
 

@@ -47,36 +47,35 @@ namespace Swapy.DAL.Repositories
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
             if (await _context.AnimalAttributes.CountAsync() <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
-            return _context.AnimalAttributes
-                .Skip(pageSize * (page - 1))
-                .Take(pageSize)
-                .Include(a => a.Product)
-                    .ThenInclude(p => p.Images)
-                .Include(a => a.Product)
-                    .ThenInclude(p => p.City)
-                .Include(a => a.Product)
-                    .ThenInclude(p => p.Currency)
-                .Include(a => a.Product)
-                    .ThenInclude(p => p.Subcategory)
-                .Include(a => a.AnimalBreed)
-                    .ThenInclude(ab => ab.AnimalType)
-                .AsQueryable();
+            return _context.AnimalAttributes.Skip(pageSize * (page - 1))
+                                            .Take(pageSize)
+                                            .Include(a => a.Product)
+                                                .ThenInclude(p => p.Images)
+                                            .Include(a => a.Product)
+                                                .ThenInclude(p => p.City)
+                                            .Include(a => a.Product)
+                                                .ThenInclude(p => p.Currency)
+                                            .Include(a => a.Product)
+                                                .ThenInclude(p => p.Subcategory)
+                                            .Include(a => a.AnimalBreed)
+                                                .ThenInclude(ab => ab.AnimalType)
+                                            .AsQueryable();
         }
 
         public async Task<AnimalAttribute> GetDetailByIdAsync(Guid id)
         {
-            var item = await _context.AnimalAttributes
-                 .Include(a => a.Product)
-                    .ThenInclude(p => p.Images)
-                .Include(a => a.Product)
-                    .ThenInclude(p => p.City)
-                .Include(a => a.Product)
-                    .ThenInclude(p => p.Currency)
-                .Include(a => a.Product)
-                    .ThenInclude(p => p.Subcategory)
-                .Include(a => a.AnimalBreed)
-                    .ThenInclude(ab => ab.AnimalType)
-                .FirstOrDefaultAsync(a => a.Id == id);
+            var item = await _context.AnimalAttributes.Include(a => a.Product)
+                                                        .ThenInclude(p => p.Images)
+                                                      .Include(a => a.Product)
+                                                        .ThenInclude(p => p.City)
+                                                      .Include(a => a.Product)
+                                                        .ThenInclude(p => p.Currency)
+                                                      .Include(a => a.Product)
+                                                        .ThenInclude(p => p.Subcategory)
+                                                      .Include(a => a.AnimalBreed)
+                                                        .ThenInclude(ab => ab.AnimalType)
+                                                      .FirstOrDefaultAsync(a => a.Id == id);
+
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
         }

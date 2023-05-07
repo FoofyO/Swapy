@@ -1,13 +1,12 @@
 ﻿using MediatR;
-using Swapy.BLL.CQRS.Commands;
+using Swapy.BLL.Domain.Products.Commands;
 using Swapy.BLL.Interfaces;
 using Swapy.BLL.Services;
 using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
-using Swapy.DAL.Repositories;
 
 
-namespace Swapy.BLL.CQRS.CommandHandlers
+namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class AddRealEstateAttributeCommandHandler : IRequestHandler<AddRealEstateAttributeCommand, Unit>
     {

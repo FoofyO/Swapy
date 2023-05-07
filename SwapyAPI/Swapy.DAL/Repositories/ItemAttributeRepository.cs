@@ -47,34 +47,33 @@ namespace Swapy.DAL.Repositories
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
             if (await _context.ItemAttributes.CountAsync() <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
-            return _context.ItemAttributes
-                .Skip(pageSize * (page - 1))
-                .Take(pageSize)
-                .Include(i => i.Product)
-                    .ThenInclude(p => p.Images)
-                .Include(i => i.Product)
-                    .ThenInclude(p => p.City)
-                .Include(i => i.Product)
-                    .ThenInclude(p => p.Currency)
-                .Include(i => i.Product)
-                    .ThenInclude(p => p.Subcategory)
-                .Include(i => i.ItemType)
-                .AsQueryable();
+            return _context.ItemAttributes.Skip(pageSize * (page - 1))
+                                          .Take(pageSize)
+                                          .Include(i => i.Product)
+                                            .ThenInclude(p => p.Images)
+                                          .Include(i => i.Product)
+                                            .ThenInclude(p => p.City)
+                                          .Include(i => i.Product)
+                                            .ThenInclude(p => p.Currency)
+                                          .Include(i => i.Product)
+                                            .ThenInclude(p => p.Subcategory)
+                                          .Include(i => i.ItemType)
+                                          .AsQueryable();
         }
 
         public async Task<ItemAttribute> GetDetailByIdAsync(Guid id)
         {
-            var item = await _context.ItemAttributes
-                 .Include(a => a.Product)
-                    .ThenInclude(p => p.Images)
-                .Include(a => a.Product)
-                    .ThenInclude(p => p.City)
-                .Include(a => a.Product)
-                    .ThenInclude(p => p.Currency)
-                .Include(a => a.Product)
-                    .ThenInclude(p => p.Subcategory)
-                .Include(i => i.ItemType)
-                .FirstOrDefaultAsync(a => a.Id == id);
+            var item = await _context.ItemAttributes.Include(a => a.Product)
+                                                        .ThenInclude(p => p.Images)
+                                                    .Include(a => a.Product)
+                                                        .ThenInclude(p => p.City)
+                                                    .Include(a => a.Product)
+                                                        .ThenInclude(p => p.Currency)
+                                                    .Include(a => a.Product)
+                                                        .ThenInclude(p => p.Subcategory)
+                                                    .Include(i => i.ItemType)
+                                                    .FirstOrDefaultAsync(a => a.Id == id);
+
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
         }

@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Domain\Auth\QueryHandler\**" />
+    <EmbeddedResource Remove="Domain\Auth\QueryHandler\**" />
+    <None Remove="Domain\Auth\QueryHandler\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MediatR" Version="11.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.16" />
@@ -20,7 +26,8 @@
 
   <ItemGroup>
     <Folder Include="Domain\Auth\Queries\" />
-    <Folder Include="Domain\Auth\QueryHandler\" />
+    <Folder Include="Domain\Auth\QueryHandlers\" />
+    <Folder Include="Domain\Auth\Queries\" />
   </ItemGroup>
 
 </Project>

@@ -71,6 +71,12 @@ namespace Swapy.DAL.Configurations
                    .HasForeignKey(s => s.SubscriberId)
                    .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
+
+            builder.HasMany(u => u.FavoriteProducts)
+                   .WithOne(f => f.User)
+                   .HasForeignKey(f => f.UserId)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     }
 }

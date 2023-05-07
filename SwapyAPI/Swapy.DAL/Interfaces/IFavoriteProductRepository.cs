@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IRefreshToken : IRepository<RefreshToken>
+    public interface IFavoriteProductRepository : IRepository<FavoriteProduct>
     {
     }
 }

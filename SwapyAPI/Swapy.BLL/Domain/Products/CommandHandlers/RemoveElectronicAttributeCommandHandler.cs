@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Swapy.BLL.CQRS.Commands;
 using Swapy.BLL.Domain.Products.Commands;
 using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;

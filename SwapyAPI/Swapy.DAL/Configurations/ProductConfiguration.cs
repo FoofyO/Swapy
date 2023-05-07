@@ -120,6 +120,12 @@ namespace Swapy.DAL.Configurations
                    .HasForeignKey<RealEstateAttribute>(s => s.ProductId)
                    .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
+
+            builder.HasMany(u => u.FavoriteProducts)
+                   .WithOne(f => f.Product)
+                   .HasForeignKey(f => f.ProductId)
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     }
 }

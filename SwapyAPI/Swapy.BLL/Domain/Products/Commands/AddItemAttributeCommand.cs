@@ -1,4 +1,4 @@
-﻿namespace Swapy.BLL.CQRS.Commands
+﻿namespace Swapy.BLL.Domain.Products.Commands
 {
     public class AddItemAttributeCommand : AddProductCommand
     {

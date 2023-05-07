@@ -47,40 +47,39 @@ namespace Swapy.DAL.Repositories
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
             if (await _context.TVAttributes.CountAsync() <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
-            return _context.TVAttributes
-                .Skip(pageSize * (page - 1))
-                .Take(pageSize)
-                .Include(tv => tv.Product)
-                    .ThenInclude(p => p.Images)
-                .Include(tv => tv.Product)
-                    .ThenInclude(p => p.City)
-                .Include(tv => tv.Product)
-                    .ThenInclude(p => p.Currency)
-                .Include(tv => tv.Product)
-                    .ThenInclude(p => p.Subcategory)
-                .Include(tv => tv.TVBrand)
-                .Include(tv => tv.ScreenResolution)
-                .Include(tv => tv.ScreenDiagonal)
-                .Include(tv => tv.TVType)
-                .AsQueryable();
+            return _context.TVAttributes.Skip(pageSize * (page - 1))
+                                        .Take(pageSize)
+                                        .Include(tv => tv.Product)
+                                            .ThenInclude(p => p.Images)
+                                        .Include(tv => tv.Product)
+                                            .ThenInclude(p => p.City)
+                                        .Include(tv => tv.Product)
+                                            .ThenInclude(p => p.Currency)
+                                        .Include(tv => tv.Product)
+                                            .ThenInclude(p => p.Subcategory)
+                                        .Include(tv => tv.TVBrand)
+                                        .Include(tv => tv.ScreenResolution)
+                                        .Include(tv => tv.ScreenDiagonal)
+                                        .Include(tv => tv.TVType)
+                                        .AsQueryable();
         }
 
         public async Task<TVAttribute> GetDetailByIdAsync(Guid id)
         {
-            var item = await _context.TVAttributes
-                .Include(tv => tv.Product)
-                    .ThenInclude(p => p.Images)
-                .Include(tv => tv.Product)
-                    .ThenInclude(p => p.City)
-                .Include(tv => tv.Product)
-                    .ThenInclude(p => p.Currency)
-                .Include(tv => tv.Product)
-                    .ThenInclude(p => p.Subcategory)
-                .Include(tv => tv.TVBrand)
-                .Include(tv => tv.ScreenResolution)
-                .Include(tv => tv.ScreenDiagonal)
-                .Include(tv => tv.TVType)
-                .FirstOrDefaultAsync(a => a.Id == id);
+            var item = await _context.TVAttributes.Include(tv => tv.Product)
+                                                    .ThenInclude(p => p.Images)
+                                                  .Include(tv => tv.Product)
+                                                    .ThenInclude(p => p.City)
+                                                  .Include(tv => tv.Product)
+                                                    .ThenInclude(p => p.Currency)
+                                                  .Include(tv => tv.Product)
+                                                    .ThenInclude(p => p.Subcategory)
+                                                  .Include(tv => tv.TVBrand)
+                                                  .Include(tv => tv.ScreenResolution)
+                                                  .Include(tv => tv.ScreenDiagonal)
+                                                  .Include(tv => tv.TVType)
+                                                  .FirstOrDefaultAsync(a => a.Id == id);
+
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
         }

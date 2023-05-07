@@ -3,7 +3,7 @@ using Swapy.BLL.Domain.Products.Queries;
 using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
-namespace Swapy.BLL.Domain.Products.QueryHandler
+namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
     public class GetByIdElectronicAttributeQueryHandler : IRequestHandler<GetByIdElectronicAttributeQuery, ElectronicAttribute>
     {

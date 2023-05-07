@@ -56,6 +56,7 @@ namespace Swapy.API
             builder.Services.AddScoped<IElectronicAttributeRepository, ElectronicAttributeRepository>();
             builder.Services.AddScoped<IElectronicBrandRepository, ElectronicBrandRepository>();
             builder.Services.AddScoped<IElectronicBrandTypeRepository, ElectronicBrandTypeRepository>();
+            builder.Services.AddScoped<IFavoriteProductRepository, FavoriteProductRepository>();
             builder.Services.AddScoped<IFuelTypeRepository, FuelTypeRepository>();
             builder.Services.AddScoped<IGenderRepository, GenderRepository>();
             builder.Services.AddScoped<IItemAttributeRepository, ItemAttributeRepository>();
@@ -67,6 +68,7 @@ namespace Swapy.API
             builder.Services.AddScoped<IModelRepository, ModelRepository>();
             builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             builder.Services.AddScoped<IRealEstateAttributeRepository, RealEstateAttributeRepository>();
             builder.Services.AddScoped<IScreenDiagonalRepository, ScreenDiagonalRepository>();
             builder.Services.AddScoped<IScreenResolutionRepository, ScreenResolutionRepository>();

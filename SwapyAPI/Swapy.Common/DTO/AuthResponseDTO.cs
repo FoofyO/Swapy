@@ -1,6 +1,6 @@
 ﻿namespace Swapy.Common.DTO
 {
-    public class AuthenticationResponseDTO
+    public class AuthResponseDTO
     {
         public Guid UserId { get; set; }
         public string Email { get; set; }
