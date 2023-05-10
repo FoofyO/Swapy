@@ -24,7 +24,6 @@ namespace Swapy.DAL.Configurations
             builder.HasMany(c => c.ClothesAttributes)
                    .WithOne(c => c.ClothesSeason)
                    .HasForeignKey(i => i.ClothesSeasonId)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     } 

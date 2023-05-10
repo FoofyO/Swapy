@@ -9,10 +9,10 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
     public class GetAllProductQueryHandler : IRequestHandler<GetAllProductQuery, IEnumerable<Product>>
     {
-        private readonly Guid _userId;
+        private readonly string _userId;
         private readonly IProductRepository _productRepository;
 
-        public GetAllProductQueryHandler(Guid userId, IProductRepository productRepository)
+        public GetAllProductQueryHandler(string userId, IProductRepository productRepository)
         {
             _userId = userId;
             _productRepository = productRepository;

@@ -2,12 +2,12 @@
 {
     public class AutoBrand
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public ICollection<AutoBrandType> AutoBrandsTypes { get; set; }
+        public ICollection<AutoBrandType> AutoBrandsTypes { get; set; } = new List<AutoBrandType>();
 
-        public AutoBrand() => AutoBrandsTypes = new List<AutoBrandType>();
+        public AutoBrand() { }
 
-        public AutoBrand(string name) : this() => Name = name;
+        public AutoBrand(string name) => Name = name;
     }
 }

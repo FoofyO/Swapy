@@ -9,12 +9,12 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class AddElectronicAttributeCommandHandler : IRequestHandler<AddElectronicAttributeCommand, Unit>
     {
-        private readonly Guid _userId;
+        private readonly string _userId;
         private readonly IProductRepository _productRepository;
         private readonly IElectronicAttributeRepository _electronicAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
 
-        public AddElectronicAttributeCommandHandler(Guid userId, IProductRepository productRepository, IElectronicAttributeRepository electronicAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public AddElectronicAttributeCommandHandler(string userId, IProductRepository productRepository, IElectronicAttributeRepository electronicAttributeRepository, ISubcategoryRepository subcategoryRepository)
         {
             _userId = userId;
             _productRepository = productRepository;

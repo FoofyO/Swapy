@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IUserLikeRepository : IRepository<UserLike>
     {
     }
 }

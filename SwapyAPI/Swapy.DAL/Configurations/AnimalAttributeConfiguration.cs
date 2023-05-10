@@ -18,13 +18,11 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(x => x.AnimalBreed)
                    .WithMany(x => x.AnimalAttributes)
                    .HasForeignKey(p => p.AnimalBreedId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(x => x.Product)
                    .WithOne(x => x.AnimalAttribute)
                    .HasForeignKey<Product>(x => x.AnimalAttributeId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
         }
     }

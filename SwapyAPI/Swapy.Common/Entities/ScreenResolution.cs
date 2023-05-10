@@ -2,13 +2,13 @@
 {
     public class ScreenResolution
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public ICollection<TVAttribute> TVAttributes { get; set; }
+        public ICollection<TVAttribute> TVAttributes { get; set; } = new List<TVAttribute>();
 
-        public ScreenResolution() => TVAttributes = new List<TVAttribute>();
+        public ScreenResolution() { }
 
-        public ScreenResolution(string name) : this() => Name = name;
+        public ScreenResolution(string name) => Name = name;
     }
 }
  

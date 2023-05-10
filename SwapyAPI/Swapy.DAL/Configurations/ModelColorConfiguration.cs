@@ -18,18 +18,15 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(m => m.Model)
                    .WithMany(m => m.ModelsColors)
                    .HasForeignKey(m => m.ModelId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(m => m.Color)
                    .WithMany(c => c.ModelsColors)
                    .HasForeignKey(m => m.ColorId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasMany(m => m.ElectronicAttributes)
                    .WithOne(e => e.ModelColor)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

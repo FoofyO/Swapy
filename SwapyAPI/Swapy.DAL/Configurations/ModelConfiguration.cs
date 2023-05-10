@@ -22,17 +22,14 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(m => m.ElectronicBrandType)
                    .WithMany(e => e.Models)
                    .HasForeignKey(m => m.ElectronicBrandTypeId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasMany(m => m.MemoriesModels)
                    .WithOne(m => m.Model)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired();
 
             builder.HasMany(m => m.ModelsColors)
                    .WithOne(m => m.Model)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

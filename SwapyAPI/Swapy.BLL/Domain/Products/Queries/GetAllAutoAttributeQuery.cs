@@ -12,10 +12,10 @@ namespace Swapy.BLL.Domain.Products.Queries
         public DateTime? ReleaseYearOlder { get; set; }
         public DateTime? ReleaseYearNewer { get; set; }
         public bool? IsNew { get; set; }
-        public List<Guid> FuelTypesId { get; set; }
-        public List<Guid> AutoColorsId { get; set; }
-        public List<Guid> TransmissionTypesId { get; set; }
-        public List<Guid> AutoBrandsId { get; set; }
-        public List<Guid> AutoTypesId { get; set; }
+        public List<string> FuelTypesId { get; set; }
+        public List<string> AutoColorsId { get; set; }
+        public List<string> TransmissionTypesId { get; set; }
+        public List<string> AutoBrandsId { get; set; }
+        public List<string> AutoTypesId { get; set; }
     }
 }

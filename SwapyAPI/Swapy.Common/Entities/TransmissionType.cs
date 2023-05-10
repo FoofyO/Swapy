@@ -2,12 +2,12 @@
 {
     public class TransmissionType
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public ICollection<AutoAttribute> AutoAttributes { get; set; }
+        public ICollection<AutoAttribute> AutoAttributes { get; set; } = new List<AutoAttribute>();
 
-        public TransmissionType() => AutoAttributes = new List<AutoAttribute>();
+        public TransmissionType() { }
 
-        public TransmissionType(string name) : this() => Name = name;
+        public TransmissionType(string name) => Name = name;
     }
 }

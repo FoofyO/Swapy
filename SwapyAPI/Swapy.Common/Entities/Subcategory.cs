@@ -2,39 +2,28 @@
 {
     public class Subcategory
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public Guid CategoryId { get; set; }
+        public string CategoryId { get; set; }
         public Category Category { get; set; }
-        public Guid PrevSubcategoryId { get; set; }
-        public Subcategory PrevSubcategory { get; set; }
-        public ICollection<Product> Products { get; set; }
-        public ICollection<AnimalBreed> AnimalBreeds { get; set; }
-        public ICollection<ClothesView> ClothesViews { get; set; }
-        public ICollection<Subcategory> Subcategories { get; set; }
-        public ICollection<ItemAttribute> ItemAttributes { get; set; }
-        public ICollection<AutoBrandType> AutoBrandTypes { get; set; }
-        public ICollection<ElectronicBrandType> ElectronicBrandsTypes { get; set; }
-        public ICollection<RealEstateAttribute> RealEstateAttributes { get; set; }
+        public string ParentSubcategoryId { get; set; }
+        public SubcategoryBranch ParentSubcategory { get; set; }
+        public ICollection<Product> Products { get; set; } = new List<Product>();
+        public ICollection<AnimalBreed> AnimalBreeds { get; set; } = new List<AnimalBreed>();
+        public ICollection<ClothesView> ClothesViews { get; set; } = new List<ClothesView>();
+        public ICollection<ItemAttribute> ItemAttributes { get; set; } = new List<ItemAttribute>();
+        public ICollection<AutoBrandType> AutoBrandTypes { get; set; } = new List<AutoBrandType>();
+        public ICollection<SubcategoryBranch> ChildSubcategories { get; set; } = new List<SubcategoryBranch>();
+        public ICollection<RealEstateAttribute> RealEstateAttributes { get; set; } = new List<RealEstateAttribute>();
+        public ICollection<ElectronicBrandType> ElectronicBrandsTypes { get; set; } = new List<ElectronicBrandType>();
 
-        public Subcategory() 
-        {
-            Products = new List<Product>();
-            ClothesViews = new List<ClothesView>();
-            AnimalBreeds = new List<AnimalBreed>();
-            Subcategories = new List<Subcategory>();
-            AutoBrandTypes= new List<AutoBrandType>();
-            ItemAttributes = new List<ItemAttribute>();
-            RealEstateAttributes = new List<RealEstateAttribute>();
-            ElectronicBrandsTypes = new List<ElectronicBrandType>();
-        }
-
-        public Subcategory(string name, Guid categoryId, Guid prevSubcategoryId, ICollection<RealEstateAttribute> realEstateAttributes) : this()
+        public Subcategory() { }
+             
+        public Subcategory(string name, string categoryId, string parentSubcategoryId)
         {
             Name = name;
             CategoryId = categoryId;
-            PrevSubcategoryId = prevSubcategoryId;
-            RealEstateAttributes = realEstateAttributes;
+            ParentSubcategoryId = parentSubcategoryId;
         }
     }
 }

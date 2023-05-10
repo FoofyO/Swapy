@@ -9,12 +9,12 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class AddTVAttributeCommandHandler : IRequestHandler<AddTVAttributeCommand, Unit>
     {
-        private readonly Guid _userId;
+        private readonly string _userId;
         private readonly IProductRepository _productRepository;
         private readonly ITVAttributeRepository _tvAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
 
-        public AddTVAttributeCommandHandler(Guid userId, IProductRepository productRepository, ITVAttributeRepository tvAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public AddTVAttributeCommandHandler(string userId, IProductRepository productRepository, ITVAttributeRepository tvAttributeRepository, ISubcategoryRepository subcategoryRepository)
         {
             _userId = userId;
             _productRepository = productRepository;

@@ -2,17 +2,13 @@
 {
     public class Color
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public ICollection<ModelColor> ModelsColors { get; set; }
-        public ICollection<AutoAttribute> AutoAttributes { get; set; }
+        public ICollection<ModelColor> ModelsColors { get; set; } = new List<ModelColor>();
+        public ICollection<AutoAttribute> AutoAttributes { get; set; } = new List<AutoAttribute>();
 
-        public Color()
-        {
-            ModelsColors = new List<ModelColor>();
-            AutoAttributes = new List<AutoAttribute>();
-        }
+        public Color() { }
 
-        public Color(string name) : this() => Name = name;
+        public Color(string name) => Name = name;
     }
 }

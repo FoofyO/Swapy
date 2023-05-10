@@ -2,15 +2,15 @@
 {
     public class AnimalBreed
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public Guid AnimalTypeId { get; set; } 
+        public string AnimalTypeId { get; set; } 
         public Subcategory AnimalType { get; set; } 
-        public ICollection<AnimalAttribute> AnimalAttributes { get; set; }
+        public ICollection<AnimalAttribute> AnimalAttributes { get; set; } = new List<AnimalAttribute>();
 
-        public AnimalBreed() => AnimalAttributes = new List<AnimalAttribute>();
-         
-        public AnimalBreed(string name, Guid animalTypeId) : this() 
+        public AnimalBreed() { }
+
+        public AnimalBreed(string name, string animalTypeId)
         {
             Name = name;
             AnimalTypeId = animalTypeId;

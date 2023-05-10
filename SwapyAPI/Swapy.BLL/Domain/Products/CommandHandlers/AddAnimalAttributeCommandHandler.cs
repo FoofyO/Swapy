@@ -9,12 +9,12 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     internal class AddAnimalAttributeCommandHandler : IRequestHandler<AddAnimalAttributeCommand, Unit>
     {
-        private readonly Guid _userId;
+        private readonly string _userId;
         private readonly IProductRepository _productRepository;
         private readonly IAnimalAttributeRepository _animalAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
 
-        public AddAnimalAttributeCommandHandler(Guid userId, IProductRepository productRepository, IAnimalAttributeRepository animalAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public AddAnimalAttributeCommandHandler(string userId, IProductRepository productRepository, IAnimalAttributeRepository animalAttributeRepository, ISubcategoryRepository subcategoryRepository)
         {
             _userId = userId;
             _productRepository = productRepository;

@@ -29,9 +29,9 @@ namespace Swapy.DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteByIdAsync(Guid id) => await DeleteAsync(await GetByIdAsync(id));
+        public async Task DeleteByIdAsync(string id) => await DeleteAsync(await GetByIdAsync(id));
 
-        public async Task<AutoAttribute> GetByIdAsync(Guid id)
+        public async Task<AutoAttribute> GetByIdAsync(string id)
         {
             var item = await _context.AutoAttributes.FindAsync(id);
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
@@ -67,7 +67,7 @@ namespace Swapy.DAL.Repositories
                                           .AsQueryable();
         }
 
-        public async Task<AutoAttribute> GetDetailByIdAsync(Guid id)
+        public async Task<AutoAttribute> GetDetailByIdAsync(string id)
         {
             var item = await _context.AutoAttributes.Include(a => a.Product)
                                                         .ThenInclude(p => p.Images)

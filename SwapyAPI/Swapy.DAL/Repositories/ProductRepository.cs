@@ -29,9 +29,9 @@ namespace Swapy.DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteByIdAsync(Guid id) => await DeleteAsync(await GetByIdAsync(id));
+        public async Task DeleteByIdAsync(string id) => await DeleteAsync(await GetByIdAsync(id));
 
-        public async Task<Product> GetByIdAsync(Guid id)
+        public async Task<Product> GetByIdAsync(string id)
         {
             var item = await _context.Products.FindAsync(id);
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
@@ -43,7 +43,7 @@ namespace Swapy.DAL.Repositories
             return await _context.Products.ToListAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetAllByUserId(Guid userId)
+        public async Task<IEnumerable<Product>> GetAllByUserId(string userId)
         {
             return await _context.Products.Where(p => p.UserId == userId).ToListAsync();
         }
@@ -61,7 +61,7 @@ namespace Swapy.DAL.Repositories
                                     .AsQueryable();
         }
 
-        public async Task<Product> GetDetailByIdAsync(Guid id)
+        public async Task<Product> GetDetailByIdAsync(string id)
         {
             var item = await _context.Products.Include(p => p.Images)
                                               .Include(p => p.City)

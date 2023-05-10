@@ -5,7 +5,7 @@ namespace Swapy.BLL.Domain.Products.Queries
 {
     public class GetAllAnimalAttributeQuery : GetAllProductQuery<AnimalAttribute>
     {
-        public List<Guid> AnimalBreedsId { get; set; }
-        public List<Guid> AnimalTypesId { get; set; }
+        public List<string> AnimalBreedsId { get; set; }
+        public List<string> AnimalTypesId { get; set; }
     }
 }

@@ -22,7 +22,6 @@ namespace Swapy.DAL.Configurations
             builder.HasMany(s => s.TVAttributes)
                    .WithOne(s => s.ScreenDiagonal)
                    .HasForeignKey(s => s.ScreenDiagonalId)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
 
         }

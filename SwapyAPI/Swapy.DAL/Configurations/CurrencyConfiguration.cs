@@ -18,7 +18,6 @@ namespace Swapy.DAL.Configurations
             builder.HasMany(c => c.Products)
                    .WithOne(p => p.Currency)
                    .HasForeignKey(p => p.CurrencyId)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

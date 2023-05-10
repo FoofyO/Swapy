@@ -26,13 +26,11 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(r => r.RealEstateType)
                    .WithMany(s => s.RealEstateAttributes)
                    .HasForeignKey(r => r.RealEstateTypeId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired(); ;
 
             builder.HasOne(r => r.Product)
                    .WithOne(p => p.RealEstateAttribute)
                    .HasForeignKey<Product>(p => p.RealEstateAttributeId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
         }
     }

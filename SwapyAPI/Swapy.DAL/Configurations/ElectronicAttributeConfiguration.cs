@@ -22,19 +22,16 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(e => e.MemoryModel)
                    .WithMany(m => m.ElectronicAttributes)
                    .HasForeignKey(e => e.MemoryModelId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(e => e.ModelColor)
                    .WithMany(m => m.ElectronicAttributes)
                    .HasForeignKey(e => e.ModelColorId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(e => e.Product)
                    .WithOne(p => p.ElectronicAttribute)
                    .HasForeignKey<Product>(p => p.ElectronicAttributeId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
         }
     }

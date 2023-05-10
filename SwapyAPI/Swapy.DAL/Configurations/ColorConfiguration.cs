@@ -21,12 +21,10 @@ namespace Swapy.DAL.Configurations
 
             builder.HasMany(c => c.ModelsColors)
                    .WithOne(m => m.Color)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
 
             builder.HasMany(c => c.AutoAttributes)
                    .WithOne(a => a.AutoColor)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

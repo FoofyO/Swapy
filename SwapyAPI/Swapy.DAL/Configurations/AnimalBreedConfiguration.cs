@@ -22,12 +22,10 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(a => a.AnimalType)
                    .WithMany(s => s.AnimalBreeds)
                    .HasForeignKey(a => a.AnimalTypeId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasMany(a => a.AnimalAttributes)
                    .WithOne(a => a.AnimalBreed)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

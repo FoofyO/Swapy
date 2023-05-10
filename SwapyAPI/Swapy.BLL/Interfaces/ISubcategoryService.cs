@@ -2,6 +2,6 @@
 {
     public interface ISubcategoryService
     {
-        Task<bool> SubcategoryValidationAsync(Guid SubcategoryId);
+        Task<bool> SubcategoryValidationAsync(string SubcategoryId);
     }
 }

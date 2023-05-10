@@ -15,16 +15,14 @@ namespace Swapy.DAL.Configurations
                    .IsRequired()
                    .HasDefaultValueSql("NEWID()");
 
-            builder.HasOne(l => l.Seller)
-                   .WithMany(u => u.LikesAsSeller)
-                   .HasForeignKey(l => l.SellerId)
-                   .OnDelete(DeleteBehavior.Cascade)
+            builder.HasOne(l => l.Liker)
+                   .WithMany(u => u.Likes)
+                   .HasForeignKey(l => l.LikerId)
                    .IsRequired();
 
-            builder.HasOne(l => l.Liker)
-                   .WithMany(u => u.LikesAsLiker)
-                   .HasForeignKey(l => l.LikerId)
-                   .OnDelete(DeleteBehavior.Cascade)
+            builder.HasOne(l => l.UserLike)
+                   .WithOne(ul => ul.Like)
+                   .HasForeignKey<UserLike>(ul => ul.LikeId)
                    .IsRequired();
         }
     }

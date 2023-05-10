@@ -9,12 +9,12 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class AddClothesAttributeCommandHandler : IRequestHandler<AddClothesAttributeCommand, Unit>
     {
-        private readonly Guid _userId;
+        private readonly string _userId;
         private readonly IProductRepository _productRepository;
         private readonly IClothesAttributeRepository _clothesAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
 
-        public AddClothesAttributeCommandHandler(Guid userId, IProductRepository productRepository, IClothesAttributeRepository clothesAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public AddClothesAttributeCommandHandler(string userId, IProductRepository productRepository, IClothesAttributeRepository clothesAttributeRepository, ISubcategoryRepository subcategoryRepository)
         {
             _userId = userId;
             _productRepository = productRepository;

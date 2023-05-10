@@ -23,7 +23,6 @@ namespace Swapy.DAL.Configurations
             builder.HasMany(e => e.Subcategories)
                    .WithOne(e => e.Category)
                    .HasForeignKey(e => e.CategoryId)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

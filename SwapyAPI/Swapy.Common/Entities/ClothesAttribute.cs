@@ -2,20 +2,20 @@
 {
     public class ClothesAttribute 
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public bool IsNew { get; set; } 
-        public Guid ClothesSeasonId { get; set; }
+        public string ClothesSeasonId { get; set; }
         public ClothesSeason ClothesSeason { get; set; }
-        public Guid ClothesSizeId { get; set; }
+        public string ClothesSizeId { get; set; }
         public ClothesSize ClothesSize { get; set; }
-        public Guid ClothesBrandViewId{ get; set; }
+        public string ClothesBrandViewId{ get; set; }
         public ClothesBrandView ClothesBrandView { get; set; }
-        public Guid ProductId { get; set; } 
+        public string ProductId { get; set; } 
         public Product Product { get; set; }
 
-        public ClothesAttribute() { } 
-              
-        public ClothesAttribute(bool isNew, Guid clothesSeasonId, Guid clothesSizeId, Guid clothesBrandViewId, Guid productId)
+        public ClothesAttribute() { }
+
+        public ClothesAttribute(bool isNew, string clothesSeasonId, string clothesSizeId, string clothesBrandViewId, string productId)
         { 
             IsNew = isNew;
             ClothesSeasonId = clothesSeasonId;

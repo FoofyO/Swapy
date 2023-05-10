@@ -2,17 +2,13 @@
 {
     public class Category
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Product> Products { get; set; }
-        public ICollection<Subcategory> Subcategories { get; set; }
+        public ICollection<Product> Products { get; set; } = new List<Product>();
+        public ICollection<Subcategory> Subcategories { get; set; } = new List<Subcategory>();
 
-        public Category()
-        {
-            Products = new List<Product>();
-            Subcategories = new List<Subcategory>();
-        }
+        public Category() { }
 
-        public Category(string name) : this() => Name = name;
+        public Category(string name) => Name = name;
     }
 }

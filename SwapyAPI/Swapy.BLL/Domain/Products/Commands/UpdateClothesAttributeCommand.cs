@@ -2,10 +2,10 @@
 {
     public class UpdateClothesAttributeCommand : UpdateProductCommand
     {
-        public Guid ClothesAttributeId { get; set; }
+        public string ClothesAttributeId { get; set; }
         public bool IsNew { get; set; }
-        public Guid ClothesSeasonId { get; set; }
-        public Guid ClothesSizeId { get; set; }
-        public Guid ClothesBrandViewId { get; set; }
+        public string ClothesSeasonId { get; set; }
+        public string ClothesSizeId { get; set; }
+        public string ClothesBrandViewId { get; set; }
     }
 }

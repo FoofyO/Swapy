@@ -1,9 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.Common.DTO;
 using Swapy.Common.Exceptions;
+using Swapy.DAL;
 using System.Security.Authentication;
 
 namespace Swapy.API.Controllers
@@ -23,6 +25,20 @@ namespace Swapy.API.Controllers
         public IActionResult Ping()
         {
             return Ok("ping");
+        }
+
+        [HttpGet]
+        [Route("test")]
+        public IActionResult Test()
+        {
+            var options = new DbContextOptionsBuilder<SwapyDbContext>()
+                .UseSqlServer("Data Source=FOOFY\\SQLEXPRESS;Initial Catalog=Swapy;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
+                .Options;
+
+            using (var db = new SwapyDbContext(options))
+            {
+            }
+            return Ok();
         }
 
         [HttpPost]

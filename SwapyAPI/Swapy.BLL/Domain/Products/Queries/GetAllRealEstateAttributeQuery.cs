@@ -10,6 +10,6 @@ namespace Swapy.BLL.Domain.Products.Queries
         public int? RoomsMin { get; set; }
         public int? RoomsMax { get; set; }
         public bool? IsRent { get; set; }
-        public List<Guid> RealEstateTypesId { get; set; }
+        public List<string> RealEstateTypesId { get; set; }
     }
 }

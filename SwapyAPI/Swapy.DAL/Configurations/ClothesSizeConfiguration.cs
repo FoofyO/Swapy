@@ -32,7 +32,6 @@ namespace Swapy.DAL.Configurations
             builder.HasMany(c => c.ClothesAttributes)  
                    .WithOne(c => c.ClothesSize)
                    .HasForeignKey(c => c.ClothesSizeId)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }  
     }

@@ -2,16 +2,16 @@
 {
     public class ElectronicBrandType
     {
-        public Guid Id { get; set; }
-        public Guid ElectronicBrandId { get; set; }
+        public string Id { get; set; }
+        public string ElectronicBrandId { get; set; }
         public ElectronicBrand ElectronicBrand { get; set; }
-        public Guid ElectronicTypeId { get; set; }
+        public string ElectronicTypeId { get; set; }
         public Subcategory ElectronicType { get; set; }
-        public ICollection<Model> Models { get; set; }
+        public ICollection<Model> Models { get; set; } = new List<Model>();
 
-        public ElectronicBrandType() => Models = new List<Model>();
+        public ElectronicBrandType() { }
 
-        public ElectronicBrandType(Guid electronicBrandId, Guid electronicTypeId) : this()
+        public ElectronicBrandType(string electronicBrandId, string electronicTypeId)
         {
             ElectronicBrandId = electronicBrandId;
             ElectronicTypeId = electronicTypeId;

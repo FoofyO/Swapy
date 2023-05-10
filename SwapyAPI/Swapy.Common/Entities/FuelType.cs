@@ -2,12 +2,12 @@
 {
     public class FuelType
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public ICollection<AutoAttribute> AutoAttributes { get; set; }
+        public ICollection<AutoAttribute> AutoAttributes { get; set; } = new List<AutoAttribute>();
 
-        public FuelType() => AutoAttributes = new List<AutoAttribute>();
+        public FuelType() { }
 
-        public FuelType(string name) : this() => Name = name;
+        public FuelType(string name) => Name = name;
     }
 }

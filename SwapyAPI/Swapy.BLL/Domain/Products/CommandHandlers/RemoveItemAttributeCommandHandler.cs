@@ -8,11 +8,11 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class RemoveItemAttributeCommandHandler : IRequestHandler<RemoveItemAttributeCommand, Unit>
     {
-        private readonly Guid _userId;
+        private readonly string _userId;
         private readonly IProductRepository _productRepository;
         private readonly IItemAttributeRepository _itemAttributeRepository;
 
-        public RemoveItemAttributeCommandHandler(Guid userId, IProductRepository productRepository, IItemAttributeRepository itemAttributeRepository)
+        public RemoveItemAttributeCommandHandler(string userId, IProductRepository productRepository, IItemAttributeRepository itemAttributeRepository)
         {
             _userId = userId;
             _productRepository = productRepository;

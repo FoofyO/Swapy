@@ -8,11 +8,11 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class RemoveTVAttributeCommandHandler : IRequestHandler<RemoveTVAttributeCommand, Unit>
     {
-        private readonly Guid _userId;
+        private readonly string _userId;
         private readonly IProductRepository _productRepository;
         private readonly ITVAttributeRepository _tvAttributeRepository;
 
-        public RemoveTVAttributeCommandHandler(Guid userId, IProductRepository productRepository, ITVAttributeRepository tvAttributeRepository)
+        public RemoveTVAttributeCommandHandler(string userId, IProductRepository productRepository, ITVAttributeRepository tvAttributeRepository)
         {
             _userId = userId;
             _productRepository = productRepository;

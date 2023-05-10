@@ -2,25 +2,25 @@
 {
     public class AutoAttribute
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public int Miliage { get; set; }
         public int EngineCapacity { get;  set; }
         public DateTime ReleaseYear { get; set; }
         public bool IsNew { get; set; }
-        public Guid FuelTypeId { get; set; }
+        public string FuelTypeId { get; set; }
         public FuelType FuelType { get; set; }
-        public Guid AutoColorId { get; set; }
+        public string AutoColorId { get; set; }
         public Color AutoColor { get; set; }
-        public Guid TransmissionTypeId { get; set; }
+        public string TransmissionTypeId { get; set; }
         public TransmissionType TransmissionType { get; set; }
-        public Guid AutoBrandTypeId { get; set; }
+        public string AutoBrandTypeId { get; set; }
         public AutoBrandType AutoBrandType { get; set; }
-        public Guid ProductId { get; set; }
+        public string ProductId { get; set; }
         public Product Product { get; set; }
 
         public AutoAttribute() { }
 
-        public AutoAttribute(int miliage, int engineCapacity, DateTime releaseYear, bool isNew, Guid fuelTypeId, Guid autoColorId, Guid transmissionTypeId, Guid autoBrandTypeId, Guid productId)
+        public AutoAttribute(int miliage, int engineCapacity, DateTime releaseYear, bool isNew, string fuelTypeId, string autoColorId, string transmissionTypeId, string autoBrandTypeId, string productId)
         {
             Miliage = miliage;
             EngineCapacity = engineCapacity;

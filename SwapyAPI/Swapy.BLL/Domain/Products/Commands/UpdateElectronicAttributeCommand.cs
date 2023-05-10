@@ -8,9 +8,9 @@ namespace Swapy.BLL.Domain.Products.Commands
 {
     public class UpdateElectronicAttributeCommand : UpdateProductCommand
     {
-        public Guid ElectronicAttributeId { get; set; }
+        public string ElectronicAttributeId { get; set; }
         public bool IsNew { get; set; }
-        public Guid MemoryModelId { get; set; }
-        public Guid ModelColorId { get; set; }
+        public string MemoryModelId { get; set; }
+        public string ModelColorId { get; set; }
     }
 }

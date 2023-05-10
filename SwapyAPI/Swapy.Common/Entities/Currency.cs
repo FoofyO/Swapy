@@ -2,13 +2,14 @@
 {
     public class Currency
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }    
         public string Symbol { get; set; }
-        public ICollection<Product> Products { get; set; }
+        public ICollection<Product> Products { get; set; } = new List<Product>();
 
-        public Currency() => Products = new List<Product>();
-        public Currency(string name, string symbol) : this()
+        public Currency() { }
+
+        public Currency(string name, string symbol)
         {
             Name = name;
             Symbol = symbol;

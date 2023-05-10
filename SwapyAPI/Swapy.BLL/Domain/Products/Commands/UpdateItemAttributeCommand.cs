@@ -2,8 +2,8 @@
 {
     public class UpdateItemAttributeCommand : UpdateProductCommand
     {
-        public Guid ItemAttributeId { get; set; }
+        public string ItemAttributeId { get; set; }
         public bool IsNew { get; set; }
-        public Guid ItemTypeId { get; set; }
+        public string ItemTypeId { get; set; }
     }
 }

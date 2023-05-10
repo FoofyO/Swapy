@@ -1,40 +1,29 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Swapy.Common.Enums;
 
 namespace Swapy.Common.Entities
 {
     public class User : IdentityUser
     {
-        public string FullName { get; set; }
-        public string Logo { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public UserType Type { get; set; }
         public DateTime RegistrationDate { get; set; }
+        public string Logo { get; set; }
+        public string RefreshTokenId { get; set; }
+        public RefreshToken RefreshToken { get; set; }
+        public string ShopAttributeId { get; set; }
+        public ShopAttribute ShopAttribute { get; set; }
 
-        public ICollection<Product> Products { get; set; }
-        public ICollection<Like> LikesAsLiker { get; set; }
-        public ICollection<Like> LikesAsSeller { get; set; }
-        public ICollection<Chat> ChatsAsBuyer { get; set; }
-        public ICollection<Message> SentMessages { get; set; }
-        public ICollection<Subscribe> SubscribesAsSeller { get; set; }
-        public ICollection<FavoriteProduct> FavoriteProducts { get; set; }
-        public ICollection<Subscribe> SubscribesAsSubscriber { get; set; }
+        public ICollection<Like> Likes { get; set; } = new List<Like>();
+        public ICollection<Chat> ChatsAsBuyer { get; set; } = new List<Chat>();
+        public ICollection<Product> Products { get; set; } = new List<Product>();
+        public ICollection<Message> SentMessages { get; set; } = new List<Message>();
+        public ICollection<UserLike> LikesRecipient { get; set; } = new List<UserLike>();
+        public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
+        public ICollection<FavoriteProduct> FavoriteProducts { get; set; } = new List<FavoriteProduct>();
+        public ICollection<UserSubscription> SubscriptionsRecipient { get; set; } = new List<UserSubscription>();
 
-        public User()
-        {
-            Products = new List<Product>();
-            LikesAsLiker = new List<Like>();
-            LikesAsSeller = new List<Like>();
-            ChatsAsBuyer = new List<Chat>();
-            SentMessages = new List<Message>();
-            SubscribesAsSeller = new List<Subscribe>();
-            FavoriteProducts = new List<FavoriteProduct>();
-            SubscribesAsSubscriber = new List<Subscribe>();
-        }
-
-        public User(string fullName, string email, string phone, string logo) : this()
-        {
-            Logo = logo;
-            Email = email;
-            FullName = fullName;
-            PhoneNumber = phone;
-        }
+        public User() { }
     }
 }

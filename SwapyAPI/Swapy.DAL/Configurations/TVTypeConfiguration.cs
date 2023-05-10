@@ -22,7 +22,6 @@ namespace Swapy.DAL.Configurations
             builder.HasMany(t => t.TVAttributes)
                    .WithOne(t => t.TVType)
                    .HasForeignKey(t => t.TVTypeId)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

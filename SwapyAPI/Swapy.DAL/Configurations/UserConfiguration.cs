@@ -9,73 +9,59 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.ToTable("Users");
-            builder.HasKey(u => u.Id);
 
-            builder.Property(u => u.Id)
-                   .IsRequired()
-                   .HasDefaultValueSql("NEWID()");
-
-            builder.Property(u => u.FullName)
-                   .HasColumnType("NVARCHAR(128)")
-                   .HasMaxLength(128)
+            builder.Property(u => u.FirstName)
+                   .HasColumnType("NVARCHAR(64)")
+                   .HasMaxLength(64)
                    .IsRequired();
 
-            builder.Property(u => u.Logo)
-                   .HasColumnType("NVARCHAR(128)")
-                   .HasMaxLength(128)
-                   .IsRequired(false);
+            builder.Property(u => u.LastName)
+                   .HasColumnType("NVARCHAR(64)")
+                   .HasMaxLength(64)
+                   .IsRequired();
+
+            builder.Property(u => u.Type)
+                   .HasColumnType("INT")
+                   .IsRequired();
 
             builder.Property(u => u.RegistrationDate)
                    .HasColumnType("DATE")
                    .HasDefaultValueSql("GETDATE()")
                    .IsRequired();
 
-            builder.HasMany(u => u.Products)
-                   .WithOne(p => p.User)
-                   .HasForeignKey(p => p.UserId)
-                   .OnDelete(DeleteBehavior.SetNull)
+            builder.Property(u => u.Logo)
+                   .HasColumnType("NVARCHAR(128)")
+                   .HasMaxLength(128)
+                   .IsRequired();
+
+            builder.HasOne(u => u.RefreshToken)
+                   .WithOne(r => r.User)
+                   .HasForeignKey<RefreshToken>(r => r.UserId)
                    .IsRequired(false);
 
-            builder.HasMany(u => u.LikesAsLiker)
+            builder.HasOne(u => u.ShopAttribute)
+                   .WithOne(s => s.User)
+                   .HasForeignKey<ShopAttribute>(s => s.UserId)
+                   .IsRequired(false);
+
+            builder.HasMany(u => u.Likes)
                    .WithOne(l => l.Liker)
                    .HasForeignKey(l => l.LikerId)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
 
-            builder.HasMany(u => u.LikesAsSeller)
-                   .WithOne(l => l.Seller)
-                   .HasForeignKey(l => l.SellerId)
-                   .OnDelete(DeleteBehavior.SetNull)
+            builder.HasMany(u => u.Subscriptions)
+                   .WithOne(s => s.Subscriber)
+                   .HasForeignKey(s => s.SubscriberId)
                    .IsRequired(false);
 
             builder.HasMany(u => u.ChatsAsBuyer)
                    .WithOne(c => c.Buyer)
                    .HasForeignKey(c => c.BuyerId)
-                   .OnDelete(DeleteBehavior.SetNull)
-                   .IsRequired(false);
-
-            builder.HasMany(u => u.SentMessages)
-                   .WithOne(m => m.Sender)
-                   .HasForeignKey(m => m.SenderId)
-                   .OnDelete(DeleteBehavior.SetNull)
-                   .IsRequired(false);
-
-            builder.HasMany(u => u.SubscribesAsSeller)
-                   .WithOne(s => s.Seller)
-                   .HasForeignKey(s => s.SellerId)
-                   .OnDelete(DeleteBehavior.SetNull)
-                   .IsRequired(false);
-
-            builder.HasMany(u => u.SubscribesAsSubscriber)
-                   .WithOne(s => s.Subscriber)
-                   .HasForeignKey(s => s.SubscriberId)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
 
             builder.HasMany(u => u.FavoriteProducts)
                    .WithOne(f => f.User)
                    .HasForeignKey(f => f.UserId)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

@@ -30,31 +30,26 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(x => x.FuelType)
                    .WithMany(x => x.AutoAttributes)
                    .HasForeignKey(p => p.FuelTypeId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(x => x.AutoColor)
                    .WithMany(x => x.AutoAttributes)
                    .HasForeignKey(p => p.AutoColorId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(x => x.TransmissionType)
                    .WithMany(x => x.AutoAttributes)
                    .HasForeignKey(p => p.TransmissionTypeId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(x => x.AutoBrandType)
                    .WithMany(x => x.AutoAttributes)
                    .HasForeignKey(p => p.AutoBrandTypeId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(x => x.Product)
                    .WithOne(x => x.AutoAttribute)
                    .HasForeignKey<Product>(x => x.AutoAttributeId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
         }
     }

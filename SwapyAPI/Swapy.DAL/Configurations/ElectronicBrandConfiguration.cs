@@ -21,7 +21,6 @@ namespace Swapy.DAL.Configurations
 
             builder.HasMany(e => e.ElectronicBrandsTypes)
                    .WithOne(e => e.ElectronicBrand)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

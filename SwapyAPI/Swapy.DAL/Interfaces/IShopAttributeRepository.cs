@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface ISubscribeRepository : IRepository<Subscribe>
+    public interface IShopAttributeRepository : IRepository<ShopAttribute>
     {
     }
 }

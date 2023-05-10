@@ -30,7 +30,7 @@ namespace Swapy.API
             builder.Services.AddDbContext<SwapyDbContext>(option =>
             {
                 option.UseLazyLoadingProxies();
-                option.UseSqlServer(builder.Configuration.GetConnectionString("DockerSQL"));
+                option.UseSqlServer(builder.Configuration.GetConnectionString("SamedSQL"));
             });
 
 
@@ -72,13 +72,15 @@ namespace Swapy.API
             builder.Services.AddScoped<IRealEstateAttributeRepository, RealEstateAttributeRepository>();
             builder.Services.AddScoped<IScreenDiagonalRepository, ScreenDiagonalRepository>();
             builder.Services.AddScoped<IScreenResolutionRepository, ScreenResolutionRepository>();
+            builder.Services.AddScoped<IShopAttributeRepository, ShopAttributeRepository>();
             builder.Services.AddScoped<ISubcategoryRepository, SubcategoryRepository>();
-            builder.Services.AddScoped<ISubscribeRepository, SubscribeRepository>();
+            builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             builder.Services.AddScoped<ITransmissionTypeRepository, TransmissionTypeRepository>();
             builder.Services.AddScoped<ITVAttributeRepository, TVAttributeRepository>();
             builder.Services.AddScoped<ITVBrandRepository, TVBrandRepository>();
             builder.Services.AddScoped<ITVTypeRepository, TVTypeRepository>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserLikeRepository, UserLikeRepository>();
+            builder.Services.AddScoped<IUserSubscriptionRepository, UserSubscriptionRepository>();
 
 
             /// <summary>
@@ -104,7 +106,7 @@ namespace Swapy.API
             /// <summary>
             /// Register Identity Service
             /// </summary>
-            builder.Services.AddIdentity<User, IdentityRole>(option => option.SignIn.RequireConfirmedAccount = false)
+            builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<SwapyDbContext>()
                 .AddDefaultTokenProviders();
 

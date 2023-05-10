@@ -5,6 +5,6 @@ namespace Swapy.BLL.Domain.Products.Queries
 {
     public class GetByIdRealEstateAttributeQuery : IRequest<RealEstateAttribute>
     {
-        public Guid RealEstateAttributeId { get; set; }
+        public string RealEstateAttributeId { get; set; }
     }
 }

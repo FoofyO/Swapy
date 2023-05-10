@@ -2,16 +2,16 @@
 {
     public class MemoryModel
     {
-        public Guid Id { get; set; }
-        public Guid ModelId { get; set; }
+        public string Id { get; set; }
+        public string ModelId { get; set; }
         public Model Model { get; set; }
-        public Guid MemoryId { get; set; }
+        public string MemoryId { get; set; }
         public Memory Memory { get; set; }
-        public ICollection<ElectronicAttribute> ElectronicAttributes { get; set; }
+        public ICollection<ElectronicAttribute> ElectronicAttributes { get; set; } = new List<ElectronicAttribute>();
 
-        public MemoryModel() => ElectronicAttributes = new List<ElectronicAttribute>();
+        public MemoryModel() { }
 
-        public MemoryModel(Guid modelId, Guid memoryId) : this()
+        public MemoryModel(string modelId, string memoryId)
         {
             ModelId = modelId;
             MemoryId = memoryId;

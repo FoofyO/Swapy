@@ -2,12 +2,12 @@
 {
     public class TVType
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public ICollection<TVAttribute> TVAttributes { get; set; }
+        public ICollection<TVAttribute> TVAttributes { get; set; } = new List<TVAttribute>();
 
-        public TVType() => TVAttributes = new List<TVAttribute>();
+        public TVType() { }
 
-        public TVType(string name) : this() => Name = name;
+        public TVType(string name) => Name = name;
     }
 }

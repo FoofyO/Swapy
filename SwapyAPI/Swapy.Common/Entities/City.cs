@@ -2,12 +2,12 @@
 {
     public class City
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Product> Products { get; set; }
+        public ICollection<Product> Products { get; set; } = new List<Product>();
 
-        public City() => Products = new List<Product>();
-        
-        public City(string name) : this() => Name = name;
+        public City() { }
+
+        public City(string name) => Name = name;
     } 
 }
