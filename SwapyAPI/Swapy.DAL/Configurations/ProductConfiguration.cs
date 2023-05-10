@@ -26,21 +26,18 @@ namespace Swapy.DAL.Configurations
                    .IsRequired(false);
 
             builder.Property(p => p.Price)
-                   .HasColumnType("MONEY(10,2)")
+                   .HasColumnType("Decimal(10,2)")
                    .HasDefaultValue(0)
-                   .HasPrecision(10, 2)
-                   .HasDefaultValueSql("0")
                    .IsRequired();
 
             builder.Property(p => p.Reviews)
                    .HasColumnType("INT")
                    .HasDefaultValue(0)
-                   .HasDefaultValueSql("0")
                    .IsRequired();
 
             builder.Property(p => p.DateTime)
                    .HasColumnType("DATETIME")
-                   .HasDefaultValueSql("GETDATE()")
+                   .HasDefaultValueSql("GETDATE()")                                                                     
                    .IsRequired();
 
             builder.HasOne(p => p.City)
@@ -52,79 +49,66 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(p => p.Currency)
                    .WithMany(c => c.Products)
                    .HasForeignKey(p => p.CurrencyId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(p => p.User)
                    .WithMany(u => u.Products)
                    .HasForeignKey(p => p.UserId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasMany(p => p.Chats)
                    .WithOne(c => c.Product)
                    .HasForeignKey(c => c.ProductId)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
 
             builder.HasMany(p => p.Images)
                    .WithOne(p => p.Product)
                    .HasForeignKey(p => p.ProductId)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
 
             builder.HasOne(p => p.Subcategory)
                    .WithMany(p => p.Products)
                    .HasForeignKey(p => p.SubcategoryId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(p => p.Category)
                    .WithMany(p => p.Products)
                    .HasForeignKey(p => p.CategoryId)
-                   .OnDelete(DeleteBehavior.NoAction) //Category -> Subcategory -> Product
                    .IsRequired();
 
             builder.HasOne(p => p.AutoAttribute)
                    .WithOne(a => a.Product)
                    .HasForeignKey<AutoAttribute>(s => s.ProductId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(p => p.ElectronicAttribute)
                    .WithOne(e => e.Product)
                    .HasForeignKey<ElectronicAttribute>(s => s.ProductId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(p => p.ItemAttribute)
                    .WithOne(i => i.Product)
                    .HasForeignKey<ItemAttribute>(s => s.ProductId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(p => p.AnimalAttribute)
                    .WithOne(a => a.Product)
                    .HasForeignKey<AnimalAttribute>(s => s.ProductId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(p => p.TVAttribute)
                    .WithOne(t => t.Product)
                    .HasForeignKey<TVAttribute>(s => s.ProductId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(p => p.RealEstateAttribute)
                    .WithOne(r => r.Product)
                    .HasForeignKey<RealEstateAttribute>(s => s.ProductId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
-            builder.HasMany(u => u.FavoriteProducts)
+            builder.HasMany(p => p.FavoriteProducts)
                    .WithOne(f => f.Product)
                    .HasForeignKey(f => f.ProductId)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

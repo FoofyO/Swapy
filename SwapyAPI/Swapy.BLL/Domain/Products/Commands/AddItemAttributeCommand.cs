@@ -3,6 +3,6 @@
     public class AddItemAttributeCommand : AddProductCommand
     {
         public bool IsNew { get; set; }
-        public Guid ItemTypeId { get; set; }
+        public string ItemTypeId { get; set; }
     }
 }

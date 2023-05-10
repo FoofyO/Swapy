@@ -2,13 +2,13 @@
 {
     public class Gender
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public ICollection<ClothesView> ClothesViews { get; set; }
+        public ICollection<ClothesView> ClothesViews { get; set; } = new List<ClothesView>();
 
-        public Gender() => ClothesViews = new List<ClothesView>();
+        public Gender() { }
 
-        public Gender(string name) : this() => Name = name;
+        public Gender(string name) => Name = name;
     }
 }
  

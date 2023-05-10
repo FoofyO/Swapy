@@ -2,18 +2,18 @@
 {
     public class Like
     {
-        public Guid Id { get; set; }
-        public Guid SellerId { get; set; }
-        public User Seller { get; set; }
-        public Guid LikerId { get; set; }
+        public string Id { get; set; }
+        public string LikerId { get; set; }
         public User Liker { get; set; }
+        public string UserLikeId { get; set; }
+        public UserLike UserLike { get; set; }
 
         public Like() { }
 
-        public Like(Guid sellerId, Guid likerId) : this()
+        public Like(string likerId, string userLikeId)
         {
-            SellerId = sellerId;
             LikerId = likerId;
+            UserLikeId = userLikeId;
         }
     }
 }

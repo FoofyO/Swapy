@@ -11,7 +11,12 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("RefreshTokens");
             builder.HasKey(r => r.Token);
 
-            builder.Property(r => r.Token).IsRequired(false);
+            builder.Property(r => r.Token).IsRequired();
+
+            builder.HasOne(r => r.User)
+                   .WithOne(u => u.RefreshToken)
+                   .HasForeignKey<User>(u => u.RefreshTokenId)
+                   .IsRequired();
         }
     }
 }

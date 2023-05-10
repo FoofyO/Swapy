@@ -2,16 +2,16 @@
 {
     public class AutoBrandType
     {
-        public Guid Id { get; set; }
-        public Guid AutoBrandId { get; set; }
+        public string Id { get; set; }
+        public string AutoBrandId { get; set; }
         public AutoBrand AutoBrand { get; set; }
-        public Guid AutoTypeId { get; set; }
+        public string AutoTypeId { get; set; }
         public Subcategory AutoType { get; set; }
-        public ICollection<AutoAttribute> AutoAttributes { get; set; }
+        public ICollection<AutoAttribute> AutoAttributes { get; set; } = new List<AutoAttribute>();
 
-        public AutoBrandType() => AutoAttributes = new List<AutoAttribute>();
+        public AutoBrandType() { }
 
-        public AutoBrandType(Guid autoBrandId, Guid autoTypeId) : this()
+        public AutoBrandType(string autoBrandId, string autoTypeId)
         {
             AutoBrandId = autoBrandId;
             AutoTypeId = autoTypeId;

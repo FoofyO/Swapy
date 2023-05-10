@@ -14,7 +14,7 @@ namespace Swapy.BLL.Services
 
         public TokenService(IConfiguration configuration) => _configuration = configuration;
 
-        public async Task<Guid> GenerateRefreshToken() => Guid.NewGuid();
+        public async Task<string> GenerateRefreshToken() => Guid.NewGuid().ToString();
 
         public async Task<string> GenerateJwtToken(User user)
         {

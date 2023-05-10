@@ -2,13 +2,13 @@
 {
     public class TVBrand
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }  
-        public ICollection<TVAttribute> TVAttributes { get; set; }
+        public ICollection<TVAttribute> TVAttributes { get; set; } = new List<TVAttribute>();
 
-        public TVBrand() => TVAttributes = new List<TVAttribute>();
+        public TVBrand() { }
 
-        public TVBrand(string name) : this() => Name = name; 
+        public TVBrand(string name) => Name = name; 
     }
 }
  

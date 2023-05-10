@@ -13,10 +13,10 @@ namespace Swapy.BLL.Services
             _subcategoryRepository = subcategoryRepository;
         }
         
-        public async Task<bool> SubcategoryValidationAsync(Guid SubcategoryId)
+        public async Task<bool> SubcategoryValidationAsync(string SubcategoryId)
         {
-            Subcategory subcategory = await  _subcategoryRepository.GetDetailByIdAsync(SubcategoryId);
-            return subcategory.Subcategories.Count == 0;
+            Subcategory subcategory = await _subcategoryRepository.GetDetailByIdAsync(SubcategoryId);
+            return subcategory.ChildSubcategories.Count == 0;
         }
     }
 }

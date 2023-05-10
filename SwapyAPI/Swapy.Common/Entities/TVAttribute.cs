@@ -2,23 +2,23 @@
 {
     public class TVAttribute
     {
-        public Guid Id { get; set; }  
+        public string Id { get; set; }  
         public bool IsNew { get; set; }
         public bool IsSmart { get; set; }
-        public Guid TVTypeId { get; set; }
+        public string TVTypeId { get; set; }
         public TVType TVType { get; set; }
-        public Guid TVBrandId { get; set; }
+        public string TVBrandId { get; set; }
         public TVBrand TVBrand { get; set; }
-        public Guid ScreenResolutionId { get; set; } 
+        public string ScreenResolutionId { get; set; } 
         public ScreenResolution ScreenResolution { get; set; }
-        public Guid ScreenDiagonalId { get; set; }
+        public string ScreenDiagonalId { get; set; }
         public ScreenDiagonal ScreenDiagonal { get; set; }  
-        public Guid ProductId { get; set; }
+        public string ProductId { get; set; }
         public Product Product { get; set; }
 
-        public TVAttribute() { } 
+        public TVAttribute() { }
 
-        public TVAttribute(bool isNew, bool isSmart, Guid tvTypeId, Guid tvBrandId, Guid screenResolutionId, Guid screenDiagonalId, Guid productId)
+        public TVAttribute(bool isNew, bool isSmart, string tvTypeId, string tvBrandId, string screenResolutionId, string screenDiagonalId, string productId)
         {  
             IsNew = isNew;
             IsSmart = isSmart; 

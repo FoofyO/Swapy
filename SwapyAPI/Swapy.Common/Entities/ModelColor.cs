@@ -2,16 +2,16 @@
 {
     public class ModelColor
     {
-        public Guid Id { get; set; }
-        public Guid ModelId { get; set; }
+        public string Id { get; set; }
+        public string ModelId { get; set; }
         public Model Model { get; set; }
-        public Guid ColorId { get; set; }
+        public string ColorId { get; set; }
         public Color Color { get; set; }
-        public ICollection<ElectronicAttribute> ElectronicAttributes { get; set; }
+        public ICollection<ElectronicAttribute> ElectronicAttributes { get; set; } = new List<ElectronicAttribute>();
 
-        public ModelColor() => ElectronicAttributes = new List<ElectronicAttribute>();
+        public ModelColor() { }
 
-        public ModelColor(Guid id, Guid modelId, Guid colorId) : this()
+        public ModelColor(string id, string modelId, string colorId)
         {
             Id = id;
             ModelId = modelId;

@@ -2,6 +2,6 @@
 {
     public class AddAnimalAttributeCommand : AddProductCommand
     {
-        public Guid AnimalBreedId { get; set; }
+        public string AnimalBreedId { get; set; }
     }
 }

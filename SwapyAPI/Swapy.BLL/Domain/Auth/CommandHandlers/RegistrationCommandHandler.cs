@@ -33,17 +33,17 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             else if (emailExists != null && phoneExists != null) throw new EmailOrPhoneTakenException("Email and Phone already taken");
             else
             {
-                var user = new User(request.FullName, request.Email, request.Phone, string.Empty);
-                var result = await _userManager.CreateAsync(user, request.Password);
+                //var user = new User(request.FullName, request.Email, request.Phone, string.Empty);
+                //var result = await _userManager.CreateAsync(user, request.Password);
 
-                if (!result.Succeeded) throw new InvalidOperationException("User creation failed");
+                //if (!result.Succeeded) throw new InvalidOperationException("User creation failed");
 
-                var refreshToken = await _tokenService.GenerateRefreshToken();
-                var accessToken = await _tokenService.GenerateJwtToken(user);
-                await _refreshTokenRepository.CreateAsync(new RefreshToken(refreshToken, DateTime.UtcNow.AddDays(30), Guid.Parse(user.Id)));
+                //var refreshToken = await _tokenService.GenerateRefreshToken();
+                //var accessToken = await _tokenService.GenerateJwtToken(user);
+                //await _refreshTokenRepository.CreateAsync(new RefreshToken(refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
 
-                var authDTO = new AuthResponseDTO { UserId = Guid.Parse(user.Id), Email = user.Email, Phone = user.PhoneNumber, AccessToken = accessToken, RefreshToken = refreshToken };
-                return authDTO;
+                //var authDTO = new AuthResponseDTO { SellerId = user.Id, Email = user.Email, Phone = user.PhoneNumber, AccessToken = accessToken, RefreshToken = refreshToken };
+                return new AuthResponseDTO();
             }
         }
     }

@@ -2,18 +2,18 @@
 {
     public class ElectronicAttribute
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public bool IsNew { get; set; }
-        public Guid MemoryModelId { get; set; }
+        public string MemoryModelId { get; set; }
         public MemoryModel MemoryModel { get; set; }
-        public Guid ModelColorId { get; set; }
+        public string ModelColorId { get; set; }
         public ModelColor ModelColor { get; set; }
-        public Guid ProductId { get; set; }
+        public string ProductId { get; set; }
         public Product Product { get; set; }
 
         public ElectronicAttribute() { }
 
-        public ElectronicAttribute(bool isNew, Guid memoryModelId, Guid modelColorId, Guid productId)
+        public ElectronicAttribute(bool isNew, string memoryModelId, string modelColorId, string productId)
         {
             IsNew = isNew;
             MemoryModelId = memoryModelId;

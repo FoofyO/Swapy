@@ -2,12 +2,12 @@
 {
     public class ElectronicBrand
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public ICollection<ElectronicBrandType> ElectronicBrandsTypes { get; set; }
+        public ICollection<ElectronicBrandType> ElectronicBrandsTypes { get; set; } = new List<ElectronicBrandType>();
 
-        public ElectronicBrand() => ElectronicBrandsTypes = new List<ElectronicBrandType>();
+        public ElectronicBrand() { }
 
-        public ElectronicBrand(string name) : this() => Name = name;
+        public ElectronicBrand(string name) => Name = name;
     }
 }

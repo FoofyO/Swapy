@@ -2,12 +2,12 @@
 {
     public class ClothesSeason
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }   
-        public ICollection<ClothesAttribute> ClothesAttributes { get; set; }
+        public ICollection<ClothesAttribute> ClothesAttributes { get; set; } = new List<ClothesAttribute>();
 
-        public ClothesSeason() => ClothesAttributes = new List<ClothesAttribute>();
+        public ClothesSeason() { }
 
-        public ClothesSeason(string name) : this() => Name = name;
+        public ClothesSeason(string name) => Name = name;
     }
 }     

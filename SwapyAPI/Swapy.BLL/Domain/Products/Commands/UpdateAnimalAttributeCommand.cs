@@ -2,7 +2,7 @@
 {
     public class UpdateAnimalAttributeCommand : UpdateProductCommand
     {
-        public Guid AnimalAttributeId { get; set; }
-        public Guid AnimalBreedId { get; set; }
+        public string AnimalAttributeId { get; set; }
+        public string AnimalBreedId { get; set; }
     }
 }

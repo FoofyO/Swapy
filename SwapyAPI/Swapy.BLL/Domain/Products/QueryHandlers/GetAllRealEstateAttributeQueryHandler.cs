@@ -8,10 +8,10 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
     public class GetAllRealEstateAttributeQueryHandler : IRequestHandler<GetAllRealEstateAttributeQuery, IEnumerable<RealEstateAttribute>>
     {
-        private readonly Guid _userId;
+        private readonly string _userId;
         private readonly IRealEstateAttributeRepository _realEstateAttributeRepository;
 
-        public GetAllRealEstateAttributeQueryHandler(Guid userId, IRealEstateAttributeRepository animalAttributeRepository)
+        public GetAllRealEstateAttributeQueryHandler(string userId, IRealEstateAttributeRepository animalAttributeRepository)
         {
             _userId = userId;
             _realEstateAttributeRepository = animalAttributeRepository;

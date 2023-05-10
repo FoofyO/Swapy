@@ -7,9 +7,9 @@ namespace Swapy.BLL.Domain.Products.Queries
     {
         public bool? IsNew { get; set; }
         public bool? IsSmart { get; set; }
-        public List<Guid> TVTypesId { get; set; }
-        public List<Guid> TVBrandsId { get; set; }
-        public List<Guid> ScreenResolutionsId { get; set; }
-        public List<Guid> ScreenDiagonalsId { get; set; }
+        public List<string> TVTypesId { get; set; }
+        public List<string> TVBrandsId { get; set; }
+        public List<string> ScreenResolutionsId { get; set; }
+        public List<string> ScreenDiagonalsId { get; set; }
     }
 }

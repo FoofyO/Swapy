@@ -4,6 +4,6 @@ namespace Swapy.BLL.Domain.Products.Commands
 {
     public class RemoveItemAttributeCommand : IRequest<Unit>
     {
-        public Guid ItemAttributeId { get; set; }
+        public string ItemAttributeId { get; set; }
     }
 }

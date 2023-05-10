@@ -9,12 +9,12 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class AddAutoAttributeCommandHandler : IRequestHandler<AddAutoAttributeCommand, Unit>
     {
-        private readonly Guid _userId;
+        private readonly string _userId;
         private readonly IProductRepository _productRepository;
         private readonly IAutoAttributeRepository _autoAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
 
-        public AddAutoAttributeCommandHandler(Guid userId, IProductRepository productRepository, IAutoAttributeRepository autoAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public AddAutoAttributeCommandHandler(string userId, IProductRepository productRepository, IAutoAttributeRepository autoAttributeRepository, ISubcategoryRepository subcategoryRepository)
         {
             _userId = userId;
             _productRepository = productRepository;

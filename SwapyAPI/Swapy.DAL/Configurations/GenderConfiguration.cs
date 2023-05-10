@@ -23,7 +23,6 @@ namespace Swapy.DAL.Configurations
             builder.HasMany(g => g.ClothesViews)
                    .WithOne(c => c.Gender) 
                    .HasForeignKey(c => c.GenderId)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);  
         }
     }

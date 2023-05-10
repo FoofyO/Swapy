@@ -24,12 +24,10 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(e => e.ElectronicType)
                    .WithMany(s => s.ElectronicBrandsTypes)
                    .HasForeignKey(e => e.ElectronicTypeId)
-                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasMany(x => x.Models)
                    .WithOne(x => x.ElectronicBrandType)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

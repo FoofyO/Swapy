@@ -21,7 +21,6 @@ namespace Swapy.DAL.Configurations
 
             builder.HasMany(m => m.MemoriesModels)
                    .WithOne(m => m.Memory)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

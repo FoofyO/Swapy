@@ -8,8 +8,10 @@ namespace Swapy.DAL
 {
     public class SwapyDbContext : IdentityDbContext<IdentityUser>
     {
-        public SwapyDbContext(DbContextOptions options) : base(options)
+        public SwapyDbContext(DbContextOptions<SwapyDbContext> options) : base(options)
         {
+            Database.EnsureDeleted();
+            Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -48,13 +50,17 @@ namespace Swapy.DAL
             builder.ApplyConfiguration(new RealEstateAttributeConfiguration());
             builder.ApplyConfiguration(new ScreenDiagonalConfiguration());
             builder.ApplyConfiguration(new ScreenResolutionConfiguration());
+            builder.ApplyConfiguration(new ShopAttributeConfiguration());
             builder.ApplyConfiguration(new SubcategoryConfiguration());
-            builder.ApplyConfiguration(new SubscribeConfiguration());
+            builder.ApplyConfiguration(new SubcategoryBranchConfiguration());
+            builder.ApplyConfiguration(new SubscriptionConfiguration());
             builder.ApplyConfiguration(new TVAttributeConfiguration());
             builder.ApplyConfiguration(new TVBrandConfiguration());
             builder.ApplyConfiguration(new TVTypeConfiguration());
             builder.ApplyConfiguration(new TransmissionTypeConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new UserLikeConfiguration());
+            builder.ApplyConfiguration(new UserSubscriptionConfiguration());
             base.OnModelCreating(builder);
         }
 
@@ -93,12 +99,16 @@ namespace Swapy.DAL
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<ScreenDiagonal> ScreenDiagonals { get; set; }
         public DbSet<ScreenResolution> ScreenResolutions { get; set; }
+        public DbSet<ShopAttribute> ShopAttributes { get; set; }
         public DbSet<Subcategory> Subcategories { get; set; }
-        public DbSet<Subscribe> Subscribes { get; set; }
+        public DbSet<SubcategoryBranch> SubcategoryBranches { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<TVAttribute> TVAttributes { get; set; }
         public DbSet<TVBrand> TVBrands { get; set; }
         public DbSet<TVType> TVTypes { get; set; }
         public DbSet<TransmissionType> TransmissionTypes { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserLike> UsersLikes { get; set; }
+        public DbSet<UserSubscription> UsersSubscriptions { get; set; }
     }
 }

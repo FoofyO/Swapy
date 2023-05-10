@@ -21,7 +21,6 @@ namespace Swapy.DAL.Configurations
 
             builder.HasMany(x => x.AutoBrandsTypes)
                    .WithOne(x => x.AutoBrand)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

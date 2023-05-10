@@ -8,10 +8,10 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
     public class GetAllTVAttributeQueryHandler : IRequestHandler<GetAllTVAttributeQuery, IEnumerable<TVAttribute>>
     {
-        private readonly Guid _userId;
+        private readonly string _userId;
         private readonly ITVAttributeRepository _tvAttributeRepository;
 
-        public GetAllTVAttributeQueryHandler(Guid userId, ITVAttributeRepository tvAttributeRepository)
+        public GetAllTVAttributeQueryHandler(string userId, ITVAttributeRepository tvAttributeRepository)
         {
             _userId = userId;
             _tvAttributeRepository = tvAttributeRepository;

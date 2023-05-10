@@ -5,6 +5,6 @@ namespace Swapy.BLL.Domain.Products.Queries
 {
     public class GetByIdAutoAttributeQuery : IRequest<AutoAttribute>
     {
-        public Guid AutoAttributeId { get; set; }
+        public string AutoAttributeId { get; set; }
     }
 }

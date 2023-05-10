@@ -8,10 +8,10 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
     public class GetAllAutoAttributeQueryHandler : IRequestHandler<GetAllAutoAttributeQuery, IEnumerable<AutoAttribute>>
     {
-        private readonly Guid _userId;
+        private readonly string _userId;
         private readonly IAutoAttributeRepository _autoAttributeRepository;
 
-        public GetAllAutoAttributeQueryHandler(Guid userId, IAutoAttributeRepository autoAttributeRepository)
+        public GetAllAutoAttributeQueryHandler(string userId, IAutoAttributeRepository autoAttributeRepository)
         {
             _userId = userId;
             _autoAttributeRepository = autoAttributeRepository;

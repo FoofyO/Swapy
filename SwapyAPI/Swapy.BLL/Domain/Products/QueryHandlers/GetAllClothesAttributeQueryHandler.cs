@@ -8,10 +8,10 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
     public class GetAllClothesAttributeQueryHandler : IRequestHandler<GetAllClothesAttributeQuery, IEnumerable<ClothesAttribute>>
     {
-        private readonly Guid _userId;
+        private readonly string _userId;
         private readonly IClothesAttributeRepository _clothesAttributeRepository;
 
-        public GetAllClothesAttributeQueryHandler(Guid userId, IClothesAttributeRepository clothesAttributeRepository)
+        public GetAllClothesAttributeQueryHandler(string userId, IClothesAttributeRepository clothesAttributeRepository)
         {
             _userId = userId;
             _clothesAttributeRepository = clothesAttributeRepository;

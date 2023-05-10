@@ -23,7 +23,6 @@ namespace Swapy.DAL.Configurations
                 .HasMany(x => x.AutoAttributes)
                 .WithOne(x => x.FuelType)
                 .HasForeignKey(x => x.FuelTypeId)
-                .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
         }
     }

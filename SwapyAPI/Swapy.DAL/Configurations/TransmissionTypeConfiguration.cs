@@ -22,7 +22,6 @@ namespace Swapy.DAL.Configurations
             builder.HasMany(x => x.AutoAttributes)
                    .WithOne(x => x.TransmissionType)
                    .HasForeignKey(x => x.TransmissionTypeId)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

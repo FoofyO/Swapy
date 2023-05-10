@@ -5,42 +5,42 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.DAL.Repositories
 {
-    public class SubscribeRepository : ISubscribeRepository
+    public class SubscribeRepository : ISubscriptionRepository
     {
         private readonly SwapyDbContext _context;
 
         public SubscribeRepository(SwapyDbContext context) => _context = context;
 
-        public async Task CreateAsync(Subscribe item)
+        public async Task CreateAsync(Subscription item)
         {
-            await _context.Subscribes.AddAsync(item);
+            await _context.Subscriptions.AddAsync(item);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Subscribe item)
+        public async Task UpdateAsync(Subscription item)
         {
-            _context.Subscribes.Update(item);
+            _context.Subscriptions.Update(item);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Subscribe item)
+        public async Task DeleteAsync(Subscription item)
         {
-            _context.Subscribes.Remove(item);
+            _context.Subscriptions.Remove(item);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteByIdAsync(Guid id) => await DeleteAsync(await GetByIdAsync(id));
+        public async Task DeleteByIdAsync(string id) => await DeleteAsync(await GetByIdAsync(id));
 
-        public async Task<Subscribe> GetByIdAsync(Guid id)
+        public async Task<Subscription> GetByIdAsync(string id)
         {
-            var item = await _context.Subscribes.FindAsync(id);
+            var item = await _context.Subscriptions.FindAsync(id);
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
         }
 
-        public async Task<IEnumerable<Subscribe>> GetAllAsync()
+        public async Task<IEnumerable<Subscription>> GetAllAsync()
         {
-            return await _context.Subscribes.ToListAsync();
+            return await _context.Subscriptions.ToListAsync();
         }
     }
 }

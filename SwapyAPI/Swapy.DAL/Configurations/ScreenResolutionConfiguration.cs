@@ -22,7 +22,6 @@ namespace Swapy.DAL.Configurations
             builder.HasMany(s => s.TVAttributes)
                    .WithOne(s => s.ScreenResolution)
                    .HasForeignKey(s => s.ScreenResolutionId)
-                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         } 
     }

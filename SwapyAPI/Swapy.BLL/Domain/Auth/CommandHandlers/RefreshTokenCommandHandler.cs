@@ -38,7 +38,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 
             var refreshToken = await _tokenService.GenerateRefreshToken();
             var accessToken = await _tokenService.GenerateJwtToken(user);
-            await _refreshTokenRepository.CreateAsync(new RefreshToken(refreshToken, DateTime.UtcNow.AddDays(30), Guid.Parse(user.Id)));
+            await _refreshTokenRepository.CreateAsync(new RefreshToken(refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
 
             var authDTO = new AuthResponseDTO { AccessToken = accessToken, RefreshToken = refreshToken };
             return authDTO;

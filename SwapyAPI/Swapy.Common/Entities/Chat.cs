@@ -2,16 +2,16 @@
 {
     public class Chat
     {
-        public Guid Id { get; set; }
-        public Guid BuyerId { get; set; }
+        public string Id { get; set; }
+        public string BuyerId { get; set; }
         public User Buyer { get; set; }
-        public Guid ProductId { get; set; }
+        public string ProductId { get; set; }
         public Product Product { get; set; }
-        public ICollection<Message> Messages { get; set; }
+        public ICollection<Message> Messages { get; set; } = new List<Message>();
 
-        public Chat() => Messages = new List<Message>();
-       
-        public Chat(Guid productId, Guid buyerId) : this()
+        public Chat() { }
+
+        public Chat(string productId, string buyerId)
         {
             ProductId = productId;
             BuyerId = buyerId;

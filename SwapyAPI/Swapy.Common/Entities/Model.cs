@@ -2,20 +2,16 @@
 {
     public class Model
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public Guid ElectronicBrandTypeId { get; set; }
+        public string ElectronicBrandTypeId { get; set; }
         public ElectronicBrandType ElectronicBrandType { get; set; }
-        public ICollection<MemoryModel> MemoriesModels { get; set; }
-        public ICollection<ModelColor> ModelsColors { get; set; }
+        public ICollection<MemoryModel> MemoriesModels { get; set; } = new List<MemoryModel>();
+        public ICollection<ModelColor> ModelsColors { get; set; } = new List<ModelColor>();
 
-        public Model()
-        {
-            MemoriesModels = new List<MemoryModel>();
-            ModelsColors = new List<ModelColor>();
-        }
+        public Model() { }
 
-        public Model(string name, Guid electronicBrandTypeId) : this() 
+        public Model(string name, string electronicBrandTypeId)
         {
             Name = name;
             ElectronicBrandTypeId = electronicBrandTypeId;
