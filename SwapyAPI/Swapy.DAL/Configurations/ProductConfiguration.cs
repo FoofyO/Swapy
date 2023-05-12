@@ -30,7 +30,7 @@ namespace Swapy.DAL.Configurations
                    .HasDefaultValue(0)
                    .IsRequired();
 
-            builder.Property(p => p.Reviews)
+            builder.Property(p => p.Views)
                    .HasColumnType("INT")
                    .HasDefaultValue(0)
                    .IsRequired();

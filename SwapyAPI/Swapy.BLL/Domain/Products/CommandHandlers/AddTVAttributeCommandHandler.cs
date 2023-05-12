@@ -7,7 +7,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
-    public class AddTVAttributeCommandHandler : IRequestHandler<AddTVAttributeCommand, Unit>
+    public class AddTVAttributeCommandHandler : IRequestHandler<AddTVAttributeCommand, TVAttribute>
     {
         private readonly string _userId;
         private readonly IProductRepository _productRepository;
@@ -22,7 +22,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             _subcategoryRepository = subcategoryRepository;
         }
 
-        public async Task<Unit> Handle(AddTVAttributeCommand request, CancellationToken cancellationToken)
+        public async Task<TVAttribute> Handle(AddTVAttributeCommand request, CancellationToken cancellationToken)
         {
             ISubcategoryService subcategoryService = new SubcategoryService(_subcategoryRepository);
             if (!await subcategoryService.SubcategoryValidationAsync(request.SubcategoryId)) throw new ArgumentException("Invalid subcategory.");
@@ -33,7 +33,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             TVAttribute tvAttribute = new TVAttribute(request.IsNew, request.IsSmart, request.TVTypeId, request.TVBrandId, request.ScreenResolutionId, request.ScreenDiagonalId, product.Id);
             await _tvAttributeRepository.CreateAsync(tvAttribute);
 
-            return Unit.Value;
+            return tvAttribute;
         }
     }
 }

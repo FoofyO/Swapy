@@ -7,7 +7,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
-    public class AddElectronicAttributeCommandHandler : IRequestHandler<AddElectronicAttributeCommand, Unit>
+    public class AddElectronicAttributeCommandHandler : IRequestHandler<AddElectronicAttributeCommand, ElectronicAttribute>
     {
         private readonly string _userId;
         private readonly IProductRepository _productRepository;
@@ -22,7 +22,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             _subcategoryRepository = subcategoryRepository;
         }
 
-        public async Task<Unit> Handle(AddElectronicAttributeCommand request, CancellationToken cancellationToken)
+        public async Task<ElectronicAttribute> Handle(AddElectronicAttributeCommand request, CancellationToken cancellationToken)
         {
             ISubcategoryService subcategoryService = new SubcategoryService(_subcategoryRepository);
             if (!await subcategoryService.SubcategoryValidationAsync(request.SubcategoryId)) throw new ArgumentException("Invalid subcategory.");
@@ -33,7 +33,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             ElectronicAttribute electronicAttribute = new ElectronicAttribute(request.IsNew, request.MemoryModelId, request.ModelColorId, product.Id);
             await _electronicAttributeRepository.CreateAsync(electronicAttribute);
 
-            return Unit.Value;
+            return electronicAttribute;
         }
     }
 }

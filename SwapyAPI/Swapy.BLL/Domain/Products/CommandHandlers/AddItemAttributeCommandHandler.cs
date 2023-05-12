@@ -7,7 +7,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
-    public class AddItemAttributeCommandHandler : IRequestHandler<AddItemAttributeCommand, Unit>
+    public class AddItemAttributeCommandHandler : IRequestHandler<AddItemAttributeCommand, ItemAttribute>
     {
         private readonly string _userId;
         private readonly IProductRepository _productRepository;
@@ -22,7 +22,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             _subcategoryRepository = subcategoryRepository;
         }
 
-        public async Task<Unit> Handle(AddItemAttributeCommand request, CancellationToken cancellationToken)
+        public async Task<ItemAttribute> Handle(AddItemAttributeCommand request, CancellationToken cancellationToken)
         {
             ISubcategoryService subcategoryService = new SubcategoryService(_subcategoryRepository);
             if (!await subcategoryService.SubcategoryValidationAsync(request.SubcategoryId)) throw new ArgumentException("Invalid subcategory.");
@@ -33,7 +33,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             ItemAttribute itemAttribute = new ItemAttribute(request.IsNew, request.ItemTypeId, product.Id);
             await _itemAttributeRepository.CreateAsync(itemAttribute);
 
-            return Unit.Value;
+            return itemAttribute;
         }
     }
 }

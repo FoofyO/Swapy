@@ -7,7 +7,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
-    public class AddAutoAttributeCommandHandler : IRequestHandler<AddAutoAttributeCommand, Unit>
+    public class AddAutoAttributeCommandHandler : IRequestHandler<AddAutoAttributeCommand, AutoAttribute>
     {
         private readonly string _userId;
         private readonly IProductRepository _productRepository;
@@ -22,7 +22,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             _subcategoryRepository = subcategoryRepository;
         }
 
-        public async Task<Unit> Handle(AddAutoAttributeCommand request, CancellationToken cancellationToken)
+        public async Task<AutoAttribute> Handle(AddAutoAttributeCommand request, CancellationToken cancellationToken)
         {
             ISubcategoryService subcategoryService = new SubcategoryService(_subcategoryRepository);
             if (!await subcategoryService.SubcategoryValidationAsync(request.SubcategoryId)) throw new ArgumentException("Invalid subcategory.");
@@ -33,7 +33,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             AutoAttribute autoAttribute = new AutoAttribute(request.Miliage, request.EngineCapacity, request.ReleaseYear, request.IsNew, request.FuelTypeId, request.AutoColorId, request.TransmissionTypeId, request.AutoBrandTypeId, product.Id);
             await _autoAttributeRepository.CreateAsync(autoAttribute);
 
-            return Unit.Value;
+            return autoAttribute;
         }
     }
 }

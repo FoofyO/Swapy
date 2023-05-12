@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IFavoriteProductRepository : IRepository<FavoriteProduct>
+    public interface IFavoriteProductRepository : IAttributeRepositoryy<FavoriteProduct>
     {
     }
 }

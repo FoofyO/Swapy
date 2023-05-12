@@ -1,6 +1,8 @@
-﻿namespace Swapy.BLL.Domain.Products.Commands
+﻿using Swapy.Common.Entities;
+
+namespace Swapy.BLL.Domain.Products.Commands
 {
-    public class AddRealEstateAttributeCommand : AddProductCommand
+    public class AddRealEstateAttributeCommand : AddProductCommand<RealEstateAttribute>
     {
         public int Area { get; set; }
         public int Rooms { get; set; }

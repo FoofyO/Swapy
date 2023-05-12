@@ -8,7 +8,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
-    public class AddRealEstateAttributeCommandHandler : IRequestHandler<AddRealEstateAttributeCommand, Unit>
+    public class AddRealEstateAttributeCommandHandler : IRequestHandler<AddRealEstateAttributeCommand, RealEstateAttribute>
     {
         private readonly string _userId;
         private readonly IProductRepository _productRepository;
@@ -23,7 +23,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             _subcategoryRepository = subcategoryRepository;
         }
 
-        public async Task<Unit> Handle(AddRealEstateAttributeCommand request, CancellationToken cancellationToken)
+        public async Task<RealEstateAttribute> Handle(AddRealEstateAttributeCommand request, CancellationToken cancellationToken)
         {
             ISubcategoryService subcategoryService = new SubcategoryService(_subcategoryRepository);
             if (!await subcategoryService.SubcategoryValidationAsync(request.SubcategoryId)) throw new ArgumentException("Invalid subcategory.");
@@ -34,7 +34,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             RealEstateAttribute animalAttribute = new RealEstateAttribute(request.Area, request.Rooms, request.IsRent, request.RealEstateTypeId, product.Id);
             await _realEstateAttributeRepository.CreateAsync(animalAttribute);
 
-            return Unit.Value;
+            return animalAttribute;
         }
     }
 }

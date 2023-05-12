@@ -72,5 +72,17 @@ namespace Swapy.DAL.Repositories
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
         }
+
+        public async Task IncrementViewsAsync(string id)
+        {
+            var item = await GetByIdAsync(id);
+            item.Views++;
+            await UpdateAsync(item);
+        }
+
+        public async Task<int> GetProductCountForShop(string userId)
+        {
+            return await _context.Products.CountAsync(p => p.UserId == userId);
+        }
     }
 }

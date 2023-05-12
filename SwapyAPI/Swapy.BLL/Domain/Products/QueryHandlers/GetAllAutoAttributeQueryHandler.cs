@@ -1,12 +1,13 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Products.Queries;
+using Swapy.Common.DTO;
 using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
-    public class GetAllAutoAttributeQueryHandler : IRequestHandler<GetAllAutoAttributeQuery, IEnumerable<AutoAttribute>>
+    public class GetAllAutoAttributeQueryHandler : IRequestHandler<GetAllAutoAttributeQuery, ProductResponseDTO<AutoAttribute>>
     {
         private readonly string _userId;
         private readonly IAutoAttributeRepository _autoAttributeRepository;
@@ -17,7 +18,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             _autoAttributeRepository = autoAttributeRepository;
         }
 
-        public async Task<IEnumerable<AutoAttribute>> Handle(GetAllAutoAttributeQuery request, CancellationToken cancellationToken)
+        public async Task<ProductResponseDTO<AutoAttribute>> Handle(GetAllAutoAttributeQuery request, CancellationToken cancellationToken)
         {
             var query = await _autoAttributeRepository.GetByPageAsync(request.Page, request.PageSize);
 
@@ -45,8 +46,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             else query.OrderBy(x => x.Product.DateTime);
             if (request.ReverseSort == true) query.Reverse();
             var result = await query.ToListAsync();
-
-            return result;
+            return new ProductResponseDTO<AutoAttribute>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Swapy.BLL.Domain.Products.Commands
 {
-    public abstract class AddProductCommand : IRequest<Unit>
+    public abstract class AddProductCommand<T> : IRequest<T>
     {
         public string Title { get; set; }
         public string Description { get; set; }

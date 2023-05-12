@@ -1,6 +1,8 @@
-﻿namespace Swapy.BLL.Domain.Products.Commands
+﻿using Swapy.Common.Entities;
+
+namespace Swapy.BLL.Domain.Products.Commands
 {
-    public class AddAutoAttributeCommand : AddProductCommand
+    public class AddAutoAttributeCommand : AddProductCommand<AutoAttribute>
     {
         public int Miliage { get; set; }
         public int EngineCapacity { get; set; }

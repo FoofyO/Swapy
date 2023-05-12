@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Swapy.Common.DTO;
 using Swapy.Common.Entities;
 
 namespace Swapy.BLL.Domain.Products.Queries
@@ -7,7 +8,7 @@ namespace Swapy.BLL.Domain.Products.Queries
     {
     }
 
-    public class GetAllProductQuery<T> : IRequest<IEnumerable<T>>
+    public class GetAllProductQuery<T> : IRequest<ProductResponseDTO<T>>
     {
         public int Page { get; set; }
         public int PageSize { get; set; }
