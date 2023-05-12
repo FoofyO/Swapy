@@ -7,7 +7,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
-    public class AddClothesAttributeCommandHandler : IRequestHandler<AddClothesAttributeCommand, Unit>
+    public class AddClothesAttributeCommandHandler : IRequestHandler<AddClothesAttributeCommand, ClothesAttribute>
     {
         private readonly string _userId;
         private readonly IProductRepository _productRepository;
@@ -22,7 +22,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             _subcategoryRepository = subcategoryRepository;
         }
 
-        public async Task<Unit> Handle(AddClothesAttributeCommand request, CancellationToken cancellationToken)
+        public async Task<ClothesAttribute> Handle(AddClothesAttributeCommand request, CancellationToken cancellationToken)
         {
             ISubcategoryService subcategoryService = new SubcategoryService(_subcategoryRepository);
             if (!await subcategoryService.SubcategoryValidationAsync(request.SubcategoryId)) throw new ArgumentException("Invalid subcategory.");
@@ -33,7 +33,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             ClothesAttribute clothesAttribute = new ClothesAttribute(request.IsNew, request.ClothesSeasonId, request.ClothesSizeId, request.ClothesBrandViewId, product.Id);
             await _clothesAttributeRepository.CreateAsync(clothesAttribute);
 
-            return Unit.Value;
+            return clothesAttribute;
         }
     }
 }

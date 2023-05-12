@@ -1,26 +1,29 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Products.Queries;
+using Swapy.BLL.Services;
 using Swapy.Common.DTO;
 using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
-{ 
-    public class GetAllItemAttributeQueryHandler : IRequestHandler<GetAllItemAttributeQuery, ProductResponseDTO<ItemAttribute>>
+{
+    public class GetAllFavoriteProductQueryHandler : IRequestHandler<GetAllFavoriteProductQuery, ProductResponseDTO<FavoriteProduct>>
     {
         private readonly string _userId;
-        private readonly IItemAttributeRepository _itemAttributeRepository;
+        private readonly IFavoriteProductRepository _favoriteProductRepository;
 
-        public GetAllItemAttributeQueryHandler(string userId, IItemAttributeRepository itemAttributeRepository)
+        public GetAllFavoriteProductQueryHandler(string userId, IFavoriteProductRepository favoriteProductRepository)
         {
             _userId = userId;
-            _itemAttributeRepository = itemAttributeRepository;
+            _favoriteProductRepository = favoriteProductRepository;
         }
-
-        public async Task<ProductResponseDTO<ItemAttribute>> Handle(GetAllItemAttributeQuery request, CancellationToken cancellationToken)
+        
+        public async Task<ProductResponseDTO<FavoriteProduct>> Handle(GetAllFavoriteProductQuery request, CancellationToken cancellationToken)
         {
-            var query = await _itemAttributeRepository.GetByPageAsync(request.Page, request.PageSize);
+            if ((request.ProductId == null) == (request.UserId == null)) throw new ArgumentException("Specify one ID for either the product or the user.");
+
+            var query = await _favoriteProductRepository.GetByPageAsync(request.Page, request.PageSize);
 
             query = query.Where(x =>
                 (request.Title == null || x.Product.Title.Contains(request.Title)) &&
@@ -29,14 +32,13 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
                 (request.CategoryId == null || x.Product.CategoryId == request.CategoryId) &&
                 (request.SubcategoryId == null || x.Product.SubcategoryId == request.SubcategoryId) &&
                 (request.CityId == null || x.Product.CityId == request.CityId) &&
-                (request.UserId == null ? x.Product.UserId != _userId : x.Product.UserId == request.UserId) &&
-                (request.IsNew == null || x.IsNew == request.IsNew) &&
-                (request.ItemTypesId == null || request.ItemTypesId.Contains(x.ItemTypeId)) );
+                (request.UserId == null || x.Product.UserId == request.UserId) &&
+                (request.ProductId == null || x.ProductId == request.ProductId) );
             if (request.SortByPrice == true) query.OrderBy(x => x.Product.Price);
             else query.OrderBy(x => x.Product.DateTime);
             if (request.ReverseSort == true) query.Reverse();
             var result = await query.ToListAsync();
-            return new ProductResponseDTO<ItemAttribute>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
+            return new ProductResponseDTO<FavoriteProduct>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
         }
     }
 }

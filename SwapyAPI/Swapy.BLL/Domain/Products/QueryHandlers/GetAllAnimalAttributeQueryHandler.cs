@@ -1,12 +1,13 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Products.Queries;
+using Swapy.Common.DTO;
 using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
-    public class GetAllAnimalAttributeQueryHandler : IRequestHandler<GetAllAnimalAttributeQuery, IEnumerable<AnimalAttribute>>
+    public class GetAllAnimalAttributeQueryHandler : IRequestHandler<GetAllAnimalAttributeQuery, ProductResponseDTO<AnimalAttribute>>
     {
         private readonly string _userId;
         private readonly IAnimalAttributeRepository _animalAttributeRepository;
@@ -17,7 +18,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             _animalAttributeRepository = animalAttributeRepository;
         }
 
-        public async Task<IEnumerable<AnimalAttribute>> Handle(GetAllAnimalAttributeQuery request, CancellationToken cancellationToken)
+        public async Task<ProductResponseDTO<AnimalAttribute>> Handle(GetAllAnimalAttributeQuery request, CancellationToken cancellationToken)
         {
             var query = await _animalAttributeRepository.GetByPageAsync(request.Page, request.PageSize);
 
@@ -35,8 +36,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             else query.OrderBy(x => x.Product.DateTime);
             if (request.ReverseSort == true) query.Reverse();
             var result = await query.ToListAsync();
-
-            return result;
+            return new ProductResponseDTO<AnimalAttribute>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
         }
     }
 }

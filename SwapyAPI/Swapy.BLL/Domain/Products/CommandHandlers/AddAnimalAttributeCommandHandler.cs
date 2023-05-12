@@ -4,25 +4,26 @@ using Swapy.BLL.Interfaces;
 using Swapy.BLL.Services;
 using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
+using System.Security.Claims;
 
 namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
-    internal class AddAnimalAttributeCommandHandler : IRequestHandler<AddAnimalAttributeCommand, Unit>
+    internal class AddAnimalAttributeCommandHandler : IRequestHandler<AddAnimalAttributeCommand, AnimalAttribute>
     {
         private readonly string _userId;
         private readonly IProductRepository _productRepository;
         private readonly IAnimalAttributeRepository _animalAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
 
-        public AddAnimalAttributeCommandHandler(string userId, IProductRepository productRepository, IAnimalAttributeRepository animalAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public AddAnimalAttributeCommandHandler(ClaimsPrincipal user, IProductRepository productRepository, IAnimalAttributeRepository animalAttributeRepository, ISubcategoryRepository subcategoryRepository)
         {
-            _userId = userId;
+            _userId = user.FindFirst(ClaimTypes.NameIdentifier).Value;
             _productRepository = productRepository;
             _animalAttributeRepository = animalAttributeRepository;
             _subcategoryRepository = subcategoryRepository;
         }
 
-        public async Task<Unit> Handle(AddAnimalAttributeCommand request, CancellationToken cancellationToken)
+        public async Task<AnimalAttribute> Handle(AddAnimalAttributeCommand request, CancellationToken cancellationToken)
         {
             ISubcategoryService subcategoryService = new SubcategoryService(_subcategoryRepository);
             if (!await subcategoryService.SubcategoryValidationAsync(request.SubcategoryId)) throw new ArgumentException("Invalid subcategory.");
@@ -33,7 +34,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             AnimalAttribute animalAttribute = new AnimalAttribute(request.AnimalBreedId, product.Id);
             await _animalAttributeRepository.CreateAsync(animalAttribute);
 
-            return Unit.Value;
+            return animalAttribute;
         }
     }
 }

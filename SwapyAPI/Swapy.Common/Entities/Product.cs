@@ -7,7 +7,7 @@
         public string Description { get; set; }
         public decimal Price { get; set; }
         public DateTime DateTime { get; set; }
-        public int Reviews { get; set; }
+        public int Views { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
         public string CurrencyId { get; set; }

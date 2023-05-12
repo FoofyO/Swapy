@@ -1,6 +1,9 @@
-﻿namespace Swapy.BLL.Domain.Products.Commands
+﻿using Swapy.BLL.Domain.Products.Queries;
+using Swapy.Common.Entities;
+
+namespace Swapy.BLL.Domain.Products.Commands
 {
-    public class AddClothesAttributeCommand : AddProductCommand
+    public class AddClothesAttributeCommand : AddProductCommand<ClothesAttribute>
     {
         public bool IsNew { get; set; }
         public string ClothesSeasonId { get; set; }

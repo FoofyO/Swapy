@@ -42,5 +42,38 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.FavoriteProducts.ToListAsync();
         }
+
+        public async Task<IQueryable<FavoriteProduct>> GetByPageAsync(int page = 1, int pageSize = 24)
+        {
+            if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
+            if (await _context.FavoriteProducts.CountAsync() <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
+            return _context.FavoriteProducts.Skip(pageSize * (page - 1))
+                                    .Take(pageSize)
+                                    .Include(fp => fp.Product)
+                                        .ThenInclude(p => p.Images)
+                                    .Include(fp => fp.Product)
+                                        .ThenInclude(p => p.City)
+                                    .Include(fp => fp.Product)
+                                        .ThenInclude(p => p.Currency)
+                                    .Include(fp => fp.Product)
+                                        .ThenInclude(fp => fp.Subcategory)
+                                    .AsQueryable();
+        }
+
+        public async Task<FavoriteProduct> GetDetailByIdAsync(string id)
+        {
+            var item = await _context.FavoriteProducts.Include(fp => fp.Product)
+                                        .ThenInclude(p => p.Images)
+                                    .Include(fp => fp.Product)
+                                        .ThenInclude(p => p.City)
+                                    .Include(fp => fp.Product)
+                                        .ThenInclude(p => p.Currency)
+                                    .Include(fp => fp.Product)
+                                        .ThenInclude(p => p.Subcategory)
+                                    .FirstOrDefaultAsync(fp => fp.Id == id);
+
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
+            return item;
+        }
     }
 }

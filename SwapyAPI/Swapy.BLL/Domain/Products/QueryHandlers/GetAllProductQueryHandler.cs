@@ -2,12 +2,13 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Products.Queries;
+using Swapy.Common.DTO;
 using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
-    public class GetAllProductQueryHandler : IRequestHandler<GetAllProductQuery, IEnumerable<Product>>
+    public class GetAllProductQueryHandler : IRequestHandler<GetAllProductQuery, ProductResponseDTO<Product>>
     {
         private readonly string _userId;
         private readonly IProductRepository _productRepository;
@@ -18,7 +19,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             _productRepository = productRepository;
         }
         
-        public async Task<IEnumerable<Product>> Handle(GetAllProductQuery request, CancellationToken cancellationToken)
+        public async Task<ProductResponseDTO<Product>> Handle(GetAllProductQuery request, CancellationToken cancellationToken)
         {
             var query = await _productRepository.GetByPageAsync(request.Page, request.PageSize);
 
@@ -34,8 +35,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             else query.OrderBy(x => x.DateTime);
             if (request.ReverseSort == true) query.Reverse();
             var result = await query.ToListAsync();
-
-            return result;
+            return new ProductResponseDTO<Product>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Products.Queries;
+using Swapy.Common.DTO;
 using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
-    public class GetAllClothesAttributeQueryHandler : IRequestHandler<GetAllClothesAttributeQuery, IEnumerable<ClothesAttribute>>
+    public class GetAllClothesAttributeQueryHandler : IRequestHandler<GetAllClothesAttributeQuery, ProductResponseDTO<ClothesAttribute>>
     {
         private readonly string _userId;
         private readonly IClothesAttributeRepository _clothesAttributeRepository;
@@ -17,7 +18,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             _clothesAttributeRepository = clothesAttributeRepository;
         }
 
-        public async Task<IEnumerable<ClothesAttribute>> Handle(GetAllClothesAttributeQuery request, CancellationToken cancellationToken)
+        public async Task<ProductResponseDTO<ClothesAttribute>> Handle(GetAllClothesAttributeQuery request, CancellationToken cancellationToken)
         {
             var query = await _clothesAttributeRepository.GetByPageAsync(request.Page, request.PageSize);
 
@@ -40,8 +41,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             else query.OrderBy(x => x.Product.DateTime);
             if (request.ReverseSort == true) query.Reverse();
             var result = await query.ToListAsync();
-
-            return result;
+            return new ProductResponseDTO<ClothesAttribute>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
         }
     }
 }

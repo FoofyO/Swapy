@@ -1,6 +1,8 @@
-﻿namespace Swapy.BLL.Domain.Products.Commands
+﻿using Swapy.Common.Entities;
+
+namespace Swapy.BLL.Domain.Products.Commands
 {
-    public class AddTVAttributeCommand : AddProductCommand
+    public class AddTVAttributeCommand : AddProductCommand<TVAttribute>
     {
         public bool IsNew { get; set; }
         public bool IsSmart { get; set; }
