@@ -40,14 +40,12 @@
 
         public Product(string title, string description, decimal price, string userId, string currencyId, string categoryId, string subcategoryId, string cityId)
         {
-            Reviews = 0;
             Title = title;
             Price = price;
             CityId = cityId;
             UserId = userId;
             CategoryId = categoryId;
             CurrencyId = currencyId;
-            DateTime = DateTime.Now;
             Description = description;
             SubcategoryId = subcategoryId;
         }
