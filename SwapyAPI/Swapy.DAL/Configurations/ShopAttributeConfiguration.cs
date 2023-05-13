@@ -26,9 +26,19 @@ namespace Swapy.DAL.Configurations
                    .HasMaxLength(1024)
                    .IsRequired(false);
 
+            builder.Property(p => p.Views)
+                   .HasColumnType("INT")
+                   .HasDefaultValue(0)
+                   .IsRequired();
+
             builder.Property(s => s.Location)
                    .HasColumnType("NVARCHAR(256)")
                    .HasMaxLength(256)
+                   .IsRequired(false);
+
+            builder.Property(s => s.Slogan)
+                   .HasColumnType("NVARCHAR(128)")
+                   .HasMaxLength(128)
                    .IsRequired(false);
 
             builder.Property(s => s.Banner)

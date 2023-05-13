@@ -21,19 +21,11 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 
         public async Task<Unit> Handle(UpdateClothesAttributeCommand request, CancellationToken cancellationToken)
         {
-            ClothesAttribute clothesAttribute;
-            Product product;
-            try
-            {
-                clothesAttribute = await _clothesAttributeRepository.GetByIdAsync(request.ClothesAttributeId);
-                product = await _productRepository.GetByIdAsync(clothesAttribute.ProductId);
-            }
-            catch (ArgumentException)
-            {
-                throw new NotFoundException("Products not found.");
-            }
 
-            if (_userId != product.UserId) throw new NoAccessException("No access to uninstall this product.");
+            var clothesAttribute = await _clothesAttributeRepository.GetByIdAsync(request.ClothesAttributeId);
+            var product = await _productRepository.GetByIdAsync(clothesAttribute.ProductId);
+            
+            if (_userId != product.UserId) throw new NoAccessException("No access to update this product");
 
             product.Title = request.Title;
             product.Description = request.Description;

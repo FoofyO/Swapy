@@ -6,6 +6,7 @@ using Swapy.BLL.Interfaces;
 using Swapy.Common.DTO;
 using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
+using Swapy.DAL.Interfaces;
 using Swapy.DAL.Repositories;
 using System.Security.Authentication;
 
@@ -16,9 +17,9 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
         private readonly ITokenService _tokenService;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly RefreshTokenRepository _refreshTokenRepository;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public LoginCommandHandler(UserManager<User> userManager, SignInManager<User> signInManager, RefreshTokenRepository refreshTokenRepository, ITokenService tokenService)
+        public LoginCommandHandler(UserManager<User> userManager, SignInManager<User> signInManager, IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService)
         {
             _userManager = userManager;
             _tokenService = tokenService;
@@ -43,7 +44,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             var accessToken = await _tokenService.GenerateJwtToken(user);
             await _refreshTokenRepository.CreateAsync(new RefreshToken(refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
 
-            var authDTO = new AuthResponseDTO { SellerId = user.Id, Email = user.Email, Phone = user.PhoneNumber, AccessToken = accessToken, RefreshToken = refreshToken };
+            var authDTO = new AuthResponseDTO { UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
             return authDTO;
         }
     }

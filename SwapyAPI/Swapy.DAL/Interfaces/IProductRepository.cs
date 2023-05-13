@@ -6,6 +6,6 @@ namespace Swapy.DAL.Interfaces
     {
         Task<IEnumerable<Product>> GetAllByUserId(string userId);
         Task IncrementViewsAsync(string id);
-        Task<int> GetProductCountForShop(string userId);
+        Task<int> GetProductCountForShopAsync(string userId);
     }
 }

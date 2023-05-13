@@ -2,6 +2,8 @@
 using Microsoft.IdentityModel.Tokens;
 using Swapy.BLL.Interfaces;
 using Swapy.Common.Entities;
+using Swapy.Common.Exceptions;
+using Swapy.DAL.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -11,8 +13,13 @@ namespace Swapy.BLL.Services
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public TokenService(IConfiguration configuration) => _configuration = configuration;
+        public TokenService(IConfiguration configuration, IRefreshTokenRepository refreshTokenRepository)
+        {
+            _configuration = configuration;
+            _refreshTokenRepository = refreshTokenRepository;
+        }
 
         public async Task<string> GenerateRefreshToken() => Guid.NewGuid().ToString();
 
@@ -25,12 +32,13 @@ namespace Swapy.BLL.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Name, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Name, user.FirstName),
+                    new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(15),
+                Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = credentials
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

@@ -2,7 +2,9 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IShopAttributeRepository : IRepository<ShopAttribute>
+    public interface IShopAttributeRepository : IAttributeRepositoryy<ShopAttribute>
     {
+        Task IncrementViewsAsync(string shopId);
+        Task<bool> FindByShopNameAsync(string shopName);
     }
 }
