@@ -54,5 +54,15 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.Subcategories.ToListAsync();
         }
+
+        public async Task<IEnumerable<Subcategory>> GetByCategoryAsync(string categoryId)
+        {
+            return await _context.Subcategories.Where(s => s.CategoryId == categoryId && s.ParentSubcategoryId == null).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Subcategory>> GetBySubcategoryAsync(string subcategoryId)
+        {
+            return await _context.Subcategories.Where(s => s.ParentSubcategoryId == subcategoryId).ToListAsync();
+        }
     }
 }
