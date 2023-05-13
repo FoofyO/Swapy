@@ -2,12 +2,10 @@
 using Microsoft.AspNetCore.Identity;
 using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.BLL.Interfaces;
-using Swapy.BLL.Services;
 using Swapy.Common.DTO;
 using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
-using Swapy.DAL.Repositories;
-using System.Security.Authentication;
+using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
@@ -15,9 +13,9 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
     {
         private readonly ITokenService _tokenService;
         private readonly UserManager<User> _userManager;
-        private readonly RefreshTokenRepository _refreshTokenRepository;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public RefreshTokenCommandHandler(UserManager<User> userManager, RefreshTokenRepository refreshTokenRepository, ITokenService tokenService)
+        public RefreshTokenCommandHandler(UserManager<User> userManager, IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService)
         {
             _tokenService = tokenService;
             _userManager = userManager;
@@ -27,8 +25,6 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
         public async Task<AuthResponseDTO> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
             var token = await _refreshTokenRepository.GetByIdAsync(request.OldRefreshToken);
-
-            if (token == null) throw new NotFoundException("The provided refresh token was not found");
 
             await _refreshTokenRepository.DeleteAsync(token);
 
@@ -40,7 +36,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             var accessToken = await _tokenService.GenerateJwtToken(user);
             await _refreshTokenRepository.CreateAsync(new RefreshToken(refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
 
-            var authDTO = new AuthResponseDTO { AccessToken = accessToken, RefreshToken = refreshToken };
+            var authDTO = new AuthResponseDTO { UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
             return authDTO;
         }
     }

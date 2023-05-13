@@ -21,19 +21,10 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 
         public async Task<Unit> Handle(UpdateTVAttributeCommand request, CancellationToken cancellationToken)
         {
-            TVAttribute tvAttribute;
-            Product product;
-            try
-            {
-                tvAttribute = await _tvAttributeRepository.GetByIdAsync(request.TVAttributeId);
-                product = await _productRepository.GetByIdAsync(tvAttribute.ProductId);
-            }
-            catch (ArgumentException)
-            {
-                throw new NotFoundException("Products not found.");
-            }
+            var tvAttribute = await _tvAttributeRepository.GetByIdAsync(request.TVAttributeId);
+            var product = await _productRepository.GetByIdAsync(tvAttribute.ProductId);
 
-            if (_userId != product.UserId) throw new NoAccessException("No access to uninstall this product.");
+            if (_userId != product.UserId) throw new NoAccessException("No access to update this product");
 
             product.Title = request.Title;
             product.Description = request.Description;

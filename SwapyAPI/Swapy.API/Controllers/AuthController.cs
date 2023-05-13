@@ -1,11 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.Common.DTO;
 using Swapy.Common.Exceptions;
-using Swapy.DAL;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Authentication;
 
 namespace Swapy.API.Controllers
@@ -19,6 +18,7 @@ namespace Swapy.API.Controllers
 
         public AuthController(IMediator mediator) => _mediator = mediator;
 
+
         [HttpGet]
         [Route("ping")]
         [Authorize]
@@ -27,24 +27,13 @@ namespace Swapy.API.Controllers
             return Ok("ping");
         }
 
-        [HttpGet]
-        [Route("test")]
-        public IActionResult Test()
-        {
-            var options = new DbContextOptionsBuilder<SwapyDbContext>()
-                .UseSqlServer("Data Source=FOOFY\\SQLEXPRESS;Initial Catalog=Swapy;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
-                .Options;
-
-            using (var db = new SwapyDbContext(options))
-            {
-            }
-            return Ok();
-        }
 
         [HttpPost]
         [Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<AuthResponseDTO>> LoginAsync(LoginCommand command)
         {
             try
@@ -54,19 +43,26 @@ namespace Swapy.API.Controllers
             }
             catch (NotFoundException ex)
             {
-                return Unauthorized(ex.Message);
+                return NotFound(ex.Message);
             }
             catch (AuthenticationException ex)
             {
                 return Unauthorized(ex.Message);
             }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
         }
 
+
         [HttpPost]
-        [Route("register")]
+        [Route("register/user")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<AuthResponseDTO>> RegisterAsync(RegistrationCommand command)
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<AuthResponseDTO>> UserRegistrationAsync(UserRegistrationCommand command)
         {
             try
             {
@@ -75,18 +71,53 @@ namespace Swapy.API.Controllers
             }
             catch (EmailOrPhoneTakenException ex)
             {
-                return BadRequest(ex.Message);
+                return Conflict(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
                 return BadRequest("Invalid operation: " + ex.Message);
             }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
         }
+
+
+        [HttpPost]
+        [Route("register/shop")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<AuthResponseDTO>> ShopRegistrationAsync(ShopRegistrationCommand command)
+        {
+            try
+            {
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (EmailOrPhoneTakenException ex)
+            {
+                return Conflict(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return StatusCode(500, "Invalid operation: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
 
         [HttpGet]
         [Route("refresh/{oldRefreshToken}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<AuthResponseDTO>> RefreshAsync(RefreshTokenCommand command)
         {
             try
@@ -96,30 +127,114 @@ namespace Swapy.API.Controllers
             }
             catch (TokenExpiredException ex)
             {
-                return BadRequest(ex.Message);
+                return Unauthorized(ex.Message);
             }
             catch (NotFoundException ex)
             {
-                return BadRequest(ex.Message);
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
+
 
         [HttpGet]
         [Route("logout/{refreshToken}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> LogoutAsync(LogoutCommand command)
         {
             try
             {
                 var result = await _mediator.Send(command);
-                return StatusCode(204);
+                return NoContent();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                if (ex is ValidationException)
+                {
+                    return BadRequest(ex.Message);
+                }
+
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
+
+
+        [HttpGet]
+        [Route("check/shopname")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<bool>> CheckShopNameAsync(ShopNameCommand command)
+        {
+            try
+            {
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                if (ex is ValidationException)
+                {
+                    return BadRequest(ex.Message);
+                }
+
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("check/email")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<bool>> CheckEmailAsync(EmailCommand command)
+        {
+            try
+            {
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                if (ex is ValidationException)
+                {
+                    return BadRequest(ex.Message);
+                }
+
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("check/phonenumber")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<bool>> CheckPhoneNumberAsync(PhoneNumberCommand command)
+        {
+            try
+            {
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                if (ex is ValidationException)
+                {
+                    return BadRequest(ex.Message);
+                }
+
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
 
         [HttpHead]
         [Route("")]
@@ -128,6 +243,7 @@ namespace Swapy.API.Controllers
         {
             return Ok();
         }
+
 
         [HttpOptions]
         [Route("")]

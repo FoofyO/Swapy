@@ -21,10 +21,10 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 
         public async Task<Unit> Handle(RemoveItemAttributeCommand request, CancellationToken cancellationToken)
         {
-            ItemAttribute itemAttribute = await _itemAttributeRepository.GetByIdAsync(request.ItemAttributeId);
-            Product product = await _productRepository.GetByIdAsync(itemAttribute.ProductId);
+            var itemAttribute = await _itemAttributeRepository.GetByIdAsync(request.ItemAttributeId);
+            var product = await _productRepository.GetByIdAsync(itemAttribute.ProductId);
 
-            if (_userId != product.UserId) throw new NoAccessException("No access to uninstall this product.");
+            if (_userId != product.UserId) throw new NoAccessException("No access to delete this product.");
 
             await _itemAttributeRepository.DeleteAsync(itemAttribute);
 

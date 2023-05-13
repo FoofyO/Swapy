@@ -1,14 +1,14 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Auth.Commands;
-using Swapy.DAL.Repositories;
+using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
     public class LogoutCommandHandler : IRequestHandler<LogoutCommand, Unit>
     {
-        private readonly RefreshTokenRepository _refreshTokenRepository;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public LogoutCommandHandler(RefreshTokenRepository refreshTokenRepository) => _refreshTokenRepository = refreshTokenRepository;
+        public LogoutCommandHandler(IRefreshTokenRepository refreshTokenRepository) => _refreshTokenRepository = refreshTokenRepository;
 
         public async Task<Unit> Handle(LogoutCommand request, CancellationToken cancellationToken)
         {

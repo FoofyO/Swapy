@@ -18,22 +18,14 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             _productRepository = productRepository;
             _itemAttributeRepository = itemAttributeRepository;
         }
-        
+
         public async Task<Unit> Handle(UpdateItemAttributeCommand request, CancellationToken cancellationToken)
         {
-            ItemAttribute itemAttribute;
-            Product product;
-            try
-            {
-                itemAttribute = await _itemAttributeRepository.GetByIdAsync(request.ItemAttributeId);
-                product = await _productRepository.GetByIdAsync(itemAttribute.ProductId);
-            }
-            catch (ArgumentException)
-            {
-                throw new NotFoundException("Products not found.");
-            }
 
-            if (_userId != product.UserId) throw new NoAccessException("No access to uninstall this product.");
+            var itemAttribute = await _itemAttributeRepository.GetByIdAsync(request.ItemAttributeId);
+            var product = await _productRepository.GetByIdAsync(itemAttribute.ProductId);
+
+            if (_userId != product.UserId) throw new NoAccessException("No access to update this product");
 
             product.Title = request.Title;
             product.Description = request.Description;

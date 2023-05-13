@@ -80,7 +80,7 @@ namespace Swapy.DAL.Repositories
             await UpdateAsync(item);
         }
 
-        public async Task<int> GetProductCountForShop(string userId)
+        public async Task<int> GetProductCountForShopAsync(string userId)
         {
             return await _context.Products.CountAsync(p => p.UserId == userId);
         }

@@ -7,7 +7,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
-    public class GetAllElectronicAttributeQueryHandler : IRequestHandler<GetAllElectronicAttributeQuery, ProductResponseDTO<ElectronicAttribute>>
+    public class GetAllElectronicAttributeQueryHandler : IRequestHandler<GetAllElectronicAttributesQuery, ProductResponseDTO<ElectronicAttribute>>
     {
         private readonly string _userId;
         private readonly IElectronicAttributeRepository _electronicAttributeRepository;
@@ -18,7 +18,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             _electronicAttributeRepository = electronicAttributeRepository;
         }
 
-        public async Task<ProductResponseDTO<ElectronicAttribute>> Handle(GetAllElectronicAttributeQuery request, CancellationToken cancellationToken)
+        public async Task<ProductResponseDTO<ElectronicAttribute>> Handle(GetAllElectronicAttributesQuery request, CancellationToken cancellationToken)
         {
             var query = await _electronicAttributeRepository.GetByPageAsync(request.Page, request.PageSize);
 

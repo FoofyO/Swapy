@@ -28,6 +28,8 @@
     <Folder Include="Domain\Auth\Queries\" />
     <Folder Include="Domain\Auth\QueryHandlers\" />
     <Folder Include="Domain\Auth\Queries\" />
+    <Folder Include="Domain\Categories\Commands\" />
+    <Folder Include="Domain\Categories\CommandHandlers\" />
   </ItemGroup>
 
 </Project>
