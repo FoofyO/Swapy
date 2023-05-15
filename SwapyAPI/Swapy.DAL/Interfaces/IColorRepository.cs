@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IColorRepository : IRepository<Color>
+    public interface IColorRepository : IQueryableProviderRepository<Color>
     {
     }
 }

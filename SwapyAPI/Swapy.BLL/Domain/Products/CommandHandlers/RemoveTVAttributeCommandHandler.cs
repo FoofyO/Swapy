@@ -24,7 +24,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             var tvAttribute = await _tvAttributeRepository.GetByIdAsync(request.TVAttributeId);
             var product = await _productRepository.GetByIdAsync(tvAttribute.ProductId);
 
-            if (_userId != product.UserId) throw new NoAccessException("No access to delete this product.");
+            if (!_userId.Equals(product.UserId)) throw new NoAccessException("No access to delete this product.");
 
             await _tvAttributeRepository.DeleteAsync(tvAttribute);
 

@@ -42,5 +42,10 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.ElectronicBrands.ToListAsync();
         }
+
+        public async Task<IQueryable<ElectronicBrand>> GetQueryableAsync()
+        {
+            return _context.ElectronicBrands.AsQueryable();
+        }
     }
 }

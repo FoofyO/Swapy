@@ -42,5 +42,10 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.TVTypes.ToListAsync();
         }
+
+        public async Task<IQueryable<TVType>> GetQueryableAsync()
+        {
+            return _context.TVTypes.AsQueryable();
+        }
     }
 }

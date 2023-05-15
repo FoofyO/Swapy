@@ -27,10 +27,10 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
                 (request.Title == null || x.Title.Contains(request.Title)) &&
                 (request.PriceMin == null) || (x.Price >= request.PriceMin) &&
                 (request.PriceMax == null) || (x.Price <= request.PriceMax) &&
-                (request.CategoryId == null || x.CategoryId == request.CategoryId) &&
-                (request.SubcategoryId == null || x.SubcategoryId == request.SubcategoryId) &&
-                (request.CityId == null || x.CityId == request.CityId) &&
-                (request.UserId == null ? x.UserId != _userId : x.UserId == request.UserId));
+                (request.CategoryId == null || x.CategoryId.Equals(request.CategoryId)) &&
+                (request.SubcategoryId == null || x.SubcategoryId.Equals(request.SubcategoryId)) &&
+                (request.CityId == null || x.CityId.Equals(request.CityId)) &&
+                (request.UserId == null ? !x.UserId.Equals(_userId) : x.UserId.Equals(request.UserId)));
             if (request.SortByPrice == true) query.OrderBy(x => x.Price);
             else query.OrderBy(x => x.DateTime);
             if (request.ReverseSort == true) query.Reverse();

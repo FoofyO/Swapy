@@ -42,6 +42,11 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.Colors.ToListAsync();
         }
+
+        public async Task<IQueryable<Color>> GetQueryableAsync()
+        {
+            return _context.Colors.AsQueryable();
+        }
     }
 }
 

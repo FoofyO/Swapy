@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface ITransmissionTypeRepository : IRepository<TransmissionType>
+    public interface ITransmissionTypeRepository : IQueryableProviderRepository<TransmissionType>
     {
     }
 }

@@ -25,7 +25,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             var clothesAttribute = await _clothesAttributeRepository.GetByIdAsync(request.ClothesAttributeId);
             var product = await _productRepository.GetByIdAsync(clothesAttribute.ProductId);
             
-            if (_userId != product.UserId) throw new NoAccessException("No access to update this product");
+            if (!_userId.Equals(product.UserId)) throw new NoAccessException("No access to update this product");
 
             product.Title = request.Title;
             product.Description = request.Description;
