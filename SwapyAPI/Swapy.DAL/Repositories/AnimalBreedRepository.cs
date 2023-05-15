@@ -42,5 +42,10 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.AnimalBreeds.ToListAsync();
         }
+
+        public async Task<IQueryable<AnimalBreed>> GetQueryableAsync()
+        {
+            return _context.AnimalBreeds.AsQueryable();
+        }
     }
 }

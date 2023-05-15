@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IMemoryRepository : IRepository<Memory>
+    public interface IMemoryRepository : IQueryableProviderRepository<Memory>
     {
     }
 }

@@ -42,5 +42,10 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.ScreenDiagonals.ToListAsync();
         }
+
+        public async Task<IQueryable<ScreenDiagonal>> GetQueryableAsync()
+        {
+            return _context.ScreenDiagonals.AsQueryable();
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface ITVBrandRepository : IRepository<TVBrand>
+    public interface ITVBrandRepository : IQueryableProviderRepository<TVBrand>
     {
     }
 }

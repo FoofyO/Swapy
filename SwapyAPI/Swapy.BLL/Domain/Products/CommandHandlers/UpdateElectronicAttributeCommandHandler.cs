@@ -24,7 +24,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             var electronicAttribute = await _electronicAttributeRepository.GetByIdAsync(request.ElectronicAttributeId);
             var product = await _productRepository.GetByIdAsync(electronicAttribute.ProductId);
 
-            if (_userId != product.UserId) throw new NoAccessException("No access to update this product");
+            if (!_userId.Equals(product.UserId)) throw new NoAccessException("No access to update this product");
 
             product.Title = request.Title;
             product.Description = request.Description;

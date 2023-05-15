@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface ICurrencyRepository : IRepository<Currency>
+    public interface ICurrencyRepository : IQueryableProviderRepository<Currency>
     {
     }
 }

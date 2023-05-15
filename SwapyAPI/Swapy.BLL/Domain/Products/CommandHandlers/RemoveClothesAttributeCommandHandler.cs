@@ -24,7 +24,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             var clothesAttribute = await _clothesAttributeRepository.GetByIdAsync(request.ClothesAttributeId);
             var product = await _productRepository.GetByIdAsync(clothesAttribute.ProductId);
 
-            if (_userId != product.UserId) throw new NoAccessException("No access to delete this product.");
+            if (!_userId.Equals(product.UserId)) throw new NoAccessException("No access to delete this product.");
 
             await _clothesAttributeRepository.DeleteAsync(clothesAttribute);
 

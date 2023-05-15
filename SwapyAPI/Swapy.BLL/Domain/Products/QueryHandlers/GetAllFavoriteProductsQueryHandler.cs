@@ -29,11 +29,11 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
                 (request.Title == null || x.Product.Title.Contains(request.Title)) &&
                 (request.PriceMin == null) || (x.Product.Price >= request.PriceMin) &&
                 (request.PriceMax == null) || (x.Product.Price <= request.PriceMax) &&
-                (request.CategoryId == null || x.Product.CategoryId == request.CategoryId) &&
-                (request.SubcategoryId == null || x.Product.SubcategoryId == request.SubcategoryId) &&
-                (request.CityId == null || x.Product.CityId == request.CityId) &&
-                (request.UserId == null || x.Product.UserId == request.UserId) &&
-                (request.ProductId == null || x.ProductId == request.ProductId) );
+                (request.CategoryId == null || x.Product.CategoryId.Equals(request.CategoryId)) &&
+                (request.SubcategoryId == null || x.Product.SubcategoryId.Equals(request.SubcategoryId)) &&
+                (request.CityId == null || x.Product.CityId.Equals(request.CityId)) &&
+                (request.UserId == null || x.Product.UserId.Equals(request.UserId)) &&
+                (request.ProductId == null || x.ProductId.Equals(request.ProductId)) );
             if (request.SortByPrice == true) query.OrderBy(x => x.Product.Price);
             else query.OrderBy(x => x.Product.DateTime);
             if (request.ReverseSort == true) query.Reverse();
