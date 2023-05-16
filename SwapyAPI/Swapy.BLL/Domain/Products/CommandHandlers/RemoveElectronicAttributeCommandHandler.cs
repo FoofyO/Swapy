@@ -24,7 +24,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             var electronicAttribute = await _electronicAttributeRepository.GetByIdAsync(request.ElectronicAttribute);
             var product = await _productRepository.GetByIdAsync(electronicAttribute.ProductId);
 
-            if (!_userId.Equals(product.UserId)) throw new NoAccessException("No access to delete this product.");
+            if (_userId.Equals(product.UserId)) throw new NoAccessException("No access to delete this product");
 
             await _electronicAttributeRepository.DeleteAsync(electronicAttribute);
 

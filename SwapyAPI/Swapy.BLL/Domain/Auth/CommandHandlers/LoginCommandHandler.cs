@@ -7,7 +7,6 @@ using Swapy.Common.DTO;
 using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
-using Swapy.DAL.Repositories;
 using System.Security.Authentication;
 
 namespace Swapy.BLL.Domain.Auth.CommandHandlers
@@ -33,18 +32,19 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 
             if (user == null)
             {
-                user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.EmailOrPhone);
+                user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber.Equals(request.EmailOrPhone));
                 if (user == null) throw new NotFoundException("Invalid email or password");
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
             if (!result.Succeeded) throw new AuthenticationException("Invalid email or password");
 
-            var refreshToken = await _tokenService.GenerateRefreshToken();
             var accessToken = await _tokenService.GenerateJwtToken(user);
+            var refreshToken = await _tokenService.GenerateRefreshToken();
+            
             await _refreshTokenRepository.CreateAsync(new RefreshToken(refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
 
-            var authDTO = new AuthResponseDTO { UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
+            var authDTO = new AuthResponseDTO { Type = user.Type, UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
             return authDTO;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Products.Queries;
 using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;

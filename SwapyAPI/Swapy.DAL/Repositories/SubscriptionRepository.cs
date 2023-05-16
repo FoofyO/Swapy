@@ -42,5 +42,10 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.Subscriptions.ToListAsync();
         }
+
+        public async Task<IEnumerable<Subscription>> GetAllByUserIdAsync(string userId)
+        {
+            return await _context.Subscriptions.Where(s => s.SubscriberId.Equals(userId)).ToListAsync();
+        }
     }
 }

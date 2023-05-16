@@ -14,7 +14,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 
         public async Task<bool> Handle(PhoneNumberCommand request, CancellationToken cancellationToken)
         {
-            var result = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
+            var result = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber.Equals(request.PhoneNumber));
             if (result == null) return false;
             return true;
         }

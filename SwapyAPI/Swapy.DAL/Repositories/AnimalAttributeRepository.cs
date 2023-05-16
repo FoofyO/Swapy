@@ -74,7 +74,7 @@ namespace Swapy.DAL.Repositories
                                                         .ThenInclude(p => p.Subcategory)
                                                       .Include(a => a.AnimalBreed)
                                                         .ThenInclude(ab => ab.AnimalType)
-                                                      .FirstOrDefaultAsync(a => a.Id == id);
+                                                      .FirstOrDefaultAsync(a => a.Id.Equals(id));
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;

@@ -51,7 +51,8 @@ namespace Swapy.DAL.Repositories
         public async Task<ShopAttribute> GetDetailByIdAsync(string id)
         {
             var item = await _context.ShopAttributes.Include(s => s.User)
-                                                    .FirstOrDefaultAsync(s => s.Id == id);
+                                                        .ThenInclude(u => u.LikesRecipient)
+                                                    .FirstOrDefaultAsync(s => s.Id.Equals(id));
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
@@ -65,7 +66,7 @@ namespace Swapy.DAL.Repositories
 
         public async Task<bool> FindByShopNameAsync(string shopName)
         {
-            var result = await _context.ShopAttributes.FirstOrDefaultAsync(s => s.ShopName == shopName);
+            var result = await _context.ShopAttributes.FirstOrDefaultAsync(s => s.ShopName.Equals(shopName));
             if(result == null) return false;
             return true;
         }
