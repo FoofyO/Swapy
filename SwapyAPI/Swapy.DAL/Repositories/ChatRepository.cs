@@ -42,5 +42,36 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.Chats.ToListAsync();
         }
+
+        public async Task<IEnumerable<Chat>> GetAllSellerChatsAsync(string userId)
+        { 
+            return await _context.Products.Where(p => p.UserId.Equals(userId))
+                                          .SelectMany(p => p.Chats)
+                                          .Include(c => c.Product)
+                                          .Include(c => c.Buyer)
+                                          .Include(c => c.Messages.OrderByDescending(m => m.DateTime).FirstOrDefault())
+                                          .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Chat>> GetAllBuyerChatsAsync(string userId)
+        {
+            return await _context.Chats.Where(c => c.BuyerId.Equals(userId))
+                                       .Include(p => p.Product)
+                                            .ThenInclude(p => p.User)
+                                       .Include(c => c.Messages.OrderByDescending(m => m.DateTime).FirstOrDefault())
+                                       .ToListAsync();
+        }
+
+        public async Task<Chat> GetByIdDetailAsync(string id)
+        {
+            var item = await _context.Chats.Include(c => c.Product)
+                                            .ThenInclude(p => p.User)
+                                       .Include(c => c.Messages)
+                                            .ThenInclude(m => m.Sender)
+                                       .FirstOrDefaultAsync(c => c.Id.Equals(id));
+
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
+            return item;
+        }
     }
 }
