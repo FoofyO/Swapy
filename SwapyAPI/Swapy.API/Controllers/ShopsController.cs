@@ -45,6 +45,7 @@ namespace Swapy.API.Controllers
         [HttpGet]
         [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById(GetByIdShopQuery query)
         {
@@ -52,6 +53,10 @@ namespace Swapy.API.Controllers
             {
                 var result = await _mediator.Send(query);
                 return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
@@ -100,7 +105,7 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<string> Options()
         {
-            return Ok("x3 GET, x1 PUT, HEAD, OPTIONS");
+            return Ok("x3 GET, PUT, HEAD, OPTIONS");
         }
     }
 }
