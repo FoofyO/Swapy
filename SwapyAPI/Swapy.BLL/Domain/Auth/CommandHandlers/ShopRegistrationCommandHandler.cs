@@ -60,7 +60,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 
             await _refreshTokenRepository.CreateAsync(new RefreshToken(refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
 
-            var authDTO = new AuthResponseDTO { UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
+            var authDTO = new AuthResponseDTO { Type = UserType.Shop, UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
             return new AuthResponseDTO();
         }
     }

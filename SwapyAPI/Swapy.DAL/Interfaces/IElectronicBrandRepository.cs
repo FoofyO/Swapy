@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IElectronicBrandRepository : IRepository<ElectronicBrand>
+    public interface IElectronicBrandRepository : IQueryableProviderRepository<ElectronicBrand>
     {
     }
 }

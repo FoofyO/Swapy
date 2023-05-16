@@ -44,7 +44,7 @@ namespace Swapy.DAL.Repositories
                                                     .ThenInclude(b => b.Child)
                                                    .Include(s => s.ParentSubcategory)
                                                     .ThenInclude(b => b.Parent)
-                                                   .FirstOrDefaultAsync(s => s.Id == id);
+                                                   .FirstOrDefaultAsync(s => s.Id.Equals(id));
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
@@ -57,12 +57,16 @@ namespace Swapy.DAL.Repositories
 
         public async Task<IEnumerable<Subcategory>> GetByCategoryAsync(string categoryId)
         {
-            return await _context.Subcategories.Where(s => s.CategoryId == categoryId && s.ParentSubcategoryId == null).ToListAsync();
+            var item = await _context.Subcategories.Where(s => s.CategoryId.Equals(categoryId) && s.ParentSubcategoryId == null).ToListAsync();
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {categoryId} id not found");
+            return item;
         }
 
         public async Task<IEnumerable<Subcategory>> GetBySubcategoryAsync(string subcategoryId)
         {
-            return await _context.Subcategories.Where(s => s.ParentSubcategoryId == subcategoryId).ToListAsync();
+            var item = await _context.Subcategories.Where(s => s.ParentSubcategoryId.Equals(subcategoryId)).ToListAsync();
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {subcategoryId} id not found");
+            return item;
         }
     }
 }

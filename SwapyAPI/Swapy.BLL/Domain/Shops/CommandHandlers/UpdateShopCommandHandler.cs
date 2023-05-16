@@ -18,7 +18,7 @@ namespace Swapy.BLL.Domain.Shops.CommandHandlers
         {
             var shop = await _shopAttributeRepository.GetByIdAsync(request.ShopId);
 
-            if (shop.UserId != _userId) throw new NoAccessException("No access to update this shop");
+            if (!shop.UserId.Equals(_userId)) throw new NoAccessException("No access to update this shop");
             
             shop.Banner = request.Banner;
             shop.Slogan = request.Slogan;

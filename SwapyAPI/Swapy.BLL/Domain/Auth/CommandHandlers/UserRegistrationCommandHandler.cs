@@ -28,7 +28,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
         public async Task<AuthResponseDTO> Handle(UserRegistrationCommand request, CancellationToken cancellationToken)
         {
             var emailExists = await _userManager.FindByEmailAsync(request.Email);
-            var phoneExists = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
+            var phoneExists = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber.Equals(request.PhoneNumber));
 
             if (emailExists != null || phoneExists != null) throw new EmailOrPhoneTakenException("Email and Phone already taken");
             
@@ -50,7 +50,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 
             await _refreshTokenRepository.CreateAsync(new RefreshToken(refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
 
-            var authDTO = new AuthResponseDTO { UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
+            var authDTO = new AuthResponseDTO { Type = UserType.Seller, UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
             return new AuthResponseDTO();
         }
     }

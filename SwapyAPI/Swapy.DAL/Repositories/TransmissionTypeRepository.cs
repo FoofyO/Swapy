@@ -42,5 +42,10 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.TransmissionTypes.ToListAsync();
         }
+
+        public async Task<IQueryable<TransmissionType>> GetQueryableAsync()
+        {
+            return _context.TransmissionTypes.AsQueryable();
+        }
     }
 }

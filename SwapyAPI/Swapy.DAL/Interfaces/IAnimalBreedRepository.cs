@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IAnimalBreedRepository : IRepository<AnimalBreed>
+    public interface IAnimalBreedRepository : IQueryableProviderRepository<AnimalBreed>
     {
     } 
 }

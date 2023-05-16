@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IModelRepository : IRepository<Model>
+    public interface IModelRepository : IQueryableProviderRepository<Model>
     {
     }
 }
