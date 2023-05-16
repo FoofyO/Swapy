@@ -90,7 +90,7 @@ namespace Swapy.DAL.Repositories
                                                        .Include(c => c.ClothesBrandView)
                                                         .ThenInclude(cbv => cbv.ClothesView)
                                                             .ThenInclude(cv => cv.Gender)
-                                                       .FirstOrDefaultAsync(a => a.Id == id);
+                                                       .FirstOrDefaultAsync(a => a.Id.Equals(id));
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;

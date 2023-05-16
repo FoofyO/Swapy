@@ -116,7 +116,7 @@ namespace Swapy.API
             /// <summary>
             /// Configurations for JWToken
             /// </summary>
-            var guid = builder.Configuration["JWT-Key"];
+            var guid = builder.Configuration["JWTKey"];
             var key = Encoding.ASCII.GetBytes(guid);
 
             builder.Services.AddAuthentication(options =>

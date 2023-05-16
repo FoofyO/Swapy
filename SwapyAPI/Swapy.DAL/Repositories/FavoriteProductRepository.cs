@@ -70,7 +70,7 @@ namespace Swapy.DAL.Repositories
                                         .ThenInclude(p => p.Currency)
                                     .Include(fp => fp.Product)
                                         .ThenInclude(p => p.Subcategory)
-                                    .FirstOrDefaultAsync(fp => fp.Id == id);
+                                    .FirstOrDefaultAsync(fp => fp.Id.Equals(id));
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;

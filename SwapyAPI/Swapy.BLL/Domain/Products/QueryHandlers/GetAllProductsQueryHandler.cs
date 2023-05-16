@@ -25,6 +25,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 
             query = query.Where(x =>
                 (request.Title == null || x.Title.Contains(request.Title)) &&
+                (request.CurrencyId == null || x.CurrencyId.Equals(request.CurrencyId)) &&
                 (request.PriceMin == null) || (x.Price >= request.PriceMin) &&
                 (request.PriceMax == null) || (x.Price <= request.PriceMax) &&
                 (request.CategoryId == null || x.CategoryId.Equals(request.CategoryId)) &&

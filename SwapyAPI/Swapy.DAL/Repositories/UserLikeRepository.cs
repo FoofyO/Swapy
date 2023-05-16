@@ -42,5 +42,25 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.UsersLikes.ToListAsync();
         }
+
+        public async Task<IEnumerable<UserLike>> GetAllByUserIdAsync(string userId)
+        {
+            return await _context.UsersLikes.Where(ul => ul.RecipientId.Equals(userId)).ToListAsync();
+        }
+
+        public async Task<int> GetCountByUserIdAsync(string userId)
+        {
+            return await _context.UsersLikes.CountAsync(ul => ul.RecipientId.Equals(userId));
+        }
+
+        public async Task<bool> CheckUserLikeAsync(string likerId, string recipientId)
+        {
+            var item = await _context.UsersLikes.Include(ul => ul.Like)
+                                                .FirstOrDefaultAsync(ul => ul.RecipientId.Equals(recipientId) && ul.Like.LikerId.Equals(likerId));
+
+            if (item == null) return false;
+            
+            return true;
+        }
     }
 }

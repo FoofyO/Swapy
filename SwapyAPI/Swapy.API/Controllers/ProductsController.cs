@@ -33,6 +33,7 @@ namespace Swapy.API.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddAnimalAsync(AddAnimalAttributeCommand command)
         {
@@ -46,12 +47,16 @@ namespace Swapy.API.Controllers
             {
                 return BadRequest("Invalid parameters: " + ex.Message);
             }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpDelete]
         [Route("animals/{id}")]
         [Authorize]
@@ -66,7 +71,7 @@ namespace Swapy.API.Controllers
                 var result = await _mediator.Send(command);
                 return NoContent();
             }
-            catch(NoAccessException ex)
+            catch (NoAccessException ex)
             {
                 return Forbid(ex.Message);
             }
@@ -79,7 +84,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpPut]
         [Route("animals/{id}")]
         [Authorize]
@@ -107,7 +112,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("animals")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -124,7 +129,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("animals/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -151,6 +156,7 @@ namespace Swapy.API.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddAutoAsync(AddAutoAttributeCommand command)
         {
@@ -164,12 +170,16 @@ namespace Swapy.API.Controllers
             {
                 return BadRequest("Invalid parameters: " + ex.Message);
             }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpDelete]
         [Route("autos/{id}")]
         [Authorize]
@@ -197,7 +207,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpPut]
         [Route("autos/{id}")]
         [Authorize]
@@ -225,7 +235,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("autos")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -242,7 +252,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("autos/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -269,6 +279,7 @@ namespace Swapy.API.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddClothesAsync(AddClothesAttributeCommand command)
         {
@@ -282,12 +293,16 @@ namespace Swapy.API.Controllers
             {
                 return BadRequest("Invalid parameters: " + ex.Message);
             }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpDelete]
         [Route("clothes/{id}")]
         [Authorize]
@@ -315,7 +330,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpPut]
         [Route("clothes/{id}")]
         [Authorize]
@@ -343,7 +358,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("clothes/")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -360,7 +375,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("clothes/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -387,6 +402,7 @@ namespace Swapy.API.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddElectronicAsync(AddElectronicAttributeCommand command)
         {
@@ -400,12 +416,16 @@ namespace Swapy.API.Controllers
             {
                 return BadRequest("Invalid parameters: " + ex.Message);
             }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpDelete]
         [Route("electronics/{id}")]
         [Authorize]
@@ -433,7 +453,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-       
+
         [HttpPut]
         [Route("electronics/{id}")]
         [Authorize]
@@ -461,7 +481,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("electronics")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -478,7 +498,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("electronics/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -505,6 +525,7 @@ namespace Swapy.API.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddItemAsync(AddItemAttributeCommand command)
         {
@@ -518,12 +539,16 @@ namespace Swapy.API.Controllers
             {
                 return BadRequest("Invalid parameters: " + ex.Message);
             }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpDelete]
         [Route("items/{id}")]
         [Authorize]
@@ -551,7 +576,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpPut]
         [Route("items/{id}")]
         [Authorize]
@@ -579,7 +604,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("items")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -596,7 +621,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("items/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -623,6 +648,7 @@ namespace Swapy.API.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddRealEstatesAsync(AddRealEstateAttributeCommand command)
         {
@@ -636,12 +662,16 @@ namespace Swapy.API.Controllers
             {
                 return BadRequest("Invalid parameters: " + ex.Message);
             }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpDelete]
         [Route("real-estates/{id}")]
         [Authorize]
@@ -669,7 +699,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpPut]
         [Route("real-estates/{id}")]
         [Authorize]
@@ -697,7 +727,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("real-estates")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -741,6 +771,7 @@ namespace Swapy.API.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddTVAsync(AddTVAttributeCommand command)
         {
@@ -754,12 +785,16 @@ namespace Swapy.API.Controllers
             {
                 return BadRequest("Invalid parameters: " + ex.Message);
             }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpDelete]
         [Route("tvs/{id}")]
         [Authorize]
@@ -787,7 +822,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpPut]
         [Route("tvs/{id}")]
         [Authorize]
@@ -815,7 +850,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("tvs")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -832,7 +867,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("tvs/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -877,7 +912,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpDelete]
         [Route("favorite-products/{id}")]
         [Authorize]
@@ -905,7 +940,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("favorite-products")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -927,7 +962,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("favorite-products/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

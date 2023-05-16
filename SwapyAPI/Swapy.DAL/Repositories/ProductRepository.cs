@@ -45,7 +45,7 @@ namespace Swapy.DAL.Repositories
 
         public async Task<IEnumerable<Product>> GetAllByUserId(string userId)
         {
-            return await _context.Products.Where(p => p.UserId == userId).ToListAsync();
+            return await _context.Products.Where(p => p.UserId.Equals(userId)).ToListAsync();
         }
 
         public async Task<IQueryable<Product>> GetByPageAsync(int page = 1, int pageSize = 24)
@@ -67,7 +67,7 @@ namespace Swapy.DAL.Repositories
                                               .Include(p => p.City)
                                               .Include(p => p.Currency)
                                               .Include(p => p.Subcategory)
-                                              .FirstOrDefaultAsync(a => a.Id == id);
+                                              .FirstOrDefaultAsync(a => a.Id.Equals(id));
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
@@ -82,7 +82,7 @@ namespace Swapy.DAL.Repositories
 
         public async Task<int> GetProductCountForShopAsync(string userId)
         {
-            return await _context.Products.CountAsync(p => p.UserId == userId);
+            return await _context.Products.CountAsync(p => p.UserId.Equals(userId));
         }
     }
 }

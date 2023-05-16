@@ -3,6 +3,7 @@ using Swapy.DAL.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Azure.Core;
 
 namespace Swapy.DAL
 {
@@ -107,7 +108,6 @@ namespace Swapy.DAL
         public DbSet<TVBrand> TVBrands { get; set; }
         public DbSet<TVType> TVTypes { get; set; }
         public DbSet<TransmissionType> TransmissionTypes { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<UserLike> UsersLikes { get; set; }
         public DbSet<UserSubscription> UsersSubscriptions { get; set; }
     }

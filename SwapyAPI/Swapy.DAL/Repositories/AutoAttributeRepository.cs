@@ -84,7 +84,7 @@ namespace Swapy.DAL.Repositories
                                                         .ThenInclude(abt => abt.AutoBrand)
                                                     .Include(a => a.AutoBrandType)
                                                         .ThenInclude(abt => abt.AutoType)
-                                                    .FirstOrDefaultAsync(a => a.Id == id);
+                                                    .FirstOrDefaultAsync(a => a.Id.Equals(id));
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;

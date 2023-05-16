@@ -24,7 +24,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             var realEstateAttribute = await _realEstateAttributeRepository.GetByIdAsync(request.RealEstateAttributeId);
             var product = await _productRepository.GetByIdAsync(realEstateAttribute.ProductId);
 
-            if (!_userId.Equals(product.UserId)) throw new NoAccessException("No access to delete this product.");
+            if (_userId.Equals(product.UserId)) throw new NoAccessException("No access to delete this product");
 
             await _realEstateAttributeRepository.DeleteAsync(realEstateAttribute);
 
