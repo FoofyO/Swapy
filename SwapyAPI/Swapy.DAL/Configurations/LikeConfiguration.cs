@@ -11,9 +11,7 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("Likes");
             builder.HasKey(l => l.Id);
 
-            builder.Property(l => l.Id)
-                   .IsRequired()
-                   .HasDefaultValueSql("NEWID()");
+            builder.Property(l => l.Id).IsRequired();
 
             builder.HasOne(l => l.Liker)
                    .WithMany(u => u.Likes)

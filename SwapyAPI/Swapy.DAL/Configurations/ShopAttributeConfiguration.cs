@@ -12,9 +12,7 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("ShopAttributes");
             builder.HasKey(s => s.Id);
 
-            builder.Property(s => s.Id)
-                   .IsRequired()
-                   .HasDefaultValueSql("NEWID()");
+            builder.Property(s => s.Id).IsRequired();
 
             builder.Property(s => s.ShopName)
                    .HasColumnType("NVARCHAR(128)")
@@ -62,7 +60,7 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(s => s.User)
                    .WithOne(u => u.ShopAttribute)
                    .HasForeignKey<User>(u => u.ShopAttributeId)
-                   .IsRequired();
+                   .IsRequired(false);
         }
     }
 }

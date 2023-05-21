@@ -6,8 +6,8 @@
         public string Name { get; set; }
         public ICollection<TVAttribute> TVAttributes { get; set; } = new List<TVAttribute>();
 
-        public ScreenDiagonal() { }
+        public ScreenDiagonal() => Id = Guid.NewGuid().ToString();
 
-        public ScreenDiagonal(string name) => Name = name;
+        public ScreenDiagonal(string name) : this() => Name = name;
     }
 }

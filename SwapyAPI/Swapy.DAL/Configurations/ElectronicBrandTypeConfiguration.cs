@@ -11,9 +11,7 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("ElectronicBrandsTypes");
             builder.HasKey(e => e.Id);
 
-            builder.Property(e => e.Id)
-                   .IsRequired()
-                   .HasDefaultValueSql("NEWID()");
+            builder.Property(e => e.Id).IsRequired();
 
             builder.HasOne(e => e.ElectronicBrand)
                    .WithMany(e => e.ElectronicBrandsTypes)

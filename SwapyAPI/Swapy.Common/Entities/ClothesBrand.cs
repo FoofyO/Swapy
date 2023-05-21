@@ -6,9 +6,9 @@
         public string Name { get; set; }
         public ICollection<ClothesBrandView> ClothesBrandsViews { get; set; } = new List<ClothesBrandView>();
 
-        public ClothesBrand() { }
+        public ClothesBrand() => Id = Guid.NewGuid().ToString();
 
-        public ClothesBrand(string name) => Name = name;
+        public ClothesBrand(string name) : this() => Name = name;
     } 
 }
  

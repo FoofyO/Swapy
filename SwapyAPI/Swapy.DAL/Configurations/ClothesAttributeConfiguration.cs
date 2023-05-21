@@ -11,9 +11,7 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("ClothesAttributes");
             builder.HasKey(p => p.Id);
 
-            builder.Property(p => p.Id)
-                   .IsRequired()
-                   .HasDefaultValueSql("NEWID()");
+            builder.Property(p => p.Id).IsRequired();
 
             builder.Property(x => x.IsNew)
                    .IsRequired()

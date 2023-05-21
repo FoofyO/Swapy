@@ -29,7 +29,7 @@ namespace Swapy.API.Controllers
         [Route("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAll(GetAllProductsQuery query)
+        public async Task<IActionResult> GetAll(GetAllShopsQuery query)
         {
             try
             {

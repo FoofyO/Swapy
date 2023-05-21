@@ -14,9 +14,8 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
         private readonly ITVAttributeRepository _tvAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
 
-        public AddTVAttributeCommandHandler(string userId, IProductRepository productRepository, ITVAttributeRepository tvAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public AddTVAttributeCommandHandler(IProductRepository productRepository, ITVAttributeRepository tvAttributeRepository, ISubcategoryRepository subcategoryRepository)
         {
-            _userId = userId;
             _productRepository = productRepository;
             _tvAttributeRepository = tvAttributeRepository;
             _subcategoryRepository = subcategoryRepository;

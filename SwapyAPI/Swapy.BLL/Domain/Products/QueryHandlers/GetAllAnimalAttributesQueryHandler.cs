@@ -12,9 +12,9 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
         private readonly string _userId;
         private readonly IAnimalAttributeRepository _animalAttributeRepository;
 
-        public GetAllAnimalAttributesQueryHandler(string userId, IAnimalAttributeRepository animalAttributeRepository)
+        public GetAllAnimalAttributesQueryHandler(IAnimalAttributeRepository animalAttributeRepository)
         {
-            _userId = userId;
+            //_userId = userId;
             _animalAttributeRepository = animalAttributeRepository;
         }
 

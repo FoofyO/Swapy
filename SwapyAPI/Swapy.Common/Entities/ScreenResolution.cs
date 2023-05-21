@@ -6,9 +6,9 @@
         public string Name { get; set; }
         public ICollection<TVAttribute> TVAttributes { get; set; } = new List<TVAttribute>();
 
-        public ScreenResolution() { }
+        public ScreenResolution() => Id = Guid.NewGuid().ToString();
 
-        public ScreenResolution(string name) => Name = name;
+        public ScreenResolution(string name) : this() => Name = name;
     }
 }
  

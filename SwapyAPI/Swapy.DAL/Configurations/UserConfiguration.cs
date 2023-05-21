@@ -10,15 +10,17 @@ namespace Swapy.DAL.Configurations
         {
             builder.ToTable("Users");
 
+            builder.Property(u => u.UserName).IsRequired(true);
+
             builder.Property(u => u.FirstName)
                    .HasColumnType("NVARCHAR(64)")
                    .HasMaxLength(64)
-                   .IsRequired();
+                   .IsRequired(false);
 
             builder.Property(u => u.LastName)
                    .HasColumnType("NVARCHAR(64)")
                    .HasMaxLength(64)
-                   .IsRequired();
+                   .IsRequired(false);
 
             builder.Property(u => u.Type)
                    .HasColumnType("INT")
@@ -34,15 +36,16 @@ namespace Swapy.DAL.Configurations
                    .HasMaxLength(128)
                    .IsRequired();
 
-            builder.HasOne(u => u.RefreshToken)
-                   .WithOne(r => r.User)
-                   .HasForeignKey<RefreshToken>(r => r.UserId)
+            builder.HasOne(u => u.UserToken)
+                   .WithOne(ur => ur.User)
+                   .HasForeignKey<UserToken>(ur => ur.UserId)
+                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired(false);
 
             builder.HasOne(u => u.ShopAttribute)
                    .WithOne(s => s.User)
                    .HasForeignKey<ShopAttribute>(s => s.UserId)
-                   .IsRequired(false);
+                   .IsRequired();
 
             builder.HasMany(u => u.Likes)
                    .WithOne(l => l.Liker)

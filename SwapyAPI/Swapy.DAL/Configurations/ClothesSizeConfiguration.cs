@@ -12,9 +12,7 @@ namespace Swapy.DAL.Configurations
 
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.Id)
-                   .IsRequired()
-                   .HasDefaultValueSql("NEWID()");
+            builder.Property(c => c.Id).IsRequired();
 
             builder.Property(c => c.IsShoe)
                    .IsRequired()

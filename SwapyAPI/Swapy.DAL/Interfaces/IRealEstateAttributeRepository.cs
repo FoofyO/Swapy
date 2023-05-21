@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IRealEstateAttributeRepository : IAttributeRepositoryy<RealEstateAttribute>
+    public interface IRealEstateAttributeRepository : IAttributeRepository<RealEstateAttribute>
     {
     }
 }

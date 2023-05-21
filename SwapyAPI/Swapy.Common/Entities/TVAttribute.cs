@@ -16,9 +16,9 @@
         public string ProductId { get; set; }
         public Product Product { get; set; }
 
-        public TVAttribute() { }
+        public TVAttribute() => Id = Guid.NewGuid().ToString();
 
-        public TVAttribute(bool isNew, bool isSmart, string tvTypeId, string tvBrandId, string screenResolutionId, string screenDiagonalId, string productId)
+        public TVAttribute(bool isNew, bool isSmart, string tvTypeId, string tvBrandId, string screenResolutionId, string screenDiagonalId, string productId) : this()
         {  
             IsNew = isNew;
             IsSmart = isSmart; 

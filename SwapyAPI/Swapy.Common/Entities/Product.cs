@@ -36,9 +36,9 @@
         public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
         public ICollection<FavoriteProduct> FavoriteProducts { get; set; } = new List<FavoriteProduct>();
 
-        public Product() { }
+        public Product() => Id = Guid.NewGuid().ToString();
 
-        public Product(string title, string description, decimal price, string userId, string currencyId, string categoryId, string subcategoryId, string cityId)
+        public Product(string title, string description, decimal price, string userId, string currencyId, string categoryId, string subcategoryId, string cityId) : this()
         {
             Title = title;
             Price = price;

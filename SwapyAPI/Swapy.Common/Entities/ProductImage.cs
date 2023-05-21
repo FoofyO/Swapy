@@ -7,9 +7,9 @@
         public string ProductId { get; set; }
         public Product Product { get; set; }
 
-        public ProductImage() { }
+        public ProductImage() => Id = Guid.NewGuid().ToString();
 
-        public ProductImage(string image, string productId)
+        public ProductImage(string image, string productId) : this()
         {
             Image = image;
             ProductId = productId;

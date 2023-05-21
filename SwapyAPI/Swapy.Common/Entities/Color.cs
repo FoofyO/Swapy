@@ -7,8 +7,8 @@
         public ICollection<ModelColor> ModelsColors { get; set; } = new List<ModelColor>();
         public ICollection<AutoAttribute> AutoAttributes { get; set; } = new List<AutoAttribute>();
 
-        public Color() { }
+        public Color() => Id = Guid.NewGuid().ToString();
 
-        public Color(string name) => Name = name;
+        public Color(string name) : this() => Name = name;
     }
 }

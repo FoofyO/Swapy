@@ -8,9 +8,9 @@
         public string ChildId { get; set; }
         public Subcategory Child { get; set; }
 
-       public SubcategoryBranch() { }
+       public SubcategoryBranch() => Id = Guid.NewGuid().ToString();
 
-        public SubcategoryBranch(string parentId, string childId)
+        public SubcategoryBranch(string parentId, string childId) : this()
         {
             ParentId = parentId;
             ChildId = childId;

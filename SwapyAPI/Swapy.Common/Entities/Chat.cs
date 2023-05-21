@@ -9,9 +9,9 @@
         public Product Product { get; set; }
         public ICollection<Message> Messages { get; set; } = new List<Message>();
 
-        public Chat() { }
+        public Chat() => Id = Guid.NewGuid().ToString();
 
-        public Chat(string productId, string buyerId)
+        public Chat(string productId, string buyerId) : this()
         {
             ProductId = productId;
             BuyerId = buyerId;

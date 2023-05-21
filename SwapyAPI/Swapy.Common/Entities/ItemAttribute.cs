@@ -9,9 +9,9 @@
         public string ProductId { get; set; }
         public Product Product { get; set; }
 
-        public ItemAttribute() { }
+        public ItemAttribute() => Id = Guid.NewGuid().ToString();
 
-        public ItemAttribute(bool isNew, string itemTypeId, string productId)
+        public ItemAttribute(bool isNew, string itemTypeId, string productId) : this()
         {
             IsNew = isNew;
             ItemTypeId = itemTypeId;

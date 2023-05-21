@@ -9,9 +9,9 @@
         public Subcategory ElectronicType { get; set; }
         public ICollection<Model> Models { get; set; } = new List<Model>();
 
-        public ElectronicBrandType() { }
+        public ElectronicBrandType() => Id = Guid.NewGuid().ToString();
 
-        public ElectronicBrandType(string electronicBrandId, string electronicTypeId)
+        public ElectronicBrandType(string electronicBrandId, string electronicTypeId) : this()
         {
             ElectronicBrandId = electronicBrandId;
             ElectronicTypeId = electronicTypeId;

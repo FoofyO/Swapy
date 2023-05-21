@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Swapy.BLL.Domain.Chats.Commands; 
+using Swapy.BLL.Domain.Chats.Commands;
 using Swapy.Common.Exceptions;
 using Swapy.BLL.Domain.Chats.Queries;
 
@@ -23,17 +23,17 @@ namespace Swapy.API.Controllers
         {
             return Ok("ping");
         }
-         
+
         [HttpPost]
         [Route("")]
-        [Authorize] 
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateChatAsync(CreateChatCommand command)
-        {  
+        {
             try
-            { 
+            {
                 var result = await _mediator.Send(command);
                 var locationUri = new Uri($"{Request.Scheme}://{Request.Host.ToUriComponent()}/{result.Id}");
                 return Created(locationUri, result);
@@ -82,7 +82,7 @@ namespace Swapy.API.Controllers
             {
                 var result = await _mediator.Send(query);
                 return Ok(result);
-            }  
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
@@ -91,7 +91,7 @@ namespace Swapy.API.Controllers
 
         [HttpGet]
         [Route("chats/sellers/{userId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)] 
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllSellerChatsAsync(GetAllSellerChatsQuery query)
         {
@@ -99,7 +99,7 @@ namespace Swapy.API.Controllers
             {
                 var result = await _mediator.Send(query);
                 return Ok(result);
-            }  
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
@@ -114,9 +114,9 @@ namespace Swapy.API.Controllers
         public async Task<IActionResult> GetDetailChatAsync(GetDetailChatQuery query)
         {
             try
-            { 
+            {
                 var result = await _mediator.Send(query);
-                return Ok(result); 
+                return Ok(result);
             }
             catch (NotFoundException ex)
             {

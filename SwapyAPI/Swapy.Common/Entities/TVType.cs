@@ -6,8 +6,8 @@
         public string Name { get; set; }
         public ICollection<TVAttribute> TVAttributes { get; set; } = new List<TVAttribute>();
 
-        public TVType() { }
+        public TVType() => Id = Guid.NewGuid().ToString();
 
-        public TVType(string name) => Name = name;
+        public TVType(string name) : this() => Name = name;
     }
 }

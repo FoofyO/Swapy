@@ -11,9 +11,7 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("Subscriptions");
             builder.HasKey(s => s.Id);
 
-            builder.Property(s => s.Id)
-                   .IsRequired()
-                   .HasDefaultValueSql("NEWID()");
+            builder.Property(s => s.Id).IsRequired();
 
             builder.HasOne(s => s.Subscriber)
                    .WithMany(u => u.Subscriptions)

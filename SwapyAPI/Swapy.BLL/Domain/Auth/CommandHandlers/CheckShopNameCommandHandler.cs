@@ -4,7 +4,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
-    internal class CheckShopNameCommandHandler : IRequestHandler<ShopNameCommand, bool>
+    public class CheckShopNameCommandHandler : IRequestHandler<ShopNameCommand, bool>
     {
         private readonly IShopAttributeRepository _shopAttributeRepository;
 

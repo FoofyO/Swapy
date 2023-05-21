@@ -11,9 +11,7 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("Memories");
             builder.HasKey(m => m.Id);
 
-            builder.Property(m => m.Id)
-                   .IsRequired()
-                   .HasDefaultValueSql("NEWID()");
+            builder.Property(m => m.Id).IsRequired();
 
             builder.Property(m => m.Name)
                    .IsRequired()

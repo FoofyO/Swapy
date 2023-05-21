@@ -6,8 +6,8 @@
         public string Name { get; set; }
         public ICollection<ElectronicBrandType> ElectronicBrandsTypes { get; set; } = new List<ElectronicBrandType>();
 
-        public ElectronicBrand() { }
+        public ElectronicBrand() => Id = Guid.NewGuid().ToString();
 
-        public ElectronicBrand(string name) => Name = name;
+        public ElectronicBrand(string name) : this() => Name = name;
     }
 }

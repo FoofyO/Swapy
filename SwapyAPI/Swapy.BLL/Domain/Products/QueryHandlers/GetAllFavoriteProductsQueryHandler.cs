@@ -13,9 +13,9 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
         private readonly string _userId;
         private readonly IFavoriteProductRepository _favoriteProductRepository;
 
-        public GetAllFavoriteProductsQueryHandler(string userId, IFavoriteProductRepository favoriteProductRepository)
+        public GetAllFavoriteProductsQueryHandler(IFavoriteProductRepository favoriteProductRepository)
         {
-            _userId = userId;
+            //_userId = userId;
             _favoriteProductRepository = favoriteProductRepository;
         }
         

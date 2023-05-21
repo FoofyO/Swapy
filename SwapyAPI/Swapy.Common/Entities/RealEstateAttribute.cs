@@ -11,9 +11,9 @@
         public string ProductId { get; set; }
         public Product Product { get; set; }
 
-        public RealEstateAttribute() { }
+        public RealEstateAttribute() => Id = Guid.NewGuid().ToString();
 
-        public RealEstateAttribute(int area, int rooms, bool isRent, string realEstateTypeId, string productId)
+        public RealEstateAttribute(int area, int rooms, bool isRent, string realEstateTypeId, string productId) : this()
         {
             Area = area;
             Rooms = rooms; 

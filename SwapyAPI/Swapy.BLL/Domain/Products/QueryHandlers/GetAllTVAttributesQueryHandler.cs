@@ -12,9 +12,9 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
         private readonly string _userId;
         private readonly ITVAttributeRepository _tvAttributeRepository;
 
-        public GetAllTVAttributesQueryHandler(string userId, ITVAttributeRepository tvAttributeRepository)
+        public GetAllTVAttributesQueryHandler(ITVAttributeRepository tvAttributeRepository)
         {
-            _userId = userId;
+            //_userId = userId;
             _tvAttributeRepository = tvAttributeRepository;
         }
 

@@ -9,9 +9,9 @@
         public Color Color { get; set; }
         public ICollection<ElectronicAttribute> ElectronicAttributes { get; set; } = new List<ElectronicAttribute>();
 
-        public ModelColor() { }
+        public ModelColor() => Id = Guid.NewGuid().ToString();
 
-        public ModelColor(string id, string modelId, string colorId)
+        public ModelColor(string id, string modelId, string colorId) : this()
         {
             Id = id;
             ModelId = modelId;

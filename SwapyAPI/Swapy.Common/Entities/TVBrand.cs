@@ -6,9 +6,9 @@
         public string Name { get; set; }  
         public ICollection<TVAttribute> TVAttributes { get; set; } = new List<TVAttribute>();
 
-        public TVBrand() { }
+        public TVBrand() => Id = Guid.NewGuid().ToString();
 
-        public TVBrand(string name) => Name = name; 
+        public TVBrand(string name) : this() => Name = name; 
     }
 }
  

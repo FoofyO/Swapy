@@ -14,9 +14,8 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
         private readonly IClothesAttributeRepository _clothesAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
 
-        public AddClothesAttributeCommandHandler(string userId, IProductRepository productRepository, IClothesAttributeRepository clothesAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public AddClothesAttributeCommandHandler(IProductRepository productRepository, IClothesAttributeRepository clothesAttributeRepository, ISubcategoryRepository subcategoryRepository)
         {
-            _userId = userId;
             _productRepository = productRepository;
             _clothesAttributeRepository = clothesAttributeRepository;
             _subcategoryRepository = subcategoryRepository;

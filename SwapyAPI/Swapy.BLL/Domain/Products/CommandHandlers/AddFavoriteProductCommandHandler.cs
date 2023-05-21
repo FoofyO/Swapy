@@ -18,9 +18,8 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
         private readonly string _userId;
         private readonly IFavoriteProductRepository _favoriteProductRepository;
 
-        public AddFavoriteProductCommandHandler(ClaimsPrincipal user, IFavoriteProductRepository favoriteProductRepository)
+        public AddFavoriteProductCommandHandler(IFavoriteProductRepository favoriteProductRepository)
         {
-            _userId = user.FindFirst(ClaimTypes.NameIdentifier).Value;
             _favoriteProductRepository = favoriteProductRepository;
         }
 

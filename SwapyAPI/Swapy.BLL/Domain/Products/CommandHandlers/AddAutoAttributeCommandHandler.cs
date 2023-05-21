@@ -14,9 +14,8 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
         private readonly IAutoAttributeRepository _autoAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
 
-        public AddAutoAttributeCommandHandler(string userId, IProductRepository productRepository, IAutoAttributeRepository autoAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public AddAutoAttributeCommandHandler(IProductRepository productRepository, IAutoAttributeRepository autoAttributeRepository, ISubcategoryRepository subcategoryRepository)
         {
-            _userId = userId;
             _productRepository = productRepository;
             _autoAttributeRepository = autoAttributeRepository;
             _subcategoryRepository = subcategoryRepository;

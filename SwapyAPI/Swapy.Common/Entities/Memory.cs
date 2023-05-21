@@ -6,8 +6,8 @@
         public string Name { get; set; }
         public ICollection<MemoryModel> MemoriesModels { get; set; } = new List<MemoryModel>();
 
-        public Memory() { }
+        public Memory() => Id = Guid.NewGuid().ToString();
 
-        public Memory(string name) => Name = name;
+        public Memory(string name) : this() => Name = name;
     }
 }

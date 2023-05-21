@@ -84,7 +84,7 @@ namespace Swapy.API.Controllers
         /// </summary>
         [HttpPost]
         [Authorize]
-        [Route("likes}")]
+        [Route("likes")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -270,7 +270,7 @@ namespace Swapy.API.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("subscriptions/check?=userId{userId}")]
+        [Route("subscriptions/check/{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CheckSubscription(CheckSubscriptionQuery query)

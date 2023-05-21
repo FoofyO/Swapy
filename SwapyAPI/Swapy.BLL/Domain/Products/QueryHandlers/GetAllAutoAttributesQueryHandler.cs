@@ -12,9 +12,9 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
         private readonly string _userId;
         private readonly IAutoAttributeRepository _autoAttributeRepository;
 
-        public GetAllAutoAttributesQueryHandler(string userId, IAutoAttributeRepository autoAttributeRepository)
+        public GetAllAutoAttributesQueryHandler(IAutoAttributeRepository autoAttributeRepository)
         {
-            _userId = userId;
+            //_userId = userId;
             _autoAttributeRepository = autoAttributeRepository;
         }
 

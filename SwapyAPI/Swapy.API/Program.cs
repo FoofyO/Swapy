@@ -1,16 +1,35 @@
 using Swapy.DAL;
-using System.Text;
 using Swapy.BLL.Services;
 using Swapy.DAL.Interfaces;
 using Swapy.BLL.Interfaces;
 using Swapy.Common.Entities;
 using Swapy.DAL.Repositories;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using MediatR;
 using System.Reflection;
+using Swapy.BLL.Domain.Auth.CommandHandlers;
+using Swapy.BLL.Domain.Auth.Commands;
+using Swapy.Common.DTO;
+using Swapy.BLL.Domain.Chats.Commands;
+using Swapy.BLL.Domain.Chats.Queries;
+using Swapy.BLL.Domain.Products.Commands;
+using Swapy.BLL.Domain.Products.Queries;
+using Swapy.BLL.Domain.Shops.Commands;
+using Swapy.BLL.Domain.Shops.Queries;
+using Swapy.BLL.Domain.Users.Commands;
+using Swapy.BLL.Domain.Users.Queries;
+using Swapy.BLL.Domain.Products.CommandHandlers;
+using Swapy.BLL.Domain.Users.CommandHandlers;
+using Swapy.BLL.Domain.Users.QueryHandlers;
+using Swapy.BLL.Domain.Chats.CommandHandlers;
+using Swapy.BLL.Domain.Products.QueryHandlers;
+using Swapy.BLL.Domain.Shops.QueryHandlers;
+using Swapy.BLL.Domain.Chats.QueryHandlers;
+using Swapy.BLL.Domain.Shops.CommandHandlers;
+using System.Security.Claims;
+using Microsoft.OpenApi.Models;
+using Swapy.API.Middleware;
 
 namespace Swapy.API
 {
@@ -21,21 +40,46 @@ namespace Swapy.API
             var builder = WebApplication.CreateBuilder(args);
 
             /// <summary>
-            /// Services setup
+            /// Services Setup
             /// </summary>
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            //Swagger Registration
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Swapy Api", Description = "'Swapy' REST Api", Version = "v1" });
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please insert JWT with Bearer into field",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
+                });
+            });
 
             builder.Services.AddDbContext<SwapyDbContext>(option =>
             {
-                option.UseLazyLoadingProxies();
                 option.UseSqlServer(builder.Configuration.GetConnectionString("SamedSQL"));
             });
 
 
             /// <summary>
-            /// Repository registration
+            /// Repository Registration
             /// </summary>
             builder.Services.AddScoped<IAnimalAttributeRepository, AnimalAttributeRepository>();
             builder.Services.AddScoped<IAnimalBreedRepository, AnimalBreedRepository>();
@@ -68,7 +112,6 @@ namespace Swapy.API
             builder.Services.AddScoped<IModelRepository, ModelRepository>();
             builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             builder.Services.AddScoped<IRealEstateAttributeRepository, RealEstateAttributeRepository>();
             builder.Services.AddScoped<IScreenDiagonalRepository, ScreenDiagonalRepository>();
             builder.Services.AddScoped<IScreenResolutionRepository, ScreenResolutionRepository>();
@@ -81,14 +124,120 @@ namespace Swapy.API
             builder.Services.AddScoped<ITVTypeRepository, TVTypeRepository>();
             builder.Services.AddScoped<IUserLikeRepository, UserLikeRepository>();
             builder.Services.AddScoped<IUserSubscriptionRepository, UserSubscriptionRepository>();
+            builder.Services.AddScoped<IUserTokenRepository, UserTokenRepository>();
 
 
             /// <summary>
-            /// Service registration
+            /// Service Registration
             /// </summary>
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
-            builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddScoped<IUserTokenService, UserTokenService>();
+
+
+            /// <summary>
+            /// CQRS registration
+            /// </summary>
+            builder.Services.AddTransient<IRequestHandler<AddAnimalAttributeCommand, AnimalAttribute>, AddAnimalAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<AddAutoAttributeCommand, AutoAttribute>, AddAutoAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<AddClothesAttributeCommand, ClothesAttribute>, AddClothesAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<AddElectronicAttributeCommand, ElectronicAttribute>, AddElectronicAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<AddFavoriteProductCommand, FavoriteProduct>, AddFavoriteProductCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<AddItemAttributeCommand, ItemAttribute>, AddItemAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<AddLikeCommand, Like>, AddLikeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<AddRealEstateAttributeCommand, RealEstateAttribute>, AddRealEstateAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<AddSubscriptionCommand, Subscription>, AddSubscriptionCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<AddTVAttributeCommand, TVAttribute>, AddTVAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<CheckLikeQuery, bool>, CheckLikeQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<CheckSubscriptionQuery, bool>, CheckSubscriptionQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<CreateChatCommand, Chat>, CreateChatCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<EmailCommand, bool>, CheckEmailCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllAnimalAttributesQuery, ProductResponseDTO<AnimalAttribute>>, GetAllAnimalAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllAnimalAttributesQuery, ProductResponseDTO<AnimalAttribute>>, GetAllAnimalAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllAnimalBreedsQuery, IEnumerable<AnimalBreed>>, GetAllAnimalBreedsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllAutoAttributesQuery, ProductResponseDTO<AutoAttribute>>, GetAllAutoAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllAutoBrandsQuery, IEnumerable<AutoBrand>>, GetAllAutoBrandsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllBuyerChatsQuery, IEnumerable<Chat>>, GetAllBuyerChatsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllCitiesQuery, IEnumerable<City>>, GetAllCitiesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllClothesAttributesQuery, ProductResponseDTO<ClothesAttribute>>, GetAllClothesAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllClothesBrandsQuery, IEnumerable<ClothesBrand>>, GetAllClothesBrandsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllClothesSeasonsQuery, IEnumerable<ClothesSeason>>, GetAllClothesSeasonsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllClothesSizesQuery, IEnumerable<ClothesSize>>, GetAllClothesSizesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllClothesViewsQuery, IEnumerable<ClothesView>>, GetAllClothesViewsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllColorsQuery, IEnumerable<Color>>, GetAllColorsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllCurrenciesQuery, IEnumerable<Currency>>, GetAllCurrenciesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllElectronicAttributesQuery, ProductResponseDTO<ElectronicAttribute>>, GetAllElectronicAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllElectronicBrandsQuery, IEnumerable<ElectronicBrand>>, GetAllElectronicBrandsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllFavoriteProductsQuery, ProductResponseDTO<FavoriteProduct>>, GetAllFavoriteProductsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllFuelTypesQuery, IEnumerable<FuelType>>, GetAllFuelTypesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllGendersQuery, IEnumerable<Gender>>, GetAllGendersQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllItemAttributesQuery, ProductResponseDTO<ItemAttribute>>, GetAllItemAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllMemoriesQuery, IEnumerable<Memory>>, GetAllMemoriesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllModelsQuery, IEnumerable<Model>>, GetAllModelsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllProductsQuery, ProductResponseDTO<Product>>, GetAllProductsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllRealEstateAttributesQuery, ProductResponseDTO<RealEstateAttribute>>, GetAllRealEstateAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllScreenDiagonalsQuery, IEnumerable<ScreenDiagonal>>, GetAllScreenDiagonalsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllScreenResolutionsQuery, IEnumerable<ScreenResolution>>, GetAllScreenResolutionsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllSellerChatsQuery, IEnumerable<Chat>>, GetAllSellerChatsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllShopsQuery, IEnumerable<ShopAttribute>>, GetAllShopsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllTVAttributesQuery, ProductResponseDTO<TVAttribute>>, GetAllTVAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllTVBrandsQuery, IEnumerable<TVBrand>>, GetAllTVBrandsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllTVTypesQuery, IEnumerable<TVType>>, GetAllTVTypesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllTransmissionTypesQuery, IEnumerable<TransmissionType>>, GetAllTransmissionTypesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetByIdAnimalAttributeQuery, AnimalAttribute>, GetByIdAnimalAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetByIdAutoAttributeQuery, AutoAttribute>, GetByIdAutoAttributeQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetByIdClothesAttributeQuery, ClothesAttribute>, GetByIdClothesAttributeQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetByIdElectronicAttributeQuery, ElectronicAttribute>, GetByIdElectronicAttributeQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetByIdFavoriteProductQuery, FavoriteProduct>, GetByIdFavoriteProductQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetByIdItemAttributeQuery, ItemAttribute>, GetByIdItemAttributeQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetByIdRealEstateAttributeQuery, RealEstateAttribute>, GetByIdRealEstateAttributeQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetByIdShopQuery, ShopAttribute>, GetByIdShopQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetByIdTVAttributeQuery, TVAttribute>, GetByIdTVAttributeQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetByIdUserQuery, User>, GetByIdUserQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetDetailChatQuery, Chat>, GetDetailChatQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetUserLikesCountQuery, int>, GetUserLikesCountQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetUserSubscriptionsCountQuery, int>, GetUserSubscriptionsCountQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetUserSubscriptionsQuery, IEnumerable<Subscription>>, GetUserSubscriptionsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<IncrementProductViewsCommand, Unit>, IncrementProductViewsCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<LoginCommand, AuthResponseDTO>, LoginCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<LogoutCommand, Unit>, LogoutCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<PhoneNumberCommand, bool>, CheckPhoneCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UpdateUserTokenCommand, AuthResponseDTO>, UpdateUserTokenCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<RemoveAnimalAttributeCommand, Unit>, RemoveAnimalAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<RemoveAutoAttributeCommand, Unit>, RemoveAutoAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<RemoveClothesAttributeCommand, Unit>, RemoveClothesAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<RemoveElectronicAttributeCommand, Unit>, RemoveElectronicAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<RemoveFavoriteProductCommand, Unit>, RemoveFavoriteProductCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<RemoveItemAttributeCommand, Unit>, RemoveItemAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<RemoveLikeCommand, Unit>, RemoveLikeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<RemoveRealEstateAttributeCommand, Unit>, RemoveRealEstateAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<RemoveSubscriptionCommand, Unit>, RemoveSubscriptionCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<RemoveTVAttributeCommand, Unit>, RemoveTVAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<SendMessageCommand, Message>, SendMessageCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<ShopNameCommand, bool>, CheckShopNameCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<ShopRegistrationCommand, AuthResponseDTO>, ShopRegistrationCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UpdateAnimalAttributeCommand, Unit>, UpdateAnimalAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UpdateAutoAttributeCommand, Unit>, UpdateAutoAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UpdateClothesAttributeCommand, Unit>, UpdateClothesAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UpdateElectronicAttributeCommand, Unit>, UpdateElectronicAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UpdateItemAttributeCommand, Unit>, UpdateItemAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UpdateRealEstateAttributeCommand, Unit>, UpdateRealEstateAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UpdateShopCommand, Unit>, UpdateShopCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UpdateTVAttributeCommand, Unit>, UpdateTVAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UpdateUserCommand, Unit>, UpdateUserCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UserRegistrationCommand, AuthResponseDTO>, UserRegistrationCommandHandler>();
+
+
+            /// <summary>
+            /// Claims Principal Registration
+            /// </summary>
+            builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddScoped<ClaimsPrincipal>(provider =>
+            {
+                var httpContextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
+                return httpContextAccessor.HttpContext?.User;
+            });
 
 
             /// <summary>
@@ -116,26 +265,11 @@ namespace Swapy.API
             /// <summary>
             /// Configurations for JWToken
             /// </summary>
-            var guid = builder.Configuration["JWTKey"];
-            var key = Encoding.ASCII.GetBytes(guid);
-
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = false,
-                    ValidateLifetime = true,
-                    ValidateAudience = false,
-                    ValidateIssuerSigningKey = true,
-                    ClockSkew = TimeSpan.FromDays(5),
-                    IssuerSigningKey = new SymmetricSecurityKey(key)
-                };
-            });
+                options.DefaultAuthenticateScheme = "Basic";
+                options.DefaultChallengeScheme = "Basic";
+            }).AddScheme<BasicAuthenticationOptions, SwapyAuthenticationHandler>("Basic", null);
 
 
             /// <summary>
@@ -145,7 +279,7 @@ namespace Swapy.API
 
 
             /// <summary>
-            /// Application setup
+            /// Application Setup
             /// </summary>
             var app = builder.Build();
 
@@ -158,10 +292,10 @@ namespace Swapy.API
             app.UseCors("Default");
 
             app.UseRouting();
-
-            app.UseAuthorization();
-            app.UseAuthentication();
             
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseHttpsRedirection();
 
             app.MapControllers();

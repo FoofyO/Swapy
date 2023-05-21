@@ -11,9 +11,7 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("TVAttributes");
             builder.HasKey(t => t.Id);
 
-            builder.Property(t => t.Id)
-                   .IsRequired()
-                   .HasDefaultValueSql("NEWID()");
+            builder.Property(t => t.Id).IsRequired();
              
             builder.Property(t => t.IsNew)
                    .IsRequired()

@@ -17,9 +17,9 @@
         public ICollection<RealEstateAttribute> RealEstateAttributes { get; set; } = new List<RealEstateAttribute>();
         public ICollection<ElectronicBrandType> ElectronicBrandsTypes { get; set; } = new List<ElectronicBrandType>();
 
-        public Subcategory() { }
+        public Subcategory() => Id = Guid.NewGuid().ToString();
              
-        public Subcategory(string name, string categoryId, string parentSubcategoryId)
+        public Subcategory(string name, string categoryId, string parentSubcategoryId) : this()
         {
             Name = name;
             CategoryId = categoryId;

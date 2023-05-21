@@ -8,9 +8,9 @@
         public string LikeId { get; set; }
         public Like Like { get; set; }
 
-        public UserLike() { }
+        public UserLike() => Id = Guid.NewGuid().ToString();
 
-        public UserLike(string recipientId, string likeId)
+        public UserLike(string recipientId, string likeId) : this()
         {
             RecipientId = recipientId;
             LikeId = likeId;

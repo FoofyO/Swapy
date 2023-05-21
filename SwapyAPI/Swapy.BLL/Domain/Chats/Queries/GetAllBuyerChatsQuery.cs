@@ -3,7 +3,7 @@ using Swapy.Common.Entities;
 
 namespace Swapy.BLL.Domain.Chats.Queries
 {
-    public class GetAllBuyerChatsQuery : IRequest<List<Chat>>
+    public class GetAllBuyerChatsQuery : IRequest<IEnumerable<Chat>>
     {
 
     } 

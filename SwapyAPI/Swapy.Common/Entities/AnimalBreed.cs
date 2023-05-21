@@ -8,9 +8,9 @@
         public Subcategory AnimalType { get; set; } 
         public ICollection<AnimalAttribute> AnimalAttributes { get; set; } = new List<AnimalAttribute>();
 
-        public AnimalBreed() { }
+        public AnimalBreed() => Id = Guid.NewGuid().ToString();
 
-        public AnimalBreed(string name, string animalTypeId)
+        public AnimalBreed(string name, string animalTypeId) : this()
         {
             Name = name;
             AnimalTypeId = animalTypeId;
