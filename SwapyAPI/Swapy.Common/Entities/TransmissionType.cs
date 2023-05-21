@@ -6,8 +6,8 @@
         public string Name { get; set; }
         public ICollection<AutoAttribute> AutoAttributes { get; set; } = new List<AutoAttribute>();
 
-        public TransmissionType() { }
+        public TransmissionType() => Id = Guid.NewGuid().ToString();
 
-        public TransmissionType(string name) => Name = name;
+        public TransmissionType(string name) : this() => Name = name;
     }
 }

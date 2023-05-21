@@ -8,9 +8,9 @@
         public string ProductId { get; set; }
         public Product Product { get; set; }
 
-        public FavoriteProduct() { }
+        public FavoriteProduct() => Id = Guid.NewGuid().ToString();
 
-        public FavoriteProduct(string userId, string productId)
+        public FavoriteProduct(string userId, string productId) : this()
         {
             UserId = userId;
             ProductId = productId;

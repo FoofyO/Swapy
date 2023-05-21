@@ -14,9 +14,8 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
         private readonly IElectronicAttributeRepository _electronicAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
 
-        public AddElectronicAttributeCommandHandler(string userId, IProductRepository productRepository, IElectronicAttributeRepository electronicAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public AddElectronicAttributeCommandHandler(IProductRepository productRepository, IElectronicAttributeRepository electronicAttributeRepository, ISubcategoryRepository subcategoryRepository)
         {
-            _userId = userId;
             _productRepository = productRepository;
             _electronicAttributeRepository = electronicAttributeRepository;
             _subcategoryRepository = subcategoryRepository;

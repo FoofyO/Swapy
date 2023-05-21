@@ -6,8 +6,8 @@
         public string Name { get; set; }
         public ICollection<AutoBrandType> AutoBrandsTypes { get; set; } = new List<AutoBrandType>();
 
-        public AutoBrand() { }
+        public AutoBrand() => Id = Guid.NewGuid().ToString();
 
-        public AutoBrand(string name) => Name = name;
+        public AutoBrand(string name) : this() => Name = name;
     }
 }

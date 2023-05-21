@@ -6,14 +6,14 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
     public class LogoutCommandHandler : IRequestHandler<LogoutCommand, Unit>
     {
-        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IUserTokenRepository _userTokenRepository;
 
-        public LogoutCommandHandler(IRefreshTokenRepository refreshTokenRepository) => _refreshTokenRepository = refreshTokenRepository;
+        public LogoutCommandHandler(IUserTokenRepository userTokenRepository) => _userTokenRepository = userTokenRepository;
 
         public async Task<Unit> Handle(LogoutCommand request, CancellationToken cancellationToken)
         {
-            var token = await _refreshTokenRepository.GetByIdAsync(request.RefreshToken);
-            if (token != null) await _refreshTokenRepository.DeleteAsync(token);
+            var token = await _userTokenRepository.GetByIdAsync(request.RefreshToken);
+            if (token != null) await _userTokenRepository.DeleteAsync(token);
             return Unit.Value;
         }
     }

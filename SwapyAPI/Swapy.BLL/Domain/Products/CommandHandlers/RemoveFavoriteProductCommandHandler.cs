@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Products.Commands;
-using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -11,9 +10,8 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
         private readonly string _userId;
         private readonly IFavoriteProductRepository _favoriteProductRepository;
 
-        public RemoveFavoriteProductCommandHandler(string userId, IFavoriteProductRepository favoriteProductRepository)
+        public RemoveFavoriteProductCommandHandler(IFavoriteProductRepository favoriteProductRepository)
         {
-            _userId = userId;
             _favoriteProductRepository = favoriteProductRepository;
         }
 

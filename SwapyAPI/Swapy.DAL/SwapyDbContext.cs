@@ -3,7 +3,6 @@ using Swapy.DAL.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Azure.Core;
 
 namespace Swapy.DAL
 {
@@ -11,8 +10,8 @@ namespace Swapy.DAL
     {
         public SwapyDbContext(DbContextOptions<SwapyDbContext> options) : base(options)
         {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
+            //Database.EnsureDeleted();
+            //Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -47,7 +46,6 @@ namespace Swapy.DAL
             builder.ApplyConfiguration(new ModelColorConfiguration());
             builder.ApplyConfiguration(new ProductConfiguration());
             builder.ApplyConfiguration(new ProductImageConfiguration());
-            builder.ApplyConfiguration(new RefreshTokenConfiguration());
             builder.ApplyConfiguration(new RealEstateAttributeConfiguration());
             builder.ApplyConfiguration(new ScreenDiagonalConfiguration());
             builder.ApplyConfiguration(new ScreenResolutionConfiguration());
@@ -62,6 +60,7 @@ namespace Swapy.DAL
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new UserLikeConfiguration());
             builder.ApplyConfiguration(new UserSubscriptionConfiguration());
+            builder.ApplyConfiguration(new UserTokenConfiguration());
             base.OnModelCreating(builder);
         }
 
@@ -97,7 +96,6 @@ namespace Swapy.DAL
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<RealEstateAttribute> RealEstateAttributes { get; set; }
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<ScreenDiagonal> ScreenDiagonals { get; set; }
         public DbSet<ScreenResolution> ScreenResolutions { get; set; }
         public DbSet<ShopAttribute> ShopAttributes { get; set; }
@@ -110,5 +108,6 @@ namespace Swapy.DAL
         public DbSet<TransmissionType> TransmissionTypes { get; set; }
         public DbSet<UserLike> UsersLikes { get; set; }
         public DbSet<UserSubscription> UsersSubscriptions { get; set; }
+        public DbSet<UserToken> UserTokens { get; set; }
     }
 }

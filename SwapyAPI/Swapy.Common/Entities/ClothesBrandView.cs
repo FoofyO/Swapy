@@ -11,9 +11,9 @@
 
         public ICollection<ClothesAttribute> ClothesAttributes { get; set; } = new List<ClothesAttribute>();
 
-        public ClothesBrandView() { }
+        public ClothesBrandView() => Id = Guid.NewGuid().ToString();
 
-        public ClothesBrandView(string name, string clothesBrandId, string clothesViewId)
+        public ClothesBrandView(string name, string clothesBrandId, string clothesViewId) : this()
         {  
             Name = name; 
             ClothesBrandId = clothesBrandId;

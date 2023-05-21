@@ -11,9 +11,7 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("ProductImages");
             builder.HasKey(i => i.Id);
 
-            builder.Property(i => i.Id)
-                   .IsRequired()
-                   .HasDefaultValueSql("NEWID()");
+            builder.Property(i => i.Id).IsRequired();
 
             builder.Property(i => i.Image)
                    .HasColumnType("NVARCHAR(128)")

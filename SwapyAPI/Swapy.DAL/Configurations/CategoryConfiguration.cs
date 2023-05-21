@@ -11,9 +11,7 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("Categories");
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.Id)
-                   .IsRequired()
-                   .HasDefaultValueSql("NEWID()");
+            builder.Property(c => c.Id).IsRequired();
 
             builder.Property(c => c.Name)
                    .HasColumnType("NVARCHAR(50)")

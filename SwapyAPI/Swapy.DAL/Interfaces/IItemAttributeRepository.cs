@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IItemAttributeRepository : IAttributeRepositoryy<ItemAttribute>
+    public interface IItemAttributeRepository : IAttributeRepository<ItemAttribute>
     {
     }
 }

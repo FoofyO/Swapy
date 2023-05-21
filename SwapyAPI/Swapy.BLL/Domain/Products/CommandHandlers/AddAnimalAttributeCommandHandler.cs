@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
-    internal class AddAnimalAttributeCommandHandler : IRequestHandler<AddAnimalAttributeCommand, AnimalAttribute>
+    public class AddAnimalAttributeCommandHandler : IRequestHandler<AddAnimalAttributeCommand, AnimalAttribute>
     {
         private readonly string _userId;
         private readonly IProductRepository _productRepository;

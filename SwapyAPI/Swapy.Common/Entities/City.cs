@@ -6,8 +6,8 @@
         public string Name { get; set; }
         public ICollection<Product> Products { get; set; } = new List<Product>();
 
-        public City() { }
+        public City() => Id = Guid.NewGuid().ToString();
 
-        public City(string name) => Name = name;
+        public City(string name) : this() => Name = name;
     } 
 }

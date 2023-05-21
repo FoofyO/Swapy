@@ -8,9 +8,9 @@
         public string SubscriptionId { get; set; }
         public Subscription Subscription { get; set; }
 
-        public UserSubscription() { }
+        public UserSubscription() => Id = Guid.NewGuid().ToString();
 
-        public UserSubscription(string recipientId, string subscriptionId)
+        public UserSubscription(string recipientId, string subscriptionId) : this()
         {
             RecipientId = recipientId;
             SubscriptionId = subscriptionId;

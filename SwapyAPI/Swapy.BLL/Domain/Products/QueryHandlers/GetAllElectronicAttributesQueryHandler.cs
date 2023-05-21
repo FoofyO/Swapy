@@ -12,9 +12,9 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
         private readonly string _userId;
         private readonly IElectronicAttributeRepository _electronicAttributeRepository;
 
-        public GetAllElectronicAttributesQueryHandler(string userId, IElectronicAttributeRepository electronicAttributeRepository)
+        public GetAllElectronicAttributesQueryHandler(IElectronicAttributeRepository electronicAttributeRepository)
         {
-            _userId = userId;
+            //_userId = userId;
             _electronicAttributeRepository = electronicAttributeRepository;
         }
 

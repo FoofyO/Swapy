@@ -7,8 +7,8 @@
         public ICollection<Product> Products { get; set; } = new List<Product>();
         public ICollection<Subcategory> Subcategories { get; set; } = new List<Subcategory>();
 
-        public Category() { }
+        public Category() => Id = Guid.NewGuid().ToString();
 
-        public Category(string name) => Name = name;
+        public Category(string name) : this() => Name = name;
     }
 }

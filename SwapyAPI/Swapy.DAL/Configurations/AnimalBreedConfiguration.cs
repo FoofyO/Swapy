@@ -11,9 +11,7 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("AnimalBreedsTypes");
             builder.HasKey(a => a.Id);
 
-            builder.Property(a => a.Id)
-                   .IsRequired()
-                   .HasDefaultValueSql("NEWID()");
+            builder.Property(a => a.Id).IsRequired();
              
             builder.Property(a => a.Name)
                    .IsRequired()

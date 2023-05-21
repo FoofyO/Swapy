@@ -18,9 +18,9 @@
         public string ProductId { get; set; }
         public Product Product { get; set; }
 
-        public AutoAttribute() { }
+        public AutoAttribute() => Id = Guid.NewGuid().ToString();
 
-        public AutoAttribute(int miliage, int engineCapacity, DateTime releaseYear, bool isNew, string fuelTypeId, string autoColorId, string transmissionTypeId, string autoBrandTypeId, string productId)
+        public AutoAttribute(int miliage, int engineCapacity, DateTime releaseYear, bool isNew, string fuelTypeId, string autoColorId, string transmissionTypeId, string autoBrandTypeId, string productId) : this()
         {
             Miliage = miliage;
             EngineCapacity = engineCapacity;

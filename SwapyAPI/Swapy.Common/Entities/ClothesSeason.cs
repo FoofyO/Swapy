@@ -6,8 +6,8 @@
         public string Name { get; set; }   
         public ICollection<ClothesAttribute> ClothesAttributes { get; set; } = new List<ClothesAttribute>();
 
-        public ClothesSeason() { }
+        public ClothesSeason() => Id = Guid.NewGuid().ToString();
 
-        public ClothesSeason(string name) => Name = name;
+        public ClothesSeason(string name) : this() => Name = name;
     }
 }     

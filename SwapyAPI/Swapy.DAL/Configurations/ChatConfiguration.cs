@@ -11,9 +11,7 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("Chats");
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.Id)
-                   .IsRequired()
-                   .HasDefaultValueSql("NEWID()");
+            builder.Property(c => c.Id).IsRequired();
 
             builder.HasOne(c => c.Product)
                    .WithMany(p => p.Chats)

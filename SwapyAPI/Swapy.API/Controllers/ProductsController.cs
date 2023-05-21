@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swapy.BLL.Domain.Products.Commands;
 using Swapy.BLL.Domain.Products.Queries;
 using Swapy.Common.Exceptions;
+using System.Security.Claims;
 
 namespace Swapy.API.Controllers
 {
@@ -33,12 +34,15 @@ namespace Swapy.API.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddAnimalAsync(AddAnimalAttributeCommand command)
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // will give the user's userId
+                
                 var result = await _mediator.Send(command);
                 var locationUri = new Uri($"{Request.Scheme}://{Request.Host.ToUriComponent()}/animals/{result.Id}");
                 return Created(locationUri, result);

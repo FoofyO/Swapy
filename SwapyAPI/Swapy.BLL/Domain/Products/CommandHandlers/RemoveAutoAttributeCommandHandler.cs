@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Products.Commands;
-using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -12,9 +11,8 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
         private readonly IProductRepository _productRepository;
         private readonly IAutoAttributeRepository _autoAttributeRepository;
 
-        public RemoveAutoAttributeCommandHandler(string userId, IProductRepository productRepository, IAutoAttributeRepository autoAttributeRepository)
+        public RemoveAutoAttributeCommandHandler(IProductRepository productRepository, IAutoAttributeRepository autoAttributeRepository)
         {
-            _userId = userId;
             _productRepository = productRepository;
             _autoAttributeRepository = autoAttributeRepository;
         }

@@ -11,9 +11,9 @@
         public string SenderId { get; set; }
         public User Sender { get; set; }
 
-        public Message() { }
+        public Message() => Id = Guid.NewGuid().ToString();
 
-        public Message(string text, string image, string chatId, string senderId)
+        public Message(string text, string image, string chatId, string senderId) : this()
         {
             Text = text;
             Image = image;

@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IProductRepository : IAttributeRepositoryy<Product>
+    public interface IProductRepository : IAttributeRepository<Product>
     {
         Task<IEnumerable<Product>> GetAllByUserId(string userId);
         Task IncrementViewsAsync(string id);

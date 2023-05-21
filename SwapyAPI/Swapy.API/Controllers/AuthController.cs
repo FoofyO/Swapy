@@ -18,7 +18,6 @@ namespace Swapy.API.Controllers
 
         public AuthController(IMediator mediator) => _mediator = mediator;
 
-
         [HttpGet]
         [Route("ping")]
         [Authorize]
@@ -26,7 +25,6 @@ namespace Swapy.API.Controllers
         {
             return Ok("ping");
         }
-
 
         [HttpPost]
         [Route("login")]
@@ -118,7 +116,7 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<AuthResponseDTO>> RefreshAsync(RefreshTokenCommand command)
+        public async Task<ActionResult<AuthResponseDTO>> RefreshAsync(UpdateUserTokenCommand command)
         {
             try
             {

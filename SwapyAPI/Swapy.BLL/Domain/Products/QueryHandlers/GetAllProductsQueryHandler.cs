@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Products.Queries;
 using Swapy.Common.DTO;
@@ -13,9 +12,9 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
         private readonly string _userId;
         private readonly IProductRepository _productRepository;
 
-        public GetAllProductsQueryHandler(string userId, IProductRepository productRepository)
+        public GetAllProductsQueryHandler(IProductRepository productRepository)
         {
-            _userId = userId;
+            //_userId = userId;
             _productRepository = productRepository;
         }
         

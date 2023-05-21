@@ -14,16 +14,16 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
     public class ShopRegistrationCommandHandler : IRequestHandler<ShopRegistrationCommand, AuthResponseDTO>
     {
-        private readonly ITokenService _tokenService;
+        private readonly IUserTokenService _userTokenService;
         private readonly UserManager<User> _userManager;
-        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IUserTokenRepository _userTokenRepository;
         private readonly IShopAttributeRepository _shopAttributeRepository;
 
-        public ShopRegistrationCommandHandler(UserManager<User> userManager, IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService, IShopAttributeRepository shopAttributeRepository)
+        public ShopRegistrationCommandHandler(UserManager<User> userManager, IUserTokenRepository userTokenRepository, IUserTokenService userTokenService, IShopAttributeRepository shopAttributeRepository)
         {
             _userManager = userManager;
-            _tokenService = tokenService;
-            _refreshTokenRepository = refreshTokenRepository;
+            _userTokenService = userTokenService;
+            _userTokenRepository = userTokenRepository;
             _shopAttributeRepository = shopAttributeRepository;
         }
 
@@ -43,25 +43,28 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
                 Logo = "path"
             };
 
+            var shop = new ShopAttribute()
+            {
+                UserId = user.Id,
+                ShopName = request.ShopName,
+                Banner = "path"
+            };
+            
+            var refreshToken = await _userTokenService.GenerateRefreshToken();
+            var accessToken = await _userTokenService.GenerateJwtToken(user.Id, user.Email, user.FirstName, user.LastName);
+            
+            user.UserName = user.Id.Replace("-", "");
+            user.ShopAttributeId = shop.Id;
+            user.UserTokenId = refreshToken;
+            
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded) throw new InvalidOperationException("Shop creation failed");
 
-            var shop = new ShopAttribute()
-            {
-                ShopName = request.ShopName,
-                UserId = user.Id,
-                Banner = "path"
-            };
-
             await _shopAttributeRepository.CreateAsync(shop);
 
-            var refreshToken = await _tokenService.GenerateRefreshToken();
-            var accessToken = await _tokenService.GenerateJwtToken(user);
+            await _userTokenRepository.CreateAsync(new UserToken(accessToken, refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
 
-            await _refreshTokenRepository.CreateAsync(new RefreshToken(refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
-
-            var authDTO = new AuthResponseDTO { Type = UserType.Shop, UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
-            return new AuthResponseDTO();
+            return new AuthResponseDTO { Type = UserType.Shop, UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
         }
     }
 }

@@ -12,9 +12,9 @@
 
         public ICollection<ClothesBrandView> ClothesBrandViews { get; set; } = new List<ClothesBrandView>();
 
-        public ClothesView() { }
+        public ClothesView() => Id = Guid.NewGuid().ToString();
 
-        public ClothesView(string name, bool isChild, string genderId, string clothesTypeId)
+        public ClothesView(string name, bool isChild, string genderId, string clothesTypeId) : this()
         { 
             Name = name;
             IsChild = isChild;

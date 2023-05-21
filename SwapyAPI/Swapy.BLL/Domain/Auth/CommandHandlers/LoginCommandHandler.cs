@@ -13,17 +13,17 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
     public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthResponseDTO>
     {
-        private readonly ITokenService _tokenService;
+        private readonly IUserTokenService _userTokenService;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IUserTokenRepository _userTokenRepository;
 
-        public LoginCommandHandler(UserManager<User> userManager, SignInManager<User> signInManager, IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService)
+        public LoginCommandHandler(UserManager<User> userManager, SignInManager<User> signInManager, IUserTokenRepository userTokenRepository, IUserTokenService userTokenService)
         {
             _userManager = userManager;
-            _tokenService = tokenService;
+            _userTokenService = userTokenService;
             _signInManager = signInManager;
-            _refreshTokenRepository = refreshTokenRepository;
+            _userTokenRepository = userTokenRepository;
         }
 
         public async Task<AuthResponseDTO> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -39,10 +39,13 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
             if (!result.Succeeded) throw new AuthenticationException("Invalid email or password");
 
-            var accessToken = await _tokenService.GenerateJwtToken(user);
-            var refreshToken = await _tokenService.GenerateRefreshToken();
-            
-            await _refreshTokenRepository.CreateAsync(new RefreshToken(refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
+            await _userTokenRepository.DeleteByIdAsync(user.UserTokenId);
+
+            var accessToken = await _userTokenService.GenerateJwtToken(user.Id, user.Email, user.FirstName, user.LastName);
+            var refreshToken = await _userTokenService.GenerateRefreshToken();
+
+            user.UserTokenId = refreshToken;
+            await _userTokenRepository.CreateAsync(new UserToken(accessToken, refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
 
             var authDTO = new AuthResponseDTO { Type = user.Type, UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
             return authDTO;

@@ -9,9 +9,9 @@
         public ICollection<MemoryModel> MemoriesModels { get; set; } = new List<MemoryModel>();
         public ICollection<ModelColor> ModelsColors { get; set; } = new List<ModelColor>();
 
-        public Model() { }
+        public Model() => Id = Guid.NewGuid().ToString();
 
-        public Model(string name, string electronicBrandTypeId)
+        public Model(string name, string electronicBrandTypeId) : this()
         {
             Name = name;
             ElectronicBrandTypeId = electronicBrandTypeId;

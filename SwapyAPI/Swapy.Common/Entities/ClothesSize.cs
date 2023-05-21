@@ -9,9 +9,9 @@
         public string Size { get; set; }
         public ICollection<ClothesAttribute> ClothesAttributes { get; set; } = new List<ClothesAttribute>();
 
-        public ClothesSize() { }
+        public ClothesSize() => Id = Guid.NewGuid().ToString();
 
-        public ClothesSize(string name, bool isShoe, bool isChild, string size)
+        public ClothesSize(string name, bool isShoe, bool isChild, string size) : this()
         {
             Name = name;
             IsShoe = isShoe;

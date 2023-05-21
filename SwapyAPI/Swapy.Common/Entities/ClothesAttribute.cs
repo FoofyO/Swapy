@@ -13,9 +13,9 @@
         public string ProductId { get; set; } 
         public Product Product { get; set; }
 
-        public ClothesAttribute() { }
+        public ClothesAttribute() => Id = Guid.NewGuid().ToString();
 
-        public ClothesAttribute(bool isNew, string clothesSeasonId, string clothesSizeId, string clothesBrandViewId, string productId)
+        public ClothesAttribute(bool isNew, string clothesSeasonId, string clothesSizeId, string clothesBrandViewId, string productId) : this()
         { 
             IsNew = isNew;
             ClothesSeasonId = clothesSeasonId;

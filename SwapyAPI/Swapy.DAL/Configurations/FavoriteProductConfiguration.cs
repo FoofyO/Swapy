@@ -11,9 +11,7 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("FavoriteProducts");
             builder.HasKey(f => f.Id);
 
-            builder.Property(f => f.Id)
-                   .IsRequired()
-                   .HasDefaultValueSql("NEWID()");
+            builder.Property(f => f.Id).IsRequired();
 
             builder.HasOne(f => f.Product)
                    .WithMany(p => p.FavoriteProducts)

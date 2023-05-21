@@ -9,9 +9,9 @@
         public Subcategory AutoType { get; set; }
         public ICollection<AutoAttribute> AutoAttributes { get; set; } = new List<AutoAttribute>();
 
-        public AutoBrandType() { }
+        public AutoBrandType() => Id = Guid.NewGuid().ToString();
 
-        public AutoBrandType(string autoBrandId, string autoTypeId)
+        public AutoBrandType(string autoBrandId, string autoTypeId) : this()
         {
             AutoBrandId = autoBrandId;
             AutoTypeId = autoTypeId;

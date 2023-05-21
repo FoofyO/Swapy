@@ -11,9 +11,7 @@ namespace Swapy.DAL.Configurations
             builder.ToTable("RealEstatesAttributes");
             builder.HasKey(r => r.Id);
 
-            builder.Property(r => r.Id)
-                   .IsRequired()
-                   .HasDefaultValueSql("NEWID()");
+            builder.Property(r => r.Id).IsRequired();
 
             builder.Property(r => r.Area).IsRequired();
 

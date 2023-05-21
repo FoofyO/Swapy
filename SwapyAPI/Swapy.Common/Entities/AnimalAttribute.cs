@@ -8,9 +8,9 @@
         public string ProductId { get; set; } 
         public Product Product { get; set; }
 
-        public AnimalAttribute() { }
+        public AnimalAttribute() => Id = Guid.NewGuid().ToString();
 
-        public AnimalAttribute(string animalBreedId, string productId)
+        public AnimalAttribute(string animalBreedId, string productId) : this()
         { 
             ProductId = productId;
             AnimalBreedId = animalBreedId;

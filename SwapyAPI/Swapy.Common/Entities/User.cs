@@ -10,8 +10,8 @@ namespace Swapy.Common.Entities
         public UserType Type { get; set; }
         public DateTime RegistrationDate { get; set; }
         public string Logo { get; set; }
-        public string RefreshTokenId { get; set; }
-        public RefreshToken RefreshToken { get; set; }
+        public string UserTokenId { get; set; }
+        public UserToken UserToken { get; set; }
         public string ShopAttributeId { get; set; }
         public ShopAttribute ShopAttribute { get; set; }
 
