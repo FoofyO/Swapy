@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.BLL.Domain.Categories.Queries;
+using Swapy.Common.DTO.Categories.Requests.Queries;
+using Swapy.Common.Entities;
 
 namespace Swapy.API.Controllers
 {
@@ -26,10 +28,12 @@ namespace Swapy.API.Controllers
         [Route("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllCategoriesAsync(GetAllCategoriesQuery query)
+        public async Task<IActionResult> GetAllCategoriesAsync()
         {
             try
             {
+                GetAllCategoriesQuery query = new GetAllCategoriesQuery();
+
                 var result = await _mediator.Send(query);
                 return Ok(result);
             }
@@ -43,10 +47,15 @@ namespace Swapy.API.Controllers
         [Route("subcategories/{category}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetSubcategoriesByCategoryAsync(GetAllSubcategoriesByCategoryQuery query)
+        public async Task<IActionResult> GetSubcategoriesByCategoryAsync(GetAllSubcategoriesByCategoryQueryDTO dto)
         {
             try
             {
+                var query = new GetAllSubcategoriesByCategoryQuery() 
+                {
+                    CategoryId = dto.CategoryId
+                };
+
                 var result = await _mediator.Send(query);
                 return Ok(result);
             }
@@ -60,10 +69,15 @@ namespace Swapy.API.Controllers
         [Route("subcategories/{subcategory}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetSubcategoriesBySubcategoryAsync(GetAllSubcategoriesBySubcategoryQuery query)
+        public async Task<IActionResult> GetSubcategoriesBySubcategoryAsync(GetAllSubcategoriesBySubcategoryQueryDTO dto)
         {
             try
             {
+                var query = new GetAllSubcategoriesBySubcategoryQuery()
+                {
+                    SubcategoryId = dto.SubcategoryId
+                };
+
                 var result = await _mediator.Send(query);
                 return Ok(result);
             }

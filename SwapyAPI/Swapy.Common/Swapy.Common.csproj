@@ -10,4 +10,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.16" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTO\Categories\Requests\Commands\" />
+    <Folder Include="DTO\Categories\Responses\" />
+  </ItemGroup>
+
 </Project>
