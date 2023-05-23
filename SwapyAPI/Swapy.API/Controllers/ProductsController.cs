@@ -42,7 +42,7 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); 
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new AddAnimalAttributeCommand()
                 {
                     UserId = userId,
@@ -226,8 +226,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new AddAutoAttributeCommand()
                 {
+                    UserId = userId,
                     Title = dto.Title,
                     Description = dto.Description,
                     Price = dto.Price,
@@ -274,8 +276,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new RemoveAutoAttributeCommand()
                 {
+                    UserId = userId,
                     AutoAttributeId = dto.AutoAttributeId
                 };
 
@@ -307,8 +311,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new UpdateAutoAttributeCommand()
                 {
+                    UserId = userId,
                     Title = dto.Title,
                     Description = dto.Description,
                     Price = dto.Price,
@@ -352,8 +358,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var query = new GetAllAutoAttributesQuery()
                 {
+                    UserId = userId,
                     Page = dto.Page,
                     PageSize = dto.PageSize,
                     Title = dto.Title,
@@ -425,8 +433,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new AddClothesAttributeCommand()
                 {
+                    UserId = userId,
                     Title = dto.Title,
                     Description = dto.Description,
                     Price = dto.Price,
@@ -469,8 +479,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new RemoveClothesAttributeCommand()
                 {
+                    UserId = userId,
                     ClothesAttributeId = dto.ClothesAttributeId
                 };
 
@@ -502,8 +514,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new UpdateClothesAttributeCommand()
                 {
+                    UserId = userId,
                     Title = dto.Title,
                     Description = dto.Description,
                     Price = dto.Price,
@@ -543,8 +557,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var query = new GetAllClothesAttributesQuery()
                 {
+                    UserId = userId,
                     Page = dto.Page,
                     PageSize = dto.PageSize,
                     Title = dto.Title,
@@ -612,8 +628,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new AddElectronicAttributeCommand()
                 {
+                    UserId = userId,
                     Title = dto.Title,
                     Description = dto.Description,
                     Price = dto.Price,
@@ -655,8 +673,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new RemoveElectronicAttributeCommand()
                 {
+                    UserId = userId,
                     ElectronicAttributeId = dto.ElectronicAttributeId
                 };
 
@@ -688,8 +708,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new UpdateElectronicAttributeCommand()
                 {
+                    UserId = userId,
                     Title = dto.Title,
                     Description = dto.Description,
                     Price = dto.Price,
@@ -728,8 +750,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var query = new GetAllElectronicAttributesQuery()
                 {
+                    UserId = userId,
                     Page = dto.Page,
                     PageSize = dto.PageSize,
                     Title = dto.Title,
@@ -796,8 +820,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new AddItemAttributeCommand()
                 {
+                    UserId = userId,
                     Title = dto.Title,
                     Description = dto.Description,
                     Price = dto.Price,
@@ -838,8 +864,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new RemoveItemAttributeCommand()
                 {
+                    UserId = userId,
                     ItemAttributeId = dto.ItemAttributeId
                 };
 
@@ -871,8 +899,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new UpdateItemAttributeCommand()
                 {
+                    UserId = userId,
                     Title = dto.Title,
                     Description = dto.Description,
                     Price = dto.Price,
@@ -910,8 +940,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var query = new GetAllItemAttributesQuery()
                 {
+                    UserId = userId,
                     Page = dto.Page,
                     PageSize = dto.PageSize,
                     Title = dto.Title,
@@ -974,8 +1006,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new AddRealEstateAttributeCommand()
                 {
+                    UserId = userId,
                     Title = dto.Title,
                     Description = dto.Description,
                     Price = dto.Price,
@@ -1018,8 +1052,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new RemoveRealEstateAttributeCommand()
                 {
+                    UserId = userId,
                     RealEstateAttributeId = dto.RealEstateAttributeId
                 };
 
@@ -1051,8 +1087,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new UpdateRealEstateAttributeCommand()
                 {
+                    UserId = userId,
                     Title = dto.Title,
                     Description = dto.Description,
                     Price = dto.Price,
@@ -1092,8 +1130,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var query = new GetAllRealEstateAttributesQuery()
                 {
+                    UserId = userId,
                     Page = dto.Page,
                     PageSize = dto.PageSize,
                     Title = dto.Title,
@@ -1160,8 +1200,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new AddTVAttributeCommand()
                 {
+                    UserId = userId,
                     Title = dto.Title,
                     Description = dto.Description,
                     Price = dto.Price,
@@ -1206,8 +1248,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new RemoveTVAttributeCommand()
                 {
+                    UserId = userId,
                     TVAttributeId = dto.TVAttributeId
                 };
 
@@ -1239,8 +1283,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new UpdateTVAttributeCommand()
                 {
+                    UserId = userId,
                     Title = dto.Title,
                     Description = dto.Description,
                     Price = dto.Price,
@@ -1282,8 +1328,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var query = new GetAllTVAttributesQuery()
                 {
+                    UserId = userId,
                     Page = dto.Page,
                     PageSize = dto.PageSize,
                     Title = dto.Title,
@@ -1349,8 +1397,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new AddFavoriteProductCommand()
                 {
+                    UserId = userId,
                     ProductId = dto.ProductId,
                 };
 
@@ -1379,8 +1429,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new RemoveFavoriteProductCommand()
                 {
+                    UserId = userId,
                     FavoriteProductId = dto.FavoriteProductId
                 };
 
@@ -1410,8 +1462,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var query = new GetAllFavoriteProductsQuery()
                 {
+                    UserId = userId,
                     Page = dto.Page,
                     PageSize = dto.PageSize,
                     Title = dto.Title,
@@ -1474,8 +1528,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var query = new GetAllProductsQuery()
                 {
+                    UserId = userId,
                     Page = dto.Page,
                     PageSize = dto.PageSize,
                     Title = dto.Title,
@@ -1510,8 +1566,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new RemoveProductCommand()
                 {
+                    UserId = userId,
                     ProductId = dto.ProductId
                 };
 
@@ -2066,7 +2124,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("real-estates/types")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -2099,7 +2157,7 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<string> Options()
         {
-            return Ok("x44 GET, x8 POST, x8 PUT, x8 DELETE, HEAD, OPTIONS");
+            return Ok("x44 GET, x8 POST, x7 PUT, x9 DELETE, HEAD, OPTIONS");
         }
     }
 }
