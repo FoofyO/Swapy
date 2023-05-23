@@ -1,4 +1,4 @@
-﻿namespace Swapy.Common.DTO
+﻿namespace Swapy.Common.DTO.Products.Responses
 {
     public class ProductResponseDTO<T>
     {

@@ -40,9 +40,9 @@ namespace Swapy.DAL.Configurations
                    .HasForeignKey(p => p.TransmissionTypeId)
                    .IsRequired();
 
-            builder.HasOne(x => x.AutoBrandType)
+            builder.HasOne(x => x.AutoModel)
                    .WithMany(x => x.AutoAttributes)
-                   .HasForeignKey(p => p.AutoBrandTypeId)
+                   .HasForeignKey(p => p.AutoModelId)
                    .IsRequired();
 
             builder.HasOne(x => x.Product)

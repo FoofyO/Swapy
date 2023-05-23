@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Products.Queries;
-using Swapy.Common.DTO;
+using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
@@ -9,12 +9,10 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
     public class GetAllAutoAttributesQueryHandler : IRequestHandler<GetAllAutoAttributesQuery, ProductResponseDTO<AutoAttribute>>
     {
-        private readonly string _userId;
         private readonly IAutoAttributeRepository _autoAttributeRepository;
 
         public GetAllAutoAttributesQueryHandler(IAutoAttributeRepository autoAttributeRepository)
         {
-            //_userId = userId;
             _autoAttributeRepository = autoAttributeRepository;
         }
 
@@ -30,7 +28,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
                 (request.CategoryId == null || x.Product.CategoryId.Equals(request.CategoryId)) &&
                 (request.SubcategoryId == null || x.Product.SubcategoryId.Equals(request.SubcategoryId)) &&
                 (request.CityId == null || x.Product.CityId.Equals(request.CityId)) &&
-                (request.UserId == null ? !x.Product.UserId.Equals(_userId) : x.Product.UserId.Equals(request.UserId)) &&
+                (request.OtherUserId == null ? !x.Product.UserId.Equals(request.UserId) : x.Product.UserId.Equals(request.OtherUserId)) &&
                 (request.MiliageMin == null) || (x.Miliage >= request.MiliageMin) &&
                 (request.MiliageMax == null) || (x.Miliage <= request.MiliageMax) &&
                 (request.EngineCapacityMin == null) || (x.EngineCapacity >= request.EngineCapacityMin) &&
@@ -41,8 +39,8 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
                 (request.FuelTypesId == null || request.FuelTypesId.Equals(x.FuelTypeId)) &&
                 (request.AutoColorsId == null || request.AutoColorsId.Equals(x.AutoColorId)) &&
                 (request.TransmissionTypesId == null || request.TransmissionTypesId.Equals(x.TransmissionTypeId)) &&
-                (request.AutoBrandsId == null || request.AutoBrandsId.Equals(x.AutoBrandType.AutoBrandId)) &&
-                (request.AutoTypesId == null || request.AutoTypesId.Equals(x.AutoBrandType.AutoTypeId)) );
+                (request.AutoBrandsId == null || request.AutoBrandsId.Equals(x.AutoModel.AutoBrandId)) &&
+                (request.AutoTypesId == null || request.AutoTypesId.Equals(x.AutoModel.AutoTypeId)) );
             if (request.SortByPrice == true) query.OrderBy(x => x.Product.Price);
             else query.OrderBy(x => x.Product.DateTime);
             if (request.ReverseSort == true) query.Reverse();

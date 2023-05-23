@@ -2,6 +2,7 @@
 using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
+using System.Linq;
 
 namespace Swapy.DAL.Repositories
 {
@@ -43,9 +44,12 @@ namespace Swapy.DAL.Repositories
             return await _context.ClothesBrands.ToListAsync();
         }
 
-        public async Task<IQueryable<ClothesBrand>> GetQueryableAsync()
+        public async Task<IEnumerable<ClothesBrand>> GetByClothesViewsAsync(IEnumerable<string> clothesViewsId)
         {
-            return _context.ClothesBrands.AsQueryable();
+            return await _context.ClothesBrands.Include(x => x.ClothesBrandsViews)
+                          .Where(x => clothesViewsId == null || clothesViewsId.Intersect(x.ClothesBrandsViews.Select(x => x.ClothesViewId)).Any())
+                          .OrderBy(x => x.Name)
+                          .ToListAsync();
         }
     }
 }

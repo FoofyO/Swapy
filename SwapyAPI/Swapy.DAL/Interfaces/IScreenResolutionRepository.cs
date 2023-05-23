@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IScreenResolutionRepository : IQueryableProviderRepository<ScreenResolution>
+    public interface IScreenResolutionRepository : IRepository<ScreenResolution>
     {
     } 
 }

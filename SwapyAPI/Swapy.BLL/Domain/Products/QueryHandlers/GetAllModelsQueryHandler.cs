@@ -14,12 +14,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 
         public async Task<IEnumerable<Model>> Handle(GetAllModelsQuery request, CancellationToken cancellationToken)
         {
-            var query = (await _modelRepository.GetQueryableAsync())
-                .Include(x => x.ElectronicBrandType)
-                .Where(x => (request.ElectronicBrandId == null || x.ElectronicBrandType.ElectronicBrandId.Equals(request.ElectronicBrandId)) &&
-                (request.ElectronicTypeId == null || x.ElectronicBrandType.ElectronicTypeId.Equals(request.ElectronicTypeId)))
-                .OrderBy(x => x.Name);
-            var result = await query.ToListAsync();
+            var result = await _modelRepository.GetByBrandsAndTypeAsync(request.ElectronicBrandsId, request.ElectronicTypeId);
             return result;
         }
     }

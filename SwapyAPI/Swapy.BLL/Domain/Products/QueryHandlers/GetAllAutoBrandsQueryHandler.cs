@@ -14,8 +14,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 
         public async Task<IEnumerable<AutoBrand>> Handle(GetAllAutoBrandsQuery request, CancellationToken cancellationToken)
         {
-            var query = (await _autoBrandRepository.GetQueryableAsync()).OrderBy(x => x.Name);
-            var result = await query.ToListAsync();
+            var result = await _autoBrandRepository.GetByAutoTypesAsync(request.AutoTypesId);
             return result;
         }
     }

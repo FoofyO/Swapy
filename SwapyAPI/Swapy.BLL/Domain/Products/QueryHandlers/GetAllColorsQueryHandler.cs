@@ -13,9 +13,8 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
         public GetAllColorsQueryHandler(IColorRepository colorRepository) => _colorRepository = colorRepository;
 
         public async Task<IEnumerable<Color>> Handle(GetAllColorsQuery request, CancellationToken cancellationToken)
-        {
-            var query = (await _colorRepository.GetQueryableAsync()).OrderBy(x => x.Name);
-            var result = await query.ToListAsync();
+        { 
+            var result = await _colorRepository.GetByModelAsync(request.ModelId);
             return result;
         }
     }

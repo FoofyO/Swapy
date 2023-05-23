@@ -2,8 +2,9 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IClothesBrandRepository : IQueryableProviderRepository<ClothesBrand>
+    public interface IClothesBrandRepository : IRepository<ClothesBrand>
     {
+        Task<IEnumerable<ClothesBrand>> GetByClothesViewsAsync(IEnumerable<string> clothesViewsId);
     }
 }
  

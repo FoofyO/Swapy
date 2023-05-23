@@ -40,12 +40,7 @@ namespace Swapy.DAL.Repositories
 
         public async Task<IEnumerable<FuelType>> GetAllAsync()
         {
-            return await _context.FuelTypes.ToListAsync();
-        }
-
-        public async Task<IQueryable<FuelType>> GetQueryableAsync()
-        {
-            return _context.FuelTypes.AsQueryable();
+            return await _context.FuelTypes.OrderBy(x => x.Name).ToListAsync();
         }
     }
 }

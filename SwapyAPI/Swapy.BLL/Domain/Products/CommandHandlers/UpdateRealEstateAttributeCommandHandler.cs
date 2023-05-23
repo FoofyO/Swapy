@@ -7,7 +7,6 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class UpdateRealEstateAttributeCommandHandler : IRequestHandler<UpdateRealEstateAttributeCommand, Unit>
     {
-        private readonly string _userId;
         private readonly IProductRepository _productRepository;
         private readonly IRealEstateAttributeRepository _realEstateAttributeRepository;
 
@@ -22,7 +21,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             var realEstateAttribute = await _realEstateAttributeRepository.GetByIdAsync(request.RealEstateAttributeId);
             var product = await _productRepository.GetByIdAsync(realEstateAttribute.ProductId);
             
-            if (!_userId.Equals(product.UserId)) throw new NoAccessException("No access to update this product");
+            if (!request.UserId.Equals(product.UserId)) throw new NoAccessException("No access to update this product");
 
             product.Title = request.Title;
             product.Description = request.Description;

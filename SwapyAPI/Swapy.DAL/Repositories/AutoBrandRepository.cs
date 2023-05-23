@@ -43,9 +43,12 @@ namespace Swapy.DAL.Repositories
             return await _context.AutoBrands.ToListAsync();
         }
 
-        public async Task<IQueryable<AutoBrand>> GetQueryableAsync()
+        public async Task<IEnumerable<AutoBrand>> GetByAutoTypesAsync(IEnumerable<string> autoTypesId)
         {
-            return _context.AutoBrands.AsQueryable();
+            return await _context.AutoBrands.Include(x => x.AutoModels)
+                                      .Where(x => autoTypesId == null || autoTypesId.Intersect(x.AutoModels.Select(x => x.AutoTypeId)).Any())
+                                      .OrderBy(x => x.Name)
+                                      .ToListAsync();
         }
     }
 }

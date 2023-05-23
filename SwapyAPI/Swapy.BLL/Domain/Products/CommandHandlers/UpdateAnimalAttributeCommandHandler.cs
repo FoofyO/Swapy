@@ -7,7 +7,6 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class UpdateAnimalAttributeCommandHandler : IRequestHandler<UpdateAnimalAttributeCommand, Unit>
     {
-        private readonly string _userId;
         private readonly IProductRepository _productRepository;
         private readonly IAnimalAttributeRepository _animalAttributeRepository;
 
@@ -22,7 +21,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             var animalAttribute = await _animalAttributeRepository.GetByIdAsync(request.AnimalAttributeId);
             var product = await _productRepository.GetByIdAsync(animalAttribute.ProductId);
 
-            if (!_userId.Equals(product.UserId)) throw new NoAccessException("No access to update this product");
+            if (!request.UserId.Equals(product.UserId)) throw new NoAccessException("No access to update this product");
 
             product.Title = request.Title;
             product.Description = request.Description;

@@ -9,7 +9,6 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class AddClothesAttributeCommandHandler : IRequestHandler<AddClothesAttributeCommand, ClothesAttribute>
     {
-        private readonly string _userId;
         private readonly IProductRepository _productRepository;
         private readonly IClothesAttributeRepository _clothesAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
@@ -26,7 +25,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             ISubcategoryService subcategoryService = new SubcategoryService(_subcategoryRepository);
             if (!await subcategoryService.SubcategoryValidationAsync(request.SubcategoryId)) throw new ArgumentException("Invalid subcategory");
 
-            Product product = new Product(request.Title, request.Description, request.Price, _userId, request.CurrencyId, request.CategoryId, request.SubcategoryId, request.CityId);
+            Product product = new Product(request.Title, request.Description, request.Price, request.UserId, request.CurrencyId, request.CategoryId, request.SubcategoryId, request.CityId);
             await _productRepository.CreateAsync(product);
 
             ClothesAttribute clothesAttribute = new ClothesAttribute(request.IsNew, request.ClothesSeasonId, request.ClothesSizeId, request.ClothesBrandViewId, product.Id);

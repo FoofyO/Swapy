@@ -4,6 +4,7 @@ namespace Swapy.BLL.Domain.Products.Commands
 {
     public class UpdateProductCommand : IRequest<Unit>
     {
+        public string UserId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }

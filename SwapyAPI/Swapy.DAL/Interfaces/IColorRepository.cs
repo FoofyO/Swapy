@@ -2,7 +2,8 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IColorRepository : IQueryableProviderRepository<Color>
+    public interface IColorRepository : IRepository<Color>
     {
+        Task<IEnumerable<Color>> GetByModelAsync(string modelId);
     }
 }

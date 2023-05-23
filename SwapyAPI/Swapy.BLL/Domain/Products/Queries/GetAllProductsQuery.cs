@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Swapy.Common.DTO;
+using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 
 namespace Swapy.BLL.Domain.Products.Queries
@@ -10,6 +10,7 @@ namespace Swapy.BLL.Domain.Products.Queries
 
     public class GetAllProductQuery<T> : IRequest<ProductResponseDTO<T>>
     {
+        public string? UserId { get; set; }
         public int Page { get; set; }
         public int PageSize { get; set; }
         public string Title { get; set; }
@@ -19,7 +20,7 @@ namespace Swapy.BLL.Domain.Products.Queries
         public string? CategoryId { get; set; }
         public string? SubcategoryId { get; set; }
         public string? CityId { get; set; }
-        public string? UserId { get; set; }
+        public string? OtherUserId { get; set; }
         public bool? SortByPrice { get; set; }
         public bool? ReverseSort { get; set; }
     }

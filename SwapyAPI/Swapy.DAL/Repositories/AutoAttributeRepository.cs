@@ -60,9 +60,9 @@ namespace Swapy.DAL.Repositories
                                           .Include(a => a.FuelType)
                                           .Include(a => a.AutoColor)
                                           .Include(a => a.TransmissionType)
-                                          .Include(a => a.AutoBrandType)
+                                          .Include(a => a.AutoModel)
                                             .ThenInclude(abt => abt.AutoBrand)
-                                          .Include(a => a.AutoBrandType)
+                                          .Include(a => a.AutoModel)
                                             .ThenInclude(abt => abt.AutoType)
                                           .AsQueryable();
         }
@@ -80,9 +80,9 @@ namespace Swapy.DAL.Repositories
                                                     .Include(a => a.FuelType)
                                                     .Include(a => a.AutoColor)
                                                     .Include(a => a.TransmissionType)
-                                                    .Include(a => a.AutoBrandType)
+                                                    .Include(a => a.AutoModel)
                                                         .ThenInclude(abt => abt.AutoBrand)
-                                                    .Include(a => a.AutoBrandType)
+                                                    .Include(a => a.AutoModel)
                                                         .ThenInclude(abt => abt.AutoType)
                                                     .FirstOrDefaultAsync(a => a.Id.Equals(id));
 

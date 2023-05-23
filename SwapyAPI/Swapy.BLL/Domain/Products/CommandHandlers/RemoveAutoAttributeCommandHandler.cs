@@ -7,7 +7,6 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class RemoveAutoAttributeCommandHandler : IRequestHandler<RemoveAutoAttributeCommand, Unit>
     {
-        private readonly string _userId;
         private readonly IProductRepository _productRepository;
         private readonly IAutoAttributeRepository _autoAttributeRepository;
 
@@ -22,7 +21,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             var autoAttribute = await _autoAttributeRepository.GetByIdAsync(request.AutoAttributeId);
             var product = await _productRepository.GetByIdAsync(autoAttribute.ProductId);
 
-            if (_userId.Equals(product.UserId)) throw new NoAccessException("No access to delete this product");
+            if (request.UserId.Equals(product.UserId)) throw new NoAccessException("No access to delete this product");
 
             await _autoAttributeRepository.DeleteAsync(autoAttribute);
 

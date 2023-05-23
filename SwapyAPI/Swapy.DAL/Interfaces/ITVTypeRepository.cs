@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface ITVTypeRepository : IQueryableProviderRepository<TVType>
+    public interface ITVTypeRepository : IRepository<TVType>
     {
     }
 }

@@ -7,7 +7,6 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class RemoveFavoriteProductCommandHandler : IRequestHandler<RemoveFavoriteProductCommand, Unit>
     {
-        private readonly string _userId;
         private readonly IFavoriteProductRepository _favoriteProductRepository;
 
         public RemoveFavoriteProductCommandHandler(IFavoriteProductRepository favoriteProductRepository)
@@ -19,7 +18,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
         {
             var favoriteProduct = await _favoriteProductRepository.GetByIdAsync(request.FavoriteProductId);
 
-            if (_userId.Equals(favoriteProduct.UserId)) throw new NoAccessException("No access to delete this product");
+            if (request.UserId.Equals(favoriteProduct.UserId)) throw new NoAccessException("No access to delete this product");
 
             await _favoriteProductRepository.DeleteAsync(favoriteProduct);
 

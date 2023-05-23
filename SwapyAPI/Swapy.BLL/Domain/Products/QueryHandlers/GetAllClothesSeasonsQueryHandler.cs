@@ -14,8 +14,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 
         public async Task<IEnumerable<ClothesSeason>> Handle(GetAllClothesSeasonsQuery request, CancellationToken cancellationToken)
         {
-            var query = (await _clothesSeasonRepository.GetQueryableAsync()).OrderBy(x => x.Name);
-            var result = await query.ToListAsync();
+            var result = await _clothesSeasonRepository.GetAllAsync();
             return result;
         }
     }

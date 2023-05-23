@@ -14,8 +14,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 
         public async Task<IEnumerable<Memory>> Handle(GetAllMemoriesQuery request, CancellationToken cancellationToken)
         {
-            var query = (await _memoryRepository.GetQueryableAsync()).OrderBy(x => x.Name);
-            var result = await query.ToListAsync();
+            var result = await _memoryRepository.GetByModelAsync(request.ModelId);
             return result;
         }
     }

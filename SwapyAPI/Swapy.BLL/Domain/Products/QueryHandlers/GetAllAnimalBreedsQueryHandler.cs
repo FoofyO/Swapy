@@ -13,9 +13,8 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
         public GetAllAnimalBreedsQueryHandler(IAnimalBreedRepository animalBreedRepository) => _animalBreedRepository = animalBreedRepository;
 
         public async Task<IEnumerable<AnimalBreed>> Handle(GetAllAnimalBreedsQuery request, CancellationToken cancellationToken)
-        {
-            var query = (await _animalBreedRepository.GetQueryableAsync()).OrderBy(x => x.Name);
-            var result = await query.ToListAsync();
+        { 
+            var result = await _animalBreedRepository.GetByAnimalTypeAsync(request.AnimalTypesId);
             return result;
         }
     }

@@ -43,9 +43,9 @@ namespace Swapy.DAL.Repositories
             return await _context.ElectronicBrands.ToListAsync();
         }
 
-        public async Task<IQueryable<ElectronicBrand>> GetQueryableAsync()
+        public async Task<IEnumerable<ElectronicBrand>> GetByElectronicTypeAsync(string electronicTypeId)
         {
-            return _context.ElectronicBrands.AsQueryable();
+            return await _context.ElectronicBrands.Include(x => x.ElectronicBrandsTypes).Where(x => x.ElectronicBrandsTypes.Select(x => x.ElectronicTypeId).Contains(electronicTypeId)).OrderBy(x => x.Name).ToListAsync();
         }
     }
 }

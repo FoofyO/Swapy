@@ -30,6 +30,7 @@ using Swapy.BLL.Domain.Shops.CommandHandlers;
 using System.Security.Claims;
 using Microsoft.OpenApi.Models;
 using Swapy.API.Middleware;
+using Swapy.Common.DTO.Products.Responses;
 
 namespace Swapy.API
 {
@@ -85,7 +86,7 @@ namespace Swapy.API
             builder.Services.AddScoped<IAnimalBreedRepository, AnimalBreedRepository>();
             builder.Services.AddScoped<IAutoAttributeRepository, AutoAttributeRepository>();
             builder.Services.AddScoped<IAutoBrandRepository, AutoBrandRepository>();
-            builder.Services.AddScoped<IAutoBrandTypeRepository, AutoBrandTypeRepository>();
+            builder.Services.AddScoped<IAutoModelRepository, AutoModelRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IChatRepository, ChatRepository>();
             builder.Services.AddScoped<ICityRepository, CityRepository>();

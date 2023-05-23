@@ -53,6 +53,11 @@ namespace Swapy.DAL.Configurations
                    .HasForeignKey(i => i.ItemTypeId)
                    .IsRequired(false);
 
+            builder.HasMany(s => s.AutoModels)
+                   .WithOne(am => am.AutoType)
+                   .HasForeignKey(r => r.AutoTypeId)
+                   .IsRequired(false);
+
             builder.HasMany(s => s.RealEstateAttributes)
                    .WithOne(r => r.RealEstateType)
                    .HasForeignKey(r => r.RealEstateTypeId)

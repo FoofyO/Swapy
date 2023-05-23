@@ -4,7 +4,7 @@
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public ICollection<AutoBrandType> AutoBrandsTypes { get; set; } = new List<AutoBrandType>();
+        public ICollection<AutoModel> AutoModels { get; set; } = new List<AutoModel>();
 
         public AutoBrand() => Id = Guid.NewGuid().ToString();
 

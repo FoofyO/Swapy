@@ -43,9 +43,11 @@ namespace Swapy.DAL.Repositories
             return await _context.AnimalBreeds.ToListAsync();
         }
 
-        public async Task<IQueryable<AnimalBreed>> GetQueryableAsync()
+        public async Task<IEnumerable<AnimalBreed>> GetByAnimalTypeAsync(string animalType)
         {
-            return _context.AnimalBreeds.AsQueryable();
+            return await _context.AnimalBreeds.Where(x => animalType == null || x.AnimalTypeId.Equals(animalType))
+                                        .OrderBy(x => x.Name)
+                                        .ToListAsync();
         }
     }
 }

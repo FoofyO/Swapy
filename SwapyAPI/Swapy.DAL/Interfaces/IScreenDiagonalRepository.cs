@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IScreenDiagonalRepository : IQueryableProviderRepository<ScreenDiagonal>
+    public interface IScreenDiagonalRepository : IRepository<ScreenDiagonal>
     {
     }
 }

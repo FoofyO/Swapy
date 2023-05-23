@@ -20,7 +20,7 @@ namespace Swapy.DAL
             builder.ApplyConfiguration(new AnimalBreedConfiguration());
             builder.ApplyConfiguration(new AutoAttributeConfiguration());
             builder.ApplyConfiguration(new AutoBrandConfiguration());
-            builder.ApplyConfiguration(new AutoBrandTypeConfiguration());
+            builder.ApplyConfiguration(new AutoModelConfiguration());
             builder.ApplyConfiguration(new CategoryConfiguration());
             builder.ApplyConfiguration(new ChatConfiguration());
             builder.ApplyConfiguration(new CityConfiguration());
@@ -68,7 +68,7 @@ namespace Swapy.DAL
         public DbSet<AnimalBreed> AnimalBreeds { get; set; }
         public DbSet<AutoAttribute> AutoAttributes { get; set; }
         public DbSet<AutoBrand> AutoBrands { get; set; }
-        public DbSet<AutoBrandType> AutoBrandsTypes { get; set; }
+        public DbSet<AutoModel> AutoBrandsTypes { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Chat> Chats { get; set; }
         public DbSet<City> Cities { get; set; }

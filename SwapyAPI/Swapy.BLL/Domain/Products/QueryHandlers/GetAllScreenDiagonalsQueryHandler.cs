@@ -14,8 +14,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 
         public async Task<IEnumerable<ScreenDiagonal>> Handle(GetAllScreenDiagonalsQuery request, CancellationToken cancellationToken)
         {
-            var query = (await _screenDiagonalRepository.GetQueryableAsync()).OrderBy(x => x.Name);
-            var result = await query.ToListAsync();
+            var result = await _screenDiagonalRepository.GetAllAsync();
             return result;
         }
     }

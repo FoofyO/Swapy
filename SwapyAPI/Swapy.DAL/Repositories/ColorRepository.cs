@@ -43,9 +43,12 @@ namespace Swapy.DAL.Repositories
             return await _context.Colors.ToListAsync();
         }
 
-        public async Task<IQueryable<Color>> GetQueryableAsync()
+        public async Task<IEnumerable<Color>> GetByModelAsync(string modelId)
         {
-            return _context.Colors.AsQueryable();
+            return await _context.Colors.Include(x => x.ModelsColors)
+                .Where(x => modelId == null || x.ModelsColors.Select(x => x.ModelId).Contains(modelId))
+                .OrderBy(x => x.Name)
+                .ToListAsync();
         }
     }
 }

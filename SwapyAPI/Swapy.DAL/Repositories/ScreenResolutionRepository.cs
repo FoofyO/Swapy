@@ -40,12 +40,7 @@ namespace Swapy.DAL.Repositories
 
         public async Task<IEnumerable<ScreenResolution>> GetAllAsync()
         {
-            return await _context.ScreenResolutions.ToListAsync();
-        }
-
-        public async Task<IQueryable<ScreenResolution>> GetQueryableAsync()
-        {
-            return _context.ScreenResolutions.AsQueryable();
+            return await _context.ScreenResolutions.OrderBy(x => x.Name).ToListAsync();
         }
     }
 }

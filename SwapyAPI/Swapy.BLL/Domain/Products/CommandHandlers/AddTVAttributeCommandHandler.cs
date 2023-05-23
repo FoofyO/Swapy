@@ -9,7 +9,6 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class AddTVAttributeCommandHandler : IRequestHandler<AddTVAttributeCommand, TVAttribute>
     {
-        private readonly string _userId;
         private readonly IProductRepository _productRepository;
         private readonly ITVAttributeRepository _tvAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
@@ -26,7 +25,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             ISubcategoryService subcategoryService = new SubcategoryService(_subcategoryRepository);
             if (!await subcategoryService.SubcategoryValidationAsync(request.SubcategoryId)) throw new ArgumentException("Invalid subcategory");
 
-            Product product = new Product(request.Title, request.Description, request.Price, _userId, request.CurrencyId, request.CategoryId, request.SubcategoryId, request.CityId);
+            Product product = new Product(request.Title, request.Description, request.Price, request.UserId, request.CurrencyId, request.CategoryId, request.SubcategoryId, request.CityId);
             await _productRepository.CreateAsync(product);
 
             TVAttribute tvAttribute = new TVAttribute(request.IsNew, request.IsSmart, request.TVTypeId, request.TVBrandId, request.ScreenResolutionId, request.ScreenDiagonalId, product.Id);
