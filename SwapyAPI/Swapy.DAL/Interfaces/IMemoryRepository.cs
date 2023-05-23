@@ -2,7 +2,8 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IMemoryRepository : IQueryableProviderRepository<Memory>
+    public interface IMemoryRepository : IRepository<Memory>
     {
+        Task<IEnumerable<Memory>> GetByModelAsync(string modelId);
     }
 }

@@ -1,8 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Products.Queries;
-using Swapy.BLL.Services;
-using Swapy.Common.DTO;
+using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
@@ -10,12 +9,10 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
     public class GetAllFavoriteProductsQueryHandler : IRequestHandler<GetAllFavoriteProductsQuery, ProductResponseDTO<FavoriteProduct>>
     {
-        private readonly string _userId;
         private readonly IFavoriteProductRepository _favoriteProductRepository;
 
         public GetAllFavoriteProductsQueryHandler(IFavoriteProductRepository favoriteProductRepository)
         {
-            //_userId = userId;
             _favoriteProductRepository = favoriteProductRepository;
         }
         
@@ -34,6 +31,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
                 (request.SubcategoryId == null || x.Product.SubcategoryId.Equals(request.SubcategoryId)) &&
                 (request.CityId == null || x.Product.CityId.Equals(request.CityId)) &&
                 (request.UserId == null || x.Product.UserId.Equals(request.UserId)) &&
+                (request.OtherUserId == null || x.Product.UserId.Equals(request.OtherUserId)) &&
                 (request.ProductId == null || x.ProductId.Equals(request.ProductId)) );
             if (request.SortByPrice == true) query.OrderBy(x => x.Product.Price);
             else query.OrderBy(x => x.Product.DateTime);

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Products.Queries;
-using Swapy.Common.DTO;
+using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
@@ -9,12 +9,10 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
     public class GetAllRealEstateAttributesQueryHandler : IRequestHandler<GetAllRealEstateAttributesQuery, ProductResponseDTO<RealEstateAttribute>>
     {
-        private readonly string _userId;
         private readonly IRealEstateAttributeRepository _realEstateAttributeRepository;
 
         public GetAllRealEstateAttributesQueryHandler(IRealEstateAttributeRepository animalAttributeRepository)
         {
-            //_userId = userId;
             _realEstateAttributeRepository = animalAttributeRepository;
         }
 
@@ -30,7 +28,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
                 (request.CategoryId == null || x.Product.CategoryId.Equals(request.CategoryId)) &&
                 (request.SubcategoryId == null || x.Product.SubcategoryId.Equals(request.SubcategoryId)) &&
                 (request.CityId == null || x.Product.CityId.Equals(request.CityId)) &&
-                (request.UserId == null ? !x.Product.UserId.Equals(_userId) : x.Product.UserId.Equals(request.UserId)) &&
+                (request.OtherUserId == null ? !x.Product.UserId.Equals(request.UserId) : x.Product.UserId.Equals(request.OtherUserId)) &&
                 (request.AreaMin == null) || (x.Area >= request.AreaMin) &&
                 (request.AreaMax == null) || (x.Area <= request.AreaMax) &&
                 (request.RoomsMin == null) || (x.Rooms >= request.RoomsMin) &&

@@ -40,12 +40,7 @@ namespace Swapy.DAL.Repositories
 
         public async Task<IEnumerable<City>> GetAllAsync()
         {
-            return await _context.Cities.ToListAsync();
-        }
-
-        public async Task<IQueryable<City>> GetQueryableAsync()
-        {
-            return _context.Cities.AsQueryable();
+            return await _context.Cities.OrderBy(x => x.Name).ToListAsync();
         }
     }
 }

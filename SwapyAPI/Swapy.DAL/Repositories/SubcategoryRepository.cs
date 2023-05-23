@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Swapy.Common.Entities;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Swapy.DAL.Repositories
 {
@@ -67,6 +69,38 @@ namespace Swapy.DAL.Repositories
             var item = await _context.Subcategories.Where(s => s.ParentSubcategoryId.Equals(subcategoryId)).ToListAsync();
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {subcategoryId} id not found");
             return item;
+        }
+
+        public async Task<IEnumerable<Subcategory>> GetAllAutoTypesAsync()
+        {
+            return await _context.Subcategories.Where(s => s.Type == SubcategoryType.AutoTypes).OrderBy(s => s.Name).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Subcategory>> GetClothesTypesByGenderAsync(string genderId)
+        {
+            return await _context.Subcategories.Include(s => s.ClothesViews)
+                .Where(s => (s.Type == SubcategoryType.ClothesTypes) &&
+                       (s.ClothesViews.Select(cv => cv.GenderId).Contains(genderId)))
+                .OrderBy(s => s.Name)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Subcategory>> GetAllElectronicTypesAsync()
+        {
+            return await _context.Subcategories.Where(s => s.Type == SubcategoryType.ElectronicsTypes).OrderBy(s => s.Name).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Subcategory>> GetAllRealEstateTypesAsync()
+        {
+            return await _context.Subcategories.Where(s => s.Type == SubcategoryType.RealEstatesTypes).OrderBy(s => s.Name).ToListAsync();
+        }
+        public async Task<IEnumerable<Subcategory>> GetAllAnimalTypesAsync()
+        {
+            return await _context.Subcategories.Where(s => s.Type == SubcategoryType.AnimalsTypes).OrderBy(s => s.Name).ToListAsync();
+        }
+        public async Task<IEnumerable<Subcategory>> GetAllItemTypesAsync()
+        {
+            return await _context.Subcategories.Where(s => s.Type == SubcategoryType.ItemsTypes).OrderBy(s => s.Name).ToListAsync();
         }
     }
 }

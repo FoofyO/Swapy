@@ -2,7 +2,7 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IFuelTypeRepository : IQueryableProviderRepository<FuelType>
+    public interface IFuelTypeRepository : IRepository<FuelType>
     {
     }
 }

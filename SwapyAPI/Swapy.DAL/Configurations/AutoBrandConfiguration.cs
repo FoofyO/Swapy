@@ -17,7 +17,7 @@ namespace Swapy.DAL.Configurations
                    .IsRequired()
                    .HasMaxLength(32);
 
-            builder.HasMany(x => x.AutoBrandsTypes)
+            builder.HasMany(x => x.AutoModels)
                    .WithOne(x => x.AutoBrand)
                    .IsRequired(false);
         }

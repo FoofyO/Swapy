@@ -7,7 +7,6 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class RemoveElectronicAttributeCommandHandler : IRequestHandler<RemoveElectronicAttributeCommand, Unit>
     {
-        private readonly string _userId;
         private readonly IProductRepository _productRepository;
         private readonly IElectronicAttributeRepository _electronicAttributeRepository;
 
@@ -19,10 +18,10 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 
         public async Task<Unit> Handle(RemoveElectronicAttributeCommand request, CancellationToken cancellationToken)
         {
-            var electronicAttribute = await _electronicAttributeRepository.GetByIdAsync(request.ElectronicAttribute);
+            var electronicAttribute = await _electronicAttributeRepository.GetByIdAsync(request.ElectronicAttributeId);
             var product = await _productRepository.GetByIdAsync(electronicAttribute.ProductId);
 
-            if (_userId.Equals(product.UserId)) throw new NoAccessException("No access to delete this product");
+            if (request.UserId.Equals(product.UserId)) throw new NoAccessException("No access to delete this product");
 
             await _electronicAttributeRepository.DeleteAsync(electronicAttribute);
 

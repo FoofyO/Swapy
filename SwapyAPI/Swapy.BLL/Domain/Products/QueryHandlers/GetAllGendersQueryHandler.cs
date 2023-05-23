@@ -14,8 +14,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 
         public async Task<IEnumerable<Gender>> Handle(GetAllGendersQuery request, CancellationToken cancellationToken)
         {
-            var query = (await _genderRepository.GetQueryableAsync()).OrderBy(x => x.Name);
-            var result = await query.ToListAsync();
+            var result = await _genderRepository.GetAllAsync();
             return result;
         }
     }

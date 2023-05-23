@@ -40,12 +40,7 @@ namespace Swapy.DAL.Repositories
 
         public async Task<IEnumerable<Currency>> GetAllAsync()
         {
-            return await _context.Currencies.ToListAsync();
-        }
-
-        public async Task<IQueryable<Currency>> GetQueryableAsync()
-        {
-            return _context.Currencies.AsQueryable();
+            return await _context.Currencies.OrderBy(x => x.Name).ToListAsync();
         }
     }
 }

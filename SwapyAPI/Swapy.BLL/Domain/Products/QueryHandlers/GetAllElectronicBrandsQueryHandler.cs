@@ -14,8 +14,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 
         public async Task<IEnumerable<ElectronicBrand>> Handle(GetAllElectronicBrandsQuery request, CancellationToken cancellationToken)
         {
-            var query = (await _electronicBrandRepository.GetQueryableAsync()).OrderBy(x => x.Name);
-            var result = await query.ToListAsync();
+            var result = await _electronicBrandRepository.GetByElectronicTypeAsync(request.ElectronicTypeId);
             return result;
         }
     }

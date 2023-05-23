@@ -14,8 +14,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 
         public async Task<IEnumerable<ScreenResolution>> Handle(GetAllScreenResolutionsQuery request, CancellationToken cancellationToken)
         {
-            var query = (await _screenResolutionRepository.GetQueryableAsync()).OrderBy(x => x.Name);
-            var result = await query.ToListAsync();
+            var result = await _screenResolutionRepository.GetAllAsync();
             return result;
         }
     }

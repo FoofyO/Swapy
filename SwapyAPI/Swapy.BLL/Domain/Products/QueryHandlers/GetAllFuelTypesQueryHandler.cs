@@ -19,8 +19,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 
         public async Task<IEnumerable<FuelType>> Handle(GetAllFuelTypesQuery request, CancellationToken cancellationToken)
         {
-            var query = (await _fuelTypeRepository.GetQueryableAsync()).OrderBy(x => x.Name);
-            var result = await query.ToListAsync();
+            var result = await _fuelTypeRepository.GetAllAsync();
             return result;
         }
     }

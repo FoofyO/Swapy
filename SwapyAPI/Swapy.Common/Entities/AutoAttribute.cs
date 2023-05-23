@@ -13,14 +13,14 @@
         public Color AutoColor { get; set; }
         public string TransmissionTypeId { get; set; }
         public TransmissionType TransmissionType { get; set; }
-        public string AutoBrandTypeId { get; set; }
-        public AutoBrandType AutoBrandType { get; set; }
+        public string AutoModelId { get; set; }
+        public AutoModel AutoModel { get; set; }
         public string ProductId { get; set; }
         public Product Product { get; set; }
 
         public AutoAttribute() => Id = Guid.NewGuid().ToString();
 
-        public AutoAttribute(int miliage, int engineCapacity, DateTime releaseYear, bool isNew, string fuelTypeId, string autoColorId, string transmissionTypeId, string autoBrandTypeId, string productId) : this()
+        public AutoAttribute(int miliage, int engineCapacity, DateTime releaseYear, bool isNew, string fuelTypeId, string autoColorId, string transmissionTypeId, string autoModelId, string productId) : this()
         {
             Miliage = miliage;
             EngineCapacity = engineCapacity;
@@ -29,7 +29,7 @@
             FuelTypeId = fuelTypeId;
             AutoColorId = autoColorId;
             TransmissionTypeId = transmissionTypeId;
-            AutoBrandTypeId = autoBrandTypeId;
+            AutoModelId = autoModelId;
             ProductId = productId;
         }
     }

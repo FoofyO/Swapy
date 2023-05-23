@@ -43,9 +43,11 @@ namespace Swapy.DAL.Repositories
             return await _context.ClothesViews.ToListAsync();
         }
 
-        public async Task<IQueryable<ClothesView>> GetQueryableAsync()
+        public async Task<IEnumerable<ClothesView>> GetByGenderAndTypeAsync(string genderId, string clothesTypeId)
         {
-            return _context.ClothesViews.AsQueryable();
+            return _context.ClothesViews.Where(x => (clothesTypeId == null || x.ClothesTypeId.Equals(clothesTypeId)) &&
+                                              (genderId == null || x.GenderId.Equals(genderId)))
+                                        .OrderBy(x => x.Name); ;
         }
     }
 }

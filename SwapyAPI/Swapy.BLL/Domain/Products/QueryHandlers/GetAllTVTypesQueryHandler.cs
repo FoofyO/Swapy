@@ -14,8 +14,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 
         public async Task<IEnumerable<TVType>> Handle(GetAllTVTypesQuery request, CancellationToken cancellationToken)
         {
-            var query = (await _tvTypeRepository.GetQueryableAsync()).OrderBy(x => x.Name);
-            var result = await query.ToListAsync();
+            var result = await _tvTypeRepository.GetAllAsync();
             return result;
         }
     }

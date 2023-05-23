@@ -5,5 +5,6 @@ namespace Swapy.BLL.Domain.Products.Queries
 {
     public class GetAllMemoriesQuery : IRequest<IEnumerable<Memory>>
     {
+        public string ModelId { get; set; }
     }
 }

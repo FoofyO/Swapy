@@ -2,7 +2,8 @@
 
 namespace Swapy.DAL.Interfaces
 {
-    public interface IAutoBrandRepository : IQueryableProviderRepository<AutoBrand>
+    public interface IAutoBrandRepository : IRepository<AutoBrand>
     {
+        Task<IEnumerable<AutoBrand>> GetByAutoTypesAsync(IEnumerable<string> autoTypesId);
     }
 }

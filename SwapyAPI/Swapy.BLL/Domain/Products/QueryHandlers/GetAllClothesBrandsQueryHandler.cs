@@ -14,8 +14,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
 
         public async Task<IEnumerable<ClothesBrand>> Handle(GetAllClothesBrandsQuery request, CancellationToken cancellationToken)
         {
-            var query = (await _clothesBrandRepository.GetQueryableAsync()).OrderBy(x => x.Name);
-            var result = await query.ToListAsync();
+            var result = await _clothesBrandRepository.GetByClothesViewsAsync(request.ClothesViewsId);
             return result;
         }
     }

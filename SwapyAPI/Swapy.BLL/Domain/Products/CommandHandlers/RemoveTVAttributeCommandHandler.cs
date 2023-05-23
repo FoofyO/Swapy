@@ -7,7 +7,6 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 {
     public class RemoveTVAttributeCommandHandler : IRequestHandler<RemoveTVAttributeCommand, Unit>
     {
-        private readonly string _userId;
         private readonly IProductRepository _productRepository;
         private readonly ITVAttributeRepository _tvAttributeRepository;
 
@@ -22,7 +21,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             var tvAttribute = await _tvAttributeRepository.GetByIdAsync(request.TVAttributeId);
             var product = await _productRepository.GetByIdAsync(tvAttribute.ProductId);
 
-            if (_userId.Equals(product.UserId)) throw new NoAccessException("No access to delete this product");
+            if (request.UserId.Equals(product.UserId)) throw new NoAccessException("No access to delete this product");
 
             await _tvAttributeRepository.DeleteAsync(tvAttribute);
 

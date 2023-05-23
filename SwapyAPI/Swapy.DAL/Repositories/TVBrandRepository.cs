@@ -40,12 +40,7 @@ namespace Swapy.DAL.Repositories
 
         public async Task<IEnumerable<TVBrand>> GetAllAsync()
         {
-            return await _context.TVBrands.ToListAsync();
-        }
-
-        public async Task<IQueryable<TVBrand>> GetQueryableAsync()
-        {
-            return _context.TVBrands.AsQueryable();
+            return await _context.TVBrands.OrderBy(x => x.Name).ToListAsync();
         }
     }
 }
