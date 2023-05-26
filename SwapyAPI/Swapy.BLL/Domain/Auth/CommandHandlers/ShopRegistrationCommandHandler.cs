@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.BLL.Interfaces;
-using Swapy.Common.DTO;
+using Swapy.Common.DTO.Auth.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
@@ -14,8 +14,8 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
     public class ShopRegistrationCommandHandler : IRequestHandler<ShopRegistrationCommand, AuthResponseDTO>
     {
-        private readonly IUserTokenService _userTokenService;
         private readonly UserManager<User> _userManager;
+        private readonly IUserTokenService _userTokenService;
         private readonly IUserTokenRepository _userTokenRepository;
         private readonly IShopAttributeRepository _shopAttributeRepository;
 
@@ -54,14 +54,14 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             var accessToken = await _userTokenService.GenerateJwtToken(user.Id, user.Email, user.FirstName, user.LastName);
             
             user.UserName = user.Id.Replace("-", "");
-            user.ShopAttributeId = shop.Id;
-            user.UserTokenId = refreshToken;
             
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded) throw new InvalidOperationException("Shop creation failed");
 
+            user.ShopAttributeId = shop.Id;
             await _shopAttributeRepository.CreateAsync(shop);
 
+            user.UserTokenId = refreshToken;
             await _userTokenRepository.CreateAsync(new UserToken(accessToken, refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
 
             return new AuthResponseDTO { Type = UserType.Shop, UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };

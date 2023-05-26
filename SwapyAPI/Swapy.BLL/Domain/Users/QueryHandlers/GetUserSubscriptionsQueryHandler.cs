@@ -7,14 +7,13 @@ namespace Swapy.BLL.Domain.Users.QueryHandlers
 {
     public class GetUserSubscriptionsQueryHandler : IRequestHandler<GetUserSubscriptionsQuery, IEnumerable<Subscription>>
     {
-        private readonly string _userId;
         private readonly ISubscriptionRepository _subscriptionRepository;
 
         public GetUserSubscriptionsQueryHandler(ISubscriptionRepository subscriptionRepository) => _subscriptionRepository = subscriptionRepository;
 
         public async Task<IEnumerable<Subscription>> Handle(GetUserSubscriptionsQuery request, CancellationToken cancellationToken)
         {
-            return await _subscriptionRepository.GetAllByUserIdAsync(_userId);
+            return await _subscriptionRepository.GetAllByUserIdAsync(request.UserId);
         }
     }
 }

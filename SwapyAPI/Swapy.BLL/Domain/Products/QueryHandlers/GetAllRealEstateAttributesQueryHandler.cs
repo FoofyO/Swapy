@@ -7,7 +7,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
-    public class GetAllRealEstateAttributesQueryHandler : IRequestHandler<GetAllRealEstateAttributesQuery, ProductResponseDTO<RealEstateAttribute>>
+    public class GetAllRealEstateAttributesQueryHandler : IRequestHandler<GetAllRealEstateAttributesQuery, ProductsResponseDTO<RealEstateAttribute>>
     {
         private readonly IRealEstateAttributeRepository _realEstateAttributeRepository;
 
@@ -16,7 +16,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             _realEstateAttributeRepository = animalAttributeRepository;
         }
 
-        public async Task<ProductResponseDTO<RealEstateAttribute>> Handle(GetAllRealEstateAttributesQuery request, CancellationToken cancellationToken)
+        public async Task<ProductsResponseDTO<RealEstateAttribute>> Handle(GetAllRealEstateAttributesQuery request, CancellationToken cancellationToken)
         {
             var query = await _realEstateAttributeRepository.GetByPageAsync(request.Page, request.PageSize);
 
@@ -39,7 +39,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             else query.OrderBy(x => x.Product.DateTime);
             if (request.ReverseSort == true) query.Reverse();
             var result = await query.ToListAsync();
-            return new ProductResponseDTO<RealEstateAttribute>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
+            return new ProductsResponseDTO<RealEstateAttribute>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
         }
     }
 }

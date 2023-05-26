@@ -8,7 +8,7 @@ namespace Swapy.BLL.Domain.Products.Queries
     {
     }
 
-    public class GetAllProductQuery<T> : IRequest<ProductResponseDTO<T>>
+    public class GetAllProductQuery<T> : IRequest<ProductsResponseDTO<T>>
     {
         public string? UserId { get; set; }
         public int Page { get; set; }

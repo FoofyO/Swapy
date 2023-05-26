@@ -45,7 +45,7 @@ namespace Swapy.DAL.Repositories
 
         public async Task<UserToken> GetByAccessTokenAsync(string accessToken)
         {
-            return await _context.UserTokens.FirstOrDefaultAsync(ur => ur.AccessToken.Equals(accessToken));
+            return await _context.UserTokens.Include(ut => ut.User).FirstOrDefaultAsync(ut => ut.AccessToken.Equals(accessToken));
         }
     }
 }

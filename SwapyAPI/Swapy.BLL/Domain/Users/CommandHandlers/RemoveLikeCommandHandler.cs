@@ -1,27 +1,32 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Swapy.BLL.Domain.Users.Commands;
 using Swapy.Common.Entities;
-using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
-using Swapy.DAL.Repositories;
 
 namespace Swapy.BLL.Domain.Users.CommandHandlers
 {
     public class RemoveLikeCommandHandler : IRequestHandler<RemoveLikeCommand, Unit>
     {
-        private readonly string _userId;
-        private readonly ILikeRepository _likeRepository;
+        private readonly UserManager<User> _userManager;
+        private readonly IUserLikeRepository _userLikeRepository;
 
-        public RemoveLikeCommandHandler(ILikeRepository likeRepository) => _likeRepository = likeRepository;
+        public RemoveLikeCommandHandler(IUserLikeRepository userLikeRepository, UserManager<User> userManager)
+        {
+            _userManager = userManager;
+            _userLikeRepository = userLikeRepository;
+        }
 
         public async Task<Unit> Handle(RemoveLikeCommand request, CancellationToken cancellationToken)
         {
-            var like = await _likeRepository.GetByIdAsync(request.LikeId);
+            var userLike = await _userLikeRepository.GetUserLikeByRecipientAsync(request.LikerId, request.RecipientId);
 
-            if (like.LikerId != _userId) throw new NoAccessException("No access to delete this like");
+            if (userLike.Like.LikerId != request.LikerId) throw new NoAccessException("No access to delete this like");
 
-            await _likeRepository.DeleteAsync(like);
+            var user = await _userManager.FindByIdAsync(request.RecipientId);
+            user.LikesCount--;
+            await _userLikeRepository.DeleteAsync(userLike);
 
             return Unit.Value;
         }

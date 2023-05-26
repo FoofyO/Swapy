@@ -7,7 +7,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
-    public class GetAllElectronicAttributesQueryHandler : IRequestHandler<GetAllElectronicAttributesQuery, ProductResponseDTO<ElectronicAttribute>>
+    public class GetAllElectronicAttributesQueryHandler : IRequestHandler<GetAllElectronicAttributesQuery, ProductsResponseDTO<ElectronicAttribute>>
     {
         private readonly IElectronicAttributeRepository _electronicAttributeRepository;
 
@@ -16,7 +16,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             _electronicAttributeRepository = electronicAttributeRepository;
         }
 
-        public async Task<ProductResponseDTO<ElectronicAttribute>> Handle(GetAllElectronicAttributesQuery request, CancellationToken cancellationToken)
+        public async Task<ProductsResponseDTO<ElectronicAttribute>> Handle(GetAllElectronicAttributesQuery request, CancellationToken cancellationToken)
         {
             var query = await _electronicAttributeRepository.GetByPageAsync(request.Page, request.PageSize);
 
@@ -39,7 +39,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             else query.OrderBy(x => x.Product.DateTime);
             if (request.ReverseSort == true) query.Reverse();
             var result = await query.ToListAsync();
-            return new ProductResponseDTO<ElectronicAttribute>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
+            return new ProductsResponseDTO<ElectronicAttribute>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
         }
     }
 }

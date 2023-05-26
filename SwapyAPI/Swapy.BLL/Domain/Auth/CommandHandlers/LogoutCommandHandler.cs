@@ -12,8 +12,11 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 
         public async Task<Unit> Handle(LogoutCommand request, CancellationToken cancellationToken)
         {
-            var token = await _userTokenRepository.GetByIdAsync(request.RefreshToken);
-            if (token != null) await _userTokenRepository.DeleteAsync(token);
+            try
+            {
+                await _userTokenRepository.DeleteByIdAsync(request.RefreshToken);
+            }
+            catch (Exception) { return Unit.Value; }
             return Unit.Value;
         }
     }

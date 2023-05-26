@@ -4,7 +4,7 @@ using Swapy.Common.Entities;
 namespace Swapy.BLL.Domain.Chats.Queries
 {
     public class GetAllSellerChatsQuery : IRequest<IEnumerable<Chat>>
-    { 
-
+    {
+        public string UserId { get; set; }
     } 
 }

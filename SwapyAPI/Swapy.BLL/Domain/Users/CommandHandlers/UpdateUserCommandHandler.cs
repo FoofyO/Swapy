@@ -8,14 +8,13 @@ namespace Swapy.BLL.Domain.Users.CommandHandlers
 {
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Unit>
     {
-        private readonly string _userId;
         private readonly UserManager<User> _userManager;
         
         public UpdateUserCommandHandler(UserManager<User> userManager) => _userManager = userManager;
 
         public async Task<Unit> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByIdAsync(_userId);
+            var user = await _userManager.FindByIdAsync(request.UserId);
 
             if (user == null) throw new NoAccessException("No access to update this user");
 

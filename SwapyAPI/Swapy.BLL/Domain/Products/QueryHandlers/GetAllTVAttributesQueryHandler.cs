@@ -7,7 +7,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
-    public class GetAllTVAttributesQueryHandler : IRequestHandler<GetAllTVAttributesQuery, ProductResponseDTO<TVAttribute>>
+    public class GetAllTVAttributesQueryHandler : IRequestHandler<GetAllTVAttributesQuery, ProductsResponseDTO<TVAttribute>>
     {
         private readonly ITVAttributeRepository _tvAttributeRepository;
 
@@ -16,7 +16,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             _tvAttributeRepository = tvAttributeRepository;
         }
 
-        public async Task<ProductResponseDTO<TVAttribute>> Handle(GetAllTVAttributesQuery request, CancellationToken cancellationToken)
+        public async Task<ProductsResponseDTO<TVAttribute>> Handle(GetAllTVAttributesQuery request, CancellationToken cancellationToken)
         {
             var query = await _tvAttributeRepository.GetByPageAsync(request.Page, request.PageSize);
 
@@ -39,7 +39,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             else query.OrderBy(x => x.Product.DateTime);
             if (request.ReverseSort == true) query.Reverse();
             var result = await query.ToListAsync();
-            return new ProductResponseDTO<TVAttribute>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
+            return new ProductsResponseDTO<TVAttribute>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
         }
     }
 }

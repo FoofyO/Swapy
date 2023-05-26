@@ -37,6 +37,13 @@ namespace Swapy.DAL.Repositories
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
         }
+        
+        public async Task<ShopAttribute> GetByUserId(string userId)
+        {
+            var item = await _context.ShopAttributes.Include(s => s.User).FirstOrDefaultAsync(s => s.UserId.Equals(userId));
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {userId} id not found");
+            return item;
+        }
 
         public async Task<IQueryable<ShopAttribute>> GetByPageAsync(int page, int pageSize)
         {
@@ -45,19 +52,16 @@ namespace Swapy.DAL.Repositories
             return _context.ShopAttributes.Skip(pageSize * (page - 1))
                                           .Take(pageSize)
                                           .Include(s => s.User)
+                                            .ThenInclude(u => u.Products)
                                           .AsQueryable();
         }
 
         public async Task<ShopAttribute> GetDetailByIdAsync(string id)
         {
-            var item = await _context.ShopAttributes.Include(s => s.User)
-                                                        .ThenInclude(u => u.LikesRecipient)
-                                                    .FirstOrDefaultAsync(s => s.Id.Equals(id));
-
+            var item = await _context.ShopAttributes.Include(s => s.User).FirstOrDefaultAsync(s => s.Id.Equals(id));
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
         }
-
 
         public async Task<IEnumerable<ShopAttribute>> GetAllAsync()
         {

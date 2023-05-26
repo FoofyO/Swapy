@@ -19,10 +19,9 @@ namespace Swapy.API.Controllers
 
         public ProductsController(IMediator mediator) => _mediator = mediator;
 
-        [HttpGet]
-        [Route("ping")]
+        [HttpGet("ping")]
         [Authorize]
-        public IActionResult Ping()
+        public async Task<IActionResult> Ping()
         {
             return Ok("ping");
         }
@@ -2145,17 +2144,15 @@ namespace Swapy.API.Controllers
         }
 
         [HttpHead]
-        [Route("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult Head()
+        public async Task<IActionResult> Head()
         {
             return Ok();
         }
 
         [HttpOptions]
-        [Route("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<string> Options()
+        public async Task<ActionResult<string>> Options()
         {
             return Ok("x44 GET, x8 POST, x7 PUT, x9 DELETE, HEAD, OPTIONS");
         }

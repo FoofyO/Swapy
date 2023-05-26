@@ -26,6 +26,22 @@ namespace Swapy.DAL.Configurations
                    .HasColumnType("INT")
                    .IsRequired();
 
+            builder.Property(u => u.LikesCount)
+                  .HasColumnType("INT")
+                  .HasDefaultValue(0)
+                  .IsRequired();
+
+            builder.Property(u => u.ProductsCount)
+                  .HasColumnType("INT")
+                  .HasDefaultValue(0)
+                  .IsRequired();
+
+            builder.Property(u => u.SubscriptionsCount)
+                  .HasColumnType("INT")
+                  .HasDefaultValue(0)
+                  .IsRequired();
+
+
             builder.Property(u => u.RegistrationDate)
                    .HasColumnType("DATE")
                    .HasDefaultValueSql("GETDATE()")
@@ -45,16 +61,19 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(u => u.ShopAttribute)
                    .WithOne(s => s.User)
                    .HasForeignKey<ShopAttribute>(s => s.UserId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired(false);
 
             builder.HasMany(u => u.Likes)
                    .WithOne(l => l.Liker)
                    .HasForeignKey(l => l.LikerId)
+                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired(false);
 
             builder.HasMany(u => u.Subscriptions)
                    .WithOne(s => s.Subscriber)
                    .HasForeignKey(s => s.SubscriberId)
+                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired(false);
 
             builder.HasMany(u => u.ChatsAsBuyer)

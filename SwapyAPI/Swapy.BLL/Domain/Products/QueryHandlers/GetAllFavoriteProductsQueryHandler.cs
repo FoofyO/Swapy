@@ -7,7 +7,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
-    public class GetAllFavoriteProductsQueryHandler : IRequestHandler<GetAllFavoriteProductsQuery, ProductResponseDTO<FavoriteProduct>>
+    public class GetAllFavoriteProductsQueryHandler : IRequestHandler<GetAllFavoriteProductsQuery, ProductsResponseDTO<FavoriteProduct>>
     {
         private readonly IFavoriteProductRepository _favoriteProductRepository;
 
@@ -16,7 +16,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             _favoriteProductRepository = favoriteProductRepository;
         }
         
-        public async Task<ProductResponseDTO<FavoriteProduct>> Handle(GetAllFavoriteProductsQuery request, CancellationToken cancellationToken)
+        public async Task<ProductsResponseDTO<FavoriteProduct>> Handle(GetAllFavoriteProductsQuery request, CancellationToken cancellationToken)
         {
             if ((request.ProductId == null) == (request.UserId == null)) throw new ArgumentException("Specify one ID for either the product or the user.");
 
@@ -37,7 +37,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             else query.OrderBy(x => x.Product.DateTime);
             if (request.ReverseSort == true) query.Reverse();
             var result = await query.ToListAsync();
-            return new ProductResponseDTO<FavoriteProduct>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
+            return new ProductsResponseDTO<FavoriteProduct>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
         }
     }
 }

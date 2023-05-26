@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using Swapy.Common.Entities;
+using Swapy.Common.DTO.Shops.Responses;
 
 namespace Swapy.BLL.Domain.Shops.Queries
 {
-    public class GetByIdShopQuery : IRequest<ShopAttribute>
+    public class GetByIdShopQuery : IRequest<ShopDetailResponseDTO>
     {
         public string ShopId { get; set; }
     }

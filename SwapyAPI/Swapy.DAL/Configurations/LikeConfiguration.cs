@@ -16,12 +16,14 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(l => l.Liker)
                    .WithMany(u => u.Likes)
                    .HasForeignKey(l => l.LikerId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
 
             builder.HasOne(l => l.UserLike)
                    .WithOne(ul => ul.Like)
                    .HasForeignKey<UserLike>(ul => ul.LikeId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired(false);
         }
     }
 }

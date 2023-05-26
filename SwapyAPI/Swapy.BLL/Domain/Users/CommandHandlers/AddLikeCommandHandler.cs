@@ -10,27 +10,35 @@ namespace Swapy.BLL.Domain.Users.CommandHandlers
 {
     public class AddLikeCommandHandler : IRequestHandler<AddLikeCommand, Like>
     {
-        private readonly string _userId;
+        private readonly UserManager<User> _userManager;
         private readonly ILikeRepository _likeRepository;
         private readonly IUserLikeRepository _userLikeRepository;
 
-        public AddLikeCommandHandler(ILikeRepository likeRepository, IUserLikeRepository userLikeRepository)
+        public AddLikeCommandHandler(ILikeRepository likeRepository, IUserLikeRepository userLikeRepository, UserManager<User> userManager)
         {
+            _userManager = userManager;
             _likeRepository = likeRepository;
             _userLikeRepository = userLikeRepository;
         }
 
         public async Task<Like> Handle(AddLikeCommand request, CancellationToken cancellationToken)
         {
-            if (_userId.Equals(request.RecipientId)) throw new DuplicateValueException("The provided RecipientId and RecepientId are the same");
+            if(await _userLikeRepository.CheckUserLikeAsync(request.UserId, request.RecipientId)) throw new DuplicateValueException("The provided LikerId already liked Recepient");
+
+            if (request.UserId.Equals(request.RecipientId)) throw new DuplicateValueException("The provided LikerId and RecepientId are the same");
 
             if (request.Type != UserType.Seller) throw new InvalidOperationException("The provided item Id can't like other users");
             
-            var like = new Like { LikerId = _userId };
-            
-            await _likeRepository.CreateAsync(like);
+            var like = new Like() { LikerId = request.UserId };
             var userLike = new UserLike(request.RecipientId, like.Id);
             await _userLikeRepository.CreateAsync(userLike);
+            
+            like.UserLikeId = userLike.Id;
+            await _likeRepository.CreateAsync(like);
+
+            var user = await _userManager.FindByIdAsync(request.RecipientId);
+            user.LikesCount++;
+            await _userManager.UpdateAsync(user);
 
             return like;
         }

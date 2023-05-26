@@ -21,7 +21,8 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(us => us.Recipient)
                    .WithMany(s => s.SubscriptionsRecipient)
                    .HasForeignKey(us => us.RecipientId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     }
 }
