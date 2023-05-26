@@ -7,5 +7,6 @@ namespace Swapy.DAL.Interfaces
         Task<IEnumerable<UserLike>> GetAllByUserIdAsync(string userId);
         Task<int> GetCountByUserIdAsync(string userId);
         Task<bool> CheckUserLikeAsync(string likerId, string recipientId);
+        Task<UserLike> GetUserLikeByRecipientAsync(string likerId, string recipientId);
     }
 }

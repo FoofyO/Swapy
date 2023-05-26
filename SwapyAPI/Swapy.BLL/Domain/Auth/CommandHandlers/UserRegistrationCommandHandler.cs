@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.BLL.Interfaces;
-using Swapy.Common.DTO;
+using Swapy.Common.DTO.Auth.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
@@ -13,8 +13,8 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
     public class UserRegistrationCommandHandler : IRequestHandler<UserRegistrationCommand, AuthResponseDTO>
     {
-        private readonly IUserTokenService _userTokenService;
         private readonly UserManager<User> _userManager;
+        private readonly IUserTokenService _userTokenService;
         private readonly IUserTokenRepository _userTokenRepository;
 
         public UserRegistrationCommandHandler(UserManager<User> userManager, IUserTokenRepository userTokenRepository, IUserTokenService userTokenService)

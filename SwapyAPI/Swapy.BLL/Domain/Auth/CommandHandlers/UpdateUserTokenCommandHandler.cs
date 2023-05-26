@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.BLL.Interfaces;
-using Swapy.Common.DTO;
+using Swapy.Common.DTO.Auth.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
@@ -12,8 +12,8 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
     public class UpdateUserTokenCommandHandler : IRequestHandler<UpdateUserTokenCommand, AuthResponseDTO>
     {
-        private readonly IUserTokenService _userTokenService;
         private readonly UserManager<User> _userManager;
+        private readonly IUserTokenService _userTokenService;
         private readonly IUserTokenRepository _refreshTokenRepository;
 
         public UpdateUserTokenCommandHandler(UserManager<User> userManager, IUserTokenRepository refreshTokenRepository, IUserTokenService userTokenService)
@@ -26,7 +26,6 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
         public async Task<AuthResponseDTO> Handle(UpdateUserTokenCommand request, CancellationToken cancellationToken)
         {
             var user = new User();
-            var userId = request.UserId;
             var userToken = new UserToken();
             var accessToken = request.OldAccessToken;
             var refreshToken = request.OldRefreshToken;
@@ -46,7 +45,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 
             if (expirationTime < DateTime.Now)
             {
-                user = await _userManager.FindByIdAsync(userId);
+                user = await _userManager.FindByIdAsync(request.UserId);
                 await _refreshTokenRepository.DeleteAsync(userToken);
 
                 if (userToken.ExpiresAt < DateTime.Now) throw new TokenExpiredException("The provided Refresh token has expired");
@@ -59,7 +58,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
                 await _refreshTokenRepository.CreateAsync(new UserToken(accessToken, refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
             }
 
-            var authDTO = new AuthResponseDTO { UserId = userId, Type = user.Type, AccessToken = accessToken, RefreshToken = refreshToken };
+            var authDTO = new AuthResponseDTO { UserId = user.Id, Type = user.Type, AccessToken = accessToken, RefreshToken = refreshToken };
             return authDTO;
         }
     }

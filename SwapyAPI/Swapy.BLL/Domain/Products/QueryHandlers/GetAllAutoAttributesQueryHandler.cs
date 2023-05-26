@@ -7,7 +7,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
-    public class GetAllAutoAttributesQueryHandler : IRequestHandler<GetAllAutoAttributesQuery, ProductResponseDTO<AutoAttribute>>
+    public class GetAllAutoAttributesQueryHandler : IRequestHandler<GetAllAutoAttributesQuery, ProductsResponseDTO<AutoAttribute>>
     {
         private readonly IAutoAttributeRepository _autoAttributeRepository;
 
@@ -16,7 +16,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             _autoAttributeRepository = autoAttributeRepository;
         }
 
-        public async Task<ProductResponseDTO<AutoAttribute>> Handle(GetAllAutoAttributesQuery request, CancellationToken cancellationToken)
+        public async Task<ProductsResponseDTO<AutoAttribute>> Handle(GetAllAutoAttributesQuery request, CancellationToken cancellationToken)
         {
             var query = await _autoAttributeRepository.GetByPageAsync(request.Page, request.PageSize);
 
@@ -45,7 +45,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             else query.OrderBy(x => x.Product.DateTime);
             if (request.ReverseSort == true) query.Reverse();
             var result = await query.ToListAsync();
-            return new ProductResponseDTO<AutoAttribute>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
+            return new ProductsResponseDTO<AutoAttribute>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
         }
     }
 }

@@ -10,7 +10,6 @@ using MediatR;
 using System.Reflection;
 using Swapy.BLL.Domain.Auth.CommandHandlers;
 using Swapy.BLL.Domain.Auth.Commands;
-using Swapy.Common.DTO;
 using Swapy.BLL.Domain.Chats.Commands;
 using Swapy.BLL.Domain.Chats.Queries;
 using Swapy.BLL.Domain.Products.Commands;
@@ -31,6 +30,10 @@ using System.Security.Claims;
 using Microsoft.OpenApi.Models;
 using Swapy.API.Middleware;
 using Swapy.Common.DTO.Products.Responses;
+using Swapy.Common.DTO.Auth.Responses;
+using System.Text.Json.Serialization;
+using Swapy.Common.DTO.Shops.Responses;
+using Swapy.Common.DTO.Users.Responses;
 
 namespace Swapy.API
 {
@@ -73,11 +76,23 @@ namespace Swapy.API
                 });
             });
 
+
+            /// <summary>
+            /// Database Registration
+            /// </summary>
             builder.Services.AddDbContext<SwapyDbContext>(option =>
             {
                 option.UseSqlServer(builder.Configuration.GetConnectionString("SamedSQL"));
             });
 
+
+            /// <summary>
+            /// JSON Registration
+            /// </summary>
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+            });
 
             /// <summary>
             /// Repository Registration
@@ -153,35 +168,35 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<CheckSubscriptionQuery, bool>, CheckSubscriptionQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<CreateChatCommand, Chat>, CreateChatCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<EmailCommand, bool>, CheckEmailCommandHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetAllAnimalAttributesQuery, ProductResponseDTO<AnimalAttribute>>, GetAllAnimalAttributesQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetAllAnimalAttributesQuery, ProductResponseDTO<AnimalAttribute>>, GetAllAnimalAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllAnimalAttributesQuery, ProductsResponseDTO<AnimalAttribute>>, GetAllAnimalAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllAnimalAttributesQuery, ProductsResponseDTO<AnimalAttribute>>, GetAllAnimalAttributesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllAnimalBreedsQuery, IEnumerable<AnimalBreed>>, GetAllAnimalBreedsQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetAllAutoAttributesQuery, ProductResponseDTO<AutoAttribute>>, GetAllAutoAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllAutoAttributesQuery, ProductsResponseDTO<AutoAttribute>>, GetAllAutoAttributesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllAutoBrandsQuery, IEnumerable<AutoBrand>>, GetAllAutoBrandsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllBuyerChatsQuery, IEnumerable<Chat>>, GetAllBuyerChatsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllCitiesQuery, IEnumerable<City>>, GetAllCitiesQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetAllClothesAttributesQuery, ProductResponseDTO<ClothesAttribute>>, GetAllClothesAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllClothesAttributesQuery, ProductsResponseDTO<ClothesAttribute>>, GetAllClothesAttributesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllClothesBrandsQuery, IEnumerable<ClothesBrand>>, GetAllClothesBrandsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllClothesSeasonsQuery, IEnumerable<ClothesSeason>>, GetAllClothesSeasonsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllClothesSizesQuery, IEnumerable<ClothesSize>>, GetAllClothesSizesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllClothesViewsQuery, IEnumerable<ClothesView>>, GetAllClothesViewsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllColorsQuery, IEnumerable<Color>>, GetAllColorsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllCurrenciesQuery, IEnumerable<Currency>>, GetAllCurrenciesQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetAllElectronicAttributesQuery, ProductResponseDTO<ElectronicAttribute>>, GetAllElectronicAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllElectronicAttributesQuery, ProductsResponseDTO<ElectronicAttribute>>, GetAllElectronicAttributesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllElectronicBrandsQuery, IEnumerable<ElectronicBrand>>, GetAllElectronicBrandsQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetAllFavoriteProductsQuery, ProductResponseDTO<FavoriteProduct>>, GetAllFavoriteProductsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllFavoriteProductsQuery, ProductsResponseDTO<FavoriteProduct>>, GetAllFavoriteProductsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllFuelTypesQuery, IEnumerable<FuelType>>, GetAllFuelTypesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllGendersQuery, IEnumerable<Gender>>, GetAllGendersQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetAllItemAttributesQuery, ProductResponseDTO<ItemAttribute>>, GetAllItemAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllItemAttributesQuery, ProductsResponseDTO<ItemAttribute>>, GetAllItemAttributesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllMemoriesQuery, IEnumerable<Memory>>, GetAllMemoriesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllModelsQuery, IEnumerable<Model>>, GetAllModelsQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetAllProductsQuery, ProductResponseDTO<Product>>, GetAllProductsQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetAllRealEstateAttributesQuery, ProductResponseDTO<RealEstateAttribute>>, GetAllRealEstateAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllProductsQuery, ProductsResponseDTO<Product>>, GetAllProductsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllRealEstateAttributesQuery, ProductsResponseDTO<RealEstateAttribute>>, GetAllRealEstateAttributesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllScreenDiagonalsQuery, IEnumerable<ScreenDiagonal>>, GetAllScreenDiagonalsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllScreenResolutionsQuery, IEnumerable<ScreenResolution>>, GetAllScreenResolutionsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllSellerChatsQuery, IEnumerable<Chat>>, GetAllSellerChatsQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetAllShopsQuery, IEnumerable<ShopAttribute>>, GetAllShopsQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetAllTVAttributesQuery, ProductResponseDTO<TVAttribute>>, GetAllTVAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllShopsQuery, ShopsResponseDTO>, GetAllShopsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllTVAttributesQuery, ProductsResponseDTO<TVAttribute>>, GetAllTVAttributesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllTVBrandsQuery, IEnumerable<TVBrand>>, GetAllTVBrandsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllTVTypesQuery, IEnumerable<TVType>>, GetAllTVTypesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllTransmissionTypesQuery, IEnumerable<TransmissionType>>, GetAllTransmissionTypesQueryHandler>();
@@ -192,12 +207,10 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<GetByIdFavoriteProductQuery, FavoriteProduct>, GetByIdFavoriteProductQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetByIdItemAttributeQuery, ItemAttribute>, GetByIdItemAttributeQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetByIdRealEstateAttributeQuery, RealEstateAttribute>, GetByIdRealEstateAttributeQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetByIdShopQuery, ShopAttribute>, GetByIdShopQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetByIdShopQuery, ShopDetailResponseDTO>, GetByIdShopQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetByIdTVAttributeQuery, TVAttribute>, GetByIdTVAttributeQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetByIdUserQuery, User>, GetByIdUserQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetByIdUserQuery, UserResponseDTO>, GetByIdUserQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetDetailChatQuery, Chat>, GetDetailChatQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetUserLikesCountQuery, int>, GetUserLikesCountQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetUserSubscriptionsCountQuery, int>, GetUserSubscriptionsCountQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetUserSubscriptionsQuery, IEnumerable<Subscription>>, GetUserSubscriptionsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<IncrementProductViewsCommand, Unit>, IncrementProductViewsCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<LoginCommand, AuthResponseDTO>, LoginCommandHandler>();
@@ -214,6 +227,7 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<RemoveRealEstateAttributeCommand, Unit>, RemoveRealEstateAttributeCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<RemoveSubscriptionCommand, Unit>, RemoveSubscriptionCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<RemoveTVAttributeCommand, Unit>, RemoveTVAttributeCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<RemoveUserCommand, Unit>, RemoveUserCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<SendMessageCommand, Message>, SendMessageCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<ShopNameCommand, bool>, CheckShopNameCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<ShopRegistrationCommand, AuthResponseDTO>, ShopRegistrationCommandHandler>();
@@ -253,7 +267,7 @@ namespace Swapy.API
                     policy.AllowAnyHeader();
                 });
             });
-
+            
 
             /// <summary>
             /// Register Identity Service
@@ -290,7 +304,7 @@ namespace Swapy.API
                 app.UseSwaggerUI();
             }
 
-            app.UseCors("Default");
+            app.UseCors();
 
             app.UseRouting();
             

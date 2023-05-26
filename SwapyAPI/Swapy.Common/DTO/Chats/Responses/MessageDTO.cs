@@ -1,4 +1,4 @@
-﻿namespace Swapy.Common.DTO 
+﻿namespace Swapy.Common.DTO.Chats.Responses
 {
     public class MessageDTO
     {
@@ -9,4 +9,4 @@
         public string ChatId { get; set; }
         public string SenderId { get; set; }
     }
-} 
+}

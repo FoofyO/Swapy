@@ -16,12 +16,14 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(s => s.Subscriber)
                    .WithMany(u => u.Subscriptions)
                    .HasForeignKey(s => s.SubscriberId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
 
             builder.HasOne(s => s.UserSubscription)
                    .WithOne(us => us.Subscription)
                    .HasForeignKey<UserSubscription>(us => us.SubscriptionId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired(false);
         }
     }
 }

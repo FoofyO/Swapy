@@ -7,7 +7,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
-    public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, ProductResponseDTO<Product>>
+    public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, ProductsResponseDTO<Product>>
     {
         private readonly IProductRepository _productRepository;
 
@@ -16,7 +16,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             _productRepository = productRepository;
         }
         
-        public async Task<ProductResponseDTO<Product>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
+        public async Task<ProductsResponseDTO<Product>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
             var query = await _productRepository.GetByPageAsync(request.Page, request.PageSize);
 
@@ -33,7 +33,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             else query.OrderBy(x => x.DateTime);
             if (request.ReverseSort == true) query.Reverse();
             var result = await query.ToListAsync();
-            return new ProductResponseDTO<Product>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
+            return new ProductsResponseDTO<Product>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
         }
     }
 }

@@ -1,14 +1,14 @@
 ﻿using MediatR;
-using Swapy.Common.Entities;
+using Swapy.Common.DTO.Shops.Responses;
 
 namespace Swapy.BLL.Domain.Shops.Queries
 {
-    public class GetAllShopsQuery : IRequest<IEnumerable<ShopAttribute>>
+    public class GetAllShopsQuery : IRequest<ShopsResponseDTO>
     {
         public string Title { get; set; }
         public int Page { get; set; }
         public int PageSize { get; set; }
-        public bool SortByViews { get; set; }
-        public bool ReverseSort { get; set; }
+        public bool? SortByViews { get; set; }
+        public bool? ReverseSort { get; set; }
     }
 }

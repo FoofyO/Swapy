@@ -48,7 +48,10 @@ namespace Swapy.API.Middleware
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, userToken.UserId)
+                new Claim(ClaimTypes.Hash, userToken.AccessToken),
+                new Claim(ClaimTypes.NameIdentifier, userToken.UserId),
+                new Claim(ClaimTypes.Authentication, userToken.RefreshToken),
+                new Claim(ClaimTypes.Role, userToken.User.Type.ToString())
             };
 
             var identity = new ClaimsIdentity(claims, Scheme.Name);

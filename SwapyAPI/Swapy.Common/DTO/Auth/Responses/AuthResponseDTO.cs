@@ -1,6 +1,6 @@
 ﻿using Swapy.Common.Enums;
 
-namespace Swapy.Common.DTO
+namespace Swapy.Common.DTO.Auth.Responses
 {
     public class AuthResponseDTO
     {

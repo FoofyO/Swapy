@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.BLL.Domain.Categories.Queries;
 using Swapy.Common.DTO.Categories.Requests.Queries;
-using Swapy.Common.Entities;
 
 namespace Swapy.API.Controllers
 {
@@ -16,10 +15,9 @@ namespace Swapy.API.Controllers
 
         public CategoriesController(IMediator mediator) => _mediator = mediator;
 
-        [HttpGet]
-        [Route("ping")]
+        [HttpGet("ping")]
         [Authorize]
-        public IActionResult Ping()
+        public async Task<IActionResult> Ping()
         {
             return Ok("ping");
         }
@@ -88,17 +86,15 @@ namespace Swapy.API.Controllers
         }
 
         [HttpHead]
-        [Route("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult Head()
+        public async Task<IActionResult> Head()
         {
             return Ok();
         }
 
         [HttpOptions]
-        [Route("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<string> Options()
+        public async Task<ActionResult<string>> Options()
         {
             return Ok("x4 GET, HEAD, OPTIONS");
         }

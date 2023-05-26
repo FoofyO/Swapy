@@ -1,4 +1,4 @@
-﻿namespace Swapy.Common.DTO
+﻿namespace Swapy.Common.DTO.Chats.Responses
 {
     public class ChatDTO
     {

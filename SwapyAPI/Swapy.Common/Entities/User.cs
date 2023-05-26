@@ -14,6 +14,9 @@ namespace Swapy.Common.Entities
         public UserToken UserToken { get; set; }
         public string ShopAttributeId { get; set; }
         public ShopAttribute ShopAttribute { get; set; }
+        public int LikesCount { get; set; }
+        public int ProductsCount { get; set; }
+        public int SubscriptionsCount { get; set; }
 
         public ICollection<Like> Likes { get; set; } = new List<Like>();
         public ICollection<Chat> ChatsAsBuyer { get; set; } = new List<Chat>();

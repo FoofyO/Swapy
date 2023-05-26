@@ -5,6 +5,6 @@ namespace Swapy.BLL.Domain.Chats.Queries
 {
     public class GetAllBuyerChatsQuery : IRequest<IEnumerable<Chat>>
     {
-
+        public string UserId { get; set; }
     } 
 }

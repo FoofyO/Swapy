@@ -60,6 +60,7 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(s => s.User)
                    .WithOne(u => u.ShopAttribute)
                    .HasForeignKey<User>(u => u.ShopAttributeId)
+                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

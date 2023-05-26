@@ -4,7 +4,7 @@ namespace Swapy.BLL.Domain.Shops.Commands
 {
     public class UpdateShopCommand : IRequest<Unit>
     {
-        public string ShopId { get; set; }
+        public string UserId { get; set; }
         public string ShopName { get; set; }
         public string Description { get; set; }
         public string Location { get; set; }

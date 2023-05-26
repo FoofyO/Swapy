@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.BLL.Domain.Auth.Commands;
-using Swapy.Common.DTO;
+using Swapy.Common.DTO.Auth.Requests;
+using Swapy.Common.DTO.Auth.Responses;
 using Swapy.Common.Exceptions;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Authentication;
+using System.Security.Claims;
 
 namespace Swapy.API.Controllers
 {
@@ -18,24 +20,28 @@ namespace Swapy.API.Controllers
 
         public AuthController(IMediator mediator) => _mediator = mediator;
 
-        [HttpGet]
-        [Route("ping")]
+        [HttpGet("ping")]
         [Authorize]
-        public IActionResult Ping()
+        public async Task<IActionResult> Ping()
         {
             return Ok("ping");
         }
 
-        [HttpPost]
-        [Route("login")]
+        [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<AuthResponseDTO>> LoginAsync(LoginCommand command)
+        public async Task<ActionResult<AuthResponseDTO>> LoginAsync(LoginCommandDTO dto)
         {
             try
             {
+                var command = new LoginCommand()
+                {
+                    EmailOrPhone = dto.emailorphone,
+                    Password = dto.password
+                };
+
                 var result = await _mediator.Send(command);
                 return Ok(result);
             }
@@ -54,16 +60,24 @@ namespace Swapy.API.Controllers
         }
 
 
-        [HttpPost]
-        [Route("register/user")]
+        [HttpPost("register/user")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<AuthResponseDTO>> UserRegistrationAsync(UserRegistrationCommand command)
+        public async Task<ActionResult<AuthResponseDTO>> UserRegistrationAsync(UserRegistrationCommandDTO dto)
         {
             try
             {
+                var command = new UserRegistrationCommand()
+                {
+                    FirstName = dto.firstname,
+                    LastName = dto.lastname,
+                    Email = dto.email,
+                    PhoneNumber = dto.phonenumber,
+                    Password = dto.password
+                };
+
                 var result = await _mediator.Send(command);
                 return Ok(result);
             }
@@ -82,16 +96,23 @@ namespace Swapy.API.Controllers
         }
 
 
-        [HttpPost]
-        [Route("register/shop")]
+        [HttpPost("register/shop")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<AuthResponseDTO>> ShopRegistrationAsync(ShopRegistrationCommand command)
+        public async Task<ActionResult<AuthResponseDTO>> ShopRegistrationAsync(ShopRegistrationCommandDTO dto)
         {
             try
             {
+                var command = new ShopRegistrationCommand()
+                {
+                    ShopName = dto.shopname,
+                    Email = dto.email,
+                    PhoneNumber = dto.phonenumber,
+                    Password = dto.password
+                };
+
                 var result = await _mediator.Send(command);
                 return Ok(result);
             }
@@ -110,16 +131,25 @@ namespace Swapy.API.Controllers
         }
 
 
-        [HttpGet]
-        [Route("refresh/{oldRefreshToken}")]
+        [HttpGet("refresh/{oldRefreshToken}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<AuthResponseDTO>> RefreshAsync(UpdateUserTokenCommand command)
+        public async Task<ActionResult<AuthResponseDTO>> RefreshAsync(UpdateUserTokenCommandDTO dto)
         {
             try
             {
+                var accessToken = User.FindFirstValue(ClaimTypes.Hash);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var refreshToken = User.FindFirstValue(ClaimTypes.Authentication);
+                var command = new UpdateUserTokenCommand()
+                {
+                    UserId = userId,
+                    OldAccessToken = accessToken,
+                    OldRefreshToken = refreshToken
+                };
+
                 var result = await _mediator.Send(command);
                 return Ok(result);
             }
@@ -138,15 +168,21 @@ namespace Swapy.API.Controllers
         }
 
 
-        [HttpGet]
-        [Route("logout/{refreshToken}")]
+        [HttpGet("logout/{refreshToken}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> LogoutAsync(LogoutCommand command)
+        public async Task<IActionResult> LogoutAsync()
         {
             try
             {
+                var refreshToken = User.FindFirstValue(ClaimTypes.Authentication);
+                var command = new LogoutCommand()
+                {
+                    RefreshToken = refreshToken  
+                };
+
                 var result = await _mediator.Send(command);
                 return NoContent();
             }
@@ -162,17 +198,45 @@ namespace Swapy.API.Controllers
         }
 
 
-        [HttpGet]
-        [Route("check/shopname")]
+        [HttpGet("check")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<bool>> CheckShopNameAsync(ShopNameCommand command)
+        public async Task<ActionResult<bool>> Check([FromQuery] CheckCommandDTO dto)
         {
             try
             {
-                var result = await _mediator.Send(command);
-                return Ok(result);
+                if (!string.IsNullOrEmpty(dto.email) && !string.IsNullOrEmpty(dto.phonenumber) && string.IsNullOrEmpty(dto.shopname))
+                {
+                    var command = new EmailCommand()
+                    {
+                        Email = dto.email
+                    };
+
+                    var result = await _mediator.Send(command);
+                    return Ok(result);
+                }
+                else if (string.IsNullOrEmpty(dto.email) && !string.IsNullOrEmpty(dto.phonenumber) && string.IsNullOrEmpty(dto.shopname))
+                {
+                    var command = new PhoneNumberCommand()
+                    {
+                        PhoneNumber = dto.phonenumber
+                    };
+
+                    var result = await _mediator.Send(command);
+                    return Ok(result);
+                }
+                else if (string.IsNullOrEmpty(dto.email) && string.IsNullOrEmpty(dto.phonenumber) && !string.IsNullOrEmpty(dto.shopname))
+                {
+                    var command = new ShopNameCommand()
+                    {
+                        ShopName = dto.shopname
+                    };
+
+                    var result = await _mediator.Send(command);
+                    return Ok(result);
+                }
+                else throw new Exception("You can't send more than 1 parameter");
             }
             catch (Exception ex)
             {
@@ -184,71 +248,20 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-
-
-        [HttpGet]
-        [Route("check/email")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<bool>> CheckEmailAsync(EmailCommand command)
-        {
-            try
-            {
-                var result = await _mediator.Send(command);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                if (ex is ValidationException)
-                {
-                    return BadRequest(ex.Message);
-                }
-
-                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
-            }
-        }
-
-
-        [HttpGet]
-        [Route("check/phonenumber")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<bool>> CheckPhoneNumberAsync(PhoneNumberCommand command)
-        {
-            try
-            {
-                var result = await _mediator.Send(command);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                if (ex is ValidationException)
-                {
-                    return BadRequest(ex.Message);
-                }
-
-                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
-            }
-        }
-
 
         [HttpHead]
-        [Route("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult Head()
+        public async Task<IActionResult> Head()
         {
             return Ok();
         }
 
 
         [HttpOptions]
-        [Route("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<string> Options()
+        public async Task<ActionResult<string>> Options()
         {
-            return Ok("x3 GET, x2 POST, HEAD, OPTIONS");
+            return Ok("x4 GET, x3 POST, HEAD, OPTIONS");
         }
     }
 }

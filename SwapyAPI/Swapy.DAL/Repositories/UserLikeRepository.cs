@@ -62,5 +62,12 @@ namespace Swapy.DAL.Repositories
             
             return true;
         }
+
+        public async Task<UserLike> GetUserLikeByRecipientAsync(string likerId, string recipientId)
+        {
+            var item = await _context.UsersLikes.Include(ul => ul.Like).FirstOrDefaultAsync(ul => ul.RecipientId.Equals(recipientId) && ul.Like.LikerId.Equals(likerId));
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {likerId} id not found");
+            return item;
+        }
     }
 }

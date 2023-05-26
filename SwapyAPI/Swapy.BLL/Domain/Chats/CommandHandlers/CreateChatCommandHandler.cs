@@ -7,7 +7,6 @@ namespace Swapy.BLL.Domain.Chats.CommandHandlers
 {
     public class CreateChatCommandHandler : IRequestHandler<CreateChatCommand, Chat>
     {
-        private readonly string _userId; 
         private readonly IChatRepository _chatRepository;
         private readonly IProductRepository _productRepository;
 
@@ -19,7 +18,7 @@ namespace Swapy.BLL.Domain.Chats.CommandHandlers
         public async Task<Chat> Handle(CreateChatCommand request, CancellationToken cancellationToken)
         {
             await _productRepository.GetByIdAsync(request.ProductId);
-            var chat = new Chat(request.ProductId, _userId);
+            var chat = new Chat(request.ProductId, request.UserId);
             await _chatRepository.CreateAsync(chat);
             return chat;
         } 
