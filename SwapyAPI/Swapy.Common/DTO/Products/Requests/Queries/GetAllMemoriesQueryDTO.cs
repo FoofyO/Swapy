@@ -2,6 +2,6 @@
 {
     public class GetAllMemoriesQueryDTO
     {
-        public string ModelId { get; set; }
+        public string modelId { get; set; }
     }
 }

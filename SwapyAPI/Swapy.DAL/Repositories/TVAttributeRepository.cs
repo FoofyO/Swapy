@@ -38,6 +38,13 @@ namespace Swapy.DAL.Repositories
             return item;
         }
 
+        public async Task<TVAttribute> GetByProductIdAsync(string productId)
+        {
+            var item = await _context.TVAttributes.Where(x => x.ProductId.Equals(productId)).FirstOrDefaultAsync();
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
+            return item;
+        }
+
         public async Task<IEnumerable<TVAttribute>> GetAllAsync()
         {
             return await _context.TVAttributes.ToListAsync();
@@ -64,7 +71,7 @@ namespace Swapy.DAL.Repositories
                                         .AsQueryable();
         }
 
-        public async Task<TVAttribute> GetDetailByIdAsync(string id)
+        public async Task<TVAttribute> GetDetailByIdAsync(string productId)
         {
             var item = await _context.TVAttributes.Include(tv => tv.Product)
                                                     .ThenInclude(p => p.Images)
@@ -78,9 +85,9 @@ namespace Swapy.DAL.Repositories
                                                   .Include(tv => tv.ScreenResolution)
                                                   .Include(tv => tv.ScreenDiagonal)
                                                   .Include(tv => tv.TVType)
-                                                  .FirstOrDefaultAsync(a => a.Id.Equals(id));
+                                                  .FirstOrDefaultAsync(a => a.ProductId.Equals(productId));
 
-            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
             return item;
         }
     }

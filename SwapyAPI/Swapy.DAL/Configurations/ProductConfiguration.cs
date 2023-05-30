@@ -77,36 +77,43 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(p => p.AutoAttribute)
                    .WithOne(a => a.Product)
                    .HasForeignKey<AutoAttribute>(s => s.ProductId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired(false);
 
             builder.HasOne(p => p.ElectronicAttribute)
                    .WithOne(e => e.Product)
                    .HasForeignKey<ElectronicAttribute>(s => s.ProductId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired(false);
 
             builder.HasOne(p => p.ItemAttribute)
                    .WithOne(i => i.Product)
                    .HasForeignKey<ItemAttribute>(s => s.ProductId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired(false);
 
             builder.HasOne(p => p.AnimalAttribute)
                    .WithOne(a => a.Product)
                    .HasForeignKey<AnimalAttribute>(s => s.ProductId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired(false);
 
             builder.HasOne(p => p.TVAttribute)
                    .WithOne(t => t.Product)
                    .HasForeignKey<TVAttribute>(s => s.ProductId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired(false);
 
             builder.HasOne(p => p.RealEstateAttribute)
                    .WithOne(r => r.Product)
                    .HasForeignKey<RealEstateAttribute>(s => s.ProductId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired(false);
 
             builder.HasMany(p => p.FavoriteProducts)
                    .WithOne(f => f.Product)
                    .HasForeignKey(f => f.ProductId)
+                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired(false);
         }
     }

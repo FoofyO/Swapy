@@ -18,7 +18,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 
         public async Task<Unit> Handle(UpdateAutoAttributeCommand request, CancellationToken cancellationToken)
         {
-            var autoAttribute = await _autoAttributeRepository.GetByIdAsync(request.AutoAttributeId);
+            var autoAttribute = await _autoAttributeRepository.GetByProductIdAsync(request.ProductId);
             var product = await _productRepository.GetByIdAsync(autoAttribute.ProductId);
 
             if (!request.UserId.Equals(product.UserId)) throw new NoAccessException("No access to uninstall this product");

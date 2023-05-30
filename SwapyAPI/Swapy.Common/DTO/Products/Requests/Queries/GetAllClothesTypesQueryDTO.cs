@@ -2,6 +2,6 @@
 {
     public class GetAllClothesTypesQueryDTO
     {
-        public string GenderId { get; set; }
+        public string genderId { get; set; }
     }
 }

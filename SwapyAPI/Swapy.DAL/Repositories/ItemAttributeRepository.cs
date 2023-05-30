@@ -38,6 +38,13 @@ namespace Swapy.DAL.Repositories
             return item;
         }
 
+        public async Task<ItemAttribute> GetByProductIdAsync(string productId)
+        {
+            var item = await _context.ItemAttributes.Where(x => x.ProductId.Equals(productId)).FirstOrDefaultAsync();
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
+            return item;
+        }
+
         public async Task<IEnumerable<ItemAttribute>> GetAllAsync()
         {
             return await _context.ItemAttributes.ToListAsync();
@@ -61,7 +68,7 @@ namespace Swapy.DAL.Repositories
                                           .AsQueryable();
         }
 
-        public async Task<ItemAttribute> GetDetailByIdAsync(string id)
+        public async Task<ItemAttribute> GetDetailByIdAsync(string productId)
         {
             var item = await _context.ItemAttributes.Include(a => a.Product)
                                                         .ThenInclude(p => p.Images)
@@ -72,9 +79,9 @@ namespace Swapy.DAL.Repositories
                                                     .Include(a => a.Product)
                                                         .ThenInclude(p => p.Subcategory)
                                                     .Include(i => i.ItemType)
-                                                    .FirstOrDefaultAsync(a => a.Id.Equals(id));
+                                                    .FirstOrDefaultAsync(a => a.ProductId.Equals(productId));
 
-            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
             return item;
         }
     }

@@ -1,20 +1,19 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Products.Queries;
-using Swapy.Common.Entities;
+using Swapy.Common.DTO.Products.Responses;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
-    public class GetAllScreenResolutionsQueryHandler : IRequestHandler<GetAllScreenResolutionsQuery, IEnumerable<ScreenResolution>>
+    public class GetAllScreenResolutionsQueryHandler : IRequestHandler<GetAllScreenResolutionsQuery, IEnumerable<SpecificationResponseDTO>>
     {
         private readonly IScreenResolutionRepository _screenResolutionRepository;
 
         public GetAllScreenResolutionsQueryHandler(IScreenResolutionRepository screenResolutionRepository) => _screenResolutionRepository = screenResolutionRepository;
 
-        public async Task<IEnumerable<ScreenResolution>> Handle(GetAllScreenResolutionsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SpecificationResponseDTO>> Handle(GetAllScreenResolutionsQuery request, CancellationToken cancellationToken)
         {
-            var result = await _screenResolutionRepository.GetAllAsync();
+            var result = (await _screenResolutionRepository.GetAllAsync()).Select(x => new SpecificationResponseDTO(x.Id, x.Name));
             return result;
         }
     }

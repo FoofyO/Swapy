@@ -4,11 +4,11 @@ namespace Swapy.Common.DTO.Products.Requests.Commands
 {
     public class AddTVAttributeCommandDTO : AddProductCommandDTO<TVAttribute>
     {
-        public bool IsNew { get; set; }
-        public bool IsSmart { get; set; }
-        public string TVTypeId { get; set; }
-        public string TVBrandId { get; set; }
-        public string ScreenResolutionId { get; set; }
-        public string ScreenDiagonalId { get; set; }
+        public bool isNew { get; set; }
+        public bool isSmart { get; set; }
+        public string tvTypeId { get; set; }
+        public string tvBrandId { get; set; }
+        public string screenResolutionId { get; set; }
+        public string screenDiagonalId { get; set; }
     }
 }

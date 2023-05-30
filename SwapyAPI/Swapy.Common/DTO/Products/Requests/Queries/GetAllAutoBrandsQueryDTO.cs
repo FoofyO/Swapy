@@ -2,6 +2,6 @@
 {
     public class GetAllAutoBrandsQueryDTO
     {
-        public List<string> AutoTypesId { get; set; }
+        public List<string> autoTypesId { get; set; }
     }
 }

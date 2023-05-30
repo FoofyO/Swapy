@@ -2,6 +2,6 @@
 {
     public class RemoveProductCommandDTO
     {
-        public string ProductId { get; set; }
+        public string productId { get; set; }
     }
 }

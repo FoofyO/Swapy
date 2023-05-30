@@ -1,8 +1,8 @@
-﻿using Swapy.Common.Entities;
+﻿using Swapy.Common.DTO.Products.Responses;
 
 namespace Swapy.BLL.Domain.Products.Queries
 {
-    public class GetAllAutoAttributesQuery : GetAllProductQuery<AutoAttribute>
+    public class GetAllAutoAttributesQuery : GetAllProductQuery<ProductResponseDTO>
     {
         public int? MiliageMin { get; set; }
         public int? MiliageMax { get; set; }

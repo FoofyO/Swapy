@@ -4,9 +4,9 @@ namespace Swapy.Common.DTO.Products.Requests.Commands
 {
     public class AddClothesAttributeCommandDTO : AddProductCommandDTO<ClothesAttribute>
     {
-        public bool IsNew { get; set; }
-        public string ClothesSeasonId { get; set; }
-        public string ClothesSizeId { get; set; }
-        public string ClothesBrandViewId { get; set; }
+        public bool isNew { get; set; }
+        public string clothesSeasonId { get; set; }
+        public string clothesSizeId { get; set; }
+        public string clothesBrandViewId { get; set; }
     }
 }

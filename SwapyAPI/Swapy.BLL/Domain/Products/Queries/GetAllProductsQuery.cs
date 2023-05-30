@@ -1,10 +1,9 @@
 ﻿using MediatR;
 using Swapy.Common.DTO.Products.Responses;
-using Swapy.Common.Entities;
 
 namespace Swapy.BLL.Domain.Products.Queries
 {
-    public class GetAllProductsQuery : GetAllProductQuery<Product>
+    public class GetAllProductsQuery : GetAllProductQuery<ProductResponseDTO>
     {
     }
 

@@ -1,5 +1,4 @@
-﻿using Swapy.BLL.Domain.Products.Queries;
-using Swapy.Common.Entities;
+﻿using Swapy.Common.Entities;
 
 namespace Swapy.BLL.Domain.Products.Commands
 {

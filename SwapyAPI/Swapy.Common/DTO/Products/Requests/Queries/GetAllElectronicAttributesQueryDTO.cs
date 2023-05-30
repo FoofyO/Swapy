@@ -4,11 +4,11 @@ namespace Swapy.Common.DTO.Products.Requests.Queries
 {
     public class GetAllElectronicAttributesQueryDTO : GetAllProductQueryDTO<ElectronicAttribute>
     {
-        public bool? IsNew { get; set; }
-        public List<string> MemoriesId { get; set; }
-        public List<string> ColorsId { get; set; }
-        public List<string> ModelsId { get; set; }
-        public List<string> BrandsId { get; set; }
-        public List<string> TypesId { get; set; }
+        public bool? isNew { get; set; }
+        public List<string> memoriesId { get; set; }
+        public List<string> colorsId { get; set; }
+        public List<string> modelsId { get; set; }
+        public List<string> brandsId { get; set; }
+        public List<string> typesId { get; set; }
     }
 }

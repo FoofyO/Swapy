@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
@@ -101,6 +102,17 @@ namespace Swapy.DAL.Repositories
         public async Task<IEnumerable<Subcategory>> GetAllItemTypesAsync()
         {
             return await _context.Subcategories.Where(s => s.Type == SubcategoryType.ItemsTypes).OrderBy(s => s.Name).ToListAsync();
+        }
+        public async Task<IEnumerable<Subcategory>> GetSequenceOfSubcategories(string subcategoryId)
+        {
+            List<Subcategory> result = new();
+            Subcategory currentSubcategory = await GetByIdAsync(subcategoryId);
+            do
+            {
+                result.Insert(0, currentSubcategory);
+                currentSubcategory = await _context.Subcategories.FindAsync(currentSubcategory.ParentSubcategoryId);
+            } while (currentSubcategory != null);
+            return result;
         }
     }
 }

@@ -2,6 +2,6 @@
 {
     public class RemoveAnimalAttributeCommandDTO
     {
-        public string AnimalAttributeId { get; set; }
+        public string animalAttributeId { get; set; }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using Swapy.Common.Entities;
+using Swapy.Common.DTO.Products.Responses;
 
 namespace Swapy.BLL.Domain.Products.Queries
 {
-    public class GetAllCurrenciesQuery : IRequest<IEnumerable<Currency>>
+    public class GetAllCurrenciesQuery : IRequest<IEnumerable<CurrencyResponseDTO>>
     {
     }
 }

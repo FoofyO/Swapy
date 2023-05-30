@@ -2,6 +2,6 @@
 {
     public class RemoveTVAttributeCommandDTO
     {
-        public string TVAttributeId { get; set; }
+        public string tvAttributeId { get; set; }
     }
 }

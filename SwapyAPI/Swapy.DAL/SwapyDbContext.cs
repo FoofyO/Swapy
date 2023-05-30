@@ -3,6 +3,7 @@ using Swapy.DAL.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Swapy.DAL
 {
@@ -12,6 +13,15 @@ namespace Swapy.DAL
         {
             //Database.EnsureDeleted();
             //Database.EnsureCreated();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.ConfigureWarnings(warnings =>
+            {
+                warnings.Ignore(CoreEventId.NavigationBaseIncludeIgnored);
+            });
+            base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

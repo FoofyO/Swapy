@@ -19,7 +19,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
         public async Task<Unit> Handle(UpdateClothesAttributeCommand request, CancellationToken cancellationToken)
         {
 
-            var clothesAttribute = await _clothesAttributeRepository.GetByIdAsync(request.ClothesAttributeId);
+            var clothesAttribute = await _clothesAttributeRepository.GetByProductIdAsync(request.ProductId);
             var product = await _productRepository.GetByIdAsync(clothesAttribute.ProductId);
             
             if (!request.UserId.Equals(product.UserId)) throw new NoAccessException("No access to update this product");

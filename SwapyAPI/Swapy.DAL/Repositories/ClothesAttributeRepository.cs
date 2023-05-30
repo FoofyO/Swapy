@@ -38,6 +38,13 @@ namespace Swapy.DAL.Repositories
             return item;
         }
 
+        public async Task<ClothesAttribute> GetByProductIdAsync(string productId)
+        {
+            var item = await _context.ClothesAttributes.Where(x => x.ProductId.Equals(productId)).FirstOrDefaultAsync();
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
+            return item;
+        }
+
         public async Task<IEnumerable<ClothesAttribute>> GetAllAsync()
         {
             return await _context.ClothesAttributes.ToListAsync();
@@ -70,7 +77,7 @@ namespace Swapy.DAL.Repositories
                                              .AsQueryable();
         }
 
-        public async Task<ClothesAttribute> GetDetailByIdAsync(string id)
+        public async Task<ClothesAttribute> GetDetailByIdAsync(string productId)
         {
             var item = await _context.ClothesAttributes.Include(c => c.Product)
                                                         .ThenInclude(p => p.Images)
@@ -90,9 +97,9 @@ namespace Swapy.DAL.Repositories
                                                        .Include(c => c.ClothesBrandView)
                                                         .ThenInclude(cbv => cbv.ClothesView)
                                                             .ThenInclude(cv => cv.Gender)
-                                                       .FirstOrDefaultAsync(a => a.Id.Equals(id));
+                                                       .FirstOrDefaultAsync(a => a.ProductId.Equals(productId));
 
-            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
             return item;
         }
     }

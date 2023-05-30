@@ -2,6 +2,6 @@
 {
     public class RemoveElectronicAttributeCommandDTO
     {
-        public string ElectronicAttributeId { get; set; }
+        public string electronicAttributeId { get; set; }
     }
 }

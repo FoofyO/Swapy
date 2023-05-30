@@ -2,6 +2,6 @@
 {
     public class RemoveClothesAttributeCommandDTO
     {
-        public string ClothesAttributeId { get; set; }
+        public string clothesAttributeId { get; set; }
     }
 }

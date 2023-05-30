@@ -30,8 +30,7 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Animals Attribute
         /// </summary>
-        [HttpPost]
-        [Route("animals")]
+        [HttpPost("animals")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -45,14 +44,14 @@ namespace Swapy.API.Controllers
                 var command = new AddAnimalAttributeCommand()
                 {
                     UserId = userId,
-                    Title = dto.Title,
-                    Description = dto.Description,
-                    Price = dto.Price,
-                    CurrencyId = dto.CurrencyId,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    AnimalBreedId = dto.AnimalBreedId
+                    Title = dto.title,
+                    Description = dto.description,
+                    Price = dto.price,
+                    CurrencyId = dto.currencyId,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    AnimalBreedId = dto.animalBreedId
                 };
 
                 var result = await _mediator.Send(command);
@@ -73,14 +72,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete]
-        [Route("animals/{id}")]
+        [HttpDelete("animals")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveAnimalAsync(RemoveAnimalAttributeCommandDTO dto)
+        public async Task<IActionResult> RemoveAnimalAsync([FromRoute] RemoveAnimalAttributeCommandDTO dto)
         {
             try
             {
@@ -88,7 +86,7 @@ namespace Swapy.API.Controllers
                 var command = new RemoveAnimalAttributeCommand()
                 {
                     UserId = userId,
-                    AnimalAttributeId = dto.AnimalAttributeId
+                    AnimalAttributeId = dto.animalAttributeId
                 };
 
                 var result = await _mediator.Send(command);
@@ -108,14 +106,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpPut]
-        [Route("animals/{id}")]
+        [HttpPut("animals")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateAnimalAsync(UpdateAnimalAttributeCommandDTO dto)
+        public async Task<IActionResult> UpdateAnimalAsync([FromQuery] UpdateAnimalAttributeCommandDTO dto)
         {
             try
             {
@@ -123,15 +120,15 @@ namespace Swapy.API.Controllers
                 var command = new UpdateAnimalAttributeCommand()
                 {
                     UserId = userId,
-                    Title = dto.Title,
-                    Description = dto.Description,
-                    Price = dto.Price,
-                    CurrencyId = dto.CurrencyId,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    AnimalAttributeId = dto.AnimalAttributeId,
-                    AnimalBreedId = dto.AnimalBreedId
+                    Title = dto.title,
+                    Description = dto.description,
+                    Price = dto.price,
+                    CurrencyId = dto.currencyId,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    ProductId = dto.productId,
+                    AnimalBreedId = dto.animalBreedId
                 };
 
                 var result = await _mediator.Send(command);
@@ -151,11 +148,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("animals")]
+        [HttpGet("animals")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllAnimalsAsync(GetAllAnimalAttributesQueryDTO dto)
+        public async Task<IActionResult> GetAllAnimalsAsync([FromQuery] GetAllAnimalAttributesQueryDTO dto)
         {
             try
             {
@@ -163,20 +159,20 @@ namespace Swapy.API.Controllers
                 var query = new GetAllAnimalAttributesQuery()
                 {
                     UserId = userId,
-                    Page = dto.Page,
-                    PageSize = dto.PageSize,
-                    Title = dto.Title,
-                    CurrencyId = dto.CurrencyId,
-                    PriceMin = dto.PriceMin,
-                    PriceMax = dto.PriceMax,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    OtherUserId = dto.OtherUserId,
-                    SortByPrice = dto.SortByPrice,
-                    ReverseSort = dto.ReverseSort,
-                    AnimalBreedsId = dto.AnimalBreedsId,
-                    AnimalTypesId = dto.AnimalTypesId
+                    Page = dto.page,
+                    PageSize = dto.pageSize,
+                    Title = dto.title,
+                    CurrencyId = dto.currencyId,
+                    PriceMin = dto.priceMin,
+                    PriceMax = dto.priceMax,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    OtherUserId = dto.otherUserId,
+                    SortByPrice = dto.sortByPrice,
+                    ReverseSort = dto.reverseSort,
+                    AnimalBreedsId = dto.animalBreedsId,
+                    AnimalTypesId = dto.animalTypesId
                 };
 
                 var result = await _mediator.Send(query);
@@ -188,17 +184,16 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("animals/{id}")]
+        [HttpGet("animals/{productId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByIdAnimalAsync(GetByIdAnimalAttributeQueryDTO dto)
+        public async Task<IActionResult> GetByIdAnimalAsync([FromRoute] GetByIdProductQueryDTO dto)
         {
             try
             {
                 var query = new GetByIdAnimalAttributeQuery()
                 {
-                    AnimalAttributeId = dto.AnimalAttributeId
+                    ProductId = dto.productId
                 };
 
                 var result = await _mediator.Send(query);
@@ -214,8 +209,7 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Auto Attribute
         /// </summary>
-        [HttpPost]
-        [Route("autos")]
+        [HttpPost("autos")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -229,21 +223,21 @@ namespace Swapy.API.Controllers
                 var command = new AddAutoAttributeCommand()
                 {
                     UserId = userId,
-                    Title = dto.Title,
-                    Description = dto.Description,
-                    Price = dto.Price,
-                    CurrencyId = dto.CurrencyId,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    Miliage = dto.Miliage,
-                    EngineCapacity = dto.EngineCapacity,
-                    ReleaseYear = dto.ReleaseYear,
-                    IsNew = dto.IsNew,
-                    FuelTypeId = dto.FuelTypeId,
-                    AutoColorId = dto.AutoColorId,
-                    TransmissionTypeId = dto.TransmissionTypeId,
-                    AutoModelId = dto.AutoModelId
+                    Title = dto.title,
+                    Description = dto.description,
+                    Price = dto.price,
+                    CurrencyId = dto.currencyId,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    Miliage = dto.miliage,
+                    EngineCapacity = dto.engineCapacity,
+                    ReleaseYear = dto.releaseYear,
+                    IsNew = dto.isNew,
+                    FuelTypeId = dto.fuelTypeId,
+                    AutoColorId = dto.autoColorId,
+                    TransmissionTypeId = dto.transmissionTypeId,
+                    AutoModelId = dto.autoModelId
                 };
 
                 var result = await _mediator.Send(command);
@@ -264,14 +258,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete]
-        [Route("autos/{id}")]
+        [HttpDelete("autos")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveAutoAsync(RemoveAutoAttributeCommandDTO dto)
+        public async Task<IActionResult> RemoveAutoAsync([FromRoute] RemoveAutoAttributeCommandDTO dto)
         {
             try
             {
@@ -279,7 +272,7 @@ namespace Swapy.API.Controllers
                 var command = new RemoveAutoAttributeCommand()
                 {
                     UserId = userId,
-                    AutoAttributeId = dto.AutoAttributeId
+                    AutoAttributeId = dto.autoAttributeId
                 };
 
                 var result = await _mediator.Send(command);
@@ -299,14 +292,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpPut]
-        [Route("autos/{id}")]
+        [HttpPut("autos")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateAutoAsync(UpdateAutoAttributeCommandDTO dto)
+        public async Task<IActionResult> UpdateAutoAsync([FromQuery] UpdateAutoAttributeCommandDTO dto)
         {
             try
             {
@@ -314,22 +306,22 @@ namespace Swapy.API.Controllers
                 var command = new UpdateAutoAttributeCommand()
                 {
                     UserId = userId,
-                    Title = dto.Title,
-                    Description = dto.Description,
-                    Price = dto.Price,
-                    CurrencyId = dto.CurrencyId,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    AutoAttributeId = dto.AutoAttributeId,
-                    Miliage = dto.Miliage,
-                    EngineCapacity = dto.EngineCapacity,
-                    ReleaseYear = dto.ReleaseYear,
-                    IsNew = dto.IsNew,
-                    FuelTypeId = dto.FuelTypeId,
-                    AutoColorId = dto.AutoColorId,
-                    TransmissionTypeId = dto.TransmissionTypeId,
-                    AutoModelId = dto.AutoModelId
+                    Title = dto.title,
+                    Description = dto.description,
+                    Price = dto.price,
+                    CurrencyId = dto.currencyId,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    ProductId = dto.productId,
+                    Miliage = dto.miliage,
+                    EngineCapacity = dto.engineCapacity,
+                    ReleaseYear = dto.releaseYear,
+                    IsNew = dto.isNew,
+                    FuelTypeId = dto.fuelTypeId,
+                    AutoColorId = dto.autoColorId,
+                    TransmissionTypeId = dto.transmissionTypeId,
+                    AutoModelId = dto.autoModelId
                 };
 
                 var result = await _mediator.Send(command);
@@ -349,11 +341,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("autos")]
+        [HttpGet("autos")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllAutosAsync(GetAllAutoAttributesQueryDTO dto)
+        public async Task<IActionResult> GetAllAutosAsync([FromQuery] GetAllAutoAttributesQueryDTO dto)
         {
             try
             {
@@ -361,30 +352,30 @@ namespace Swapy.API.Controllers
                 var query = new GetAllAutoAttributesQuery()
                 {
                     UserId = userId,
-                    Page = dto.Page,
-                    PageSize = dto.PageSize,
-                    Title = dto.Title,
-                    CurrencyId = dto.CurrencyId,
-                    PriceMin = dto.PriceMin,
-                    PriceMax = dto.PriceMax,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    OtherUserId = dto.OtherUserId,
-                    SortByPrice = dto.SortByPrice,
-                    ReverseSort = dto.ReverseSort,
-                    MiliageMin = dto.MiliageMin,
-                    MiliageMax = dto.MiliageMax,
-                    EngineCapacityMin = dto.EngineCapacityMin,
-                    EngineCapacityMax = dto.EngineCapacityMax,
-                    ReleaseYearOlder = dto.ReleaseYearOlder,
-                    ReleaseYearNewer = dto.ReleaseYearNewer,
-                    IsNew = dto.IsNew,
-                    FuelTypesId = dto.FuelTypesId,
-                    AutoColorsId = dto.AutoColorsId,
-                    TransmissionTypesId = dto.TransmissionTypesId,
-                    AutoBrandsId = dto.AutoBrandsId,
-                    AutoTypesId = dto.AutoTypesId
+                    Page = dto.page,
+                    PageSize = dto.pageSize,
+                    Title = dto.title,
+                    CurrencyId = dto.currencyId,
+                    PriceMin = dto.priceMin,
+                    PriceMax = dto.priceMax,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    OtherUserId = dto.otherUserId,
+                    SortByPrice = dto.sortByPrice,
+                    ReverseSort = dto.reverseSort,
+                    MiliageMin = dto.miliageMin,
+                    MiliageMax = dto.miliageMax,
+                    EngineCapacityMin = dto.engineCapacityMin,
+                    EngineCapacityMax = dto.engineCapacityMax,
+                    ReleaseYearOlder = dto.releaseYearOlder,
+                    ReleaseYearNewer = dto.releaseYearNewer,
+                    IsNew = dto.isNew,
+                    FuelTypesId = dto.fuelTypesId,
+                    AutoColorsId = dto.autoColorsId,
+                    TransmissionTypesId = dto.transmissionTypesId,
+                    AutoBrandsId = dto.autoBrandsId,
+                    AutoTypesId = dto.autoTypesId
                 };
                 var result = await _mediator.Send(query);
                 return Ok(result);
@@ -395,17 +386,16 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("autos/{id}")]
+        [HttpGet("autos/{productId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByIdAutoAsync(GetByIdAutoAttributeQueryDTO dto)
+        public async Task<IActionResult> GetByIdAutoAsync([FromRoute] GetByIdProductQueryDTO dto)
         {
             try
             {
                 var query = new GetByIdAutoAttributeQuery()
                 {
-                    AutoAttributeId = dto.AutoAttributeId
+                    ProductId = dto.productId
                 };
 
                 var result = await _mediator.Send(query);
@@ -421,8 +411,7 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Clothes Attribute
         /// </summary>
-        [HttpPost]
-        [Route("clothes")]
+        [HttpPost("clothes")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -436,17 +425,17 @@ namespace Swapy.API.Controllers
                 var command = new AddClothesAttributeCommand()
                 {
                     UserId = userId,
-                    Title = dto.Title,
-                    Description = dto.Description,
-                    Price = dto.Price,
-                    CurrencyId = dto.CurrencyId,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    IsNew = dto.IsNew,
-                    ClothesSeasonId = dto.ClothesSeasonId,
-                    ClothesSizeId = dto.ClothesSizeId,
-                    ClothesBrandViewId = dto.ClothesBrandViewId
+                    Title = dto.title,
+                    Description = dto.description,
+                    Price = dto.price,
+                    CurrencyId = dto.currencyId,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    IsNew = dto.isNew,
+                    ClothesSeasonId = dto.clothesSeasonId,
+                    ClothesSizeId = dto.clothesSizeId,
+                    ClothesBrandViewId = dto.clothesBrandViewId
                 };
 
                 var result = await _mediator.Send(command);
@@ -467,14 +456,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete]
-        [Route("clothes/{id}")]
+        [HttpDelete("clothes")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveClothesAsync(RemoveClothesAttributeCommandDTO dto)
+        public async Task<IActionResult> RemoveClothesAsync([FromRoute] RemoveClothesAttributeCommandDTO dto)
         {
             try
             {
@@ -482,7 +470,7 @@ namespace Swapy.API.Controllers
                 var command = new RemoveClothesAttributeCommand()
                 {
                     UserId = userId,
-                    ClothesAttributeId = dto.ClothesAttributeId
+                    ClothesAttributeId = dto.clothesAttributeId
                 };
 
                 var result = await _mediator.Send(command);
@@ -502,14 +490,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpPut]
-        [Route("clothes/{id}")]
+        [HttpPut("clothes")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateClothesAsync(UpdateClothesAttributeCommandDTO dto)
+        public async Task<IActionResult> UpdateClothesAsync([FromQuery] UpdateClothesAttributeCommandDTO dto)
         {
             try
             {
@@ -517,18 +504,18 @@ namespace Swapy.API.Controllers
                 var command = new UpdateClothesAttributeCommand()
                 {
                     UserId = userId,
-                    Title = dto.Title,
-                    Description = dto.Description,
-                    Price = dto.Price,
-                    CurrencyId = dto.CurrencyId,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    ClothesAttributeId = dto.ClothesAttributeId,
-                    IsNew = dto.IsNew,
-                    ClothesSeasonId = dto.ClothesSeasonId,
-                    ClothesSizeId = dto.ClothesSizeId,
-                    ClothesBrandViewId = dto.ClothesBrandViewId
+                    Title = dto.title,
+                    Description = dto.description,
+                    Price = dto.price,
+                    CurrencyId = dto.currencyId,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    ProductId = dto.productId,
+                    IsNew = dto.isNew,
+                    ClothesSeasonId = dto.clothesSeasonId,
+                    ClothesSizeId = dto.clothesSizeId,
+                    ClothesBrandViewId = dto.clothesBrandViewId
                 };
 
                 var result = await _mediator.Send(command);
@@ -548,11 +535,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("clothes/")]
+        [HttpGet("clothes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllClothesAsync(GetAllClothesAttributesQueryDTO dto)
+        public async Task<IActionResult> GetAllClothesAsync([FromQuery] GetAllClothesAttributesQueryDTO dto)
         {
             try
             {
@@ -560,25 +546,25 @@ namespace Swapy.API.Controllers
                 var query = new GetAllClothesAttributesQuery()
                 {
                     UserId = userId,
-                    Page = dto.Page,
-                    PageSize = dto.PageSize,
-                    Title = dto.Title,
-                    CurrencyId = dto.CurrencyId,
-                    PriceMin = dto.PriceMin,
-                    PriceMax = dto.PriceMax,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    OtherUserId = dto.OtherUserId,
-                    SortByPrice = dto.SortByPrice,
-                    ReverseSort = dto.ReverseSort,
-                    IsNew = dto.IsNew,
-                    ClothesSeasonsId = dto.ClothesSeasonsId,
-                    ClothesSizesId = dto.ClothesSizesId,
-                    ClothesBrandsId = dto.ClothesBrandsId,
-                    ClothesViewsId = dto.ClothesViewsId,
-                    ClothesTypesId = dto.ClothesTypesId,
-                    ClothesGendersId = dto.ClothesGendersId
+                    Page = dto.page,
+                    PageSize = dto.pageSize,
+                    Title = dto.title,
+                    CurrencyId = dto.currencyId,
+                    PriceMin = dto.priceMin,
+                    PriceMax = dto.priceMax,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    OtherUserId = dto.otherUserId,
+                    SortByPrice = dto.sortByPrice,
+                    ReverseSort = dto.reverseSort,
+                    IsNew = dto.isNew,
+                    ClothesSeasonsId = dto.clothesSeasonsId,
+                    ClothesSizesId = dto.clothesSizesId,
+                    ClothesBrandsId = dto.clothesBrandsId,
+                    ClothesViewsId = dto.clothesViewsId,
+                    ClothesTypesId = dto.clothesTypesId,
+                    ClothesGendersId = dto.clothesGendersId
                 };
 
                 var result = await _mediator.Send(query);
@@ -590,17 +576,16 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("clothes/{id}")]
+        [HttpGet("clothes/{productId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByIdClothesAsync(GetByIdClothesAttributeQueryDTO dto)
+        public async Task<IActionResult> GetByIdClothesAsync([FromRoute] GetByIdProductQueryDTO dto)
         {
             try
             {
                 var query = new GetByIdClothesAttributeQuery()
                 {
-                    ClothesAttributeId = dto.ClothesAttributeId
+                    ProductId = dto.productId
                 };
 
                 var result = await _mediator.Send(query);
@@ -616,8 +601,7 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Electronics Attribute
         /// </summary>
-        [HttpPost]
-        [Route("electronics")]
+        [HttpPost("electronics")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -631,16 +615,16 @@ namespace Swapy.API.Controllers
                 var command = new AddElectronicAttributeCommand()
                 {
                     UserId = userId,
-                    Title = dto.Title,
-                    Description = dto.Description,
-                    Price = dto.Price,
-                    CurrencyId = dto.CurrencyId,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    IsNew = dto.IsNew,
-                    MemoryModelId = dto.MemoryModelId,
-                    ModelColorId = dto.ModelColorId
+                    Title = dto.title,
+                    Description = dto.description,
+                    Price = dto.price,
+                    CurrencyId = dto.currencyId,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    IsNew = dto.isNew,
+                    MemoryModelId = dto.memoryModelId,
+                    ModelColorId = dto.modelColorId
                 };
 
                 var result = await _mediator.Send(command);
@@ -661,14 +645,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete]
-        [Route("electronics/{id}")]
+        [HttpDelete("electronics")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveElectronicAsync(RemoveElectronicAttributeCommandDTO dto)
+        public async Task<IActionResult> RemoveElectronicAsync([FromRoute] RemoveElectronicAttributeCommandDTO dto)
         {
             try
             {
@@ -676,7 +659,7 @@ namespace Swapy.API.Controllers
                 var command = new RemoveElectronicAttributeCommand()
                 {
                     UserId = userId,
-                    ElectronicAttributeId = dto.ElectronicAttributeId
+                    ElectronicAttributeId = dto.electronicAttributeId
                 };
 
                 var result = await _mediator.Send(command);
@@ -696,14 +679,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpPut]
-        [Route("electronics/{id}")]
+        [HttpPut("electronics")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateElectronicAsync(UpdateElectronicAttributeCommandDTO dto)
+        public async Task<IActionResult> UpdateElectronicAsync([FromQuery] UpdateElectronicAttributeCommandDTO dto)
         {
             try
             {
@@ -711,17 +693,17 @@ namespace Swapy.API.Controllers
                 var command = new UpdateElectronicAttributeCommand()
                 {
                     UserId = userId,
-                    Title = dto.Title,
-                    Description = dto.Description,
-                    Price = dto.Price,
-                    CurrencyId = dto.CurrencyId,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    ElectronicAttributeId = dto.ElectronicAttributeId,
-                    IsNew = dto.IsNew,
-                    MemoryModelId = dto.MemoryModelId,
-                    ModelColorId = dto.ModelColorId
+                    Title = dto.title,
+                    Description = dto.description,
+                    Price = dto.price,
+                    CurrencyId = dto.currencyId,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    ProductId = dto.productId,
+                    IsNew = dto.isNew,
+                    MemoryModelId = dto.memoryModelId,
+                    ModelColorId = dto.modelColorId
                 };
 
                 var result = await _mediator.Send(command);
@@ -741,11 +723,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("electronics")]
+        [HttpGet("electronics")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllElectronicsAsync(GetAllElectronicAttributesQueryDTO dto)
+        public async Task<IActionResult> GetAllElectronicsAsync([FromQuery] GetAllElectronicAttributesQueryDTO dto)
         {
             try
             {
@@ -753,24 +734,24 @@ namespace Swapy.API.Controllers
                 var query = new GetAllElectronicAttributesQuery()
                 {
                     UserId = userId,
-                    Page = dto.Page,
-                    PageSize = dto.PageSize,
-                    Title = dto.Title,
-                    CurrencyId = dto.CurrencyId,
-                    PriceMin = dto.PriceMin,
-                    PriceMax = dto.PriceMax,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    OtherUserId = dto.OtherUserId,
-                    SortByPrice = dto.SortByPrice,
-                    ReverseSort = dto.ReverseSort,
-                    IsNew = dto.IsNew,
-                    MemoriesId = dto.MemoriesId,
-                    ColorsId = dto.ColorsId,
-                    ModelsId = dto.ModelsId,
-                    BrandsId = dto.BrandsId,
-                    TypesId = dto.TypesId,
+                    Page = dto.page,
+                    PageSize = dto.pageSize,
+                    Title = dto.title,
+                    CurrencyId = dto.currencyId,
+                    PriceMin = dto.priceMin,
+                    PriceMax = dto.priceMax,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    OtherUserId = dto.otherUserId,
+                    SortByPrice = dto.sortByPrice,
+                    ReverseSort = dto.reverseSort,
+                    IsNew = dto.isNew,
+                    MemoriesId = dto.memoriesId,
+                    ColorsId = dto.colorsId,
+                    ModelsId = dto.modelsId,
+                    BrandsId = dto.brandsId,
+                    TypesId = dto.typesId,
                 };
 
                 var result = await _mediator.Send(query);
@@ -782,17 +763,16 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("electronics/{id}")]
+        [HttpGet("electronics/{productId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByIdElectronicAsync(GetByIdElectronicAttributeQueryDTO dto)
+        public async Task<IActionResult> GetByIdElectronicAsync([FromRoute] GetByIdProductQueryDTO dto)
         {
             try
             {
                 var query = new GetByIdElectronicAttributeQuery()
                 {
-                    ElectronicAttributeId = dto.ElectronicAttributeId
+                    ProductId = dto.productId
                 };
 
                 var result = await _mediator.Send(query);
@@ -808,8 +788,7 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Items Attribute
         /// </summary>
-        [HttpPost]
-        [Route("items")]
+        [HttpPost("items")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -823,15 +802,15 @@ namespace Swapy.API.Controllers
                 var command = new AddItemAttributeCommand()
                 {
                     UserId = userId,
-                    Title = dto.Title,
-                    Description = dto.Description,
-                    Price = dto.Price,
-                    CurrencyId = dto.CurrencyId,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    IsNew = dto.IsNew,
-                    ItemTypeId = dto.ItemTypeId
+                    Title = dto.title,
+                    Description = dto.description,
+                    Price = dto.price,
+                    CurrencyId = dto.currencyId,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    IsNew = dto.isNew,
+                    ItemTypeId = dto.itemTypeId
                 };
 
                 var result = await _mediator.Send(command);
@@ -852,14 +831,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete]
-        [Route("items/{id}")]
+        [HttpDelete("items")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveItemAsync(RemoveItemAttributeCommandDTO dto)
+        public async Task<IActionResult> RemoveItemAsync([FromRoute] RemoveItemAttributeCommandDTO dto)
         {
             try
             {
@@ -867,7 +845,7 @@ namespace Swapy.API.Controllers
                 var command = new RemoveItemAttributeCommand()
                 {
                     UserId = userId,
-                    ItemAttributeId = dto.ItemAttributeId
+                    ItemAttributeId = dto.itemAttributeId
                 };
 
                 var result = await _mediator.Send(command);
@@ -887,14 +865,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpPut]
-        [Route("items/{id}")]
+        [HttpPut("items")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateItemAsync(UpdateItemAttributeCommandDTO dto)
+        public async Task<IActionResult> UpdateItemAsync([FromQuery] UpdateItemAttributeCommandDTO dto)
         {
             try
             {
@@ -902,16 +879,16 @@ namespace Swapy.API.Controllers
                 var command = new UpdateItemAttributeCommand()
                 {
                     UserId = userId,
-                    Title = dto.Title,
-                    Description = dto.Description,
-                    Price = dto.Price,
-                    CurrencyId = dto.CurrencyId,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    ItemAttributeId = dto.ItemAttributeId,
-                    IsNew = dto.IsNew,
-                    ItemTypeId = dto.ItemTypeId
+                    Title = dto.title,
+                    Description = dto.description,
+                    Price = dto.price,
+                    CurrencyId = dto.currencyId,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    ProductId = dto.productId,
+                    IsNew = dto.isNew,
+                    ItemTypeId = dto.itemTypeId
                 };
 
                 var result = await _mediator.Send(command);
@@ -931,11 +908,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("items")]
+        [HttpGet("items")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllItemsAsync(GetAllItemAttributesQueryDTO dto)
+        public async Task<IActionResult> GetAllItemsAsync([FromQuery] GetAllItemAttributesQueryDTO dto)
         {
             try
             {
@@ -943,20 +919,20 @@ namespace Swapy.API.Controllers
                 var query = new GetAllItemAttributesQuery()
                 {
                     UserId = userId,
-                    Page = dto.Page,
-                    PageSize = dto.PageSize,
-                    Title = dto.Title,
-                    CurrencyId = dto.CurrencyId,
-                    PriceMin = dto.PriceMin,
-                    PriceMax = dto.PriceMax,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    OtherUserId = dto.OtherUserId,
-                    SortByPrice = dto.SortByPrice,
-                    ReverseSort = dto.ReverseSort,
-                    IsNew = dto.IsNew,
-                    ItemTypesId = dto.ItemTypesId,
+                    Page = dto.page,
+                    PageSize = dto.pageSize,
+                    Title = dto.title,
+                    CurrencyId = dto.currencyId,
+                    PriceMin = dto.priceMin,
+                    PriceMax = dto.priceMax,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    OtherUserId = dto.otherUserId,
+                    SortByPrice = dto.sortByPrice,
+                    ReverseSort = dto.reverseSort,
+                    IsNew = dto.isNew,
+                    ItemTypesId = dto.itemTypesId,
                 };
 
                 var result = await _mediator.Send(query);
@@ -968,17 +944,16 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("items/{id}")]
+        [HttpGet("items/{productId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByIdItemAsync(GetByIdItemAttributeQueryDTO dto)
+        public async Task<IActionResult> GetByIdItemAsync([FromRoute] GetByIdProductQueryDTO dto)
         {
             try
             {
                 var query = new GetByIdItemAttributeQuery()
                 {
-                    ItemAttributeId = dto.ItemAttributeId
+                    ProductId = dto.productId
                 };
 
                 var result = await _mediator.Send(query);
@@ -994,8 +969,7 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Real-Estates Attribute
         /// </summary>
-        [HttpPost]
-        [Route("real-estates")]
+        [HttpPost("real-estates")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -1009,17 +983,17 @@ namespace Swapy.API.Controllers
                 var command = new AddRealEstateAttributeCommand()
                 {
                     UserId = userId,
-                    Title = dto.Title,
-                    Description = dto.Description,
-                    Price = dto.Price,
-                    CurrencyId = dto.CurrencyId,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    Area = dto.Area,
-                    Rooms = dto.Rooms,
-                    IsRent = dto.IsRent,
-                    RealEstateTypeId = dto.RealEstateTypeId
+                    Title = dto.title,
+                    Description = dto.description,
+                    Price = dto.price,
+                    CurrencyId = dto.currencyId,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    Area = dto.area,
+                    Rooms = dto.rooms,
+                    IsRent = dto.isRent,
+                    RealEstateTypeId = dto.realEstateTypeId
                 };
 
                 var result = await _mediator.Send(command);
@@ -1040,14 +1014,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete]
-        [Route("real-estates/{id}")]
+        [HttpDelete("real-estates")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveRealEstateAsync(RemoveRealEstateAttributeCommandDTO dto)
+        public async Task<IActionResult> RemoveRealEstateAsync([FromRoute] RemoveRealEstateAttributeCommandDTO dto)
         {
             try
             {
@@ -1055,7 +1028,7 @@ namespace Swapy.API.Controllers
                 var command = new RemoveRealEstateAttributeCommand()
                 {
                     UserId = userId,
-                    RealEstateAttributeId = dto.RealEstateAttributeId
+                    RealEstateAttributeId = dto.realEstateAttributeId
                 };
 
                 var result = await _mediator.Send(command);
@@ -1075,14 +1048,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpPut]
-        [Route("real-estates/{id}")]
+        [HttpPut("real-estates")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateRealEstateAsync(UpdateRealEstateAttributeCommandDTO dto)
+        public async Task<IActionResult> UpdateRealEstateAsync([FromQuery] UpdateRealEstateAttributeCommandDTO dto)
         {
             try
             {
@@ -1090,18 +1062,18 @@ namespace Swapy.API.Controllers
                 var command = new UpdateRealEstateAttributeCommand()
                 {
                     UserId = userId,
-                    Title = dto.Title,
-                    Description = dto.Description,
-                    Price = dto.Price,
-                    CurrencyId = dto.CurrencyId,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    RealEstateAttributeId = dto.RealEstateAttributeId,
-                    Area = dto.Area,
-                    Rooms = dto.Rooms,
-                    IsRent = dto.IsRent,
-                    RealEstateTypeId = dto.RealEstateTypeId
+                    Title = dto.title,
+                    Description = dto.description,
+                    Price = dto.price,
+                    CurrencyId = dto.currencyId,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    ProductId = dto.productId,
+                    Area = dto.area,
+                    Rooms = dto.rooms,
+                    IsRent = dto.isRent,
+                    RealEstateTypeId = dto.realEstateTypeId
                 };
 
                 var result = await _mediator.Send(command);
@@ -1121,11 +1093,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("real-estates")]
+        [HttpGet("real-estates")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllRealEstatesAsync(GetAllRealEstateAttributesQueryDTO dto)
+        public async Task<IActionResult> GetAllRealEstatesAsync([FromQuery] GetAllRealEstateAttributesQueryDTO dto)
         {
             try
             {
@@ -1133,24 +1104,24 @@ namespace Swapy.API.Controllers
                 var query = new GetAllRealEstateAttributesQuery()
                 {
                     UserId = userId,
-                    Page = dto.Page,
-                    PageSize = dto.PageSize,
-                    Title = dto.Title,
-                    CurrencyId = dto.CurrencyId,
-                    PriceMin = dto.PriceMin,
-                    PriceMax = dto.PriceMax,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    OtherUserId = dto.OtherUserId,
-                    SortByPrice = dto.SortByPrice,
-                    ReverseSort = dto.ReverseSort,
-                    AreaMin = dto.AreaMin,
-                    AreaMax = dto.AreaMax,
-                    RoomsMin = dto.RoomsMin,
-                    RoomsMax = dto.RoomsMax,
-                    IsRent = dto.IsRent,
-                    RealEstateTypesId = dto.RealEstateTypesId
+                    Page = dto.page,
+                    PageSize = dto.pageSize,
+                    Title = dto.title,
+                    CurrencyId = dto.currencyId,
+                    PriceMin = dto.priceMin,
+                    PriceMax = dto.priceMax,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    OtherUserId = dto.otherUserId,
+                    SortByPrice = dto.sortByPrice,
+                    ReverseSort = dto.reverseSort,
+                    AreaMin = dto.areaMin,
+                    AreaMax = dto.areaMax,
+                    RoomsMin = dto.roomsMin,
+                    RoomsMax = dto.roomsMax,
+                    IsRent = dto.isRent,
+                    RealEstateTypesId = dto.realEstateTypesId
                 };
 
                 var result = await _mediator.Send(query);
@@ -1162,17 +1133,16 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("real-estates/{id}")]
+        [HttpGet("real-estates/{productId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByIdRealEstateAsync(GetByIdRealEstateAttributeQueryDTO dto)
+        public async Task<IActionResult> GetByIdRealEstateAsync([FromRoute] GetByIdProductQueryDTO dto)
         {
             try
             {
                 var query = new GetByIdRealEstateAttributeQuery()
                 {
-                    RealEstateAttributeId = dto.RealEstateAttributeId
+                    ProductId = dto.productId
                 };
 
                 var result = await _mediator.Send(query);
@@ -1188,8 +1158,7 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Tvs Attribute
         /// </summary>
-        [HttpPost]
-        [Route("tvs")]
+        [HttpPost("tvs")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -1203,19 +1172,19 @@ namespace Swapy.API.Controllers
                 var command = new AddTVAttributeCommand()
                 {
                     UserId = userId,
-                    Title = dto.Title,
-                    Description = dto.Description,
-                    Price = dto.Price,
-                    CurrencyId = dto.CurrencyId,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    IsNew = dto.IsNew,
-                    IsSmart = dto.IsSmart,
-                    TVTypeId = dto.TVTypeId,
-                    TVBrandId = dto.TVBrandId,
-                    ScreenResolutionId = dto.ScreenResolutionId,
-                    ScreenDiagonalId = dto.ScreenDiagonalId,
+                    Title = dto.title,
+                    Description = dto.description,
+                    Price = dto.price,
+                    CurrencyId = dto.currencyId,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    IsNew = dto.isNew,
+                    IsSmart = dto.isSmart,
+                    TVTypeId = dto.tvTypeId,
+                    TVBrandId = dto.tvBrandId,
+                    ScreenResolutionId = dto.screenResolutionId,
+                    ScreenDiagonalId = dto.screenDiagonalId,
                 };
 
                 var result = await _mediator.Send(command);
@@ -1236,14 +1205,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete]
-        [Route("tvs/{id}")]
+        [HttpDelete("tvs")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveTVAsync(RemoveTVAttributeCommandDTO dto)
+        public async Task<IActionResult> RemoveTVAsync([FromRoute] RemoveTVAttributeCommandDTO dto)
         {
             try
             {
@@ -1251,7 +1219,7 @@ namespace Swapy.API.Controllers
                 var command = new RemoveTVAttributeCommand()
                 {
                     UserId = userId,
-                    TVAttributeId = dto.TVAttributeId
+                    TVAttributeId = dto.tvAttributeId
                 };
 
                 var result = await _mediator.Send(command);
@@ -1271,14 +1239,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpPut]
-        [Route("tvs/{id}")]
+        [HttpPut("tvs")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateTVAsync(UpdateTVAttributeCommandDTO dto)
+        public async Task<IActionResult> UpdateTVAsync([FromQuery] UpdateTVAttributeCommandDTO dto)
         {
             try
             {
@@ -1286,20 +1253,20 @@ namespace Swapy.API.Controllers
                 var command = new UpdateTVAttributeCommand()
                 {
                     UserId = userId,
-                    Title = dto.Title,
-                    Description = dto.Description,
-                    Price = dto.Price,
-                    CurrencyId = dto.CurrencyId,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    TVAttributeId = dto.TVAttributeId,
-                    IsNew = dto.IsNew,
-                    IsSmart = dto.IsSmart,
-                    TVTypeId = dto.TVTypeId,
-                    TVBrandId = dto.TVTypeId,
-                    ScreenResolutionId = dto.ScreenResolutionId,
-                    ScreenDiagonalId = dto.ScreenDiagonalId
+                    Title = dto.title,
+                    Description = dto.description,
+                    Price = dto.price,
+                    CurrencyId = dto.currencyId,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    ProductId = dto.productId,
+                    IsNew = dto.isNew,
+                    IsSmart = dto.isSmart,
+                    TVTypeId = dto.tvTypeId,
+                    TVBrandId = dto.tvBrandId,
+                    ScreenResolutionId = dto.screenResolutionId,
+                    ScreenDiagonalId = dto.screenDiagonalId
                 };
 
                 var result = await _mediator.Send(command);
@@ -1319,11 +1286,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("tvs")]
+        [HttpGet("tvs")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllTVsAsync(GetAllTVAttributesQueryDTO dto)
+        public async Task<IActionResult> GetAllTVsAsync([FromQuery] GetAllTVAttributesQueryDTO dto)
         {
             try
             {
@@ -1331,24 +1297,24 @@ namespace Swapy.API.Controllers
                 var query = new GetAllTVAttributesQuery()
                 {
                     UserId = userId,
-                    Page = dto.Page,
-                    PageSize = dto.PageSize,
-                    Title = dto.Title,
-                    CurrencyId = dto.CurrencyId,
-                    PriceMin = dto.PriceMin,
-                    PriceMax = dto.PriceMax,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    OtherUserId = dto.OtherUserId,
-                    SortByPrice = dto.SortByPrice,
-                    ReverseSort = dto.ReverseSort,
-                    IsNew = dto.IsNew,
-                    IsSmart = dto.IsSmart,
-                    TVTypesId = dto.TVTypesId,
-                    TVBrandsId = dto.TVBrandsId,
-                    ScreenResolutionsId = dto.ScreenResolutionsId,
-                    ScreenDiagonalsId = dto.ScreenDiagonalsId,
+                    Page = dto.page,
+                    PageSize = dto.pageSize,
+                    Title = dto.title,
+                    CurrencyId = dto.currencyId,
+                    PriceMin = dto.priceMin,
+                    PriceMax = dto.priceMax,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    OtherUserId = dto.otherUserId,
+                    SortByPrice = dto.sortByPrice,
+                    ReverseSort = dto.reverseSort,
+                    IsNew = dto.isNew,
+                    IsSmart = dto.isSmart,
+                    TVTypesId = dto.tvTypesId,
+                    TVBrandsId = dto.tvBrandsId,
+                    ScreenResolutionsId = dto.screenResolutionsId,
+                    ScreenDiagonalsId = dto.screenDiagonalsId,
                 };
 
                 var result = await _mediator.Send(query);
@@ -1360,17 +1326,16 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("tvs/{id}")]
+        [HttpGet("tvs/{productId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByIdTVAsync(GetByIdTVAttributeQueryDTO dto)
+        public async Task<IActionResult> GetByIdTVAsync([FromRoute] GetByIdProductQueryDTO dto)
         {
             try
             {
                 var query = new GetByIdTVAttributeQuery()
                 {
-                    TVAttributeId = dto.TVAttributeId
+                    ProductId = dto.productId
                 };
 
                 var result = await _mediator.Send(query);
@@ -1386,8 +1351,7 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Favorite-Products Attribute
         /// </summary>
-        [HttpPost]
-        [Route("favorite-products")]
+        [HttpPost("favorite-products")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -1400,7 +1364,7 @@ namespace Swapy.API.Controllers
                 var command = new AddFavoriteProductCommand()
                 {
                     UserId = userId,
-                    ProductId = dto.ProductId,
+                    ProductId = dto.productId,
                 };
 
                 var result = await _mediator.Send(command);
@@ -1417,14 +1381,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete]
-        [Route("favorite-products/{id}")]
+        [HttpDelete("favorite-products")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveFavoriteProductAsync(RemoveFavoriteProductCommandDTO dto)
+        public async Task<IActionResult> RemoveFavoriteProductAsync([FromRoute] RemoveFavoriteProductCommandDTO dto)
         {
             try
             {
@@ -1432,7 +1395,7 @@ namespace Swapy.API.Controllers
                 var command = new RemoveFavoriteProductCommand()
                 {
                     UserId = userId,
-                    FavoriteProductId = dto.FavoriteProductId
+                    ProductId = dto.productId
                 };
 
                 var result = await _mediator.Send(command);
@@ -1452,12 +1415,11 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("favorite-products")]
+        [HttpGet("favorite-products")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllFavoriteProductsAsync(GetAllFavoriteProductsQueryDTO dto)
+        public async Task<IActionResult> GetAllFavoriteProductsAsync([FromQuery] GetAllFavoriteProductsQueryDTO dto)
         {
             try
             {
@@ -1465,19 +1427,19 @@ namespace Swapy.API.Controllers
                 var query = new GetAllFavoriteProductsQuery()
                 {
                     UserId = userId,
-                    Page = dto.Page,
-                    PageSize = dto.PageSize,
-                    Title = dto.Title,
-                    CurrencyId = dto.CurrencyId,
-                    PriceMin = dto.PriceMin,
-                    PriceMax = dto.PriceMax,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    OtherUserId = dto.OtherUserId,
-                    SortByPrice = dto.SortByPrice,
-                    ReverseSort = dto.ReverseSort,
-                    ProductId = dto.ProductId
+                    Page = dto.page,
+                    PageSize = dto.pageSize,
+                    Title = dto.title,
+                    CurrencyId = dto.currencyId,
+                    PriceMin = dto.priceMin,
+                    PriceMax = dto.priceMax,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    OtherUserId = dto.otherUserId,
+                    SortByPrice = dto.sortByPrice,
+                    ReverseSort = dto.reverseSort,
+                    ProductId = dto.productId
                 };
 
                 var result = await _mediator.Send(query);
@@ -1493,37 +1455,14 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("favorite-products/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByIdFavoriteProductAsync(GetByIdFavoriteProductQueryDTO dto)
-        {
-            try
-            {
-                var query = new GetByIdFavoriteProductQuery()
-                {
-                    FavoriteProductId = dto.FavoriteProductId
-                };
-
-                var result = await _mediator.Send(query);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
-            }
-        }
-
 
         /// <summary>
         /// Products Attribute
         /// </summary>
-        [HttpGet]
-        [Route("products")]
+        [HttpGet("products")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllProductsAsync(GetAllProductsQueryDTO dto)
+        public async Task<IActionResult> GetAllProductsAsync([FromQuery] GetAllProductsQueryDTO dto)
         {
             try
             {
@@ -1531,18 +1470,18 @@ namespace Swapy.API.Controllers
                 var query = new GetAllProductsQuery()
                 {
                     UserId = userId,
-                    Page = dto.Page,
-                    PageSize = dto.PageSize,
-                    Title = dto.Title,
-                    CurrencyId = dto.CurrencyId,
-                    PriceMin = dto.PriceMin,
-                    PriceMax = dto.PriceMax,
-                    CategoryId = dto.CategoryId,
-                    SubcategoryId = dto.SubcategoryId,
-                    CityId = dto.CityId,
-                    OtherUserId = dto.OtherUserId,
-                    SortByPrice = dto.SortByPrice,
-                    ReverseSort = dto.ReverseSort
+                    Page = dto.page,
+                    PageSize = dto.pageSize,
+                    Title = dto.title,
+                    CurrencyId = dto.currencyId,
+                    PriceMin = dto.priceMin,
+                    PriceMax = dto.priceMax,
+                    CategoryId = dto.categoryId,
+                    SubcategoryId = dto.subcategoryId,
+                    CityId = dto.cityId,
+                    OtherUserId = dto.otherUserId,
+                    SortByPrice = dto.sortByPrice,
+                    ReverseSort = dto.reverseSort
                 };
 
                 var result = await _mediator.Send(query);
@@ -1554,14 +1493,13 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete]
-        [Route("products/{id}")]
+        [HttpDelete("products")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveProductAsync(RemoveProductCommandDTO dto)
+        public async Task<IActionResult> RemoveProductAsync([FromRoute] RemoveProductCommandDTO dto)
         {
             try
             {
@@ -1569,7 +1507,7 @@ namespace Swapy.API.Controllers
                 var command = new RemoveProductCommand()
                 {
                     UserId = userId,
-                    ProductId = dto.ProductId
+                    ProductId = dto.productId
                 };
 
                 var result = await _mediator.Send(command);
@@ -1589,18 +1527,17 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpPatch]
-        [Route("products/{id}")]
+        [HttpPatch("products")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> IncrementViewsAsync(IncrementProductViewsCommandDTO dto)
+        public async Task<IActionResult> IncrementViewsAsync([FromRoute] IncrementProductViewsCommandDTO dto)
         {
             try
             {
                 var command = new IncrementProductViewsCommand()
                 {
-                    ProductId = dto.ProductId
+                    ProductId = dto.productId
                 };
 
                 var result = await _mediator.Send(command);
@@ -1616,8 +1553,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("cities")]
+        [HttpGet("cities")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllCitiesAsync()
@@ -1635,8 +1571,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("currencies")]
+        [HttpGet("currencies")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllCurrenciesAsync()
@@ -1654,8 +1589,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("autos/fuel-types")]
+        [HttpGet("autos/fuel-types")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllFuelTypesAsync()
@@ -1673,17 +1607,16 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("colors")]
+        [HttpGet("colors")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllColorsAsync(GetAllColorsQueryDTO dto)
+        public async Task<IActionResult> GetAllColorsAsync([FromRoute] GetAllColorsQueryDTO dto)
         {
             try
             {
                 var query = new GetAllColorsQuery()
                 {
-                    ModelId = dto.ModelId
+                    ModelId = dto.modelId
                 };
 
                 var result = await _mediator.Send(query);
@@ -1695,8 +1628,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("autos/transmission-types")]
+        [HttpGet("autos/transmission-types")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllTransmissionTypesAsync()
@@ -1714,17 +1646,16 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("autos/brands")]
+        [HttpGet("autos/brands")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllAutoBrandsAsync(GetAllAutoBrandsQueryDTO dto)
+        public async Task<IActionResult> GetAllAutoBrandsAsync([FromRoute] GetAllAutoBrandsQueryDTO dto)
         {
             try
             {
                 var query = new GetAllAutoBrandsQuery()
                 {
-                    AutoTypesId = dto.AutoTypesId
+                    AutoTypesId = dto.autoTypesId
                 };
 
                 var result = await _mediator.Send(query);
@@ -1736,8 +1667,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("tvs/brands")]
+        [HttpGet("tvs/brands")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllTVBrandsAsync()
@@ -1755,8 +1685,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("tvs/screen-resolutions")]
+        [HttpGet("tvs/screen-resolutions")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllScreenResolutionsAsync()
@@ -1774,8 +1703,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("tvs/screen-diagonals")]
+        [HttpGet("tvs/screen-diagonals")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllScreenDiagonalsAsync()
@@ -1793,8 +1721,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("tvs/types")]
+        [HttpGet("tvs/types")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllTVTypesAsync()
@@ -1812,17 +1739,16 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("animals/breeds")]
+        [HttpGet("animals/breeds")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllAnimalBreedsAsync(GetAllAnimalBreedsQueryDTO dto)
+        public async Task<IActionResult> GetAllAnimalBreedsAsync([FromRoute] GetAllAnimalBreedsQueryDTO dto)
         {
             try
             {
                 var query = new GetAllAnimalBreedsQuery()
                 {
-                    AnimalTypesId = dto.AnimalTypesId
+                    AnimalTypesId = dto.animalTypesId
                 };
 
                 var result = await _mediator.Send(query);
@@ -1834,15 +1760,18 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("clothes/sizes")]
+        [HttpGet("clothes/sizes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllClothesSizesAsync()
+        public async Task<IActionResult> GetAllClothesSizesAsync(GetAllClothesSizesQueryDTO dto)
         {
             try
             {
-                GetAllClothesSizesQuery query = new GetAllClothesSizesQuery();
+                GetAllClothesSizesQuery query = new GetAllClothesSizesQuery()
+                {
+                    IsChild = dto.IsChild,
+                    IsShoe = dto.IsShoe
+                };
 
                 var result = await _mediator.Send(query);
                 return Ok(result);
@@ -1853,8 +1782,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("clothes/seasons")]
+        [HttpGet("clothes/seasons")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllClothesSeasonsAsync()
@@ -1872,17 +1800,16 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("clothes/brands")]
+        [HttpGet("clothes/brands")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllClothesBrandsAsync(GetAllClothesBrandsQueryDTO dto)
+        public async Task<IActionResult> GetAllClothesBrandsAsync([FromRoute] GetAllClothesBrandsQueryDTO dto)
         {
             try
             {
                 var query = new GetAllClothesBrandsQuery()
                 {
-                    ClothesViewsId = dto.ClothesViewsId
+                    ClothesViewsId = dto.clothesViewsId
                 };
 
                 var result = await _mediator.Send(query);
@@ -1894,18 +1821,17 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("clothes/views")]
+        [HttpGet("clothes/views")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllClothesViewsAsync(GetAllClothesViewsQueryDTO dto)
+        public async Task<IActionResult> GetAllClothesViewsAsync([FromQuery] GetAllClothesViewsQueryDTO dto)
         {
             try
             {
                 var query = new GetAllClothesViewsQuery()
                 {
-                    GenderId = dto.GenderId,
-                    ClothesTypeId = dto.ClothesTypeId
+                    GenderId = dto.genderId,
+                    ClothesTypeId = dto.clothesTypeId
                 };
 
                 var result = await _mediator.Send(query);
@@ -1917,8 +1843,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("clothes/genders")]
+        [HttpGet("clothes/genders")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllGendersAsync()
@@ -1936,17 +1861,16 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("electronics/memories")]
+        [HttpGet("electronics/memories")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllMemoriesAsync(GetAllMemoriesQueryDTO dto)
+        public async Task<IActionResult> GetAllMemoriesAsync([FromRoute] GetAllMemoriesQueryDTO dto)
         {
             try
             {
                 var query = new GetAllMemoriesQuery()
                 {
-                    ModelId = dto.ModelId
+                    ModelId = dto.modelId
                 };
 
                 var result = await _mediator.Send(query);
@@ -1958,18 +1882,17 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("electronics/models")]
+        [HttpGet("electronics/models")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllModelsAsync(GetAllModelsQueryDTO dto)
+        public async Task<IActionResult> GetAllModelsAsync([FromQuery] GetAllModelsQueryDTO dto)
         {
             try
             {
                 var query = new GetAllModelsQuery()
                 {
-                    ElectronicBrandsId = dto.ElectronicBrandsId,
-                    ElectronicTypeId = dto.ElectronicTypeId
+                    ElectronicBrandsId = dto.electronicBrandsId,
+                    ElectronicTypeId = dto.electronicTypeId
                 };
 
                 var result = await _mediator.Send(query);
@@ -1981,17 +1904,16 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("electronics/brands")]
+        [HttpGet("electronics/brands")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllElectronicBrandsAsync(GetAllElectronicBrandsQueryDTO dto)
+        public async Task<IActionResult> GetAllElectronicBrandsAsync([FromRoute] GetAllElectronicBrandsQueryDTO dto)
         {
             try
             {
                 var query = new GetAllElectronicBrandsQuery()
                 {
-                    ElectronicTypeId = dto.ElectronicTypeId
+                    ElectronicTypeId = dto.electronicTypeId
                 };
 
                 var result = await _mediator.Send(query);
@@ -2003,18 +1925,17 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("autos/models")]
+        [HttpGet("autos/models")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllAutoModelsAsync(GetAllAutoModelsQueryDTO dto)
+        public async Task<IActionResult> GetAllAutoModelsAsync([FromQuery] GetAllAutoModelsQueryDTO dto)
         {
             try
             {
                 var query = new GetAllAutoModelsQuery()
                 {
-                    AutoBrandsId = dto.AutoBrandsId,
-                    AutoTypesId = dto.AutoTypesId
+                    AutoBrandsId = dto.autoBrandsId,
+                    AutoTypesId = dto.autoTypesId
                 };
 
                 var result = await _mediator.Send(query);
@@ -2026,17 +1947,16 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("clothes/types")]
+        [HttpGet("clothes/types")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllClothesTypesAsync(GetAllClothesTypesQueryDTO dto)
+        public async Task<IActionResult> GetAllClothesTypesAsync([FromRoute] GetAllClothesTypesQueryDTO dto)
         {
             try
             {
                 var query = new GetAllClothesTypesQuery()
                 {
-                    GenderId = dto.GenderId
+                    GenderId = dto.genderId
                 };
 
                 var result = await _mediator.Send(query);
@@ -2048,8 +1968,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("animals/types")]
+        [HttpGet("animals/types")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllAnimalTypesAsync()
@@ -2067,8 +1986,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("autos/types")]
+        [HttpGet("autos/types")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllAutoTypesAsync()
@@ -2086,8 +2004,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("electronics/types")]
+        [HttpGet("electronics/types")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllElectronicTypesAsync()
@@ -2105,8 +2022,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("items/types")]
+        [HttpGet("items/types")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllItemTypesAsync()
@@ -2124,8 +2040,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("real-estates/types")]
+        [HttpGet("real-estates/types")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllRealEstateTypesAsync()
@@ -2152,7 +2067,7 @@ namespace Swapy.API.Controllers
 
         [HttpOptions]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> Options()
+        public async Task<IActionResult> Options()
         {
             return Ok("x44 GET, x8 POST, x7 PUT, x9 DELETE, HEAD, OPTIONS");
         }

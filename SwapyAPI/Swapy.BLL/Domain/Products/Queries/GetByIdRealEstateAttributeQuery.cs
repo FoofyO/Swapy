@@ -1,10 +1,10 @@
-﻿using MediatR;
-using Swapy.Common.Entities;
+﻿using Swapy.BLL.Domain.Products.QueryHandlers;
+using Swapy.Common.DTO.Products.Responses;
+
 
 namespace Swapy.BLL.Domain.Products.Queries
 {
-    public class GetByIdRealEstateAttributeQuery : IRequest<RealEstateAttribute>
+    public class GetByIdRealEstateAttributeQuery : GetByIdAttributeQuery<RealEstateAttributeResponseDTO>
     {
-        public string RealEstateAttributeId { get; set; }
     }
 }

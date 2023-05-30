@@ -2,12 +2,13 @@
 {
     public class UpdateProductCommandDTO
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
-        public string CurrencyId { get; set; }
-        public string CategoryId { get; set; }
-        public string SubcategoryId { get; set; }
-        public string CityId { get; set; }
+        public string productId { get; set; }
+        public string title { get; set; }
+        public string description { get; set; }
+        public decimal price { get; set; }
+        public string currencyId { get; set; }
+        public string categoryId { get; set; }
+        public string subcategoryId { get; set; }
+        public string cityId { get; set; }
     }
 }

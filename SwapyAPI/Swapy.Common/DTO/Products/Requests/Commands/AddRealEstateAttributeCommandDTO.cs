@@ -4,9 +4,9 @@ namespace Swapy.Common.DTO.Products.Requests.Commands
 {
     public class AddRealEstateAttributeCommandDTO : AddProductCommandDTO<RealEstateAttribute>
     {
-        public int Area { get; set; }
-        public int Rooms { get; set; }
-        public bool IsRent { get; set; }
-        public string RealEstateTypeId { get; set; }
+        public int area { get; set; }
+        public int rooms { get; set; }
+        public bool isRent { get; set; }
+        public string realEstateTypeId { get; set; }
     }
 }

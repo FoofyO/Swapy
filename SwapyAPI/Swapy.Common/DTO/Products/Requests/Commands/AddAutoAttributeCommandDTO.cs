@@ -4,13 +4,13 @@ namespace Swapy.Common.DTO.Products.Requests.Commands
 {
     public class AddAutoAttributeCommandDTO : AddProductCommandDTO<AutoAttribute>
     {
-        public int Miliage { get; set; }
-        public int EngineCapacity { get; set; }
-        public DateTime ReleaseYear { get; set; }
-        public bool IsNew { get; set; }
-        public string FuelTypeId { get; set; }
-        public string AutoColorId { get; set; }
-        public string TransmissionTypeId { get; set; }
-        public string AutoModelId { get; set; }
+        public int miliage { get; set; }
+        public int engineCapacity { get; set; }
+        public DateTime releaseYear { get; set; }
+        public bool isNew { get; set; }
+        public string fuelTypeId { get; set; }
+        public string autoColorId { get; set; }
+        public string transmissionTypeId { get; set; }
+        public string autoModelId { get; set; }
     }
 }

@@ -2,6 +2,6 @@
 {
     public class GetAllElectronicBrandsQueryDTO
     {
-        public string ElectronicTypeId { get; set; }
+        public string electronicTypeId { get; set; }
     }
 }

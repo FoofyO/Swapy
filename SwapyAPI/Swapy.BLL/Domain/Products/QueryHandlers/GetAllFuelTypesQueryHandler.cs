@@ -1,25 +1,19 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Products.Queries;
-using Swapy.Common.Entities;
+using Swapy.Common.DTO.Products.Responses;
 using Swapy.DAL.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
-    public class GetAllFuelTypesQueryHandler : IRequestHandler<GetAllFuelTypesQuery, IEnumerable<FuelType>>
+    public class GetAllFuelTypesQueryHandler : IRequestHandler<GetAllFuelTypesQuery, IEnumerable<SpecificationResponseDTO>>
     {
         private readonly IFuelTypeRepository _fuelTypeRepository;
 
         public GetAllFuelTypesQueryHandler(IFuelTypeRepository fuelTypeRepository) => _fuelTypeRepository = fuelTypeRepository;
 
-        public async Task<IEnumerable<FuelType>> Handle(GetAllFuelTypesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SpecificationResponseDTO>> Handle(GetAllFuelTypesQuery request, CancellationToken cancellationToken)
         {
-            var result = await _fuelTypeRepository.GetAllAsync();
+            var result = (await _fuelTypeRepository.GetAllAsync()).Select(x => new SpecificationResponseDTO(x.Id, x.Name));
             return result;
         }
     }

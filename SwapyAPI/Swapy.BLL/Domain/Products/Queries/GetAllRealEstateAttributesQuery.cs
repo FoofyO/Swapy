@@ -1,8 +1,8 @@
-﻿using Swapy.Common.Entities;
+﻿using Swapy.Common.DTO.Products.Responses;
 
 namespace Swapy.BLL.Domain.Products.Queries
 {
-    public class GetAllRealEstateAttributesQuery : GetAllProductQuery<RealEstateAttribute>
+    public class GetAllRealEstateAttributesQuery : GetAllProductQuery<ProductResponseDTO>
     {
         public int? AreaMin { get; set; }
         public int? AreaMax { get; set; }
