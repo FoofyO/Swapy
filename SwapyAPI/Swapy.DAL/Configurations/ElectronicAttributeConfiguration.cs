@@ -30,7 +30,8 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(e => e.Product)
                    .WithOne(p => p.ElectronicAttribute)
                    .HasForeignKey<Product>(p => p.ElectronicAttributeId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     }
 }

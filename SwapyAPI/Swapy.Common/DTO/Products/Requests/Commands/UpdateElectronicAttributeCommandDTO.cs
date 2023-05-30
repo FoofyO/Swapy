@@ -2,9 +2,8 @@
 {
     public class UpdateElectronicAttributeCommandDTO : UpdateProductCommandDTO
     {
-        public string ElectronicAttributeId { get; set; }
-        public bool IsNew { get; set; }
-        public string MemoryModelId { get; set; }
-        public string ModelColorId { get; set; }
+        public bool isNew { get; set; }
+        public string memoryModelId { get; set; }
+        public string modelColorId { get; set; }
     }
 }

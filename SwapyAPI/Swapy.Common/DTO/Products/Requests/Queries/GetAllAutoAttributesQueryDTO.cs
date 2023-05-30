@@ -4,17 +4,17 @@ namespace Swapy.Common.DTO.Products.Requests.Queries
 {
     public class GetAllAutoAttributesQueryDTO : GetAllProductQueryDTO<AutoAttribute>
     {
-        public int? MiliageMin { get; set; }
-        public int? MiliageMax { get; set; }
-        public int? EngineCapacityMin { get; set; }
-        public int? EngineCapacityMax { get; set; }
-        public DateTime? ReleaseYearOlder { get; set; }
-        public DateTime? ReleaseYearNewer { get; set; }
-        public bool? IsNew { get; set; }
-        public List<string> FuelTypesId { get; set; }
-        public List<string> AutoColorsId { get; set; }
-        public List<string> TransmissionTypesId { get; set; }
-        public List<string> AutoBrandsId { get; set; }
-        public List<string> AutoTypesId { get; set; }
+        public int? miliageMin { get; set; }
+        public int? miliageMax { get; set; }
+        public int? engineCapacityMin { get; set; }
+        public int? engineCapacityMax { get; set; }
+        public DateTime? releaseYearOlder { get; set; }
+        public DateTime? releaseYearNewer { get; set; }
+        public bool? isNew { get; set; }
+        public List<string> fuelTypesId { get; set; }
+        public List<string> autoColorsId { get; set; }
+        public List<string> transmissionTypesId { get; set; }
+        public List<string> autoBrandsId { get; set; }
+        public List<string> autoTypesId { get; set; }
     }
 }

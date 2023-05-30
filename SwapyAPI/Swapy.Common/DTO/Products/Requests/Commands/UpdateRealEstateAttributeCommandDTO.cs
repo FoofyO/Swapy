@@ -2,10 +2,9 @@
 {
     public class UpdateRealEstateAttributeCommandDTO : UpdateProductCommandDTO
     {
-        public string RealEstateAttributeId { get; set; }
-        public int Area { get; set; }
-        public int Rooms { get; set; }
-        public bool IsRent { get; set; }
-        public string RealEstateTypeId { get; set; }
+        public int area { get; set; }
+        public int rooms { get; set; }
+        public bool isRent { get; set; }
+        public string realEstateTypeId { get; set; }
     }
 }

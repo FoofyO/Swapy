@@ -38,6 +38,13 @@ namespace Swapy.DAL.Repositories
             return item;
         }
 
+        public async Task<ElectronicAttribute> GetByProductIdAsync(string productId)
+        {
+            var item = await _context.ElectronicAttributes.Where(x => x.ProductId.Equals(productId)).FirstOrDefaultAsync();
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
+            return item;
+        }
+
         public async Task<IEnumerable<ElectronicAttribute>> GetAllAsync()
         {
             return await _context.ElectronicAttributes.ToListAsync();
@@ -80,7 +87,7 @@ namespace Swapy.DAL.Repositories
                                                 .AsQueryable();
         }
 
-        public async Task<ElectronicAttribute> GetDetailByIdAsync(string id)
+        public async Task<ElectronicAttribute> GetDetailByIdAsync(string productId)
         {
             var item = await _context.ElectronicAttributes.Include(a => a.Product)
                                                             .ThenInclude(p => p.Images)
@@ -110,9 +117,9 @@ namespace Swapy.DAL.Repositories
                                                             .ThenInclude(mm => mm.Model)
                                                                 .ThenInclude(m => m.ElectronicBrandType)
                                                                     .ThenInclude(bt => bt.ElectronicType)
-                                                          .FirstOrDefaultAsync(a => a.Id.Equals(id));
+                                                          .FirstOrDefaultAsync(a => a.ProductId.Equals(productId));
 
-            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
             return item;
         }
     }

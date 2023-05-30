@@ -2,6 +2,6 @@
 {
     public class RemoveAutoAttributeCommandDTO
     {
-        public string AutoAttributeId { get; set; }
+        public string autoAttributeId { get; set; }
     }
 }

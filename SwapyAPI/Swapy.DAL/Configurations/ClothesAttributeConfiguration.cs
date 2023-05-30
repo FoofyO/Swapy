@@ -35,7 +35,8 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(x => x.Product)
                    .WithOne(x => x.ClothesAttribute)
                    .HasForeignKey<Product>(x => x.ClothesAttributeId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     }
 }

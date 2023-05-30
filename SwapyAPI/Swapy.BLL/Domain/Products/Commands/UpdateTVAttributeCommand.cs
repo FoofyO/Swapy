@@ -2,7 +2,6 @@
 {
     public class UpdateTVAttributeCommand : UpdateProductCommand
     {
-        public string TVAttributeId { get; set; }
         public bool IsNew { get; set; }
         public bool IsSmart { get; set; }
         public string TVTypeId { get; set; }

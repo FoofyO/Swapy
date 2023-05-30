@@ -2,6 +2,6 @@
 {
     public class GetAllClothesBrandsQueryDTO
     {
-        public List<string> ClothesViewsId { get; set; }
+        public List<string> clothesViewsId { get; set; }
     }
 }

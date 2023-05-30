@@ -8,17 +8,17 @@ namespace Swapy.Common.DTO.Products.Requests.Queries
 
     public class GetAllProductQueryDTO<T>
     {
-        public int Page { get; set; }
-        public int PageSize { get; set; }
-        public string Title { get; set; }
-        public string CurrencyId { get; set; }
-        public decimal? PriceMin { get; set; }
-        public decimal? PriceMax { get; set; }
-        public string? CategoryId { get; set; }
-        public string? SubcategoryId { get; set; }
-        public string? CityId { get; set; }
-        public string? OtherUserId { get; set; }
-        public bool? SortByPrice { get; set; }
-        public bool? ReverseSort { get; set; }
+        public int page { get; set; }
+        public int pageSize { get; set; }
+        public string title { get; set; }
+        public string currencyId { get; set; }
+        public decimal? priceMin { get; set; }
+        public decimal? priceMax { get; set; }
+        public string? categoryId { get; set; }
+        public string? subcategoryId { get; set; }
+        public string? cityId { get; set; }
+        public string? otherUserId { get; set; }
+        public bool? sortByPrice { get; set; }
+        public bool? reverseSort { get; set; }
     }
 }

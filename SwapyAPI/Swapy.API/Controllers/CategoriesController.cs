@@ -94,7 +94,7 @@ namespace Swapy.API.Controllers
 
         [HttpOptions]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> Options()
+        public async Task<IActionResult> Options()
         {
             return Ok("x4 GET, HEAD, OPTIONS");
         }

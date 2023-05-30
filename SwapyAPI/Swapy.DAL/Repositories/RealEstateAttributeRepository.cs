@@ -38,6 +38,13 @@ namespace Swapy.DAL.Repositories
             return item;
         }
 
+        public async Task<RealEstateAttribute> GetByProductIdAsync(string productId)
+        {
+            var item = await _context.RealEstateAttributes.Where(x => x.ProductId.Equals(productId)).FirstOrDefaultAsync();
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
+            return item;
+        }
+
         public async Task<IEnumerable<RealEstateAttribute>> GetAllAsync()
         {
             return await _context.RealEstateAttributes.ToListAsync();
@@ -61,7 +68,7 @@ namespace Swapy.DAL.Repositories
                                                 .AsQueryable();
         }
 
-        public async Task<RealEstateAttribute> GetDetailByIdAsync(string id)
+        public async Task<RealEstateAttribute> GetDetailByIdAsync(string productId)
         {
             var item = await _context.RealEstateAttributes.Include(re => re.Product)
                                                             .ThenInclude(p => p.Images)
@@ -72,9 +79,9 @@ namespace Swapy.DAL.Repositories
                                                           .Include(re => re.Product)
                                                             .ThenInclude(p => p.Subcategory)
                                                           .Include(re => re.RealEstateType)
-                                                          .FirstOrDefaultAsync(a => a.Id.Equals(id));
+                                                          .FirstOrDefaultAsync(a => a.ProductId.Equals(productId));
 
-            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
             return item;
         }
     }

@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using Swapy.Common.Entities;
+using Swapy.Common.DTO.Products.Responses;
 
 namespace Swapy.BLL.Domain.Products.Queries
 {
-    public class GetAllClothesBrandsQuery : IRequest<IEnumerable<ClothesBrand>>
+    public class GetAllClothesBrandsQuery : IRequest<IEnumerable<SpecificationResponseDTO>>
     {
         public List<string> ClothesViewsId { get; set; }
     }

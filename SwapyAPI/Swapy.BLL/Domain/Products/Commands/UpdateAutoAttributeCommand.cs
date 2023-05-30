@@ -2,7 +2,6 @@
 {
     public class UpdateAutoAttributeCommand : UpdateProductCommand
     {
-        public string AutoAttributeId { get; set; }
         public int Miliage { get; set; }
         public int EngineCapacity { get; set; }
         public DateTime ReleaseYear { get; set; }

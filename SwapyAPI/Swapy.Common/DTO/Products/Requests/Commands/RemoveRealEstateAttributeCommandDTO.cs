@@ -2,6 +2,6 @@
 {
     public class RemoveRealEstateAttributeCommandDTO
     {
-        public string RealEstateAttributeId { get; set; }
+        public string realEstateAttributeId { get; set; }
     }
 }

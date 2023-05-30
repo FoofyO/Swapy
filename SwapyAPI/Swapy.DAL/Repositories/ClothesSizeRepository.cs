@@ -42,5 +42,10 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.ClothesSizes.OrderBy(x => x.Name).ToListAsync();
         }
+
+        public async Task<IEnumerable<ClothesSize>> GetByChildAndShoeAsync(bool isChild, bool isShoe)
+        {
+            return await _context.ClothesSizes.Where(cs => (cs.IsChild == isChild) && (cs.IsShoe == isShoe)).OrderBy(x => x.Name).ToListAsync();
+        }
     }
 }

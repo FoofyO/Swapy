@@ -38,6 +38,13 @@ namespace Swapy.DAL.Repositories
             return item;
         }
 
+        public async Task<FavoriteProduct> GetByProductAndUserIdAsync(string productId, string userId)
+        {
+            var item = await _context.FavoriteProducts.Where(x => x.ProductId.Equals(productId) && x.UserId.Equals(userId)).FirstOrDefaultAsync();
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
+            return item;
+        }
+
         public async Task<IEnumerable<FavoriteProduct>> GetAllAsync()
         {
             return await _context.FavoriteProducts.ToListAsync();

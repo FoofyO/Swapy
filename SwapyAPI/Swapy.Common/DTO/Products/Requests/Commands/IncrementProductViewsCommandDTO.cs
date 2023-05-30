@@ -2,6 +2,6 @@
 {
     public class IncrementProductViewsCommandDTO
     {
-        public string ProductId { get; set; }
+        public string productId { get; set; }
     }
 }

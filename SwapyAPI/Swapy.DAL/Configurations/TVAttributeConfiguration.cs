@@ -44,7 +44,8 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(t => t.Product)
                    .WithOne(t => t.TVAttribute)
                    .HasForeignKey<Product>(t => t.TVAttributeId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.SetNull)
+                   .IsRequired(false);
         }
     }
 }

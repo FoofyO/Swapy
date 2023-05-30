@@ -1,13 +1,13 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Products.Queries;
+using Swapy.BLL.Services;
 using Swapy.Common.DTO.Products.Responses;
-using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
-    public class GetAllFavoriteProductsQueryHandler : IRequestHandler<GetAllFavoriteProductsQuery, ProductsResponseDTO<FavoriteProduct>>
+    public class GetAllFavoriteProductsQueryHandler : IRequestHandler<GetAllFavoriteProductsQuery, ProductsResponseDTO<ProductResponseDTO>>
     {
         private readonly IFavoriteProductRepository _favoriteProductRepository;
 
@@ -16,7 +16,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             _favoriteProductRepository = favoriteProductRepository;
         }
         
-        public async Task<ProductsResponseDTO<FavoriteProduct>> Handle(GetAllFavoriteProductsQuery request, CancellationToken cancellationToken)
+        public async Task<ProductsResponseDTO<ProductResponseDTO>> Handle(GetAllFavoriteProductsQuery request, CancellationToken cancellationToken)
         {
             if ((request.ProductId == null) == (request.UserId == null)) throw new ArgumentException("Specify one ID for either the product or the user.");
 
@@ -36,8 +36,24 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
             if (request.SortByPrice == true) query.OrderBy(x => x.Product.Price);
             else query.OrderBy(x => x.Product.DateTime);
             if (request.ReverseSort == true) query.Reverse();
-            var result = await query.ToListAsync();
-            return new ProductsResponseDTO<FavoriteProduct>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
+
+            FavoriteProductsService favoriteProductsService = new(_favoriteProductRepository);
+
+            var result = await query.Select(x => new ProductResponseDTO()
+            {
+                Id = x.ProductId,
+                Title = x.Product.Title,
+                Price = x.Product.Price,
+                City = x.Product.City.Name,
+                Currency = x.Product.Currency.Name,
+                CurrencySymbol = x.Product.Currency.Symbol,
+                DateTime = x.Product.DateTime,
+                Images = x.Product.Images.Select(i => i.Image).ToList(),
+                UserType = x.Product.User.Type,
+                IsFavorite = true
+            }).ToListAsync();
+
+            return new ProductsResponseDTO<ProductResponseDTO>(result, query.Count(), (int)Math.Ceiling(Convert.ToDouble(query.Count() / request.PageSize)));
         }
     }
 }

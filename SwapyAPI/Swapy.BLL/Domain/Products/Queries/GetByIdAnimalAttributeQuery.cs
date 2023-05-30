@@ -1,10 +1,9 @@
-﻿using MediatR;
-using Swapy.Common.Entities;
+﻿using Swapy.BLL.Domain.Products.QueryHandlers;
+using Swapy.Common.DTO.Products.Responses;
 
 namespace Swapy.BLL.Domain.Products.Queries
 {
-    public class GetByIdAnimalAttributeQuery : IRequest<AnimalAttribute>
+    public class GetByIdAnimalAttributeQuery : GetByIdAttributeQuery<AnimalAttributeResponseDTO>
     {
-        public string AnimalAttributeId { get; set; }
     }
 }

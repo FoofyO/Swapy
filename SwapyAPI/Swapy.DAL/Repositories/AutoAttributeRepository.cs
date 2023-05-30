@@ -38,6 +38,13 @@ namespace Swapy.DAL.Repositories
             return item;
         }
 
+        public async Task<AutoAttribute> GetByProductIdAsync(string productId)
+        {
+            var item = await _context.AutoAttributes.Where(x => x.ProductId.Equals(productId)).FirstOrDefaultAsync();
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
+            return item;
+        }
+
         public async Task<IEnumerable<AutoAttribute>> GetAllAsync()
         {
             return await _context.AutoAttributes.ToListAsync();
@@ -67,7 +74,7 @@ namespace Swapy.DAL.Repositories
                                           .AsQueryable();
         }
 
-        public async Task<AutoAttribute> GetDetailByIdAsync(string id)
+        public async Task<AutoAttribute> GetDetailByIdAsync(string productId)
         {
             var item = await _context.AutoAttributes.Include(a => a.Product)
                                                         .ThenInclude(p => p.Images)
@@ -84,9 +91,9 @@ namespace Swapy.DAL.Repositories
                                                         .ThenInclude(abt => abt.AutoBrand)
                                                     .Include(a => a.AutoModel)
                                                         .ThenInclude(abt => abt.AutoType)
-                                                    .FirstOrDefaultAsync(a => a.Id.Equals(id));
+                                                    .FirstOrDefaultAsync(a => a.ProductId.Equals(productId));
 
-            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
             return item;
         }
     }

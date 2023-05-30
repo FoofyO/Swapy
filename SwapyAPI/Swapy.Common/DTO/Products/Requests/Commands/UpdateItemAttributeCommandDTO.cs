@@ -2,8 +2,7 @@
 {
     public class UpdateItemAttributeCommandDTO : UpdateProductCommandDTO
     {
-        public string ItemAttributeId { get; set; }
-        public bool IsNew { get; set; }
-        public string ItemTypeId { get; set; }
+        public bool isNew { get; set; }
+        public string itemTypeId { get; set; }
     }
 }

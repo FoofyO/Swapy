@@ -14,5 +14,6 @@ namespace Swapy.DAL.Interfaces
         Task<IEnumerable<Subcategory>> GetAllRealEstateTypesAsync();
         Task<IEnumerable<Subcategory>> GetAllAnimalTypesAsync();
         Task<IEnumerable<Subcategory>> GetAllItemTypesAsync();
+        Task<IEnumerable<Subcategory>> GetSequenceOfSubcategories(string subcategoryId);
     }
 }

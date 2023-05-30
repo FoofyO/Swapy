@@ -1,10 +1,10 @@
-﻿using MediatR;
-using Swapy.Common.Entities;
+﻿using Swapy.BLL.Domain.Products.QueryHandlers;
+using Swapy.Common.DTO.Products.Responses;
+
 
 namespace Swapy.BLL.Domain.Products.Queries
 {
-    public class GetByIdElectronicAttributeQuery : IRequest<ElectronicAttribute>
+    public class GetByIdElectronicAttributeQuery : GetByIdAttributeQuery<ElectronicAttributeResponseDTO>
     {
-        public string ElectronicAttributeId { get; set; }
     }
 }

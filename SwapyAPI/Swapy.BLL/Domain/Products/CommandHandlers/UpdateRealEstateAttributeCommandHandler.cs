@@ -18,7 +18,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 
         public async Task<Unit> Handle(UpdateRealEstateAttributeCommand request, CancellationToken cancellationToken)
         {
-            var realEstateAttribute = await _realEstateAttributeRepository.GetByIdAsync(request.RealEstateAttributeId);
+            var realEstateAttribute = await _realEstateAttributeRepository.GetByProductIdAsync(request.ProductId);
             var product = await _productRepository.GetByIdAsync(realEstateAttribute.ProductId);
             
             if (!request.UserId.Equals(product.UserId)) throw new NoAccessException("No access to update this product");

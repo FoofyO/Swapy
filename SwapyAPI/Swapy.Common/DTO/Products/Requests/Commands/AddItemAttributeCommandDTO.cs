@@ -4,7 +4,7 @@ namespace Swapy.Common.DTO.Products.Requests.Commands
 {
     public class AddItemAttributeCommandDTO : AddProductCommandDTO<ItemAttribute>
     {
-        public bool IsNew { get; set; }
-        public string ItemTypeId { get; set; }
+        public bool isNew { get; set; }
+        public string itemTypeId { get; set; }
     }
 }
