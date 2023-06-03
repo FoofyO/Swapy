@@ -5,6 +5,6 @@ namespace Swapy.BLL.Domain.Shops.Queries
 {
     public class GetByIdShopQuery : IRequest<ShopDetailResponseDTO>
     {
-        public string ShopId { get; set; }
+        public string UserId { get; set; }
     }
 }

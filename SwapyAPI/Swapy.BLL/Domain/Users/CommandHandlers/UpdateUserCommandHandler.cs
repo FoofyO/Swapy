@@ -18,10 +18,10 @@ namespace Swapy.BLL.Domain.Users.CommandHandlers
 
             if (user == null) throw new NoAccessException("No access to update this user");
 
-            user.Email = request.Email;
-            user.FirstName = request.FirstName;
-            user.LastName = request.LastName;
-            user.Logo = request.Logo;
+            if(!string.IsNullOrEmpty(request.Logo)) user.Logo = request.Logo;
+            if(!string.IsNullOrEmpty(request.Email)) user.Email = request.Email;
+            if(!string.IsNullOrEmpty(request.FirstName)) user.FirstName = request.FirstName;
+            if(!string.IsNullOrEmpty(request.LastName)) user.LastName = request.LastName;
 
             if (!user.PhoneNumber.Equals(request.PhoneNumber))
             {

@@ -2,13 +2,13 @@
 {
     public class UpdateShopCommandDTO
     {
-        public string shopName { get; set; }
-        public string description { get; set; }
-        public string location { get; set; }
-        public string slogan { get; set; }
-        public string banner { get; set; }
-        public string workDays { get; set; }
-        public TimeSpan? startWorkTime { get; set; }
-        public TimeSpan? endWorkTime { get; set; }
+        public string? ShopName { get; set; }
+        public string? Description { get; set; }
+        public string? Location { get; set; }
+        public string? Slogan { get; set; }
+        public string? Banner { get; set; }
+        public string? WorkDays { get; set; }
+        public TimeSpan? StartWorkTime { get; set; }
+        public TimeSpan? EndWorkTime { get; set; }
     }
 }

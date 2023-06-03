@@ -2,6 +2,6 @@
 {
     public class RemoveLikeCommandDTO
     {
-        public string recipientid { get; set; }
+        public string RecipientId { get; set; }
     }
 }

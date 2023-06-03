@@ -17,10 +17,15 @@ namespace Swapy.BLL.Domain.Chats.CommandHandlers
         }
         public async Task<Chat> Handle(CreateChatCommand request, CancellationToken cancellationToken)
         {
+            var chat = await _chatRepository.CheckChatExists(request.UserId, request.ProductId);
+
+            if (chat != null) return chat;
+
             await _productRepository.GetByIdAsync(request.ProductId);
-            var chat = new Chat(request.ProductId, request.UserId);
-            await _chatRepository.CreateAsync(chat);
-            return chat;
-        } 
+            var newChat = new Chat(request.ProductId, request.UserId);
+            await _chatRepository.CreateAsync(newChat);
+
+            return newChat;
+        }
     }
 }

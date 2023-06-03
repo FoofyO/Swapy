@@ -31,7 +31,8 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(m => m.Chat)
                    .WithMany(c => c.Messages)
                    .HasForeignKey(m => m.ChatId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .IsRequired(false);
 
             builder.HasOne(m => m.Sender)
                    .WithMany(u => u.SentMessages)

@@ -2,7 +2,7 @@
 {
     public class LoginCommandDTO
     {
-        public string emailorphone { get; set; }
-        public string password { get; set; }
+        public string EmailOrPhone { get; set; }
+        public string Password { get; set; }
     }
 }

@@ -2,9 +2,9 @@
 {
     public class ShopRegistrationCommandDTO
     {
-        public string shopname { get; set; }
-        public string email { get; set; }
-        public string phonenumber { get; set; }
-        public string password { get; set; }
+        public string ShopName { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Password { get; set; }
     }
 }

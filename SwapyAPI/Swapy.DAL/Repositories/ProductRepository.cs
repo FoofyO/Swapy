@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
@@ -9,7 +10,13 @@ namespace Swapy.DAL.Repositories
     {
         private readonly SwapyDbContext _context;
 
-        public ProductRepository(SwapyDbContext context) => _context = context;
+        private readonly IFavoriteProductRepository _favoriteProductRepository;
+
+        public ProductRepository(SwapyDbContext context, IFavoriteProductRepository favoriteProductRepository)
+        {
+            _context = context;
+            _favoriteProductRepository = favoriteProductRepository;
+        }
 
         public async Task CreateAsync(Product item)
         {
@@ -48,19 +55,6 @@ namespace Swapy.DAL.Repositories
             return await _context.Products.Where(p => p.UserId.Equals(userId)).ToListAsync();
         }
 
-        public async Task<IQueryable<Product>> GetByPageAsync(int page = 1, int pageSize = 24)
-        {
-            if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
-            if (await _context.Products.CountAsync() <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
-            return _context.Products.Skip(pageSize * (page - 1))
-                                    .Take(pageSize)
-                                    .Include(p => p.Images)
-                                    .Include(p => p.City)
-                                    .Include(p => p.Currency)
-                                    .Include(p => p.Subcategory)
-                                    .AsQueryable();
-        }
-
         public async Task<Product> GetDetailByIdAsync(string id)
         {
             var item = await _context.Products.Include(p => p.Images)
@@ -83,6 +77,67 @@ namespace Swapy.DAL.Repositories
         public async Task<int> GetProductCountForShopAsync(string userId)
         {
             return await _context.Products.CountAsync(p => p.UserId.Equals(userId));
+        }
+
+        public async Task<ProductsResponseDTO<ProductResponseDTO>> GetAllFilteredAsync(int page,
+                                                                                       int pageSize,
+                                                                                       string userId,
+                                                                                       string title,
+                                                                                       string currencyId,
+                                                                                       decimal? priceMin,
+                                                                                       decimal? priceMax,
+                                                                                       string categoryId,
+                                                                                       string subcategoryId,
+                                                                                       string cityId,
+                                                                                       string otherUserId,
+                                                                                       bool? sortByPrice,
+                                                                                       bool? reverseSort)
+        {
+            if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
+
+            var query = _context.Products.Include(p => p.Images)
+                                         .Include(p => p.City)
+                                         .Include(p => p.Currency)
+                                         .Include(p => p.Subcategory)
+                                         .Where(x => (title == null || x.Title.Contains(title)) &&
+                                               (currencyId == null || x.CurrencyId.Equals(currencyId)) &&
+                                               (priceMin == null || x.Price >= priceMin) &&
+                                               (priceMax == null || x.Price <= priceMax) &&
+                                               (categoryId == null || x.CategoryId.Equals(categoryId)) &&
+                                               (subcategoryId == null || x.SubcategoryId.Equals(subcategoryId)) &&
+                                               (cityId == null || x.CityId.Equals(cityId)) &&
+                                               (otherUserId == null ? !x.UserId.Equals(userId) : x.UserId.Equals(otherUserId)))
+                                         .AsQueryable();
+
+            var count = await query.CountAsync();
+            if (count <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
+
+            if (sortByPrice == true) query.OrderBy(x => x.Price);
+            else query.OrderBy(x => x.DateTime);
+            if (reverseSort == true) query.Reverse();
+
+            query.Skip(pageSize * (page - 1))
+                 .Take(pageSize);
+
+            var result = await query.Select(x => new ProductResponseDTO()
+            {
+                Id = x.Id,
+                Title = x.Title,
+                Price = x.Price,
+                City = x.City.Name,
+                Currency = x.Currency.Name,
+                CurrencySymbol = x.Currency.Symbol,
+                DateTime = x.DateTime,
+                Images = x.Images.Select(i => i.Image).ToList(),
+                UserType = x.User.Type
+            }).ToListAsync();
+
+            foreach (var item in result)
+            {
+                item.IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(item.Id, userId);
+            }
+
+            return new ProductsResponseDTO<ProductResponseDTO>(result, count, (int)Math.Ceiling(Convert.ToDouble(count) / pageSize));
         }
     }
 }

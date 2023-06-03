@@ -1,14 +1,12 @@
 ﻿namespace Swapy.Common.DTO.Chats.Responses
 {
-    public class ChatResponseDTO<T>
+    public class ChatResponseDTO
     {
-        public IEnumerable<T> Items { get; set; }
-        public int Count { get; set; }
-
-        public ChatResponseDTO(IEnumerable<T> items, int count, int allPages)
-        {
-            Items = items;
-            Count = count;
-        }
+        public string ChatId { get; set; }
+        public string Title { get; set; }
+        public string Logo { get; set; }
+        public string Image { get; set; }
+        public string LastMessage { get; set; }
+        public DateTime LastMessageDateTime { get; set; }
     }
 }

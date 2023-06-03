@@ -2,10 +2,10 @@
 {
     public class GetAllShopsQueryDTO
     {
-        public string? title { get; set; }
-        public int page { get; set; }
-        public int pagesize { get; set; }
-        public bool? sortbyviews { get; set; }
-        public bool? reversesort { get; set; }
+        public string? Title { get; set; }
+        public int Page { get; set; }
+        public int PageSize { get; set; }
+        public bool? SortByViews { get; set; }
+        public bool? ReverseSort { get; set; }
     }
 }
