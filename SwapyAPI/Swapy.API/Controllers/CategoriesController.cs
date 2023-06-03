@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.BLL.Domain.Categories.Queries;
 using Swapy.Common.DTO.Categories.Requests.Queries;
+using Swapy.Common.Exceptions;
 
 namespace Swapy.API.Controllers
 {
@@ -15,24 +16,30 @@ namespace Swapy.API.Controllers
 
         public CategoriesController(IMediator mediator) => _mediator = mediator;
 
-        [HttpGet("ping")]
+        [HttpGet("Ping")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Ping()
         {
-            return Ok("ping");
+            try
+            {
+                return Ok("Ping");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
         [HttpGet]
-        [Route("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllCategoriesAsync()
         {
             try
             {
-                GetAllCategoriesQuery query = new GetAllCategoriesQuery();
-
-                var result = await _mediator.Send(query);
+                var result = await _mediator.Send(new GetAllCategoriesQuery());
                 return Ok(result);
             }
             catch (Exception ex)
@@ -41,21 +48,20 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("subcategories/{category}")]
+        [HttpGet("Subcategories/{CategoryId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetSubcategoriesByCategoryAsync(GetAllSubcategoriesByCategoryQueryDTO dto)
         {
             try
             {
-                var query = new GetAllSubcategoriesByCategoryQuery() 
-                {
-                    CategoryId = dto.CategoryId
-                };
-
-                var result = await _mediator.Send(query);
+                var result = await _mediator.Send(new GetAllSubcategoriesByCategoryQuery() { CategoryId = dto.CategoryId });
                 return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
@@ -63,21 +69,20 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("subcategories/{subcategory}")]
+        [HttpGet("Subcategories/{SubcategoryId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetSubcategoriesBySubcategoryAsync(GetAllSubcategoriesBySubcategoryQueryDTO dto)
         {
             try
             {
-                var query = new GetAllSubcategoriesBySubcategoryQuery()
-                {
-                    SubcategoryId = dto.SubcategoryId
-                };
-
-                var result = await _mediator.Send(query);
+                var result = await _mediator.Send(new GetAllSubcategoriesBySubcategoryQuery() { SubcategoryId = dto.SubcategoryId });
                 return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {

@@ -2,6 +2,6 @@
 {
     public class RemoveSubscriptionCommandDTO
     {
-        public string recipientid { get; set; }
+        public string RecipientId { get; set; }
     }
 }

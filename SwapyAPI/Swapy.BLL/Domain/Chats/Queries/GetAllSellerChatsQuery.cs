@@ -1,9 +1,9 @@
-﻿using MediatR; 
-using Swapy.Common.Entities;
+﻿using MediatR;
+using Swapy.Common.DTO.Chats.Responses;
 
 namespace Swapy.BLL.Domain.Chats.Queries
 {
-    public class GetAllSellerChatsQuery : IRequest<IEnumerable<Chat>>
+    public class GetAllSellerChatsQuery : IRequest<ChatsResponseDTO>
     {
         public string UserId { get; set; }
     } 

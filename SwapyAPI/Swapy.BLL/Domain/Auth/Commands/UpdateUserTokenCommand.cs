@@ -7,6 +7,5 @@ namespace Swapy.BLL.Domain.Auth.Commands
     {
         public string UserId { get; set; }
         public string OldAccessToken { get; set; }
-        public string OldRefreshToken { get; set; }
     }
 }

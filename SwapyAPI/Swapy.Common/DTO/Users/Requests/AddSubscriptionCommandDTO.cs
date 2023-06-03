@@ -4,6 +4,6 @@ namespace Swapy.Common.DTO.Users.Requests
 {
     public class AddSubscriptionCommandDTO
     {
-        public string recipientid { get; set; }
+        public string RecipientId { get; set; }
     }
 }

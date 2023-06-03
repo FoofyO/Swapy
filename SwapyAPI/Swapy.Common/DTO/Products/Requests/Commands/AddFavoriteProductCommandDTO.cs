@@ -2,6 +2,6 @@
 {
     public class AddFavoriteProductCommandDTO
     {
-        public string productId { get; set; }
+        public string ProductId { get; set; }
     }
 }

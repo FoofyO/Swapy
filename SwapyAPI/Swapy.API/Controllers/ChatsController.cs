@@ -18,19 +18,27 @@ namespace Swapy.API.Controllers
 
         public ChatsController(IMediator mediator) => _mediator = mediator;
 
-        [HttpGet]
-        [Route("ping")]
+        [HttpGet("Ping")]
         [Authorize]
-        public IActionResult Ping()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Ping()
         {
-            return Ok("ping");
+            try
+            {
+                return Ok("Ping");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
         [HttpPost]
-        [Route("")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateChatAsync(CreateChatCommandDTO dto)
         {
@@ -45,7 +53,11 @@ namespace Swapy.API.Controllers
 
                 var result = await _mediator.Send(command);
                 var locationUri = new Uri($"{Request.Scheme}://{Request.Host.ToUriComponent()}/{result.Id}");
-                return Created(locationUri, result);
+                return Created(locationUri, result.Id);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (ArgumentException ex)
             {
@@ -57,11 +69,11 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("messages")]
+        [HttpPost("Messages")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SendMessageAsync(SendMessageCommandDTO dto)
         {
@@ -78,7 +90,11 @@ namespace Swapy.API.Controllers
 
                 var result = await _mediator.Send(command);
                 var locationUri = new Uri($"{Request.Scheme}://{Request.Host.ToUriComponent()}/messages/{result.Id}");
-                return Created(locationUri, result);
+                return Created(locationUri, result.Id);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (ArgumentException ex)
             {
@@ -90,9 +106,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("chats/buyers/{userId}")]
+        [HttpGet("Chats/Buyers")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllBuyerChatsAsync()
         {
@@ -108,9 +125,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("chats/sellers/{userId}")]
+        [HttpGet("Chats/Sellers")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllSellerChatsAsync()
         {
@@ -126,8 +144,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("chats/{id}")]
+        [HttpGet("Chats/{ChatId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -149,17 +166,15 @@ namespace Swapy.API.Controllers
         }
 
         [HttpHead]
-        [Route("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult Head()
+        public async Task<IActionResult> Head()
         {
             return Ok();
         }
 
         [HttpOptions]
-        [Route("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<string> Options()
+        public async Task<IActionResult> Options()
         {
             return Ok("x4 GET, x2 POST, HEAD, OPTIONS");
         }

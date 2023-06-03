@@ -10,7 +10,7 @@ using System.Security.Claims;
 namespace Swapy.API.Controllers
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/Products/[controller]")]
     [Produces("application/json")]
     public class ShopsController : ControllerBase
     {
@@ -20,9 +20,18 @@ namespace Swapy.API.Controllers
 
         [HttpGet("ping")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Ping()
         {
-            return Ok("ping");
+            try
+            {
+                return Ok("ping");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
         [HttpGet]
@@ -34,11 +43,11 @@ namespace Swapy.API.Controllers
             {
                 var query = new GetAllShopsQuery()
                 {
-                    Page = dto.page,
-                    Title = dto.title,
-                    PageSize = dto.pagesize,
-                    ReverseSort = dto.reversesort,
-                    SortByViews = dto.sortbyviews
+                    Page = dto.Page,
+                    Title = dto.Title,
+                    PageSize = dto.PageSize,
+                    ReverseSort = dto.ReverseSort,
+                    SortByViews = dto.SortByViews
                 };
 
                 var result = await _mediator.Send(query);
@@ -50,7 +59,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{UserId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -58,7 +67,7 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetByIdShopQuery() { ShopId = dto.id});
+                var result = await _mediator.Send(new GetByIdShopQuery() { UserId = dto.UserId});
                 return Ok(result);
             }
             catch (NotFoundException ex)
@@ -74,6 +83,7 @@ namespace Swapy.API.Controllers
         [HttpPut]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -85,18 +95,22 @@ namespace Swapy.API.Controllers
                 var command = new UpdateShopCommand()
                 {
                     UserId = userId,
-                    ShopName = dto.shopName,
-                    Description = dto.description,
-                    Location = dto.location,
-                    Slogan = dto.slogan,
-                    Banner = dto.banner,
-                    WorkDays = dto.workDays,
-                    StartWorkTime = dto.startWorkTime,
-                    EndWorkTime = dto.endWorkTime
+                    Banner = dto.Banner,
+                    Slogan = dto.Slogan,
+                    Location = dto.Location,
+                    ShopName = dto.ShopName,
+                    WorkDays = dto.WorkDays,
+                    Description = dto.Description,
+                    EndWorkTime = dto.EndWorkTime,
+                    StartWorkTime = dto.StartWorkTime
                 };
 
                 var result = await _mediator.Send(command);
                 return NoContent();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (NoAccessException ex)
             {
@@ -121,9 +135,9 @@ namespace Swapy.API.Controllers
 
         [HttpOptions]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> Options()
+        public async Task<IActionResult> Options()
         {
-            return Ok("x2 GET, POST, PUT, HEAD, OPTIONS");
+            return Ok("x3 GET, PUT, HEAD, OPTIONS");
         }
     }
 }

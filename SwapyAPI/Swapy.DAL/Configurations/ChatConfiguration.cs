@@ -26,6 +26,7 @@ namespace Swapy.DAL.Configurations
             builder.HasMany(c => c.Messages)
                    .WithOne(m => m.Chat)
                    .HasForeignKey(m => m.ChatId)
+                   .OnDelete(DeleteBehavior.SetNull)
                    .IsRequired(false);
         }
     }

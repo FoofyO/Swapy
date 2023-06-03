@@ -2,6 +2,6 @@
 {
     public class GetByIdUserQueryDTO
     {
-        public string userid { get; set; }
+        public string UserId { get; set; }
     }
 }

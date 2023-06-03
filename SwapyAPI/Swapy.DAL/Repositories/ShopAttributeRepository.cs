@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.DTO.Shops.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
@@ -38,23 +39,12 @@ namespace Swapy.DAL.Repositories
             return item;
         }
         
-        public async Task<ShopAttribute> GetByUserId(string userId)
+        public async Task<ShopAttribute> GetByUserIdAsync(string userId)
         {
             var item = await _context.ShopAttributes.Include(s => s.User).FirstOrDefaultAsync(s => s.UserId.Equals(userId));
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {userId} id not found");
             return item;
-        }
-
-        public async Task<IQueryable<ShopAttribute>> GetByPageAsync(int page, int pageSize)
-        {
-            if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
-            if (await _context.ShopAttributes.CountAsync() <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
-            return _context.ShopAttributes.Skip(pageSize * (page - 1))
-                                          .Take(pageSize)
-                                          .Include(s => s.User)
-                                            .ThenInclude(u => u.Products)
-                                          .AsQueryable();
-        }
+        }        
 
         public async Task<ShopAttribute> GetDetailByIdAsync(string id)
         {
@@ -66,6 +56,39 @@ namespace Swapy.DAL.Repositories
         public async Task<IEnumerable<ShopAttribute>> GetAllAsync()
         {
             return await _context.ShopAttributes.ToListAsync();
+        }
+
+        public async Task<ShopsResponseDTO> GetAllFilteredAsync(int page, int pageSize, string title, bool? sortByViews, bool? reverseSort)
+        {
+            if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
+
+            var query = _context.ShopAttributes.Where(s => title == null || s.ShopName.Contains(title))
+                                               .Include(s => s.User)
+                                                .ThenInclude(u => u.Products)
+                                               .AsQueryable();
+
+            var count = await query.CountAsync();
+            if (count <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
+
+            if (sortByViews == true) query.OrderBy(s => s.Views);
+            else query.OrderBy(s => s.ShopName);
+            if (reverseSort == true) query.Reverse();
+
+            query.Skip(pageSize * (page - 1))
+                 .Take(pageSize);
+
+            var result = await query.Select(x => new ShopResponseDTO
+            {
+                ShopId = x.Id,
+                UserId = x.UserId,
+                Logo = x.User.Logo,
+                ShopName = x.ShopName,
+                Description = x.Description,
+                PhoneNumber = x.User.PhoneNumber,
+                ProductCount = x.User.ProductsCount
+            }).ToListAsync();
+
+            return new ShopsResponseDTO(result, count, (int)Math.Ceiling(Convert.ToDouble(count) / pageSize));
         }
 
         public async Task<bool> FindByShopNameAsync(string shopName)

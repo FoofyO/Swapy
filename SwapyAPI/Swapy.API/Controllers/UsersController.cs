@@ -21,16 +21,25 @@ namespace Swapy.API.Controllers
 
         [HttpGet("ping")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Ping()
         {
-            return Ok("ping");
+            try
+            {
+                return Ok("ping");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
 
         /// <summary>
         /// Users
         /// </summary>
-        [HttpGet("{userid}")]
+        [HttpGet("{UserId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -38,7 +47,7 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetByIdUserQuery() { UserId = dto.userid });
+                var result = await _mediator.Send(new GetByIdUserQuery() { UserId = dto.UserId });
                 return Ok(result);
             }
             catch (NotFoundException ex)
@@ -54,6 +63,7 @@ namespace Swapy.API.Controllers
         [HttpPut]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -65,15 +75,19 @@ namespace Swapy.API.Controllers
                 var command = new UpdateUserCommand
                 {
                     UserId = userId,
-                    Logo = dto.logo,
-                    Email = dto.email,
-                    LastName = dto.lastname,
-                    FirstName = dto.firstname,
-                    PhoneNumber = dto.phonenumber
+                    Logo = dto.Logo,
+                    Email = dto.Email,
+                    LastName = dto.LastName,
+                    FirstName = dto.FirstName,
+                    PhoneNumber = dto.PhoneNumber
                 };
 
                 var result = await _mediator.Send(command);
                 return NoContent();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (NoAccessException ex)
             {
@@ -121,9 +135,10 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Likes 
         /// </summary>
-        [HttpPost("likes/{recipientid}")]
+        [HttpPost("likes/{RecipientId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddLike([FromRoute] AddLikeCommandDTO dto)
@@ -136,12 +151,16 @@ namespace Swapy.API.Controllers
                 {
                     Type = (UserType)Enum.Parse(typeof(UserType), type),
                     UserId = userId,
-                    RecipientId = dto.recipientid,
+                    RecipientId = dto.RecipientId,
                 };
 
                 var result = await _mediator.Send(command);
                 var locationUri = new Uri($"{Request.Scheme}://{Request.Host.ToUriComponent()}/likes/{result.Id}");
-                return Created(locationUri, result);
+                return Created(locationUri, result.Id);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (DuplicateValueException ex)
             {
@@ -157,9 +176,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete("likes/{recipientid}")]
+        [HttpDelete("likes/{RecipientId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -171,11 +191,15 @@ namespace Swapy.API.Controllers
                 var command = new RemoveLikeCommand()
                 {
                     LikerId = userId,
-                    RecipientId = dto.recipientid
+                    RecipientId = dto.RecipientId
                 };
 
                 var result = await _mediator.Send(command);
                 return NoContent();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (NoAccessException ex)
             {
@@ -191,9 +215,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("likes/check/{recipientid}")]
+        [HttpGet("likes/check/{RecipientId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CheckLike([FromRoute] CheckLikeQueryDTO dto)
         {
@@ -203,11 +228,15 @@ namespace Swapy.API.Controllers
                 var query = new CheckLikeQuery()
                 {
                     UserId = userId,
-                    RecipientId = dto.recipientid
+                    RecipientId = dto.RecipientId
                 };
 
                 var result = await _mediator.Send(query);
                 return Ok(result);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (Exception ex)
             {
@@ -219,9 +248,10 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Subscriptions
         /// </summary>
-        [HttpPost("subscriptions/{recipientid}")]
+        [HttpPost("subscriptions/{RecipientId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddSubscription([FromRoute] AddSubscriptionCommandDTO dto)
@@ -234,12 +264,16 @@ namespace Swapy.API.Controllers
                 {
                     Type = (UserType)Enum.Parse(typeof(UserType), type),
                     UserId = userId,
-                    RecipientId = dto.recipientid,
+                    RecipientId = dto.RecipientId,
                 };
 
                 var result = await _mediator.Send(command);
                 var locationUri = new Uri($"{Request.Scheme}://{Request.Host.ToUriComponent()}/subscriptions/{result.Id}");
-                return Created(locationUri, result);
+                return Created(locationUri, result.Id);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (DuplicateValueException ex)
             {
@@ -255,9 +289,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete("subscriptions/{recipientid}")]
+        [HttpDelete("subscriptions/{RecipientId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -269,11 +304,15 @@ namespace Swapy.API.Controllers
                 var command = new RemoveSubscriptionCommand()
                 {
                     SubscriberId = userId,
-                    RecipientId = dto.recipientid
+                    RecipientId = dto.RecipientId
                 };
 
                 var result = await _mediator.Send(command);
                 return NoContent();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (NoAccessException ex)
             {
@@ -289,9 +328,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("subscriptions/check/{recipientid}")]
+        [HttpGet("subscriptions/check/{RecipientId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CheckSubscription([FromRoute] CheckSubscriptionQueryDTO dto)
         {
@@ -301,11 +341,15 @@ namespace Swapy.API.Controllers
                 var query = new CheckSubscriptionQuery()
                 {
                     UserId = userId,
-                    RecipientId = dto.recipientid
+                    RecipientId = dto.RecipientId
                 };
 
                 var result = await _mediator.Send(query);
                 return Ok(result);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (Exception ex)
             {
@@ -322,9 +366,9 @@ namespace Swapy.API.Controllers
 
         [HttpOptions]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> Options()
+        public async Task<IActionResult> Options()
         {
-            return Ok("x4 GET, x2 POST, PUT, DELETE, x2 DELETE, HEAD, OPTIONS");
+            return Ok("x4 GET, x2 POST, PUT, x3 DELETE, HEAD, OPTIONS");
         }
     }
 }

@@ -48,6 +48,7 @@ namespace Swapy.DAL.Repositories
             return await _context.Products.Where(p => p.UserId.Equals(userId))
                                           .SelectMany(p => p.Chats)
                                           .Include(c => c.Product)
+                                            .ThenInclude(p => p.Images.FirstOrDefault())
                                           .Include(c => c.Buyer)
                                           .Include(c => c.Messages.OrderByDescending(m => m.DateTime).FirstOrDefault())
                                           .ToListAsync();
@@ -58,6 +59,8 @@ namespace Swapy.DAL.Repositories
             return await _context.Chats.Where(c => c.BuyerId.Equals(userId))
                                        .Include(p => p.Product)
                                             .ThenInclude(p => p.User)
+                                       .Include(p => p.Product)
+                                            .ThenInclude(p => p.Images.FirstOrDefault())
                                        .Include(c => c.Messages.OrderByDescending(m => m.DateTime).FirstOrDefault())
                                        .ToListAsync();
         }
@@ -66,12 +69,19 @@ namespace Swapy.DAL.Repositories
         {
             var item = await _context.Chats.Include(c => c.Product)
                                                 .ThenInclude(p => p.User)
+                                           .Include(c => c.Product)
+                                                .ThenInclude(p => p.Images.FirstOrDefault())
                                            .Include(c => c.Messages.OrderByDescending(m => m.DateTime))
                                                 .ThenInclude(m => m.Sender)
                                            .FirstOrDefaultAsync(c => c.Id.Equals(id));
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
+        }
+
+        public async Task<Chat> CheckChatExists(string userId, string productId)
+        {
+            return await _context.Chats.Where(c => c.ProductId.Equals(productId) && c.BuyerId.Equals(userId)).FirstOrDefaultAsync();
         }
     }
 }

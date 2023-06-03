@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Users.Queries;
 using Swapy.Common.DTO.Users.Responses;
 using Swapy.Common.Entities;
@@ -15,17 +14,19 @@ namespace Swapy.BLL.Domain.Users.QueryHandlers
 
         public async Task<UserResponseDTO> Handle(GetByIdUserQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id.Equals(request.UserId));
+            var user = await _userManager.FindByIdAsync(request.UserId);
 
             return new UserResponseDTO()
             {
                 Logo = user.Logo,
+                Email = user.Email,
                 LastName = user.LastName,
                 FirstName = user.FirstName,
                 LikesCount = user.LikesCount,
+                PhoneNumber = user.PhoneNumber,
                 ProductsCount = user.ProductsCount,
                 RegistrationDate = user.RegistrationDate,
-                SubscriptionsCount = user.SubscriptionsCount,
+                SubscriptionsCount = user.SubscriptionsCount
             };
         }
     }

@@ -12,16 +12,16 @@ namespace Swapy.BLL.Domain.Shops.CommandHandlers
 
         public async Task<Unit> Handle(UpdateShopCommand request, CancellationToken cancellationToken)
         {
-            var shop = await _shopAttributeRepository.GetByUserId(request.UserId);
+            var shop = await _shopAttributeRepository.GetByUserIdAsync(request.UserId);
 
-            shop.Banner = request.Banner;
-            shop.Slogan = request.Slogan;
-            shop.Location = request.Location;
-            shop.ShopName = request.ShopName;
-            shop.WorkDays = request.WorkDays;
-            shop.Description = request.Description;
-            shop.EndWorkTime = request.EndWorkTime;
-            shop.StartWorkTime = request.StartWorkTime;
+            if (!string.IsNullOrEmpty(request.Banner)) shop.Banner = request.Banner;
+            if (!string.IsNullOrEmpty(request.Slogan)) shop.Slogan = request.Slogan;
+            if (!string.IsNullOrEmpty(request.Location)) shop.Location = request.Location;
+            if (!string.IsNullOrEmpty(request.ShopName)) shop.ShopName = request.ShopName;
+            if (!string.IsNullOrEmpty(request.WorkDays)) shop.WorkDays = request.WorkDays;
+            if (!string.IsNullOrEmpty(request.Description)) shop.Description = request.Description;
+            if (request.EndWorkTime != null) shop.EndWorkTime = request.EndWorkTime;
+            if (request.StartWorkTime != null) shop.StartWorkTime = request.StartWorkTime;
 
             await _shopAttributeRepository.UpdateAsync(shop);
 

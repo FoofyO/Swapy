@@ -2,8 +2,8 @@
 
 namespace Swapy.Common.DTO.Products.Requests.Queries
 {
-    public class GetAllFavoriteProductsQueryDTO : GetAllProductQueryDTO<FavoriteProduct>
+    public class GetAllFavoriteProductsQueryDTO : GetAllBasicProductsQueryDTO<FavoriteProduct>
     {
-        public string productId { get; set; }
+        public string ProductId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
@@ -8,8 +9,13 @@ namespace Swapy.DAL.Repositories
     public class AnimalAttributeRepository : IAnimalAttributeRepository
     {
         private readonly SwapyDbContext _context;
-    
-        public AnimalAttributeRepository(SwapyDbContext context) => _context = context;
+        private readonly IFavoriteProductRepository _favoriteProductRepository;
+
+        public AnimalAttributeRepository(SwapyDbContext context, IFavoriteProductRepository favoriteProductRepository)
+        {
+            _context = context;
+            _favoriteProductRepository = favoriteProductRepository;
+        }
         
         public async Task CreateAsync(AnimalAttribute item)
         {
@@ -50,23 +56,75 @@ namespace Swapy.DAL.Repositories
             return await _context.AnimalAttributes.ToListAsync();
         }
 
-        public async Task<IQueryable<AnimalAttribute>> GetByPageAsync(int page = 1, int pageSize = 24)
+        public async Task<ProductsResponseDTO<ProductResponseDTO>> GetAllFilteredAsync(int page,
+                                                                                       int pageSize,
+                                                                                       string userId,
+                                                                                       string title,
+                                                                                       string currencyId,
+                                                                                       decimal? priceMin,
+                                                                                       decimal? priceMax,
+                                                                                       string categoryId,
+                                                                                       string subcategoryId,
+                                                                                       string cityId,
+                                                                                       string otherUserId,
+                                                                                       List<string> animalBreedsId,
+                                                                                       List<string> animalTypesId,
+                                                                                       bool? sortByPrice,
+                                                                                       bool? reverseSort)
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
-            if (await _context.AnimalAttributes.CountAsync() <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
-            return _context.AnimalAttributes.Skip(pageSize * (page - 1))
-                                            .Take(pageSize)
-                                            .Include(a => a.Product)
-                                                .ThenInclude(p => p.Images)
-                                            .Include(a => a.Product)
-                                                .ThenInclude(p => p.City)
-                                            .Include(a => a.Product)
-                                                .ThenInclude(p => p.Currency)
-                                            .Include(a => a.Product)
-                                                .ThenInclude(p => p.Subcategory)
-                                            .Include(a => a.AnimalBreed)
-                                                .ThenInclude(ab => ab.AnimalType)
-                                            .AsQueryable();
+
+            var query = _context.AnimalAttributes.Include(a => a.Product)
+                                                    .ThenInclude(p => p.Images)
+                                                 .Include(a => a.Product)
+                                                    .ThenInclude(p => p.City)
+                                                 .Include(a => a.Product)
+                                                    .ThenInclude(p => p.Currency)
+                                                 .Include(a => a.Product)
+                                                    .ThenInclude(p => p.Subcategory)
+                                                 .Include(a => a.AnimalBreed)
+                                                    .ThenInclude(ab => ab.AnimalType)
+                                                 .Where(x => (title == null || x.Product.Title.Contains(title)) &&
+                                                       (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
+                                                       (priceMin == null || x.Product.Price >= priceMin) &&
+                                                       (priceMax == null || x.Product.Price <= priceMax) &&
+                                                       (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
+                                                       (subcategoryId == null || x.Product.SubcategoryId.Equals(subcategoryId)) &&
+                                                       (cityId == null || x.Product.CityId.Equals(cityId)) &&
+                                                       (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
+                                                       (animalBreedsId == null || animalBreedsId.Contains(x.AnimalBreedId)) &&
+                                                       (animalTypesId == null || animalTypesId.Contains(x.AnimalBreed.AnimalTypeId)))
+                                                 .AsQueryable();
+
+            var count = await query.CountAsync();
+            if (count <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
+
+            if (sortByPrice == true) query.OrderBy(x => x.Product.Price);
+            else query.OrderBy(x => x.Product.DateTime);
+            if (reverseSort == true) query.Reverse();
+
+            query.Skip(pageSize * (page - 1))
+                 .Take(pageSize);
+
+            var result = await query.Select(x => new ProductResponseDTO()
+            {
+                Id = x.ProductId,
+                Title = x.Product.Title,
+                Price = x.Product.Price,
+                City = x.Product.City.Name,
+                Currency = x.Product.Currency.Name,
+                CurrencySymbol = x.Product.Currency.Symbol,
+                DateTime = x.Product.DateTime,
+                Images = x.Product.Images.Select(i => i.Image).ToList(),
+                UserType = x.Product.User.Type
+            }).ToListAsync();
+
+            foreach (var item in result)
+            {
+                item.IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(item.Id, userId);
+            }
+
+            return new ProductsResponseDTO<ProductResponseDTO>(result, count, (int)Math.Ceiling(Convert.ToDouble(count) / pageSize));
         }
 
         public async Task<AnimalAttribute> GetDetailByIdAsync(string productId)

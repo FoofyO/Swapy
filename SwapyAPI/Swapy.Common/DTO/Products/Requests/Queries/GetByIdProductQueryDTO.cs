@@ -2,6 +2,6 @@
 {
     public class GetByIdProductQueryDTO
     {
-        public string productId { get; set; }
+        public string ProductId { get; set; }
     }
 }

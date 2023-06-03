@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.BLL.Domain.Auth.Commands;
+using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Auth.Requests;
-using Swapy.Common.DTO.Auth.Responses;
 using Swapy.Common.Exceptions;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Authentication;
@@ -20,26 +20,35 @@ namespace Swapy.API.Controllers
 
         public AuthController(IMediator mediator) => _mediator = mediator;
 
-        [HttpGet("ping")]
+        [HttpGet("Ping")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Ping()
         {
-            return Ok("ping");
+            try
+            {
+                return Ok("Ping");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<AuthResponseDTO>> LoginAsync(LoginCommandDTO dto)
+        public async Task<IActionResult> LoginAsync(LoginCommandDTO dto)
         {
             try
             {
                 var command = new LoginCommand()
                 {
-                    EmailOrPhone = dto.emailorphone,
-                    Password = dto.password
+                    EmailOrPhone = dto.EmailOrPhone,
+                    Password = dto.Password
                 };
 
                 var result = await _mediator.Send(command);
@@ -59,23 +68,22 @@ namespace Swapy.API.Controllers
             }
         }
 
-
-        [HttpPost("register/user")]
+        [HttpPost("Register/User")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<AuthResponseDTO>> UserRegistrationAsync(UserRegistrationCommandDTO dto)
+        public async Task<IActionResult> UserRegistrationAsync(UserRegistrationCommandDTO dto)
         {
             try
             {
                 var command = new UserRegistrationCommand()
                 {
-                    FirstName = dto.firstname,
-                    LastName = dto.lastname,
-                    Email = dto.email,
-                    PhoneNumber = dto.phonenumber,
-                    Password = dto.password
+                    FirstName = dto.FirstName,
+                    LastName = dto.LastName,
+                    Email = dto.Email,
+                    PhoneNumber = dto.PhoneNumber,
+                    Password = dto.Password
                 };
 
                 var result = await _mediator.Send(command);
@@ -95,22 +103,21 @@ namespace Swapy.API.Controllers
             }
         }
 
-
-        [HttpPost("register/shop")]
+        [HttpPost("Register/Shop")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<AuthResponseDTO>> ShopRegistrationAsync(ShopRegistrationCommandDTO dto)
+        public async Task<IActionResult> ShopRegistrationAsync(ShopRegistrationCommandDTO dto)
         {
             try
             {
                 var command = new ShopRegistrationCommand()
                 {
-                    ShopName = dto.shopname,
-                    Email = dto.email,
-                    PhoneNumber = dto.phonenumber,
-                    Password = dto.password
+                    ShopName = dto.ShopName,
+                    Email = dto.Email,
+                    PhoneNumber = dto.PhoneNumber,
+                    Password = dto.Password
                 };
 
                 var result = await _mediator.Send(command);
@@ -130,24 +137,21 @@ namespace Swapy.API.Controllers
             }
         }
 
-
-        [HttpGet("refresh/{oldRefreshToken}")]
+        [HttpPut("RefreshAccessToken")]
+        [AuthorizeIgnoreExpiredToken]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<AuthResponseDTO>> RefreshAsync(UpdateUserTokenCommandDTO dto)
+        public async Task<IActionResult> UpdateTokenAsync()
         {
             try
             {
                 var accessToken = User.FindFirstValue(ClaimTypes.Hash);
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var refreshToken = User.FindFirstValue(ClaimTypes.Authentication);
                 var command = new UpdateUserTokenCommand()
                 {
                     UserId = userId,
                     OldAccessToken = accessToken,
-                    OldRefreshToken = refreshToken
                 };
 
                 var result = await _mediator.Send(command);
@@ -157,21 +161,17 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
 
-
-        [HttpGet("logout/{refreshToken}")]
+        [HttpGet("Logout")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> LogoutAsync()
         {
@@ -186,6 +186,10 @@ namespace Swapy.API.Controllers
                 var result = await _mediator.Send(command);
                 return NoContent();
             }
+            catch(UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
             catch (Exception ex)
             {
                 if (ex is ValidationException)
@@ -197,40 +201,39 @@ namespace Swapy.API.Controllers
             }
         }
 
-
-        [HttpGet("check")]
+        [HttpGet("Check")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<bool>> Check([FromQuery] CheckCommandDTO dto)
+        public async Task<IActionResult> Check([FromQuery] CheckCommandDTO dto)
         {
             try
             {
-                if (!string.IsNullOrEmpty(dto.email) && !string.IsNullOrEmpty(dto.phonenumber) && string.IsNullOrEmpty(dto.shopname))
+                if (!string.IsNullOrEmpty(dto.Email) && string.IsNullOrEmpty(dto.PhoneNumber) && string.IsNullOrEmpty(dto.ShopName))
                 {
                     var command = new EmailCommand()
                     {
-                        Email = dto.email
+                        Email = dto.Email
                     };
 
                     var result = await _mediator.Send(command);
                     return Ok(result);
                 }
-                else if (string.IsNullOrEmpty(dto.email) && !string.IsNullOrEmpty(dto.phonenumber) && string.IsNullOrEmpty(dto.shopname))
+                else if (string.IsNullOrEmpty(dto.Email) && !string.IsNullOrEmpty(dto.PhoneNumber) && string.IsNullOrEmpty(dto.ShopName))
                 {
                     var command = new PhoneNumberCommand()
                     {
-                        PhoneNumber = dto.phonenumber
+                        PhoneNumber = dto.PhoneNumber
                     };
 
                     var result = await _mediator.Send(command);
                     return Ok(result);
                 }
-                else if (string.IsNullOrEmpty(dto.email) && string.IsNullOrEmpty(dto.phonenumber) && !string.IsNullOrEmpty(dto.shopname))
+                else if (string.IsNullOrEmpty(dto.Email) && string.IsNullOrEmpty(dto.PhoneNumber) && !string.IsNullOrEmpty(dto.ShopName))
                 {
                     var command = new ShopNameCommand()
                     {
-                        ShopName = dto.shopname
+                        ShopName = dto.ShopName
                     };
 
                     var result = await _mediator.Send(command);
@@ -249,6 +252,42 @@ namespace Swapy.API.Controllers
             }
         }
 
+        [HttpPatch("ChangePassword")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ChangePassword(ChangePasswordCommandDTO dto)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var command = new ChangePasswordCommand()
+                {
+                    UserId = userId,
+                    NewPassword = dto.NewPassword,
+                    OldPassword = dto.OldPassword
+                };
+
+                var result = await _mediator.Send(command);
+                return Ok();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+
         [HttpHead]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Head()
@@ -259,9 +298,9 @@ namespace Swapy.API.Controllers
 
         [HttpOptions]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> Options()
+        public async Task<IActionResult> Options()
         {
-            return Ok("x4 GET, x3 POST, HEAD, OPTIONS");
+            return Ok("x4 GET, x3 POST, PATCH, HEAD, OPTIONS");
         }
     }
 }

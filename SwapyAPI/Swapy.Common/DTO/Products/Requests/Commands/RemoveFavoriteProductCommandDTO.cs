@@ -2,6 +2,6 @@
 {
     public class RemoveFavoriteProductCommandDTO
     {
-        public string productId { get; set; }
+        public string ProductId { get; set; }
     }
 }

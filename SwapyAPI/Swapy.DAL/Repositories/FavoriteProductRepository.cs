@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
@@ -50,37 +51,94 @@ namespace Swapy.DAL.Repositories
             return await _context.FavoriteProducts.ToListAsync();
         }
 
-        public async Task<IQueryable<FavoriteProduct>> GetByPageAsync(int page = 1, int pageSize = 24)
-        {
-            if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
-            if (await _context.FavoriteProducts.CountAsync() <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
-            return _context.FavoriteProducts.Skip(pageSize * (page - 1))
-                                    .Take(pageSize)
-                                    .Include(fp => fp.Product)
-                                        .ThenInclude(p => p.Images)
-                                    .Include(fp => fp.Product)
-                                        .ThenInclude(p => p.City)
-                                    .Include(fp => fp.Product)
-                                        .ThenInclude(p => p.Currency)
-                                    .Include(fp => fp.Product)
-                                        .ThenInclude(fp => fp.Subcategory)
-                                    .AsQueryable();
-        }
-
         public async Task<FavoriteProduct> GetDetailByIdAsync(string id)
         {
             var item = await _context.FavoriteProducts.Include(fp => fp.Product)
-                                        .ThenInclude(p => p.Images)
-                                    .Include(fp => fp.Product)
-                                        .ThenInclude(p => p.City)
-                                    .Include(fp => fp.Product)
-                                        .ThenInclude(p => p.Currency)
-                                    .Include(fp => fp.Product)
-                                        .ThenInclude(p => p.Subcategory)
-                                    .FirstOrDefaultAsync(fp => fp.Id.Equals(id));
+                                                        .ThenInclude(p => p.Images)
+                                                      .Include(fp => fp.Product)
+                                                        .ThenInclude(p => p.City)
+                                                      .Include(fp => fp.Product)
+                                                        .ThenInclude(p => p.Currency)
+                                                      .Include(fp => fp.Product)
+                                                        .ThenInclude(p => p.Subcategory)
+                                                      .FirstOrDefaultAsync(fp => fp.Id.Equals(id));
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
+        }
+
+        public async Task<ProductsResponseDTO<ProductResponseDTO>> GetAllFilteredAsync(int page,
+                                                                                       int pageSize,
+                                                                                       string userId,
+                                                                                       string title,
+                                                                                       string currencyId,
+                                                                                       decimal? priceMin,
+                                                                                       decimal? priceMax,
+                                                                                       string categoryId,
+                                                                                       string subcategoryId,
+                                                                                       string cityId,
+                                                                                       string otherUserId,
+                                                                                       string productId,
+                                                                                       bool? sortByPrice,
+                                                                                       bool? reverseSort)
+        {
+            if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
+
+            var query = _context.FavoriteProducts.Include(fp => fp.Product)
+                                                    .ThenInclude(p => p.Images)
+                                                 .Include(fp => fp.Product)
+                                                    .ThenInclude(p => p.City)
+                                                 .Include(fp => fp.Product)
+                                                    .ThenInclude(p => p.Currency)
+                                                 .Include(fp => fp.Product)
+                                                    .ThenInclude(fp => fp.Subcategory)
+                                                 .Where(x => (title == null || x.Product.Title.Contains(title)) &&
+                                                       (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
+                                                       (priceMin == null || x.Product.Price >= priceMin) &&
+                                                       (priceMax == null || x.Product.Price <= priceMax) &&
+                                                       (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
+                                                       (subcategoryId == null || x.Product.SubcategoryId.Equals(subcategoryId)) &&
+                                                       (cityId == null || x.Product.CityId.Equals(cityId)) &&
+                                                       (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
+                                                       (productId == null || x.ProductId.Equals(productId)))
+                                                 .AsQueryable();
+
+            var count = await query.CountAsync();
+            if (count <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
+
+            if (sortByPrice == true) query.OrderBy(x => x.Product.Price);
+            else query.OrderBy(x => x.Product.DateTime);
+            if (reverseSort == true) query.Reverse();
+
+            query.Skip(pageSize * (page - 1))
+                 .Take(pageSize);
+
+            var result = await query.Select(x => new ProductResponseDTO()
+            {
+                Id = x.ProductId,
+                Title = x.Product.Title,
+                Price = x.Product.Price,
+                City = x.Product.City.Name,
+                Currency = x.Product.Currency.Name,
+                CurrencySymbol = x.Product.Currency.Symbol,
+                DateTime = x.Product.DateTime,
+                Images = x.Product.Images.Select(i => i.Image).ToList(),
+                UserType = x.Product.User.Type
+            }).ToListAsync();
+
+            foreach (var item in result)
+            {
+                item.IsFavorite = await CheckProductOnFavorite(item.Id, userId);
+            }
+
+            return new ProductsResponseDTO<ProductResponseDTO>(result, count, (int)Math.Ceiling(Convert.ToDouble(count) / pageSize));
+        }
+
+        public async Task<bool> CheckProductOnFavorite(string productId, string userId)
+        {
+            var item = await _context.FavoriteProducts.Where(x => x.ProductId.Equals(productId) && x.UserId.Equals(userId)).FirstOrDefaultAsync();
+            if (item == null) return false;
+            return true;
         }
     }
 }
