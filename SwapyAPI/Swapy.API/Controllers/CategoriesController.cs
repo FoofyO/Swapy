@@ -48,11 +48,11 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("Subcategories/{CategoryId}")]
+        [HttpGet("Subcategories{CategoryId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetSubcategoriesByCategoryAsync(GetAllSubcategoriesByCategoryQueryDTO dto)
+        public async Task<IActionResult> GetSubcategoriesByCategoryAsync([FromRoute] GetAllSubcategoriesByCategoryQueryDTO dto)
         {
             try
             {
@@ -69,11 +69,11 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("Subcategories/{SubcategoryId}")]
+        [HttpGet("Subcategories{SubcategoryId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetSubcategoriesBySubcategoryAsync(GetAllSubcategoriesBySubcategoryQueryDTO dto)
+        public async Task<IActionResult> GetSubcategoriesBySubcategoryAsync([FromRoute] GetAllSubcategoriesBySubcategoryQueryDTO dto)
         {
             try
             {

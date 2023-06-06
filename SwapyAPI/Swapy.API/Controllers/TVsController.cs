@@ -71,7 +71,7 @@ namespace Swapy.API.Controllers
 
                 var result = await _mediator.Send(command);
                 var locationUri = new Uri($"{Request.Scheme}://{Request.Host.ToUriComponent()}/tvs/{result.Id}");
-                return Created(locationUri, result.Id);
+                return Created(locationUri, result.ProductId);
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -91,50 +91,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete]
-        [Authorize]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveTVAsync([FromRoute] RemoveTVAttributeCommandDTO dto)
-        {
-            try
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var command = new RemoveTVAttributeCommand()
-                {
-                    UserId = userId,
-                    TVAttributeId = dto.TvAttributeId
-                };
-
-                var result = await _mediator.Send(command);
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
-            catch (NoAccessException ex)
-            {
-                return Forbid(ex.Message);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
-            }
-        }
-
         [HttpPut]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateTVAsync([FromQuery] UpdateTVAttributeCommandDTO dto)
@@ -170,7 +130,7 @@ namespace Swapy.API.Controllers
             }
             catch (NoAccessException ex)
             {
-                return Forbid(ex.Message);
+                return Unauthorized(ex.Message);
             }
             catch (NotFoundException ex)
             {

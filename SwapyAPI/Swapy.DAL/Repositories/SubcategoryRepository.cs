@@ -99,9 +99,15 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.Subcategories.Where(s => s.Type == SubcategoryType.AnimalsTypes).OrderBy(s => s.Name).ToListAsync();
         }
-        public async Task<IEnumerable<Subcategory>> GetAllItemTypesAsync()
+        public async Task<IEnumerable<Subcategory>> GetAllItemSectionsAsync()
         {
-            return await _context.Subcategories.Where(s => s.Type == SubcategoryType.ItemsTypes).OrderBy(s => s.Name).ToListAsync();
+            return await _context.Subcategories.Include(s => s.ChildSubcategories)
+                                               .Where(s => s.Type == SubcategoryType.ItemsTypes && s.ChildSubcategories.Count != 0)
+                                               .OrderBy(s => s.Name).ToListAsync();
+        }
+        public async Task<IEnumerable<Subcategory>> GetAllItemTypesAsync(string parentSubcategoryId)
+        {
+            return await _context.Subcategories.Where(s => s.Type == SubcategoryType.ItemsTypes && s.ParentSubcategoryId.Equals(parentSubcategoryId)).OrderBy(s => s.Name).ToListAsync();
         }
         public async Task<IEnumerable<Subcategory>> GetSequenceOfSubcategories(string subcategoryId)
         {

@@ -86,50 +86,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete]
-        [Authorize]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveAnimalAsync([FromRoute] RemoveAnimalAttributeCommandDTO dto)
-        {
-            try
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var command = new RemoveAnimalAttributeCommand()
-                {
-                    UserId = userId,
-                    AnimalAttributeId = dto.AnimalAttributeId
-                };
-
-                var result = await _mediator.Send(command);
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
-            catch (NoAccessException ex)
-            {
-                return Forbid(ex.Message);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
-            }
-        }
-
         [HttpPut]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateAnimalAsync([FromQuery] UpdateAnimalAttributeCommandDTO dto)
@@ -160,7 +120,7 @@ namespace Swapy.API.Controllers
             }
             catch (NoAccessException ex)
             {
-                return Forbid(ex.Message);
+                return Unauthorized(ex.Message);
             }
             catch (NotFoundException ex)
             {
@@ -238,7 +198,7 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Animal Attributes
         /// </summary>
-        [HttpGet("Breeds")]
+        [HttpGet("Breeds{AnimalTypesId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllAnimalBreedsAsync([FromRoute] GetAllAnimalBreedsQueryDTO dto)

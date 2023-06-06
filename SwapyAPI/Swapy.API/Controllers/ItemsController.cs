@@ -67,7 +67,7 @@ namespace Swapy.API.Controllers
 
                 var result = await _mediator.Send(command);
                 var locationUri = new Uri($"{Request.Scheme}://{Request.Host.ToUriComponent()}/items/{result.Id}");
-                return Created(locationUri, result.Id);
+                return Created(locationUri, result.ProductId);
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -87,50 +87,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete]
-        [Authorize]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveItemAsync([FromRoute] RemoveItemAttributeCommandDTO dto)
-        {
-            try
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var command = new RemoveItemAttributeCommand()
-                {
-                    UserId = userId,
-                    ItemAttributeId = dto.ItemAttributeId
-                };
-
-                var result = await _mediator.Send(command);
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
-            catch (NoAccessException ex)
-            {
-                return Forbid(ex.Message);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
-            }
-        }
-
         [HttpPut]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateItemAsync([FromQuery] UpdateItemAttributeCommandDTO dto)
@@ -162,7 +122,7 @@ namespace Swapy.API.Controllers
             }
             catch (NoAccessException ex)
             {
-                return Forbid(ex.Message);
+                return Unauthorized(ex.Message);
             }
             catch (NotFoundException ex)
             {
@@ -239,14 +199,33 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Items Attributes
         /// </summary>
-        [HttpGet("Types")]
+        [HttpGet("Sections")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllItemTypesAsync()
+        public async Task<IActionResult> GetAllItemSectionsAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllItemTypesQuery());
+                var result = await _mediator.Send(new GetAllItemSectionsQuery());
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpGet("Types{ParentSubcategoryId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAllItemTypesAsync([FromRoute] GetAllItemTypesQueryDTO dto)
+        {
+            try
+            {
+                var result = await _mediator.Send(new GetAllItemTypesQuery()
+                {
+                    ParentSubcategoryId = dto.ParentSubcategoryId
+                });
                 return Ok(result);
             }
             catch (Exception ex)

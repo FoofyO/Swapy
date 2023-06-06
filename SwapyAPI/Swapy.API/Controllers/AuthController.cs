@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Castle.Core.Internal;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.BLL.Domain.Auth.Commands;
@@ -148,6 +149,7 @@ namespace Swapy.API.Controllers
             {
                 var accessToken = User.FindFirstValue(ClaimTypes.Hash);
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if(userId.IsNullOrEmpty()) throw new UnauthorizedAccessException("Unauthorized");
                 var command = new UpdateUserTokenCommand()
                 {
                     UserId = userId,
@@ -157,7 +159,7 @@ namespace Swapy.API.Controllers
                 var result = await _mediator.Send(command);
                 return Ok(result);
             }
-            catch (TokenExpiredException ex)
+            catch (Exception ex) when (ex is UnauthorizedAccessException || ex is TokenExpiredException)
             {
                 return Unauthorized(ex.Message);
             }

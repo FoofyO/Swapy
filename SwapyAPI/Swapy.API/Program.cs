@@ -120,7 +120,7 @@ namespace Swapy.API
             /// </summary>
             builder.Services.AddDbContext<SwapyDbContext>(option =>
             {
-                option.UseSqlServer(builder.Configuration.GetConnectionString("SamedSQL"));
+                option.UseSqlServer(builder.Configuration.GetConnectionString("OrxanSQL"));
             });
 
 
@@ -227,6 +227,7 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<GetAllClothesTypesQuery, IEnumerable<SpecificationResponseDTO>>, GetAllClothesTypesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllClothesViewsQuery, IEnumerable<SpecificationResponseDTO>>, GetAllClothesViewsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllColorsQuery, IEnumerable<SpecificationResponseDTO>>, GetAllColorsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllColorsByModelQuery, IEnumerable<SpecificationResponseDTO>>, GetAllColorsQueryByModelHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllCurrenciesQuery, IEnumerable<CurrencyResponseDTO>>, GetAllCurrenciesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllElectronicAttributesQuery, ProductsResponseDTO<ProductResponseDTO>>, GetAllElectronicAttributesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllElectronicBrandsQuery, IEnumerable<SpecificationResponseDTO>>, GetAllElectronicBrandsQueryHandler>();
@@ -265,17 +266,10 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<IncrementProductViewsCommand, Unit>, IncrementProductViewsCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<LoginCommand, AuthResponseDTO>, LoginCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<LogoutCommand, Unit>, LogoutCommandHandler>();
-            builder.Services.AddTransient<IRequestHandler<RemoveAnimalAttributeCommand, Unit>, RemoveAnimalAttributeCommandHandler>();
-            builder.Services.AddTransient<IRequestHandler<RemoveAutoAttributeCommand, Unit>, RemoveAutoAttributeCommandHandler>();
-            builder.Services.AddTransient<IRequestHandler<RemoveClothesAttributeCommand, Unit>, RemoveClothesAttributeCommandHandler>();
-            builder.Services.AddTransient<IRequestHandler<RemoveElectronicAttributeCommand, Unit>, RemoveElectronicAttributeCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<RemoveFavoriteProductCommand, Unit>, RemoveFavoriteProductCommandHandler>();
-            builder.Services.AddTransient<IRequestHandler<RemoveItemAttributeCommand, Unit>, RemoveItemAttributeCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<RemoveLikeCommand, Unit>, RemoveLikeCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<RemoveProductCommand, Unit>, RemoveProductCommandHandler>();
-            builder.Services.AddTransient<IRequestHandler<RemoveRealEstateAttributeCommand, Unit>, RemoveRealEstateAttributeCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<RemoveSubscriptionCommand, Unit>, RemoveSubscriptionCommandHandler>();
-            builder.Services.AddTransient<IRequestHandler<RemoveTVAttributeCommand, Unit>, RemoveTVAttributeCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<RemoveUserCommand, Unit>, RemoveUserCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<SendMessageCommand, Message>, SendMessageCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<ShopRegistrationCommand, AuthResponseDTO>, ShopRegistrationCommandHandler>();
@@ -334,7 +328,6 @@ namespace Swapy.API
                 options.DefaultAuthenticateScheme = "Basic";
                 options.DefaultChallengeScheme = "Basic";
             }).AddScheme<BasicAuthenticationOptions, SwapyAuthenticationHandler>("Basic", null);
-
 
             /// <summary>
             /// Configurations for MediatR
