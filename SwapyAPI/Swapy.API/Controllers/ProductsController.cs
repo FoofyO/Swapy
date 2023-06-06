@@ -77,11 +77,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{ProductId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RemoveProductAsync([FromRoute] RemoveProductCommandDTO dto)
@@ -104,7 +103,7 @@ namespace Swapy.API.Controllers
             }
             catch (NoAccessException ex)
             {
-                return Forbid(ex.Message);
+                return Unauthorized(ex.Message);
             }
             catch (NotFoundException ex)
             {
@@ -146,13 +145,13 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Favorite products
         /// </summary>
-        [HttpPost("FavoriteProducts")]
+        [HttpPost("FavoriteProducts{ProductId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddFavoriteProductAsync(AddFavoriteProductCommandDTO dto)
+        public async Task<IActionResult> AddFavoriteProductAsync([FromRoute] AddFavoriteProductCommandDTO dto)
         {
             try
             {
@@ -181,11 +180,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete("FavoriteProducts")]
+        [HttpDelete("FavoriteProducts{ProductId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RemoveFavoriteProductAsync([FromRoute] RemoveFavoriteProductCommandDTO dto)
@@ -208,7 +206,7 @@ namespace Swapy.API.Controllers
             }
             catch (NoAccessException ex)
             {
-                return Forbid(ex.Message);
+                return Unauthorized(ex.Message);
             }
             catch (NotFoundException ex)
             {
@@ -305,11 +303,11 @@ namespace Swapy.API.Controllers
         [HttpGet("Colors")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllColorsAsync([FromRoute] GetAllColorsQueryDTO dto)
+        public async Task<IActionResult> GetAllColorsAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllColorsQuery() { ModelId = dto.ModelId });
+                var result = await _mediator.Send(new GetAllColorsQuery());
                 return Ok(result);
             }
             catch (Exception ex)
@@ -317,7 +315,7 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
-        
+
         [HttpHead]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Head()

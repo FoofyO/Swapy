@@ -69,7 +69,7 @@ namespace Swapy.API.Controllers
 
                 var result = await _mediator.Send(command);
                 var locationUri = new Uri($"{Request.Scheme}://{Request.Host.ToUriComponent()}/clothes/{result.Id}");
-                return Created(locationUri, result.Id);
+                return Created(locationUri, result.ProductId);
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -89,50 +89,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete]
-        [Authorize]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveClothesAsync([FromRoute] RemoveClothesAttributeCommandDTO dto)
-        {
-            try
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var command = new RemoveClothesAttributeCommand()
-                {
-                    UserId = userId,
-                    ClothesAttributeId = dto.ClothesAttributeId
-                };
-
-                var result = await _mediator.Send(command);
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
-            catch (NoAccessException ex)
-            {
-                return Forbid(ex.Message);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
-            }
-        }
-
         [HttpPut]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateClothesAsync([FromQuery] UpdateClothesAttributeCommandDTO dto)
@@ -166,7 +126,7 @@ namespace Swapy.API.Controllers
             }
             catch (NoAccessException ex)
             {
-                return Forbid(ex.Message);
+                return Unauthorized(ex.Message);
             }
             catch (NotFoundException ex)
             {
@@ -252,7 +212,7 @@ namespace Swapy.API.Controllers
         [HttpGet("Sizes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllClothesSizesAsync(GetAllClothesSizesQueryDTO dto)
+        public async Task<IActionResult> GetAllClothesSizesAsync([FromQuery] GetAllClothesSizesQueryDTO dto)
         {
             try
             {
@@ -287,7 +247,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("Brands")]
+        [HttpGet("Brands{ClothesViewsId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllClothesBrandsAsync([FromRoute] GetAllClothesBrandsQueryDTO dto)
@@ -341,7 +301,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("Types")]
+        [HttpGet("Types{GenderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllClothesTypesAsync([FromRoute] GetAllClothesTypesQueryDTO dto)

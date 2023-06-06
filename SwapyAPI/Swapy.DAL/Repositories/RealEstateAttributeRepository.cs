@@ -60,6 +60,8 @@ namespace Swapy.DAL.Repositories
         {
             var item = await _context.RealEstateAttributes.Include(re => re.Product)
                                                             .ThenInclude(p => p.Images)
+                                                           .Include(x => x.Product)
+                                                            .ThenInclude(x => x.Category)
                                                           .Include(re => re.Product)
                                                             .ThenInclude(p => p.City)
                                                           .Include(re => re.Product)
@@ -127,7 +129,7 @@ namespace Swapy.DAL.Repositories
             else query.OrderBy(x => x.Product.DateTime);
             if (reverseSort == true) query.Reverse();
 
-            query.Skip(pageSize * (page - 1))
+            query = query.Skip(pageSize * (page - 1))
                  .Take(pageSize);
 
             var result = await query.Select(x => new ProductResponseDTO()

@@ -18,7 +18,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
         {
             var product = await _productRepository.GetByIdAsync(request.ProductId);
 
-            if (request.UserId.Equals(product.UserId)) throw new NoAccessException("No access to delete this product");
+            if (!request.UserId.Equals(product.UserId)) throw new NoAccessException("No access to delete this product");
 
             await _productRepository.DeleteAsync(product);
 
