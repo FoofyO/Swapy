@@ -48,7 +48,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("Subcategories{CategoryId}")]
+        [HttpGet("Subcategories/{CategoryId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -69,7 +69,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("Subcategories{SubcategoryId}")]
+        [HttpGet("Subcategories/{SubcategoryId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

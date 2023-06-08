@@ -253,7 +253,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("Brands{AutoTypesId}")]
+        [HttpGet("Brands/{AutoTypesId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllAutoBrandsAsync([FromRoute] GetAllAutoBrandsQueryDTO dto)

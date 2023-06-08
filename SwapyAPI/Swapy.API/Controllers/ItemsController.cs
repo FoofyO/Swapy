@@ -215,7 +215,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("Types{ParentSubcategoryId}")]
+        [HttpGet("Types/{ParentSubcategoryId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllItemTypesAsync([FromRoute] GetAllItemTypesQueryDTO dto)

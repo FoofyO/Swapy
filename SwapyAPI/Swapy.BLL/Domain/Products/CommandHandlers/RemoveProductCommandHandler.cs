@@ -9,10 +9,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
     {
         private readonly IProductRepository _productRepository;
 
-        public RemoveProductCommandHandler(IProductRepository productRepository)
-        {
-            _productRepository = productRepository;
-        }
+        public RemoveProductCommandHandler(IProductRepository productRepository) => _productRepository = productRepository;
 
         public async Task<Unit> Handle(RemoveProductCommand request, CancellationToken cancellationToken)
         {

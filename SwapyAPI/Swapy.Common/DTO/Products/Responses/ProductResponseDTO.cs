@@ -14,5 +14,6 @@ namespace Swapy.Common.DTO.Products.Responses
         public List<string> Images { get; set; }
         public UserType UserType { get; set; }
         public bool IsFavorite { get; set; }
+        public bool IsDisable { get; set; }
     }
 }

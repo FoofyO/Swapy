@@ -24,6 +24,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
                                                                 request.SubcategoryId,
                                                                 request.CityId,
                                                                 request.OtherUserId,
+                                                                request.IsDisable,
                                                                 request.SortByPrice,
                                                                 request.ReverseSort);
         }

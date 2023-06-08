@@ -19,7 +19,7 @@ namespace Swapy.API.Controllers
 
         public UsersController(IMediator mediator) => _mediator = mediator;
 
-        [HttpGet("ping")]
+        [HttpGet("Ping")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -133,7 +133,7 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Likes 
         /// </summary>
-        [HttpPost("likes/{RecipientId}")]
+        [HttpPost("Likes/{RecipientId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -174,7 +174,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete("likes/{RecipientId}")]
+        [HttpDelete("Likes/{RecipientId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -212,7 +212,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("likes/check/{RecipientId}")]
+        [HttpGet("Likes/Check/{RecipientId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -245,7 +245,7 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Subscriptions
         /// </summary>
-        [HttpPost("subscriptions/{RecipientId}")]
+        [HttpPost("Subscriptions/{RecipientId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -286,7 +286,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete("subscriptions/{RecipientId}")]
+        [HttpDelete("Subscriptions/{RecipientId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -324,7 +324,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("subscriptions/check/{RecipientId}")]
+        [HttpGet("Subscriptions/Check/{RecipientId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

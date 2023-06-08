@@ -93,6 +93,7 @@ namespace Swapy.DAL.Repositories
                                                        (cityId == null || x.Product.CityId.Equals(cityId)) &&
                                                        (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
                                                        (animalBreedsId == null || animalBreedsId.Contains(x.AnimalBreedId)) &&
+                                                       x.Product.IsDisable.Equals(false) &&
                                                        (animalTypesId == null || animalTypesId.Contains(x.AnimalBreed.AnimalTypeId)))
                                                  .AsQueryable();
 
@@ -116,6 +117,7 @@ namespace Swapy.DAL.Repositories
                 CurrencySymbol = x.Product.Currency.Symbol,
                 DateTime = x.Product.DateTime,
                 Images = x.Product.Images.Select(i => i.Image).ToList(),
+                IsDisable = x.Product.IsDisable,
                 UserType = x.Product.User.Type
             }).ToListAsync();
 

@@ -122,6 +122,7 @@ namespace Swapy.DAL.Repositories
                                                    (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
                                                    (isNew == null || x.IsNew == isNew) &&
                                                    (isSmart == null || x.IsSmart == isSmart) &&
+                                                   x.Product.IsDisable.Equals(false) &&
                                                    (tvTypesId == null || tvTypesId.Equals(x.TVTypeId)) &&
                                                    (tvBrandsId == null || tvBrandsId.Contains(x.TVBrandId)) &&
                                                    (screenResolutionsId == null || screenResolutionsId.Contains(x.ScreenResolutionId)) &&
@@ -147,6 +148,7 @@ namespace Swapy.DAL.Repositories
                 Currency = x.Product.Currency.Name,
                 CurrencySymbol = x.Product.Currency.Symbol,
                 DateTime = x.Product.DateTime,
+                IsDisable = x.Product.IsDisable,
                 Images = x.Product.Images.Select(i => i.Image).ToList(),
                 UserType = x.Product.User.Type
             }).ToListAsync();

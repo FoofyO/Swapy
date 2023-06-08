@@ -198,7 +198,7 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Animal Attributes
         /// </summary>
-        [HttpGet("Breeds{AnimalTypesId}")]
+        [HttpGet("Breeds/{AnimalTypesId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllAnimalBreedsAsync([FromRoute] GetAllAnimalBreedsQueryDTO dto)

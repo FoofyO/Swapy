@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Items.Queries;
 using Swapy.Common.DTO.Items.Responses;
+using Swapy.Common.Entities;
 using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
 
@@ -37,6 +38,7 @@ namespace Swapy.BLL.Domain.Items.QueryHandlers
                 Shop = itemAttribute.Product.User.ShopAttribute.ShopName,
                 UserType = itemAttribute.Product.User.Type,
                 ProductId = itemAttribute.Product.Id,
+                IsDisable = itemAttribute.Product.IsDisable,
                 Title = itemAttribute.Product.Title,
                 Views = itemAttribute.Product.Views,
                 Price = itemAttribute.Product.Price,
