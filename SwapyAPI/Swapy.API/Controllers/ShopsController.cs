@@ -10,7 +10,7 @@ using System.Security.Claims;
 namespace Swapy.API.Controllers
 {
     [ApiController]
-    [Route("api/v1/Products/[controller]")]
+    [Route("api/v1/[controller]")]
     [Produces("application/json")]
     public class ShopsController : ControllerBase
     {
@@ -18,7 +18,7 @@ namespace Swapy.API.Controllers
 
         public ShopsController(IMediator mediator) => _mediator = mediator;
 
-        [HttpGet("ping")]
+        [HttpGet("Ping")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

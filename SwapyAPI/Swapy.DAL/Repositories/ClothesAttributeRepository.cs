@@ -107,6 +107,7 @@ namespace Swapy.DAL.Repositories
                                                        (cityId == null || x.Product.CityId.Equals(cityId)) &&
                                                        (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
                                                        (isNew == null || x.IsNew == isNew) &&
+                                                       x.Product.IsDisable.Equals(false) &&
                                                        (clothesSeasonsId == null || clothesSeasonsId.Contains(x.ClothesSeasonId)) &&
                                                        (clothesSizesId == null || clothesSizesId.Contains(x.ClothesSizeId)) &&
                                                        (clothesBrandsId == null || clothesBrandsId.Contains(x.ClothesBrandView.ClothesBrandId)) &&
@@ -134,6 +135,7 @@ namespace Swapy.DAL.Repositories
                 Currency = x.Product.Currency.Name,
                 CurrencySymbol = x.Product.Currency.Symbol,
                 DateTime = x.Product.DateTime,
+                IsDisable = x.Product.IsDisable,
                 Images = x.Product.Images.Select(i => i.Image).ToList(),
                 UserType = x.Product.User.Type
             }).ToListAsync();

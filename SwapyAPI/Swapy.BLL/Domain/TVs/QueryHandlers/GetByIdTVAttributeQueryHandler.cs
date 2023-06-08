@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.TVs.Queries;
 using Swapy.Common.DTO.TVs.Responses;
+using Swapy.Common.Entities;
 using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
 
@@ -41,6 +42,7 @@ namespace Swapy.BLL.Domain.TVs.QueryHandlers
                 Views = tvAttribute.Product.Views,
                 Price = tvAttribute.Product.Price,
                 DateTime = tvAttribute.Product.DateTime,
+                IsDisable = tvAttribute.Product.IsDisable,
                 Categories = categories,
                 Images = tvAttribute.Product.Images.Select(i => i.Image).ToList(),
                 IsNew = tvAttribute.IsNew,

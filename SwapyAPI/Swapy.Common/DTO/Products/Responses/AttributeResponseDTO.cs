@@ -14,6 +14,7 @@ namespace Swapy.Common.DTO.Products.Responses
         public string LastName { get; set; }
         public string PhoneNumber { get; set; }
         public string ShopId { get; set; }
+        public bool IsDisable { get; set; }
         public string Shop { get; set; }
         public UserType UserType { get; set; }
         public string ProductId { get; set; }

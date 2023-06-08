@@ -19,6 +19,7 @@ namespace Swapy.DAL.Interfaces
                                                                           string subcategoryId,
                                                                           string cityId,
                                                                           string otherUserId,
+                                                                          bool? isDisable,
                                                                           bool? sortByPrice,
                                                                           bool? reverseSort);
     }

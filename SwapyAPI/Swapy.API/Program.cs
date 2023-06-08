@@ -72,6 +72,7 @@ using Swapy.BLL.Domain.RealEstates.QueryHandlers;
 using Swapy.BLL.Domain.TVs.Queries;
 using Swapy.BLL.Domain.TVs.QueryHandlers;
 using Swapy.BLL.Domain.Electronics.QueryHandlers;
+using FluentValidation.AspNetCore;
 
 namespace Swapy.API
 {
@@ -84,7 +85,9 @@ namespace Swapy.API
             /// <summary>
             /// Services Setup
             /// </summary>
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                            .AddFluentValidation(options => options.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
+
             builder.Services.AddEndpointsApiExplorer();
 
             //Swagger Registration
@@ -273,6 +276,7 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<RemoveUserCommand, Unit>, RemoveUserCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<SendMessageCommand, Message>, SendMessageCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<ShopRegistrationCommand, AuthResponseDTO>, ShopRegistrationCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<SwitchProductEnablingCommand, Unit>, SwitchProductEnablingCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UpdateAnimalAttributeCommand, Unit>, UpdateAnimalAttributeCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UpdateAutoAttributeCommand, Unit>, UpdateAutoAttributeCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UpdateClothesAttributeCommand, Unit>, UpdateClothesAttributeCommandHandler>();

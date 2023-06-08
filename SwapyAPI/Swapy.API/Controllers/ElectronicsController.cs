@@ -207,7 +207,7 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Electronics Attributes
         /// </summary>
-        [HttpGet("Memories{ModelId}")]
+        [HttpGet("Memories/{ModelId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllMemoriesAsync([FromRoute] GetAllMemoriesQueryDTO dto)
@@ -245,7 +245,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("Brands{ElectronicTypeId}")]
+        [HttpGet("Brands/{ElectronicTypeId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllElectronicBrandsAsync([FromRoute] GetAllElectronicBrandsQueryDTO dto)
@@ -277,7 +277,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("Colors{ModelId}")]
+        [HttpGet("Colors/{ModelId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllColorsByModelAsync([FromRoute] GetAllColorsQueryDTO dto)

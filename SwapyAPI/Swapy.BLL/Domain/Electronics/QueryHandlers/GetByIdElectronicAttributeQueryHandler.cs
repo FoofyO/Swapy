@@ -42,6 +42,7 @@ namespace Swapy.BLL.Domain.Electronics.QueryHandlers
                 Price = electronicAttribute.Product.Price,
                 DateTime = electronicAttribute.Product.DateTime,
                 Categories = categories,
+                IsDisable = electronicAttribute.Product.IsDisable,
                 Images = electronicAttribute.Product.Images.Select(i => i.Image).ToList(),
                 IsNew = electronicAttribute.IsNew,
                 ColorId = electronicAttribute.ModelColor.ColorId,

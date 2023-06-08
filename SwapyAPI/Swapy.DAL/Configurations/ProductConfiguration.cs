@@ -38,6 +38,10 @@ namespace Swapy.DAL.Configurations
                    .HasDefaultValueSql("GETDATE()")                                                                     
                    .IsRequired();
 
+            builder.Property(p => p.IsDisable)
+                   .HasColumnType("BOOLEAN")
+                   .IsRequired();
+
             builder.HasOne(p => p.City)
                    .WithMany(c => c.Products)
                    .HasForeignKey(p => p.CityId)

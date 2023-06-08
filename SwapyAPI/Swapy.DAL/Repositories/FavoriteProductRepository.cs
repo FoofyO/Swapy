@@ -122,6 +122,7 @@ namespace Swapy.DAL.Repositories
                 Currency = x.Product.Currency.Name,
                 CurrencySymbol = x.Product.Currency.Symbol,
                 DateTime = x.Product.DateTime,
+                IsDisable = x.Product.IsDisable,
                 Images = x.Product.Images.Select(i => i.Image).ToList(),
                 UserType = x.Product.User.Type
             }).ToListAsync();

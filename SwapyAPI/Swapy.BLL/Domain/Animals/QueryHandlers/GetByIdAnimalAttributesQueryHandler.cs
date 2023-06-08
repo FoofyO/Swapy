@@ -42,6 +42,7 @@ namespace Swapy.BLL.Domain.Animals.QueryHandlers
                 Price = animalAttribute.Product.Price,
                 DateTime = animalAttribute.Product.DateTime,
                 Categories = categories,
+                IsDisable = animalAttribute.Product.IsDisable,
                 Images = animalAttribute.Product.Images.Select(i => i.Image).ToList(),
                 BreedId = animalAttribute.AnimalBreedId,
                 Breed = animalAttribute.AnimalBreed.Name

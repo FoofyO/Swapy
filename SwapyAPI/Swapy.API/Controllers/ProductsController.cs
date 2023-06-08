@@ -59,6 +59,7 @@ namespace Swapy.API.Controllers
                     CategoryId = dto.CategoryId,
                     SubcategoryId = dto.SubcategoryId,
                     CityId = dto.CityId,
+                    IsDisable = dto.IsDisable,
                     OtherUserId = dto.OtherUserId,
                     SortByPrice = dto.SortByPrice,
                     ReverseSort = dto.ReverseSort
@@ -66,6 +67,10 @@ namespace Swapy.API.Controllers
 
                 var result = await _mediator.Send(query);
                 return Ok(result);
+            }
+            catch (NoAccessException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (NotFoundException ex)
             {
@@ -115,7 +120,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpPatch]
+        [HttpPatch("Views/{ProductId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -123,13 +128,46 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var command = new IncrementProductViewsCommand()
+                var result = await _mediator.Send(new IncrementProductViewsCommand() { ProductId = dto.ProductId });
+                return NoContent();
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpPatch("Enabling/{ProductId}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> SwitchEnablingAsync([FromRoute] SwitchProductEnablingCommandDTO dto)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var command = new SwitchProductEnablingCommand()
                 {
+                    UserId = userId,
                     ProductId = dto.ProductId
                 };
 
                 var result = await _mediator.Send(command);
                 return NoContent();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (NoAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (NotFoundException ex)
             {
@@ -145,7 +183,7 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Favorite products
         /// </summary>
-        [HttpPost("FavoriteProducts{ProductId}")]
+        [HttpPost("FavoriteProducts/{ProductId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -180,7 +218,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete("FavoriteProducts{ProductId}")]
+        [HttpDelete("FavoriteProducts/{ProductId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

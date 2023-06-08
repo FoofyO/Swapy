@@ -90,10 +90,13 @@ namespace Swapy.DAL.Repositories
                                                                                        string subcategoryId,
                                                                                        string cityId,
                                                                                        string otherUserId,
+                                                                                       bool? isDisable,
                                                                                        bool? sortByPrice,
                                                                                        bool? reverseSort)
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
+
+            if ((bool)isDisable && (string.IsNullOrEmpty(userId) && string.IsNullOrEmpty(otherUserId))) throw new NoAccessException("No access to get disabled products");
 
             var query = _context.Products.Include(p => p.Images)
                                          .Include(p => p.City)
@@ -106,7 +109,8 @@ namespace Swapy.DAL.Repositories
                                                (categoryId == null || x.CategoryId.Equals(categoryId)) &&
                                                (subcategoryId == null || x.SubcategoryId.Equals(subcategoryId)) &&
                                                (cityId == null || x.CityId.Equals(cityId)) &&
-                                               (otherUserId == null ? !x.UserId.Equals(userId) : x.UserId.Equals(otherUserId)))
+                                               (otherUserId == null ? !x.UserId.Equals(userId) : x.UserId.Equals(otherUserId)) &&
+                                               (isDisable == null || x.IsDisable.Equals(isDisable)))
                                          .AsQueryable();
 
             var count = await query.CountAsync();
@@ -129,7 +133,8 @@ namespace Swapy.DAL.Repositories
                 CurrencySymbol = x.Currency.Symbol,
                 DateTime = x.DateTime,
                 Images = x.Images.Select(i => i.Image).ToList(),
-                UserType = x.User.Type
+                UserType = x.User.Type,
+                IsDisable = x.IsDisable
             }).ToListAsync();
 
             foreach (var item in result)

@@ -8,6 +8,7 @@
         public decimal Price { get; set; }
         public DateTime DateTime { get; set; }
         public int Views { get; set; }
+        public bool IsDisable { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
         public string CurrencyId { get; set; }
@@ -44,6 +45,7 @@
             Price = price;
             CityId = cityId;
             UserId = userId;
+            IsDisable = false;
             CategoryId = categoryId;
             CurrencyId = currencyId;
             Description = description;

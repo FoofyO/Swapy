@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.RealEstates.Queries;
 using Swapy.Common.DTO.RealEstates.Responses;
+using Swapy.Common.Entities;
 using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
 
@@ -39,6 +40,7 @@ namespace Swapy.BLL.Domain.RealEstates.QueryHandlers
                 ProductId = realEstateAttribute.Product.Id,
                 Title = realEstateAttribute.Product.Title,
                 Views = realEstateAttribute.Product.Views,
+                IsDisable = realEstateAttribute.Product.IsDisable,
                 Price = realEstateAttribute.Product.Price,
                 DateTime = realEstateAttribute.Product.DateTime,
                 Categories = categories,

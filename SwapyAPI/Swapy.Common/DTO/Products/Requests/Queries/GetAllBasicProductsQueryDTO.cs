@@ -12,6 +12,7 @@
         public string? SubcategoryId { get; set; }
         public string? CityId { get; set; }
         public string? OtherUserId { get; set; }
+        public bool? IsDisable { get; set; }
         public bool? SortByPrice { get; set; }
         public bool? ReverseSort { get; set; }
     }

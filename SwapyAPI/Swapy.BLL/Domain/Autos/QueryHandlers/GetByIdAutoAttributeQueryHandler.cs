@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Autos.Queries;
 using Swapy.Common.DTO.Autos.Responses;
+using Swapy.Common.Entities;
 using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
 
@@ -44,6 +45,7 @@ namespace Swapy.BLL.Domain.Autos.QueryHandlers
                 Categories = categories,
                 Images = autoAttribute.Product.Images.Select(i => i.Image).ToList(),
                 IsNew = autoAttribute.IsNew,
+                IsDisable = autoAttribute.Product.IsDisable,
                 Miliage = autoAttribute.Miliage,
                 EngineCapacity = autoAttribute.EngineCapacity,
                 ReleaseYear = autoAttribute.ReleaseYear,

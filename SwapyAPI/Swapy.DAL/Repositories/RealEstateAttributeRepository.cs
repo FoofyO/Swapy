@@ -114,6 +114,7 @@ namespace Swapy.DAL.Repositories
                                                            (subcategoryId == null || x.Product.SubcategoryId.Equals(subcategoryId)) &&
                                                            (cityId == null || x.Product.CityId.Equals(cityId)) &&
                                                            (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
+                                                           x.Product.IsDisable.Equals(false) &&
                                                            (areaMin == null || x.Area >= areaMin) &&
                                                            (areaMax == null || x.Area <= areaMax) &&
                                                            (roomsMin == null || x.Rooms >= roomsMin) &&
@@ -141,6 +142,7 @@ namespace Swapy.DAL.Repositories
                 Currency = x.Product.Currency.Name,
                 CurrencySymbol = x.Product.Currency.Symbol,
                 DateTime = x.Product.DateTime,
+                IsDisable = x.Product.IsDisable,
                 Images = x.Product.Images.Select(i => i.Image).ToList(),
                 UserType = x.Product.User.Type
             }).ToListAsync();
