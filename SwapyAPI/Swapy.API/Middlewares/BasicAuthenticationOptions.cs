@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 
-namespace Swapy.API.Middleware
+namespace Swapy.API.Middlewares
 {
     public class BasicAuthenticationOptions : AuthenticationSchemeOptions
     {

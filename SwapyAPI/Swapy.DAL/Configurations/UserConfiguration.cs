@@ -13,12 +13,12 @@ namespace Swapy.DAL.Configurations
             builder.Property(u => u.UserName).IsRequired(true);
 
             builder.Property(u => u.FirstName)
-                   .HasColumnType("NVARCHAR(64)")
+                   .HasColumnType("NVARCHAR(32)")
                    .HasMaxLength(64)
                    .IsRequired(false);
 
             builder.Property(u => u.LastName)
-                   .HasColumnType("NVARCHAR(64)")
+                   .HasColumnType("NVARCHAR(32)")
                    .HasMaxLength(64)
                    .IsRequired(false);
 

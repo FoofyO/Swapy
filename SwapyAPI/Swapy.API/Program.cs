@@ -28,7 +28,7 @@ using Swapy.BLL.Domain.Chats.QueryHandlers;
 using Swapy.BLL.Domain.Shops.CommandHandlers;
 using System.Security.Claims;
 using Microsoft.OpenApi.Models;
-using Swapy.API.Middleware;
+using Swapy.API.Middlewares;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.DTO.Auth.Responses;
 using System.Text.Json.Serialization;

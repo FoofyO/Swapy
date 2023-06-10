@@ -1,7 +1,7 @@
 ﻿using Swapy.Common.Attributes;
 using Swapy.Common.Enums;
 
-namespace Swapy.API.Middleware
+namespace Swapy.API.Middlewares
 {
     public class LocalizationMiddleware : IMiddleware
     {

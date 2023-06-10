@@ -15,12 +15,12 @@ namespace Swapy.DAL.Configurations
             builder.Property(s => s.Id).IsRequired();
 
             builder.Property(s => s.ShopName)
-                   .HasColumnType("NVARCHAR(128)")
+                   .HasColumnType("NVARCHAR(32)")
                    .HasMaxLength(128)
                    .IsRequired();
 
             builder.Property(s => s.Description)
-                   .HasColumnType("NVARCHAR(1024)")
+                   .HasColumnType("NVARCHAR(512)")
                    .HasMaxLength(1024)
                    .IsRequired(false);
 

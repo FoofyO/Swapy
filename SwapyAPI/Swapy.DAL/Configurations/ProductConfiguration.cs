@@ -14,8 +14,8 @@ namespace Swapy.DAL.Configurations
             builder.Property(p => p.Id).IsRequired();
 
             builder.Property(p => p.Title)
-                   .HasColumnType("NVARCHAR(100)")
-                   .HasMaxLength(100)
+                   .HasColumnType("NVARCHAR(128)")
+                   .HasMaxLength(128)
                    .IsRequired();
 
             builder.Property(p => p.Description)

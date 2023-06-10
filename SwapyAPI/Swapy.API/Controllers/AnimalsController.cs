@@ -1,6 +1,8 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swapy.API.Validators;
 using Swapy.BLL.Domain.Animals.Commands;
 using Swapy.BLL.Domain.Animals.Queries;
 using Swapy.Common.Attributes;
@@ -10,6 +12,7 @@ using Swapy.Common.DTO.Products.Requests.Queries;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using System.Security.Claims;
+using System.Text;
 
 namespace Swapy.API.Controllers
 {
@@ -48,10 +51,42 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddAnimalAsync(AddAnimalAttributeCommandDTO dto)
+        public async Task<IActionResult> AddAnimalAsync([FromQuery] AddAnimalAttributeCommandDTO dto)
         {
             try
             {
+                var productValidator = new AddProductValidator();
+                var productValidatorResult = productValidator.Validate(dto);
+
+                if (!productValidatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in productValidatorResult.Errors)
+                    {
+                        builder.Append($"Product Attribute property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+
+                var animalValidator = new AddAnimalAttributeValidator();
+                var animalValidatorResult = animalValidator.Validate(dto);
+
+                if (!animalValidatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in animalValidatorResult.Errors)
+                    {
+                        builder.Append($"Animal Attribute property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new AddAnimalAttributeCommand()
                 {
@@ -91,6 +126,7 @@ namespace Swapy.API.Controllers
         [HttpPut]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -98,6 +134,37 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var productValidator = new UpdateProductValidator();
+                var productValidatorResult = productValidator.Validate(dto);
+
+                if (!productValidatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in productValidatorResult.Errors)
+                    {
+                        builder.Append($"Product Attribute property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+
+                var animalValidator = new UpdateAnimalAttributeValidator();
+                var animalValidatorResult = animalValidator.Validate(dto);
+
+                if (!animalValidatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in animalValidatorResult.Errors)
+                    {
+                        builder.Append($"Animal Attribute property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new UpdateAnimalAttributeCommand()
                 {

@@ -6,6 +6,8 @@ using Swapy.Common.Exceptions;
 using Swapy.BLL.Domain.Shops.Commands;
 using Swapy.Common.DTO.Shops.Requests;
 using System.Security.Claims;
+using Swapy.API.Validators;
+using System.Text;
 
 namespace Swapy.API.Controllers
 {
@@ -90,6 +92,20 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var validator = new ShopUpdateValidator();
+                var validatorResult = validator.Validate(dto);
+                if (!validatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in validatorResult.Errors)
+                    {
+                        builder.Append($"Shop property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new UpdateShopCommand()
                 {

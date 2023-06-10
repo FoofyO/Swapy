@@ -1,6 +1,6 @@
 ﻿namespace Swapy.Common.DTO.Products.Requests.Commands
 {
-    public abstract class AddProductCommandDTO<T>
+    public abstract class AddProductCommandDTO
     {
         public string Title { get; set; }
         public string Description { get; set; }

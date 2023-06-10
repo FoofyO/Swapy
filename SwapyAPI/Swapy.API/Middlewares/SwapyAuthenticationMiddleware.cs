@@ -6,7 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 
-namespace Swapy.API.Middleware
+namespace Swapy.API.Middlewares
 {
     public class SwapyAuthenticationMiddleware : AuthenticationHandler<BasicAuthenticationOptions>
     {

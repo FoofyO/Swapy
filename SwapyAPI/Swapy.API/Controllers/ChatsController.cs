@@ -6,6 +6,9 @@ using Swapy.Common.Exceptions;
 using Swapy.BLL.Domain.Chats.Queries;
 using Swapy.Common.DTO.Chats.Requests;
 using System.Security.Claims;
+using Swapy.API.Validators;
+using System.Text;
+using FluentValidation;
 
 namespace Swapy.API.Controllers
 {
@@ -44,6 +47,21 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var validator = new ChatValidator();
+                var validatorResult = validator.Validate(dto);
+
+                if (!validatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in validatorResult.Errors)
+                    {
+                        builder.Append($"Chat property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new CreateChatCommand()
                 {
@@ -79,6 +97,21 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var validator = new MessageValidator();
+                var validatorResult = validator.Validate(dto);
+
+                if (!validatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in validatorResult.Errors)
+                    {
+                        builder.Append($"Message property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new SendMessageCommand()
                 {

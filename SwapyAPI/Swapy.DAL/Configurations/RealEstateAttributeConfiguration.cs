@@ -15,7 +15,7 @@ namespace Swapy.DAL.Configurations
 
             builder.Property(r => r.Area).IsRequired();
 
-            builder.Property(r => r.Rooms).IsRequired(); 
+            builder.Property(r => r.Rooms).IsRequired(false); 
              
             builder.Property(r => r.IsRent)
                    .IsRequired()
