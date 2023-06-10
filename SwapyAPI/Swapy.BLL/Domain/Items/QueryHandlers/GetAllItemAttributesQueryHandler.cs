@@ -27,7 +27,8 @@ namespace Swapy.BLL.Domain.Items.QueryHandlers
                                                                       request.IsNew,
                                                                       request.ItemTypesId,
                                                                       request.SortByPrice,
-                                                                      request.ReverseSort);
+                                                                      request.ReverseSort,
+                                                                      request.Language);
         }
     }
 }

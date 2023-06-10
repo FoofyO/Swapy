@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.BLL.Domain.Clothes.Commands;
 using Swapy.BLL.Domain.Clothes.Queries;
+using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Clothes.Requests.Commands;
 using Swapy.Common.DTO.Clothes.Requests.Queries;
 using Swapy.Common.DTO.Products.Requests.Queries;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using System.Security.Claims;
 
@@ -139,6 +141,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -168,7 +171,8 @@ namespace Swapy.API.Controllers
                     ClothesViewsId = dto.ClothesViewsId,
                     ClothesBrandsId = dto.ClothesBrandsId,
                     ClothesGendersId = dto.ClothesGendersId,
-                    ClothesSeasonsId = dto.ClothesSeasonsId
+                    ClothesSeasonsId = dto.ClothesSeasonsId,
+                    Language = (Languages)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -185,6 +189,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("{ProductId}")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -192,7 +197,12 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetByIdClothesAttributeQuery() { ProductId = dto.ProductId });
+                var query = new GetByIdClothesAttributeQuery()
+                {
+                    ProductId = dto.ProductId,
+                    Language = (Languages)HttpContext.Items["Language"]
+                };
+                var result = await _mediator.Send(query);
                 return Ok(result);
             }
             catch (NotFoundException ex)
@@ -232,13 +242,14 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("Seasons")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllClothesSeasonsAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllClothesSeasonsQuery());
+                var result = await _mediator.Send(new GetAllClothesSeasonsQuery() { Language = (Languages)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)
@@ -264,6 +275,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("Views")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllClothesViewsAsync([FromQuery] GetAllClothesViewsQueryDTO dto)
@@ -273,7 +285,8 @@ namespace Swapy.API.Controllers
                 var query = new GetAllClothesViewsQuery()
                 {
                     GenderId = dto.GenderId,
-                    ClothesTypeId = dto.ClothesTypeId
+                    ClothesTypeId = dto.ClothesTypeId,
+                    Language = (Languages)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -286,13 +299,14 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("Genders")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllGendersAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllGendersQuery());
+                var result = await _mediator.Send(new GetAllGendersQuery() { Language = (Languages)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)
@@ -302,13 +316,19 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("Types{GenderId}")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllClothesTypesAsync([FromRoute] GetAllClothesTypesQueryDTO dto)
         {
             try
             {
-                var result = await _mediator.Send(new GetAllClothesTypesQuery() { GenderId = dto.GenderId });
+                var query = new GetAllClothesTypesQuery()
+                {
+                    GenderId = dto.GenderId,
+                    Language = (Languages)HttpContext.Items["Language"]
+                };
+                var result = await _mediator.Send(query);
                 return Ok(result);
             }
             catch (Exception ex)

@@ -8,11 +8,11 @@ using System.Text.Encodings.Web;
 
 namespace Swapy.API.Middleware
 {
-    public class SwapyAuthenticationHandler : AuthenticationHandler<BasicAuthenticationOptions>
+    public class SwapyAuthenticationMiddleware : AuthenticationHandler<BasicAuthenticationOptions>
     {
         private readonly IUserTokenRepository _userTokenRepository;
 
-        public SwapyAuthenticationHandler(IOptionsMonitor<BasicAuthenticationOptions> options,
+        public SwapyAuthenticationMiddleware(IOptionsMonitor<BasicAuthenticationOptions> options,
                                           ILoggerFactory logger,
                                           UrlEncoder encoder,
                                           ISystemClock clock,
@@ -39,7 +39,7 @@ namespace Swapy.API.Middleware
         {
             var expirationTime = new JwtSecurityToken(accessToken).ValidTo;
 
-            var IsIgnore = Context.GetEndpoint()?.Metadata?.GetMetadata<AuthorizeIgnoreExpiredToken>() != null;
+            var IsIgnore = Context.GetEndpoint()?.Metadata?.GetMetadata<AuthorizeIgnoreAttribute>() != null;
 
             if (!IsIgnore && expirationTime < DateTime.UtcNow) throw new UnauthorizedAccessException("Access token expired");
 

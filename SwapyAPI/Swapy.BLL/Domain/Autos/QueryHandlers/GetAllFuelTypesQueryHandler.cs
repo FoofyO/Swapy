@@ -5,16 +5,15 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Autos.QueryHandlers
 {
-    public class GetAllFuelTypesQueryHandler : IRequestHandler<GetAllFuelTypesQuery, IEnumerable<SpecificationResponseDTO>>
+    public class GetAllFuelTypesQueryHandler : IRequestHandler<GetAllFuelTypesQuery, IEnumerable<SpecificationResponseDTO<string>>>
     {
         private readonly IFuelTypeRepository _fuelTypeRepository;
 
         public GetAllFuelTypesQueryHandler(IFuelTypeRepository fuelTypeRepository) => _fuelTypeRepository = fuelTypeRepository;
 
-        public async Task<IEnumerable<SpecificationResponseDTO>> Handle(GetAllFuelTypesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllFuelTypesQuery request, CancellationToken cancellationToken)
         {
-            var result = (await _fuelTypeRepository.GetAllAsync()).Select(x => new SpecificationResponseDTO(x.Id, x.Name));
-            return result;
+            return await _fuelTypeRepository.GetAllAsync(request.Language);
         }
     }
 }

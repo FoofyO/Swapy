@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -57,11 +58,13 @@ namespace Swapy.DAL.Repositories
 
         public async Task<Product> GetDetailByIdAsync(string id)
         {
-            var item = await _context.Products.Include(p => p.Images)
+            var item = await _context.Products.Where(a => a.Id.Equals(id))
+                                              .Include(p => p.Images)
                                               .Include(p => p.City)
+                                                .ThenInclude(c => c.Names)
                                               .Include(p => p.Currency)
                                               .Include(p => p.Subcategory)
-                                              .FirstOrDefaultAsync(a => a.Id.Equals(id));
+                                              .FirstOrDefaultAsync();
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
@@ -92,16 +95,15 @@ namespace Swapy.DAL.Repositories
                                                                                        string otherUserId,
                                                                                        bool? isDisable,
                                                                                        bool? sortByPrice,
-                                                                                       bool? reverseSort)
+                                                                                       bool? reverseSort,
+                                                                                       Languages language)
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
 
             if ((bool)isDisable && (string.IsNullOrEmpty(userId) && string.IsNullOrEmpty(otherUserId))) throw new NoAccessException("No access to get disabled products");
 
             var query = _context.Products.Include(p => p.Images)
-                                         .Include(p => p.City)
                                          .Include(p => p.Currency)
-                                         .Include(p => p.Subcategory)
                                          .Where(x => (title == null || x.Title.Contains(title)) &&
                                                (currencyId == null || x.CurrencyId.Equals(currencyId)) &&
                                                (priceMin == null || x.Price >= priceMin) &&
@@ -121,14 +123,16 @@ namespace Swapy.DAL.Repositories
             if (reverseSort == true) query.Reverse();
 
             query.Skip(pageSize * (page - 1))
-                 .Take(pageSize);
+                 .Take(pageSize)
+                 .Include(p => p.City)
+                    .ThenInclude(c => c.Names);
 
             var result = await query.Select(x => new ProductResponseDTO()
             {
                 Id = x.Id,
                 Title = x.Title,
                 Price = x.Price,
-                City = x.City.Name,
+                City = x.City.Names.FirstOrDefault(l => l.Language == language).Value,
                 Currency = x.Currency.Name,
                 CurrencySymbol = x.Currency.Symbol,
                 DateTime = x.DateTime,

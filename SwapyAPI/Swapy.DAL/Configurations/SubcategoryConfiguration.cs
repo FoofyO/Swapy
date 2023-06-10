@@ -13,15 +13,14 @@ namespace Swapy.DAL.Configurations
 
             builder.Property(s => s.Id).IsRequired();
 
-            builder.Property(s => s.Name)
-                   .HasColumnType("NVARCHAR(50)")
-                   .HasMaxLength(50)
-                   .IsRequired();
-
             builder.HasOne(s => s.ParentSubcategory)
                    .WithOne(s => s.Parent)
                    .HasForeignKey<SubcategoryBranch>(s => s.ParentId)
                    .IsRequired();
+
+            builder.HasMany(a => a.Names)
+                   .WithOne()
+                   .IsRequired(false);
 
             builder.HasMany(s => s.ChildSubcategories)
                    .WithOne(s => s.Child)

@@ -5,16 +5,15 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Electronics.QueryHandlers
 {
-    public class GetAllColorsQueryByModelHandler : IRequestHandler<GetAllColorsByModelQuery, IEnumerable<SpecificationResponseDTO>>
+    public class GetAllColorsQueryByModelHandler : IRequestHandler<GetAllColorsByModelQuery, IEnumerable<SpecificationResponseDTO<string>>>
     {
         private readonly IColorRepository _colorRepository;
 
         public GetAllColorsQueryByModelHandler(IColorRepository colorRepository) => _colorRepository = colorRepository;
 
-        public async Task<IEnumerable<SpecificationResponseDTO>> Handle(GetAllColorsByModelQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllColorsByModelQuery request, CancellationToken cancellationToken)
         { 
-            var result = (await _colorRepository.GetByModelAsync(request.ModelId)).Select(x => new SpecificationResponseDTO(x.Id, x.Name));
-            return result;
+            return await _colorRepository.GetByModelAsync(request.ModelId, request.Language);
         }
     }
 }

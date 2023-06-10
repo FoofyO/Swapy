@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Swapy.BLL.Domain.Electronics.Commands;
 using Swapy.BLL.Domain.Electronics.Queries;
 using Swapy.BLL.Domain.Products.Queries;
+using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Electronics.Requests.Commands;
 using Swapy.Common.DTO.Electronics.Requests.Queries;
 using Swapy.Common.DTO.Products.Requests.Queries;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using System.Security.Claims;
 
@@ -138,6 +140,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -166,7 +169,8 @@ namespace Swapy.API.Controllers
                     OtherUserId = dto.OtherUserId,
                     SortByPrice = dto.SortByPrice,
                     ReverseSort = dto.ReverseSort,
-                    SubcategoryId = dto.SubcategoryId
+                    SubcategoryId = dto.SubcategoryId,
+                    Language = (Languages)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -183,6 +187,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("{ProductId}")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -190,7 +195,13 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetByIdElectronicAttributeQuery() { ProductId = dto.ProductId });
+                var query = new GetByIdElectronicAttributeQuery()
+                {
+                    ProductId = dto.ProductId,
+                    Language = (Languages)HttpContext.Items["Language"]
+                };
+
+                var result = await _mediator.Send(query);
                 return Ok(result);
             }
             catch (NotFoundException ex)
@@ -262,13 +273,14 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("Types")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllElectronicTypesAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllElectronicTypesQuery());
+                var result = await _mediator.Send(new GetAllElectronicTypesQuery() { Language = (Languages)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)
@@ -278,13 +290,20 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("Colors/{ModelId}")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllColorsByModelAsync([FromRoute] GetAllColorsQueryDTO dto)
         {
             try
             {
-                var result = await _mediator.Send(new GetAllColorsByModelQuery() { ModelId = dto.ModelId });
+                var query = new GetAllColorsByModelQuery()
+                {
+                    ModelId = dto.ModelId,
+                    Language = (Languages)HttpContext.Items["Language"]
+                };
+                
+                var result = await _mediator.Send(query);
                 return Ok(result);
             }
             catch (Exception ex)

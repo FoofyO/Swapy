@@ -1,5 +1,6 @@
 ﻿using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
+using Swapy.Common.Enums;
 
 namespace Swapy.DAL.Interfaces
 {
@@ -24,6 +25,7 @@ namespace Swapy.DAL.Interfaces
                                                                                List<string> brandsId,
                                                                                List<string> typesId,
                                                                                bool? sortByPrice,
-                                                                               bool? reverseSort);
+                                                                               bool? reverseSort,
+                                                                               Languages language);
     }
 }

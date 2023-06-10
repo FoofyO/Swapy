@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -80,25 +81,16 @@ namespace Swapy.DAL.Repositories
                                                                                        List<string> autoBrandsId,
                                                                                        List<string> autoTypesId,
                                                                                        bool? sortByPrice,
-                                                                                       bool? reverseSort)
+                                                                                       bool? reverseSort,
+                                                                                       Languages language)
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
 
             var query = _context.AutoAttributes.Include(a => a.Product)
                                                    .ThenInclude(p => p.Images)
                                                .Include(a => a.Product)
-                                                   .ThenInclude(p => p.City)
-                                               .Include(a => a.Product)
                                                    .ThenInclude(p => p.Currency)
-                                               .Include(a => a.Product)
-                                                   .ThenInclude(p => p.Subcategory)
-                                               .Include(a => a.FuelType)
-                                               .Include(a => a.AutoColor)
-                                               .Include(a => a.TransmissionType)
                                                .Include(a => a.AutoModel)
-                                                 .ThenInclude(abt => abt.AutoBrand)
-                                               .Include(a => a.AutoModel)
-                                                 .ThenInclude(abt => abt.AutoType)
                                                .Where(x => (title == null || x.Product.Title.Contains(title)) &&
                                                      (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
                                                      (priceMin == null || x.Product.Price >= priceMin) &&
@@ -130,14 +122,17 @@ namespace Swapy.DAL.Repositories
             if (reverseSort == true) query.Reverse();
 
             query = query.Skip(pageSize * (page - 1))
-                 .Take(pageSize);
+                 .Take(pageSize)
+                 .Include(a => a.Product)
+                    .ThenInclude(p => p.City)
+                        .ThenInclude(c => c.Names);
 
             var result = await query.Select(x => new ProductResponseDTO()
             {
                 Id = x.ProductId,
                 Title = x.Product.Title,
                 Price = x.Product.Price,
-                City = x.Product.City.Name,
+                City = x.Product.City.Names.FirstOrDefault(l => l.Language == language).Value,
                 Currency = x.Product.Currency.Name,
                 CurrencySymbol = x.Product.Currency.Symbol,
                 DateTime = x.Product.DateTime,
@@ -156,24 +151,29 @@ namespace Swapy.DAL.Repositories
 
         public async Task<AutoAttribute> GetDetailByIdAsync(string productId)
         {
-            var item = await _context.AutoAttributes.Include(a => a.Product)
+            var item = await _context.AutoAttributes.Where(a => a.ProductId.Equals(productId))
+                                                    .Include(a => a.Product)
                                                         .ThenInclude(p => p.Images)
                                                     .Include(x => x.Product)
                                                         .ThenInclude(x => x.Category)
+                                                            .ThenInclude(c => c.Names)
                                                     .Include(a => a.Product)
                                                         .ThenInclude(p => p.City)
+                                                            .ThenInclude(c => c.Names)
                                                     .Include(a => a.Product)
                                                         .ThenInclude(p => p.Currency)
-                                                    .Include(a => a.Product)
-                                                        .ThenInclude(p => p.Subcategory)
                                                     .Include(a => a.FuelType)
+                                                        .ThenInclude(ft => ft.Names)
                                                     .Include(a => a.AutoColor)
+                                                        .ThenInclude(ac => ac.Names)
                                                     .Include(a => a.TransmissionType)
+                                                        .ThenInclude(tt => tt.Names)
                                                     .Include(a => a.AutoModel)
-                                                        .ThenInclude(abt => abt.AutoBrand)
+                                                        .ThenInclude(am => am.AutoBrand)
                                                     .Include(a => a.AutoModel)
-                                                        .ThenInclude(abt => abt.AutoType)
-                                                    .FirstOrDefaultAsync(a => a.ProductId.Equals(productId));
+                                                        .ThenInclude(am => am.AutoType)
+                                                            .ThenInclude(at => at.Names)
+                                                    .FirstOrDefaultAsync();
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
             return item;

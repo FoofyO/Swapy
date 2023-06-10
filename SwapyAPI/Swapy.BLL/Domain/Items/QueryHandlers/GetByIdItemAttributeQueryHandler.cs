@@ -21,13 +21,13 @@ namespace Swapy.BLL.Domain.Items.QueryHandlers
         public async Task<ItemAttributeResponseDTO> Handle(GetByIdItemAttributeQuery request, CancellationToken cancellationToken)
         {
             var itemAttribute = await _itemAttributeRepository.GetDetailByIdAsync(request.ProductId);
-            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(itemAttribute.Product.SubcategoryId)).Select(s => new CategoryNode(s.Id, s.Name)).ToList();
-            categories.Insert(0, new CategoryNode(itemAttribute.Product.CategoryId, itemAttribute.Product.Category.Name));
+            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(itemAttribute.Product.SubcategoryId, request.Language)).ToList();
+            categories.Insert(0, new CategoryNode(itemAttribute.Product.CategoryId, itemAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
 
             ItemAttributeResponseDTO result = new ItemAttributeResponseDTO()
             {
                 Id = itemAttribute.Id,
-                City = itemAttribute.Product.City.Name,
+                City = itemAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 Currency = itemAttribute.Product.Currency.Name,
                 CurrencySymbol = itemAttribute.Product.Currency.Symbol,
                 UserId = itemAttribute.Product.UserId,

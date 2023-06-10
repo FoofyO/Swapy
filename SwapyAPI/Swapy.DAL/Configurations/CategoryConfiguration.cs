@@ -13,10 +13,9 @@ namespace Swapy.DAL.Configurations
 
             builder.Property(c => c.Id).IsRequired();
 
-            builder.Property(c => c.Name)
-                   .HasColumnType("NVARCHAR(50)")
-                   .HasMaxLength(50)
-                   .IsRequired();
+            builder.HasMany(a => a.Names)
+                   .WithOne()
+                   .IsRequired(false);
 
             builder.HasMany(e => e.Subcategories)
                    .WithOne(e => e.Category)

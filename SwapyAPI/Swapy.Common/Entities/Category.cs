@@ -3,12 +3,10 @@
     public class Category
     {
         public string Id { get; set; }
-        public string Name { get; set; }
         public ICollection<Product> Products { get; set; } = new List<Product>();
         public ICollection<Subcategory> Subcategories { get; set; } = new List<Subcategory>();
+        public ICollection<LocalizationValue> Names { get; set; } = new List<LocalizationValue>();
 
         public Category() => Id = Guid.NewGuid().ToString();
-
-        public Category(string name) : this() => Name = name;
     }
 }

@@ -37,7 +37,8 @@ namespace Swapy.BLL.Domain.Autos.QueryHandlers
                                                                       request.AutoBrandsId,
                                                                       request.AutoTypesId,
                                                                       request.SortByPrice,
-                                                                      request.ReverseSort);
+                                                                      request.ReverseSort,
+                                                                      request.Language);
         }
     }
 }

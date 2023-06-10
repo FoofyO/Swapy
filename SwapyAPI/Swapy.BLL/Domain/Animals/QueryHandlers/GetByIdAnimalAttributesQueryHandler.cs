@@ -20,13 +20,13 @@ namespace Swapy.BLL.Domain.Animals.QueryHandlers
         public async Task<AnimalAttributeResponseDTO> Handle(GetByIdAnimalAttributeQuery request, CancellationToken cancellationToken)
         {
             var animalAttribute = await _animalAttributeRepository.GetDetailByIdAsync(request.ProductId);
-            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(animalAttribute.Product.SubcategoryId)).Select(s => new CategoryNode(s.Id, s.Name)).ToList();
-            categories.Insert(0, new CategoryNode(animalAttribute.Product.CategoryId, animalAttribute.Product.Category.Name));
+            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(animalAttribute.Product.SubcategoryId, request.Language)).ToList();
+            categories.Insert(0, new CategoryNode(animalAttribute.Product.CategoryId, animalAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
 
             AnimalAttributeResponseDTO result = new AnimalAttributeResponseDTO()
             {
                 Id = animalAttribute.Id,
-                City = animalAttribute.Product.City.Name,
+                City = animalAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 Currency = animalAttribute.Product.Currency.Name,
                 CurrencySymbol = animalAttribute.Product.Currency.Symbol,
                 UserId = animalAttribute.Product.UserId,
@@ -45,7 +45,7 @@ namespace Swapy.BLL.Domain.Animals.QueryHandlers
                 IsDisable = animalAttribute.Product.IsDisable,
                 Images = animalAttribute.Product.Images.Select(i => i.Image).ToList(),
                 BreedId = animalAttribute.AnimalBreedId,
-                Breed = animalAttribute.AnimalBreed.Name
+                Breed = animalAttribute.AnimalBreed.Names.FirstOrDefault(l => l.Language == request.Language).Value
             };
             return result;
         }

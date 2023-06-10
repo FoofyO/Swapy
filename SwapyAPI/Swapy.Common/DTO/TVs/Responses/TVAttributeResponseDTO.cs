@@ -10,8 +10,8 @@ namespace Swapy.Common.DTO.TVs.Responses
         public string TVBrand { get; set; }
         public string TVTypeId { get; set; }
         public string TVType { get; set; }
+        public int ScreenDiagonal { get; set; }
         public string ScreenDiagonalId { get; set; }
-        public string ScreenDiagonal { get; set; }
         public string ScreenResolutionId { get; set; }
         public string ScreenResolution { get; set; }
     }

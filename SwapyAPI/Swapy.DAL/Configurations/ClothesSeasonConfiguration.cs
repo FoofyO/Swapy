@@ -13,11 +13,10 @@ namespace Swapy.DAL.Configurations
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.Id).IsRequired();
-             
-            builder.Property(c => c.Name)
-                   .HasColumnType("NVARCHAR(32)")
-                   .HasMaxLength(32)
-                   .IsRequired();
+
+            builder.HasMany(a => a.Names)
+                   .WithOne()
+                   .IsRequired(false);
 
             builder.HasMany(c => c.ClothesAttributes)
                    .WithOne(c => c.ClothesSeason)

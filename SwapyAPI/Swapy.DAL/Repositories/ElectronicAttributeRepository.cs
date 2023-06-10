@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -75,38 +76,19 @@ namespace Swapy.DAL.Repositories
                                                                                List<string> brandsId,
                                                                                List<string> typesId,
                                                                                bool? sortByPrice,
-                                                                               bool? reverseSort)
+                                                                               bool? reverseSort,
+                                                                               Languages language)
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
 
             var query = _context.ElectronicAttributes.Include(e => e.Product)
                                                         .ThenInclude(p => p.Images)
                                                      .Include(e => e.Product)
-                                                        .ThenInclude(p => p.City)
-                                                     .Include(e => e.Product)
                                                         .ThenInclude(p => p.Currency)
-                                                     .Include(e => e.Product)
-                                                        .ThenInclude(p => p.Subcategory)
-                                                     .Include(e => e.MemoryModel)
-                                                        .ThenInclude(mm => mm.Memory)
                                                      .Include(e => e.MemoryModel)
                                                         .ThenInclude(mm => mm.Model)
                                                             .ThenInclude(m => m.ElectronicBrandType)
-                                                                .ThenInclude(bt => bt.ElectronicBrand)
-                                                     .Include(e => e.MemoryModel)
-                                                        .ThenInclude(mm => mm.Model)
-                                                            .ThenInclude(m => m.ElectronicBrandType)
-                                                                .ThenInclude(bt => bt.ElectronicType)
                                                      .Include(e => e.ModelColor)
-                                                        .ThenInclude(mm => mm.Color)
-                                                     .Include(e => e.ModelColor)
-                                                        .ThenInclude(mm => mm.Model)
-                                                            .ThenInclude(m => m.ElectronicBrandType)
-                                                                .ThenInclude(bt => bt.ElectronicBrand)
-                                                     .Include(e => e.ModelColor)
-                                                        .ThenInclude(mm => mm.Model)
-                                                            .ThenInclude(m => m.ElectronicBrandType)
-                                                                .ThenInclude(bt => bt.ElectronicType)
                                                      .Where(x => (title == null || x.Product.Title.Contains(title)) &&
                                                            (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
                                                            (priceMin == null || x.Product.Price >= priceMin) &&
@@ -132,14 +114,17 @@ namespace Swapy.DAL.Repositories
             if (reverseSort == true) query.Reverse();
 
             query = query.Skip(pageSize * (page - 1))
-                 .Take(pageSize);
+                 .Take(pageSize)
+                 .Include(a => a.Product)
+                    .ThenInclude(p => p.City)
+                        .ThenInclude(c => c.Names);
 
             var result = await query.Select(x => new ProductResponseDTO()
             {
                 Id = x.ProductId,
                 Title = x.Product.Title,
                 Price = x.Product.Price,
-                City = x.Product.City.Name,
+                City = x.Product.City.Names.FirstOrDefault(l => l.Language == language).Value,
                 Currency = x.Product.Currency.Name,
                 CurrencySymbol = x.Product.Currency.Symbol,
                 DateTime = x.Product.DateTime,
@@ -158,16 +143,17 @@ namespace Swapy.DAL.Repositories
 
         public async Task<ElectronicAttribute> GetDetailByIdAsync(string productId)
         {
-            var item = await _context.ElectronicAttributes.Include(a => a.Product)
+            var item = await _context.ElectronicAttributes.Where(a => a.ProductId.Equals(productId))
+                                                          .Include(a => a.Product)
                                                             .ThenInclude(p => p.Images)
                                                           .Include(x => x.Product)
-                                                        .   ThenInclude(x => x.Category)
+                                                            .ThenInclude(x => x.Category)
+                                                                .ThenInclude(c => c.Names)
                                                           .Include(a => a.Product)
                                                             .ThenInclude(p => p.City)
+                                                                .ThenInclude(c => c.Names)
                                                           .Include(a => a.Product)
                                                             .ThenInclude(p => p.Currency)
-                                                          .Include(a => a.Product)
-                                                            .ThenInclude(p => p.Subcategory)
                                                           .Include(e => e.MemoryModel)
                                                             .ThenInclude(mm => mm.Memory)
                                                           .Include(e => e.MemoryModel)
@@ -177,18 +163,12 @@ namespace Swapy.DAL.Repositories
                                                           .Include(e => e.MemoryModel)
                                                             .ThenInclude(mm => mm.Model)
                                                                 .ThenInclude(m => m.ElectronicBrandType)
-                                                                    .ThenInclude(bt => bt.ElectronicType)
+                                                                    .ThenInclude(ebt => ebt.ElectronicType)
+                                                                        .ThenInclude(et => et.Names)
                                                           .Include(e => e.ModelColor)
                                                             .ThenInclude(mm => mm.Color)
-                                                          .Include(e => e.ModelColor)
-                                                            .ThenInclude(mm => mm.Model)
-                                                                .ThenInclude(m => m.ElectronicBrandType)
-                                                                    .ThenInclude(bt => bt.ElectronicBrand)
-                                                          .Include(e => e.ModelColor)
-                                                            .ThenInclude(mm => mm.Model)
-                                                                .ThenInclude(m => m.ElectronicBrandType)
-                                                                    .ThenInclude(bt => bt.ElectronicType)
-                                                          .FirstOrDefaultAsync(a => a.ProductId.Equals(productId));
+                                                                .ThenInclude(c => c.Names)
+                                                          .FirstOrDefaultAsync();
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
             return item;

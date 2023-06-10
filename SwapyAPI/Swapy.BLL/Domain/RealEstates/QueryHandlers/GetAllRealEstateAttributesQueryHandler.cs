@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.RealEstates.Queries;
 using Swapy.Common.DTO.Products.Responses;
+using Swapy.Common.Enums;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.RealEstates.QueryHandlers
@@ -31,7 +32,8 @@ namespace Swapy.BLL.Domain.RealEstates.QueryHandlers
                                                                             request.RoomsMax,
                                                                             request.RealEstateTypesId,
                                                                             request.SortByPrice,
-                                                                            request.ReverseSort);
+                                                                            request.ReverseSort,
+                                                                            request.Language);
         }
     }
 }

@@ -13,15 +13,14 @@ namespace Swapy.DAL.Configurations
 
             builder.Property(x => x.Id).IsRequired();
 
-            builder.Property(x => x.Name)
-                .IsRequired()
-                .HasMaxLength(32);
+            builder.HasMany(a => a.Names)
+                   .WithOne()
+                   .IsRequired(false);
 
-            builder
-                .HasMany(x => x.AutoAttributes)
-                .WithOne(x => x.FuelType)
-                .HasForeignKey(x => x.FuelTypeId)
-                .IsRequired(false);
+            builder.HasMany(x => x.AutoAttributes)
+                   .WithOne(x => x.FuelType)
+                   .HasForeignKey(x => x.FuelTypeId)
+                   .IsRequired(false);
         }
     }
 }

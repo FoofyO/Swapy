@@ -13,7 +13,9 @@ namespace Swapy.DAL.Configurations
 
             builder.Property(c => c.Id).IsRequired();
 
-            builder.Property(c=> c.Name).IsRequired();
+            builder.HasMany(a => a.Names)
+                   .WithOne()
+                   .IsRequired(false);
 
             builder.HasMany(c => c.Products)
                    .WithOne(p => p.City)

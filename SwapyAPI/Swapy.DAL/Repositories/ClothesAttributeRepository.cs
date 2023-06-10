@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -76,45 +77,34 @@ namespace Swapy.DAL.Repositories
                                                                                        List<string> clothesTypesId,
                                                                                        List<string> clothesGendersId,
                                                                                        bool? sortByPrice,
-                                                                                       bool? reverseSort)
+                                                                                       bool? reverseSort,
+                                                                                       Languages language)
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
 
             var query = _context.ClothesAttributes.Include(c => c.Product)
                                                     .ThenInclude(p => p.Images)
                                                   .Include(c => c.Product)
-                                                    .ThenInclude(p => p.City)
-                                                  .Include(c => c.Product)
                                                     .ThenInclude(p => p.Currency)
-                                                  .Include(c => c.Product)
-                                                    .ThenInclude(p => p.Subcategory)
-                                                  .Include(c => c.ClothesSize)
-                                                  .Include(c => c.ClothesSeason)
-                                                  .Include(c => c.ClothesBrandView)
-                                                    .ThenInclude(cbv => cbv.ClothesBrand)
                                                   .Include(c => c.ClothesBrandView)
                                                     .ThenInclude(cbv => cbv.ClothesView)
-                                                        .ThenInclude(cv => cv.ClothesType)
-                                                  .Include(c => c.ClothesBrandView)
-                                                    .ThenInclude(cbv => cbv.ClothesView)
-                                                        .ThenInclude(cv => cv.Gender)
-                                                 .Where(x => (title == null || x.Product.Title.Contains(title)) &&
-                                                       (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
-                                                       (priceMin == null || x.Product.Price >= priceMin) &&
-                                                       (priceMax == null || x.Product.Price <= priceMax) &&
-                                                       (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
-                                                       (subcategoryId == null || x.Product.SubcategoryId.Equals(subcategoryId)) &&
-                                                       (cityId == null || x.Product.CityId.Equals(cityId)) &&
-                                                       (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
-                                                       (isNew == null || x.IsNew == isNew) &&
-                                                       x.Product.IsDisable.Equals(false) &&
-                                                       (clothesSeasonsId == null || clothesSeasonsId.Contains(x.ClothesSeasonId)) &&
-                                                       (clothesSizesId == null || clothesSizesId.Contains(x.ClothesSizeId)) &&
-                                                       (clothesBrandsId == null || clothesBrandsId.Contains(x.ClothesBrandView.ClothesBrandId)) &&
-                                                       (clothesViewsId == null || clothesViewsId.Contains(x.ClothesBrandView.ClothesViewId)) &&
-                                                       (clothesTypesId == null && clothesViewsId != null || clothesTypesId.Contains(x.ClothesBrandView.ClothesView.ClothesTypeId)) &&
-                                                       (clothesGendersId == null && clothesViewsId != null || clothesGendersId.Contains(x.ClothesBrandView.ClothesView.GenderId)))
-                                                 .AsQueryable();
+                                                  .Where(x => (title == null || x.Product.Title.Contains(title)) &&
+                                                        (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
+                                                        (priceMin == null || x.Product.Price >= priceMin) &&
+                                                        (priceMax == null || x.Product.Price <= priceMax) &&
+                                                        (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
+                                                        (subcategoryId == null || x.Product.SubcategoryId.Equals(subcategoryId)) &&
+                                                        (cityId == null || x.Product.CityId.Equals(cityId)) &&
+                                                        (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
+                                                        (isNew == null || x.IsNew == isNew) &&
+                                                        x.Product.IsDisable.Equals(false) &&
+                                                        (clothesSeasonsId == null || clothesSeasonsId.Contains(x.ClothesSeasonId)) &&
+                                                        (clothesSizesId == null || clothesSizesId.Contains(x.ClothesSizeId)) &&
+                                                        (clothesBrandsId == null || clothesBrandsId.Contains(x.ClothesBrandView.ClothesBrandId)) &&
+                                                        (clothesViewsId == null || clothesViewsId.Contains(x.ClothesBrandView.ClothesViewId)) &&
+                                                        (clothesTypesId == null && clothesViewsId != null || clothesTypesId.Contains(x.ClothesBrandView.ClothesView.ClothesTypeId)) &&
+                                                        (clothesGendersId == null && clothesViewsId != null || clothesGendersId.Contains(x.ClothesBrandView.ClothesView.GenderId)))
+                                                  .AsQueryable();
 
             var count = await query.CountAsync();
             if (count <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
@@ -124,19 +114,22 @@ namespace Swapy.DAL.Repositories
             if (reverseSort == true) query.Reverse();
 
             query = query.Skip(pageSize * (page - 1))
-                 .Take(pageSize);
+                 .Take(pageSize)
+                 .Include(a => a.Product)
+                    .ThenInclude(p => p.City)
+                        .ThenInclude(c => c.Names);
 
             var result = await query.Select(x => new ProductResponseDTO()
             {
                 Id = x.ProductId,
                 Title = x.Product.Title,
                 Price = x.Product.Price,
-                City = x.Product.City.Name,
+                City = x.Product.City.Names.FirstOrDefault(l => l.Language == language).Value,
                 Currency = x.Product.Currency.Name,
                 CurrencySymbol = x.Product.Currency.Symbol,
                 DateTime = x.Product.DateTime,
-                IsDisable = x.Product.IsDisable,
                 Images = x.Product.Images.Select(i => i.Image).ToList(),
+                IsDisable = x.Product.IsDisable,
                 UserType = x.Product.User.Type
             }).ToListAsync();
 
@@ -150,27 +143,34 @@ namespace Swapy.DAL.Repositories
 
         public async Task<ClothesAttribute> GetDetailByIdAsync(string productId)
         {
-            var item = await _context.ClothesAttributes.Include(c => c.Product)
+            var item = await _context.ClothesAttributes.Where(a => a.ProductId.Equals(productId))
+                                                       .Include(c => c.Product)
                                                         .ThenInclude(p => p.Images)
                                                        .Include(x => x.Product)
                                                         .ThenInclude(x => x.Category)
+                                                            .ThenInclude(c => c.Names)
                                                        .Include(c => c.Product)
                                                         .ThenInclude(p => p.City)
+                                                            .ThenInclude(cs => cs.Names)
                                                        .Include(c => c.Product)
                                                         .ThenInclude(p => p.Currency)
-                                                       .Include(c => c.Product)
-                                                        .ThenInclude(p => p.Subcategory)
                                                        .Include(c => c.ClothesSize)
                                                        .Include(c => c.ClothesSeason)
+                                                        .ThenInclude(cs => cs.Names)
                                                        .Include(c => c.ClothesBrandView)
                                                         .ThenInclude(cbv => cbv.ClothesBrand)
                                                        .Include(c => c.ClothesBrandView)
                                                         .ThenInclude(cbv => cbv.ClothesView)
                                                             .ThenInclude(cv => cv.ClothesType)
+                                                                .ThenInclude(cs => cs.Names)
                                                        .Include(c => c.ClothesBrandView)
                                                         .ThenInclude(cbv => cbv.ClothesView)
                                                             .ThenInclude(cv => cv.Gender)
-                                                       .FirstOrDefaultAsync(a => a.ProductId.Equals(productId));
+                                                                .ThenInclude(cs => cs.Names)
+                                                        .Include(c => c.ClothesBrandView)
+                                                            .ThenInclude(cbv => cbv.ClothesView)
+                                                                .ThenInclude(cv => cv.Names)
+                                                       .FirstOrDefaultAsync();
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
             return item;

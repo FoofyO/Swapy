@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -43,11 +45,14 @@ namespace Swapy.DAL.Repositories
             return await _context.ClothesViews.ToListAsync();
         }
 
-        public async Task<IEnumerable<ClothesView>> GetByGenderAndTypeAsync(string genderId, string clothesTypeId)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetByGenderAndTypeAsync(string genderId, string clothesTypeId, Languages language)
         {
-            return _context.ClothesViews.Where(x => (clothesTypeId == null || x.ClothesTypeId.Equals(clothesTypeId)) &&
-                                              (genderId == null || x.GenderId.Equals(genderId)))
-                                        .OrderBy(x => x.Name); ;
+            return _context.ClothesViews.Where(x => (clothesTypeId == null || x.ClothesTypeId.Equals(clothesTypeId)) && (genderId == null || x.GenderId.Equals(genderId)))
+                                        .Include(s => s.Names)
+                                        .AsEnumerable()
+                                        .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
+                                        .OrderBy(s => s.Value)
+                                        .ToList();
         }
     }
 }

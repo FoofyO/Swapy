@@ -27,7 +27,8 @@ namespace Swapy.BLL.Domain.Animals.QueryHandlers
                                                                         request.AnimalBreedsId,
                                                                         request.AnimalTypesId,
                                                                         request.SortByPrice,
-                                                                        request.ReverseSort);
+                                                                        request.ReverseSort,
+                                                                        request.Language);
         }
     }
 }
