@@ -3,7 +3,7 @@ using Swapy.Common.Entities;
 
 namespace Swapy.Common.DTO.RealEstates.Requests.Commands
 {
-    public class AddRealEstateAttributeCommandDTO : AddProductCommandDTO<RealEstateAttribute>
+    public class AddRealEstateAttributeCommandDTO : AddProductCommandDTO
     {
         public int Area { get; set; }
         public int Rooms { get; set; }

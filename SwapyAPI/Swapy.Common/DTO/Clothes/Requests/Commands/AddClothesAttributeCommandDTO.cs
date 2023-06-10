@@ -3,7 +3,7 @@ using Swapy.Common.Entities;
 
 namespace Swapy.Common.DTO.Clothes.Requests.Commands
 {
-    public class AddClothesAttributeCommandDTO : AddProductCommandDTO<ClothesAttribute>
+    public class AddClothesAttributeCommandDTO : AddProductCommandDTO
     {
         public bool IsNew { get; set; }
         public string ClothesSeasonId { get; set; }

@@ -1,6 +1,8 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swapy.API.Validators;
 using Swapy.BLL.Domain.Autos.Commands;
 using Swapy.BLL.Domain.Autos.Queries;
 using Swapy.Common.Attributes;
@@ -10,6 +12,7 @@ using Swapy.Common.DTO.Products.Requests.Queries;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using System.Security.Claims;
+using System.Text;
 
 namespace Swapy.API.Controllers
 {
@@ -52,6 +55,37 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var productValidator = new AddProductValidator();
+                var productValidatorResult = productValidator.Validate(dto);
+
+                if (!productValidatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in productValidatorResult.Errors)
+                    {
+                        builder.Append($"Product Attribute property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+
+                var autoValidator = new AddAutoAttributeValidator();
+                var autoValidatorResult = autoValidator.Validate(dto);
+
+                if (!autoValidatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in autoValidatorResult.Errors)
+                    {
+                        builder.Append($"Auto Attribute property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new AddAutoAttributeCommand()
                 {
@@ -98,6 +132,7 @@ namespace Swapy.API.Controllers
         [HttpPut]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -105,6 +140,37 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var productValidator = new UpdateProductValidator();
+                var productValidatorResult = productValidator.Validate(dto);
+
+                if (!productValidatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in productValidatorResult.Errors)
+                    {
+                        builder.Append($"Product Attribute property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+
+                var autoValidator = new UpdateAutoAttributeValidator();
+                var autoValidatorResult = autoValidator.Validate(dto);
+
+                if (!autoValidatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in autoValidatorResult.Errors)
+                    {
+                        builder.Append($"Auto Attribute property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new UpdateAutoAttributeCommand()
                 {

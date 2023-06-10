@@ -1,12 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swapy.API.Validators;
 using Swapy.BLL.Domain.Users.Commands;
 using Swapy.BLL.Domain.Users.Queries;
 using Swapy.Common.DTO.Users.Requests;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using System.Security.Claims;
+using System.Text;
 
 namespace Swapy.API.Controllers
 {
@@ -70,6 +72,20 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var validator = new UserUpdateValidator();
+                var validatorResult = validator.Validate(dto);
+                if (!validatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in validatorResult.Errors)
+                    {
+                        builder.Append($"User property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new UpdateUserCommand
                 {

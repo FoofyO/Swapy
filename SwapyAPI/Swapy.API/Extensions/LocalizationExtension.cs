@@ -1,4 +1,4 @@
-﻿using Swapy.API.Middleware;
+﻿using Swapy.API.Middlewares;
 
 namespace Swapy.API.Extensions
 {

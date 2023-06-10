@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swapy.API.Validators;
 using Swapy.BLL.Domain.TVs.Commands;
 using Swapy.BLL.Domain.TVs.Queries;
 using Swapy.Common.Attributes;
@@ -10,6 +11,7 @@ using Swapy.Common.DTO.TVs.Requests.Queries;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using System.Security.Claims;
+using System.Text;
 
 namespace Swapy.API.Controllers
 {
@@ -52,6 +54,37 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var productValidator = new AddProductValidator();
+                var productValidatorResult = productValidator.Validate(dto);
+
+                if (!productValidatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in productValidatorResult.Errors)
+                    {
+                        builder.Append($"Product Attribute property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+
+                var tvValidator = new AddTVAttributeValidator();
+                var tvValidatorResult = tvValidator.Validate(dto);
+
+                if (!tvValidatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in tvValidatorResult.Errors)
+                    {
+                        builder.Append($"Animal Attribute property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new AddTVAttributeCommand()
                 {

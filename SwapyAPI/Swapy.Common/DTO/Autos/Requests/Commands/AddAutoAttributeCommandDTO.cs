@@ -3,7 +3,7 @@ using Swapy.Common.Entities;
 
 namespace Swapy.Common.DTO.Autos.Requests.Commands
 {
-    public class AddAutoAttributeCommandDTO : AddProductCommandDTO<AutoAttribute>
+    public class AddAutoAttributeCommandDTO : AddProductCommandDTO
     {
         public int Miliage { get; set; }
         public int EngineCapacity { get; set; }

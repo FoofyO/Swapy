@@ -3,7 +3,7 @@ using Swapy.Common.Entities;
 
 namespace Swapy.Common.DTO.Animals.Requests.Commands
 {
-    public class AddAnimalAttributeCommandDTO : AddProductCommandDTO<AnimalAttribute>
+    public class AddAnimalAttributeCommandDTO : AddProductCommandDTO
     {
         public string AnimalBreedId { get; set; }
     }

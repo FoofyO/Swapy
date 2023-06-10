@@ -3,7 +3,7 @@ using Swapy.Common.Entities;
 
 namespace Swapy.Common.DTO.TVs.Requests.Commands
 {
-    public class AddTVAttributeCommandDTO : AddProductCommandDTO<TVAttribute>
+    public class AddTVAttributeCommandDTO : AddProductCommandDTO
     {
         public bool IsNew { get; set; }
         public bool IsSmart { get; set; }

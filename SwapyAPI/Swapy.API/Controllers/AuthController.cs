@@ -1,7 +1,9 @@
 ﻿using Castle.Core.Internal;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swapy.API.Validators;
 using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Auth.Requests;
@@ -9,6 +11,7 @@ using Swapy.Common.Exceptions;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Authentication;
 using System.Security.Claims;
+using System.Text;
 
 namespace Swapy.API.Controllers
 {
@@ -78,6 +81,20 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var validator = new UserRegisterValidator();
+                var validatorResult = validator.Validate(dto);
+                if (!validatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in validatorResult.Errors)
+                    {
+                        builder.Append($"User property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
                 var command = new UserRegistrationCommand()
                 {
                     FirstName = dto.FirstName,
@@ -113,6 +130,20 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var validator = new ShopRegisterValidator();
+                var validatorResult = validator.Validate(dto);
+                if (!validatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in validatorResult.Errors)
+                    {
+                        builder.Append($"Shop property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
                 var command = new ShopRegistrationCommand()
                 {
                     ShopName = dto.ShopName,
@@ -194,7 +225,7 @@ namespace Swapy.API.Controllers
             }
             catch (Exception ex)
             {
-                if (ex is ValidationException)
+                if (ex is System.ComponentModel.DataAnnotations.ValidationException)
                 {
                     return BadRequest(ex.Message);
                 }
@@ -245,7 +276,7 @@ namespace Swapy.API.Controllers
             }
             catch (Exception ex)
             {
-                if (ex is ValidationException)
+                if (ex is System.ComponentModel.DataAnnotations.ValidationException)
                 {
                     return BadRequest(ex.Message);
                 }
