@@ -39,7 +39,7 @@ namespace Swapy.DAL.Configurations
                    .IsRequired();
 
             builder.Property(p => p.IsDisable)
-                   .HasColumnType("BOOLEAN")
+                   .HasColumnType("BIT")
                    .IsRequired();
 
             builder.HasOne(p => p.City)

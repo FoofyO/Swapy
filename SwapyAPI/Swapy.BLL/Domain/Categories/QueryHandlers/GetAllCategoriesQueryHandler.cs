@@ -5,15 +5,15 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Categories.QueryHandlers
 {
-    public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesQuery, IEnumerable<SpecificationResponseDTO>>
+    public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesQuery, IEnumerable<SpecificationResponseDTO<string>>>
     {
         private readonly ICategoryRepository _categoryRepository;
 
         public GetAllCategoriesQueryHandler(ICategoryRepository categoryRepository) => _categoryRepository = categoryRepository;
 
-        public async Task<IEnumerable<SpecificationResponseDTO>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
         {
-            return (await _categoryRepository.GetAllAsync()).Select(x => new SpecificationResponseDTO(x.Id, x.Name));
+            return await _categoryRepository.GetAllAsync(request.Language);
         }
     }
 }

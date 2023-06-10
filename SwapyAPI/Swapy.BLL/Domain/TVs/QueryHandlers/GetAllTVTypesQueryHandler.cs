@@ -5,16 +5,15 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.TVs.QueryHandlers
 {
-    public class GetAllTVTypesQueryHandler : IRequestHandler<GetAllTVTypesQuery, IEnumerable<SpecificationResponseDTO>>
+    public class GetAllTVTypesQueryHandler : IRequestHandler<GetAllTVTypesQuery, IEnumerable<SpecificationResponseDTO<string>>>
     {
         private readonly ITVTypeRepository _tvTypeRepository;
 
         public GetAllTVTypesQueryHandler(ITVTypeRepository tvTypeRepository) => _tvTypeRepository = tvTypeRepository;
 
-        public async Task<IEnumerable<SpecificationResponseDTO>> Handle(GetAllTVTypesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllTVTypesQuery request, CancellationToken cancellationToken)
         {
-            var result = (await _tvTypeRepository.GetAllAsync()).Select(x => new SpecificationResponseDTO(x.Id, x.Name));
-            return result;
+            return await _tvTypeRepository.GetAllAsync(request.Language);
         }
     }
 }

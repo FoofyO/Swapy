@@ -20,13 +20,13 @@ namespace Swapy.BLL.Domain.Clothes.QueryHandlers
         public async Task<ClothesAttributeResponseDTO> Handle(GetByIdClothesAttributeQuery request, CancellationToken cancellationToken)
         {
             var clothesAttribute = await _clothesAttributeRepository.GetDetailByIdAsync(request.ProductId);
-            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(clothesAttribute.Product.SubcategoryId)).Select(s => new CategoryNode(s.Id, s.Name)).ToList();
-            categories.Insert(0, new CategoryNode(clothesAttribute.Product.CategoryId, clothesAttribute.Product.Category.Name));
+            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(clothesAttribute.Product.SubcategoryId, request.Language)).ToList();
+            categories.Insert(0, new CategoryNode(clothesAttribute.Product.CategoryId, clothesAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
 
             ClothesAttributeResponseDTO result = new ClothesAttributeResponseDTO()
             {
                 Id = clothesAttribute.Id,
-                City = clothesAttribute.Product.City.Name,
+                City = clothesAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 Currency = clothesAttribute.Product.Currency.Name,
                 CurrencySymbol = clothesAttribute.Product.Currency.Symbol,
                 UserId = clothesAttribute.Product.UserId,
@@ -49,13 +49,13 @@ namespace Swapy.BLL.Domain.Clothes.QueryHandlers
                 IsShoe = clothesAttribute.ClothesSize.IsShoe,
                 IsChild = clothesAttribute.ClothesSize.IsChild,
                 GenderId = clothesAttribute.ClothesBrandView.ClothesView.GenderId,
-                Gender = clothesAttribute.ClothesBrandView.ClothesView.Gender.Name,
+                Gender = clothesAttribute.ClothesBrandView.ClothesView.Gender.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 ClothesSeasonId = clothesAttribute.ClothesSeasonId,
-                ClothesSeason = clothesAttribute.ClothesSeason.Name,
+                ClothesSeason = clothesAttribute.ClothesSeason.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 ClothesBrandId = clothesAttribute.ClothesBrandView.ClothesBrandId,
                 ClothesBrand = clothesAttribute.ClothesBrandView.ClothesBrand.Name,
                 ClothesViewId = clothesAttribute.ClothesBrandView.ClothesViewId,
-                ClothesView = clothesAttribute.ClothesBrandView.ClothesView.Name
+                ClothesView = clothesAttribute.ClothesBrandView.ClothesView.Names.FirstOrDefault(l => l.Language == request.Language).Value
             };
             return result;
         }

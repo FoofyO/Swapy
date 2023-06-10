@@ -5,15 +5,15 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Electronics.QueryHandlers
 {
-    public class GetAllElectronicBrandsQueryHandler : IRequestHandler<GetAllElectronicBrandsQuery, IEnumerable<SpecificationResponseDTO>>
+    public class GetAllElectronicBrandsQueryHandler : IRequestHandler<GetAllElectronicBrandsQuery, IEnumerable<SpecificationResponseDTO<string>>>
     {
         private readonly IElectronicBrandRepository _electronicBrandRepository;
 
         public GetAllElectronicBrandsQueryHandler(IElectronicBrandRepository electronicBrandRepository) => _electronicBrandRepository = electronicBrandRepository;
 
-        public async Task<IEnumerable<SpecificationResponseDTO>> Handle(GetAllElectronicBrandsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllElectronicBrandsQuery request, CancellationToken cancellationToken)
         {
-            var result = (await _electronicBrandRepository.GetByElectronicTypeAsync(request.ElectronicTypeId)).Select(x => new SpecificationResponseDTO(x.Id, x.Name));
+            var result = (await _electronicBrandRepository.GetByElectronicTypeAsync(request.ElectronicTypeId)).Select(x => new SpecificationResponseDTO<string>(x.Id, x.Name));
             return result;
         }
     }

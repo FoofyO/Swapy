@@ -27,19 +27,19 @@ namespace Swapy.DAL.Configurations
                    .IsRequired();
 
             builder.Property(u => u.LikesCount)
-                  .HasColumnType("INT")
-                  .HasDefaultValue(0)
-                  .IsRequired();
+                   .HasColumnType("INT")
+                   .HasDefaultValue(0)
+                   .IsRequired();
 
             builder.Property(u => u.ProductsCount)
-                  .HasColumnType("INT")
-                  .HasDefaultValue(0)
-                  .IsRequired();
+                   .HasColumnType("INT")
+                   .HasDefaultValue(0)
+                   .IsRequired();
 
             builder.Property(u => u.SubscriptionsCount)
-                  .HasColumnType("INT")
-                  .HasDefaultValue(0)
-                  .IsRequired();
+                   .HasColumnType("INT")
+                   .HasDefaultValue(0)
+                   .IsRequired();
 
 
             builder.Property(u => u.RegistrationDate)

@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.BLL.Domain.TVs.Commands;
 using Swapy.BLL.Domain.TVs.Queries;
+using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Products.Requests.Queries;
 using Swapy.Common.DTO.TVs.Requests.Commands;
 using Swapy.Common.DTO.TVs.Requests.Queries;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using System.Security.Claims;
 
@@ -143,6 +145,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -171,7 +174,8 @@ namespace Swapy.API.Controllers
                     SortByPrice = dto.SortByPrice,
                     SubcategoryId = dto.SubcategoryId,
                     ScreenDiagonalsId = dto.ScreenDiagonalsId,
-                    ScreenResolutionsId = dto.ScreenResolutionsId
+                    ScreenResolutionsId = dto.ScreenResolutionsId,
+                    Language = (Languages)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -188,6 +192,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("{ProductId}")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -195,7 +200,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetByIdTVAttributeQuery() { ProductId = dto.ProductId });
+                var result = await _mediator.Send(new GetByIdTVAttributeQuery() {
+                    ProductId = dto.ProductId,
+                    Language = (Languages)HttpContext.Items["Language"]
+                });
                 return Ok(result);
             }
             catch (NotFoundException ex)
@@ -260,13 +268,14 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("Types")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllTVTypesAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllTVTypesQuery());
+                var result = await _mediator.Send(new GetAllTVTypesQuery() { Language = (Languages)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)

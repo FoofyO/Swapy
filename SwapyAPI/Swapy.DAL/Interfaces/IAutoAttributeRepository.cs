@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -33,6 +34,7 @@ namespace Swapy.DAL.Interfaces
                                                                                List<string> autoBrandsId,
                                                                                List<string> autoTypesId,
                                                                                bool? sortByPrice,
-                                                                               bool? reverseSort);
+                                                                               bool? reverseSort,
+                                                                               Languages language);
     }
 }

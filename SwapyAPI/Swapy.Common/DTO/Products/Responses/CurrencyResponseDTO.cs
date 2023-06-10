@@ -1,6 +1,6 @@
 ﻿namespace Swapy.Common.DTO.Products.Responses
 {
-    public class CurrencyResponseDTO : SpecificationResponseDTO
+    public class CurrencyResponseDTO : SpecificationResponseDTO<string>
     {
         public string Symbol { get; set; }
 

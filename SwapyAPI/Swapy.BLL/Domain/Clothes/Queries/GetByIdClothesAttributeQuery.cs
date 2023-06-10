@@ -1,4 +1,4 @@
-﻿using Swapy.BLL.Domain.Products.QueryHandlers;
+﻿using Swapy.BLL.Domain.Products.Queries;
 using Swapy.Common.DTO.Clothes.Responses;
 
 

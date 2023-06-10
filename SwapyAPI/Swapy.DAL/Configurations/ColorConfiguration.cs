@@ -13,9 +13,9 @@ namespace Swapy.DAL.Configurations
 
             builder.Property(c => c.Id).IsRequired();
 
-            builder.Property(c => c.Name)
-                   .IsRequired()
-                   .HasMaxLength(32);
+            builder.HasMany(a => a.Names)
+                   .WithOne()
+                   .IsRequired(false);
 
             builder.HasMany(c => c.ModelsColors)
                    .WithOne(m => m.Color)

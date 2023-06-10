@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -40,7 +42,16 @@ namespace Swapy.DAL.Repositories
 
         public async Task<IEnumerable<TVType>> GetAllAsync()
         {
-            return await _context.TVTypes.OrderBy(x => x.Name).ToListAsync();
+            return await _context.TVTypes.ToListAsync();
+        }
+
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Languages language)
+        {
+            return _context.TVTypes.Include(t => t.Names)
+                                   .AsEnumerable()
+                                   .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
+                                   .OrderBy(s => s.Value)
+                                   .ToList();
         }
     }
 }

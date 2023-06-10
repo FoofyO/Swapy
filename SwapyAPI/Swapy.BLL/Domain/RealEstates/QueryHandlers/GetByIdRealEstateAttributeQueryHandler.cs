@@ -21,13 +21,13 @@ namespace Swapy.BLL.Domain.RealEstates.QueryHandlers
         public async Task<RealEstateAttributeResponseDTO> Handle(GetByIdRealEstateAttributeQuery request, CancellationToken cancellationToken)
         {
             var realEstateAttribute = await _realEstateAttributeRepository.GetDetailByIdAsync(request.ProductId);
-            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(realEstateAttribute.Product.SubcategoryId)).Select(s => new CategoryNode(s.Id, s.Name)).ToList();
-            categories.Insert(0, new CategoryNode(realEstateAttribute.Product.CategoryId, realEstateAttribute.Product.Category.Name));
+            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(realEstateAttribute.Product.SubcategoryId, request.Language)).ToList();
+            categories.Insert(0, new CategoryNode(realEstateAttribute.Product.CategoryId, realEstateAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
 
             RealEstateAttributeResponseDTO result = new RealEstateAttributeResponseDTO()
             {
                 Id = realEstateAttribute.Id,
-                City = realEstateAttribute.Product.City.Name,
+                City = realEstateAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 Currency = realEstateAttribute.Product.Currency.Name,
                 CurrencySymbol = realEstateAttribute.Product.Currency.Symbol,
                 UserId = realEstateAttribute.Product.UserId,

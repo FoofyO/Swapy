@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -43,11 +45,14 @@ namespace Swapy.DAL.Repositories
             return await _context.AnimalBreeds.ToListAsync();
         }
 
-        public async Task<IEnumerable<AnimalBreed>> GetByAnimalTypeAsync(string animalType)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetByAnimalTypeAsync(string animalType, Languages language)
         {
-            return await _context.AnimalBreeds.Where(x => animalType == null || x.AnimalTypeId.Equals(animalType))
-                                        .OrderBy(x => x.Name)
-                                        .ToListAsync();
+            return _context.AnimalBreeds.Where(x => animalType == null || x.AnimalTypeId.Equals(animalType))
+                                        .Include(s => s.Names)
+                                        .AsEnumerable()
+                                        .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
+                                        .OrderBy(s => s.Value)
+                                        .ToList();
         }
     }
 }

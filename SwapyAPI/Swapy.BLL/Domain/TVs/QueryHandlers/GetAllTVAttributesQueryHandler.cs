@@ -31,7 +31,8 @@ namespace Swapy.BLL.Domain.TVs.QueryHandlers
                                                                     request.ScreenResolutionsId,
                                                                     request.ScreenDiagonalsId,
                                                                     request.SortByPrice,
-                                                                    request.ReverseSort);
+                                                                    request.ReverseSort,
+                                                                    request.Language);
         }
     }
 }

@@ -5,16 +5,15 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Animals.QueryHandlers
 {
-    public class GetAllAnimalBreedsQueryHandler : IRequestHandler<GetAllAnimalBreedsQuery, IEnumerable<SpecificationResponseDTO>>
+    public class GetAllAnimalBreedsQueryHandler : IRequestHandler<GetAllAnimalBreedsQuery, IEnumerable<SpecificationResponseDTO<string>>>
     {
         private readonly IAnimalBreedRepository _animalBreedRepository;
 
         public GetAllAnimalBreedsQueryHandler(IAnimalBreedRepository animalBreedRepository) => _animalBreedRepository = animalBreedRepository;
 
-        public async Task<IEnumerable<SpecificationResponseDTO>> Handle(GetAllAnimalBreedsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllAnimalBreedsQuery request, CancellationToken cancellationToken)
         {
-            var result = (await _animalBreedRepository.GetByAnimalTypeAsync(request.AnimalTypesId)).Select(x => new SpecificationResponseDTO(x.Id, x.Name)).ToList();
-            return result;
+            return await _animalBreedRepository.GetByAnimalTypeAsync(request.AnimalTypesId, request.Language);
         }
     }
 }

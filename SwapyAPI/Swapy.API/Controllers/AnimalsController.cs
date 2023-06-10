@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.BLL.Domain.Animals.Commands;
 using Swapy.BLL.Domain.Animals.Queries;
+using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Animals.Requests.Commands;
 using Swapy.Common.DTO.Animals.Requests.Queries;
 using Swapy.Common.DTO.Products.Requests.Queries;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using System.Security.Claims;
 
@@ -133,10 +135,11 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllAnimalsAsync([FromQuery] GetAllAnimalAttributesQueryDTO dto)
+        public async Task<IActionResult> GetAllAnimalsAsync([FromQuery] GetAllAnimalAttributesQueryDTO dto) 
         {
             try
             {
@@ -157,7 +160,8 @@ namespace Swapy.API.Controllers
                     SortByPrice = dto.SortByPrice,
                     ReverseSort = dto.ReverseSort,
                     AnimalBreedsId = dto.AnimalBreedsId,
-                    AnimalTypesId = dto.AnimalTypesId
+                    AnimalTypesId = dto.AnimalTypesId,
+                    Language = (Languages)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -174,6 +178,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("{ProductId}")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -181,7 +186,12 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetByIdAnimalAttributeQuery() { ProductId = dto.ProductId });
+                var query = new GetByIdAnimalAttributeQuery()
+                {
+                    ProductId = dto.ProductId,
+                    Language = (Languages)HttpContext.Items["Language"]
+                };
+                var result = await _mediator.Send(query);
                 return Ok(result);
             }
             catch (NotFoundException ex)
@@ -199,13 +209,20 @@ namespace Swapy.API.Controllers
         /// Animal Attributes
         /// </summary>
         [HttpGet("Breeds/{AnimalTypesId}")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllAnimalBreedsAsync([FromRoute] GetAllAnimalBreedsQueryDTO dto)
         {
             try
             {
-                var result = await _mediator.Send(new GetAllAnimalBreedsQuery() { AnimalTypesId = dto.AnimalTypesId });
+                var query = new GetAllAnimalBreedsQuery()
+                {
+                    AnimalTypesId = dto.AnimalTypesId,
+                    Language = (Languages)HttpContext.Items["Language"]
+                };
+
+                var result = await _mediator.Send(query);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -215,13 +232,14 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("Types")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllAnimalTypesAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllAnimalTypesQuery());
+                var result = await _mediator.Send(new GetAllAnimalTypesQuery() { Language = (Languages)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)

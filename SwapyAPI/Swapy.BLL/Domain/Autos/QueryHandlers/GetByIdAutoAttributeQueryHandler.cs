@@ -21,13 +21,13 @@ namespace Swapy.BLL.Domain.Autos.QueryHandlers
         public async Task<AutoAttributeResponseDTO> Handle(GetByIdAutoAttributeQuery request, CancellationToken cancellationToken)
         {
             var autoAttribute = await _autoAttributeRepository.GetDetailByIdAsync(request.ProductId);
-            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(autoAttribute.Product.SubcategoryId)).Select(s => new CategoryNode(s.Id, s.Name)).ToList();
-            categories.Insert(0, new CategoryNode(autoAttribute.Product.CategoryId, autoAttribute.Product.Category.Name));
+            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(autoAttribute.Product.SubcategoryId, request.Language)).ToList();
+            categories.Insert(0, new CategoryNode(autoAttribute.Product.CategoryId, autoAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
 
             AutoAttributeResponseDTO result = new AutoAttributeResponseDTO()
             {
                 Id = autoAttribute.Id,
-                City = autoAttribute.Product.City.Name,
+                City = autoAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 Currency = autoAttribute.Product.Currency.Name,
                 CurrencySymbol = autoAttribute.Product.Currency.Symbol,
                 UserId = autoAttribute.Product.UserId,
@@ -50,11 +50,11 @@ namespace Swapy.BLL.Domain.Autos.QueryHandlers
                 EngineCapacity = autoAttribute.EngineCapacity,
                 ReleaseYear = autoAttribute.ReleaseYear,
                 FuelTypeId = autoAttribute.FuelTypeId,
-                FuelType = autoAttribute.FuelType.Name,
+                FuelType = autoAttribute.FuelType.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 ColorId = autoAttribute.AutoColorId,
-                Color = autoAttribute.AutoColor.Name,
+                Color = autoAttribute.AutoColor.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 TransmissionTypeId = autoAttribute.TransmissionTypeId,
-                TransmissionType = autoAttribute.TransmissionType.Name,
+                TransmissionType = autoAttribute.TransmissionType.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 AutoBrandId = autoAttribute.AutoModel.AutoBrandId,
                 AutoBrand = autoAttribute.AutoModel.AutoBrand.Name
             };

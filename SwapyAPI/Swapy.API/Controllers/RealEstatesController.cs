@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.BLL.Domain.RealEstates.Commands;
 using Swapy.BLL.Domain.RealEstates.Queries;
+using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Products.Requests.Queries;
 using Swapy.Common.DTO.RealEstates.Requests.Commands;
 using Swapy.Common.DTO.RealEstates.Requests.Queries;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using System.Security.Claims;
 
@@ -139,6 +141,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -167,7 +170,8 @@ namespace Swapy.API.Controllers
                     ReverseSort = dto.ReverseSort,
                     SortByPrice = dto.SortByPrice,
                     SubcategoryId = dto.SubcategoryId,
-                    RealEstateTypesId = dto.RealEstateTypesId
+                    RealEstateTypesId = dto.RealEstateTypesId,
+                    Language = (Languages)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -184,6 +188,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("{ProductId}")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -191,7 +196,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetByIdRealEstateAttributeQuery() { ProductId = dto.ProductId });
+                var result = await _mediator.Send(new GetByIdRealEstateAttributeQuery() {
+                    ProductId = dto.ProductId,
+                    Language = (Languages)HttpContext.Items["Language"]
+                });
                 return Ok(result);
             }
             catch (NotFoundException ex)
@@ -209,13 +217,14 @@ namespace Swapy.API.Controllers
         /// Real Estates
         /// </summary>
         [HttpGet("Types")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllRealEstateTypesAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllRealEstateTypesQuery());
+                var result = await _mediator.Send(new GetAllRealEstateTypesQuery() { Language = (Languages)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)

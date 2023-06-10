@@ -1,16 +1,16 @@
 ﻿namespace Swapy.Common.DTO.Products.Responses
 {
-    public class SpecificationResponseDTO
+    public class SpecificationResponseDTO<T>
     {
         public string Id { get; set; }
-        public string Name { get; set; }
+        public T Value { get; set; }
 
         public SpecificationResponseDTO() { }
 
-        public SpecificationResponseDTO(string id, string name)
+        public SpecificationResponseDTO(string id, T value)
         {
             Id = id;
-            Name = name;
+            Value = value;
         }
     }
 }

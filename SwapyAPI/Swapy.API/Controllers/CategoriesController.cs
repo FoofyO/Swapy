@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.BLL.Domain.Categories.Queries;
+using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Categories.Requests.Queries;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 
 namespace Swapy.API.Controllers
@@ -33,13 +35,14 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllCategoriesAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllCategoriesQuery());
+                var result = await _mediator.Send(new GetAllCategoriesQuery() { Language = (Languages)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)
@@ -49,6 +52,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("Subcategories/{CategoryId}")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -56,7 +60,13 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetAllSubcategoriesByCategoryQuery() { CategoryId = dto.CategoryId });
+                var query = new GetAllSubcategoriesByCategoryQuery()
+                {
+                    CategoryId = dto.CategoryId,
+                    Language = (Languages)HttpContext.Items["Language"]
+                };
+
+                var result = await _mediator.Send(query);
                 return Ok(result);
             }
             catch (NotFoundException ex)
@@ -70,6 +80,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("Subcategories/{SubcategoryId}")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -77,7 +88,13 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetAllSubcategoriesBySubcategoryQuery() { SubcategoryId = dto.SubcategoryId });
+                var query = new GetAllSubcategoriesBySubcategoryQuery()
+                {
+                    SubcategoryId = dto.SubcategoryId,
+                    Language = (Languages)HttpContext.Items["Language"]
+                };
+
+                var result = await _mediator.Send(query);
                 return Ok(result);
             }
             catch (NotFoundException ex)

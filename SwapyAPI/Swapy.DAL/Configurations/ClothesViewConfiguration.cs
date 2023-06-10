@@ -13,11 +13,6 @@ namespace Swapy.DAL.Configurations
 
             builder.Property(s => s.Id).IsRequired();
              
-            builder.Property(s => s.Name)
-                   .HasColumnType("NVARCHAR(32)")
-                   .HasMaxLength(32)
-                   .IsRequired();
-
             builder.Property(x => x.IsChild)
                    .IsRequired()
                    .HasColumnType("BIT");  
@@ -30,8 +25,12 @@ namespace Swapy.DAL.Configurations
             builder.HasOne(s => s.ClothesType)  
                    .WithMany(c => c.ClothesViews) 
                    .HasForeignKey(s => s.ClothesTypeId)
-                   .IsRequired();  
-           
+                   .IsRequired();
+
+            builder.HasMany(a => a.Names)
+                   .WithOne()
+                   .IsRequired(false);
+
             builder.HasMany(s => s.ClothesBrandViews)
                   .WithOne(c => c.ClothesView)
                   .HasForeignKey(s => s.ClothesViewId)

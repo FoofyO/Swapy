@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.TVs.Queries;
 using Swapy.Common.DTO.TVs.Responses;
-using Swapy.Common.Entities;
 using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
 
@@ -21,13 +20,13 @@ namespace Swapy.BLL.Domain.TVs.QueryHandlers
         public async Task<TVAttributeResponseDTO> Handle(GetByIdTVAttributeQuery request, CancellationToken cancellationToken)
         {
             var tvAttribute = await _tvAttributeRepository.GetDetailByIdAsync(request.ProductId);
-            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(tvAttribute.Product.SubcategoryId)).Select(s => new CategoryNode(s.Id, s.Name)).ToList();
-            categories.Insert(0, new CategoryNode(tvAttribute.Product.CategoryId, tvAttribute.Product.Category.Name));
+            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(tvAttribute.Product.SubcategoryId, request.Language)).ToList();
+            categories.Insert(0, new CategoryNode(tvAttribute.Product.CategoryId, tvAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
 
             TVAttributeResponseDTO result = new TVAttributeResponseDTO()
             {
                 Id = tvAttribute.Id,
-                City = tvAttribute.Product.City.Name,
+                City = tvAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 Currency = tvAttribute.Product.Currency.Name,
                 CurrencySymbol = tvAttribute.Product.Currency.Symbol,
                 UserId = tvAttribute.Product.UserId,
@@ -50,9 +49,9 @@ namespace Swapy.BLL.Domain.TVs.QueryHandlers
                 TVBrandId = tvAttribute.TVBrandId,
                 TVBrand = tvAttribute.TVBrand.Name,
                 TVTypeId = tvAttribute.TVTypeId,
-                TVType = tvAttribute.TVType.Name,
+                TVType = tvAttribute.TVType.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 ScreenDiagonalId = tvAttribute.ScreenDiagonalId,
-                ScreenDiagonal = tvAttribute.ScreenDiagonal.Name,
+                ScreenDiagonal = tvAttribute.ScreenDiagonal.Diagonal,
                 ScreenResolutionId = tvAttribute.ScreenResolutionId,
                 ScreenResolution = tvAttribute.ScreenResolution.Name
             };

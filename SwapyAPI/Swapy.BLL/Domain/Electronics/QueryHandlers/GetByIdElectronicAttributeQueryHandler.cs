@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Electronics.Queries;
 using Swapy.Common.DTO.Electronics.Responses;
+using Swapy.Common.Entities;
 using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
 
@@ -20,13 +21,13 @@ namespace Swapy.BLL.Domain.Electronics.QueryHandlers
         public async Task<ElectronicAttributeResponseDTO> Handle(GetByIdElectronicAttributeQuery request, CancellationToken cancellationToken)
         {
             var electronicAttribute = await _electronicAttributeRepository.GetDetailByIdAsync(request.ProductId);
-            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(electronicAttribute.Product.SubcategoryId)).Select(s => new CategoryNode(s.Id, s.Name)).ToList();
-            categories.Insert(0, new CategoryNode(electronicAttribute.Product.CategoryId, electronicAttribute.Product.Category.Name));
+            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(electronicAttribute.Product.SubcategoryId, request.Language)).ToList();
+            categories.Insert(0, new CategoryNode(electronicAttribute.Product.CategoryId, electronicAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
 
             ElectronicAttributeResponseDTO result = new ElectronicAttributeResponseDTO()
             {
                 Id = electronicAttribute.Id,
-                City = electronicAttribute.Product.City.Name,
+                City = electronicAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 Currency = electronicAttribute.Product.Currency.Name,
                 CurrencySymbol = electronicAttribute.Product.Currency.Symbol,
                 UserId = electronicAttribute.Product.UserId,
@@ -46,7 +47,7 @@ namespace Swapy.BLL.Domain.Electronics.QueryHandlers
                 Images = electronicAttribute.Product.Images.Select(i => i.Image).ToList(),
                 IsNew = electronicAttribute.IsNew,
                 ColorId = electronicAttribute.ModelColor.ColorId,
-                Color = electronicAttribute.ModelColor.Color.Name,
+                Color = electronicAttribute.ModelColor.Color.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 MemoryId = electronicAttribute.MemoryModel.MemoryId,
                 Memory = electronicAttribute.MemoryModel.Memory.Name,
                 ModelId = electronicAttribute.ModelColor.ModelId,

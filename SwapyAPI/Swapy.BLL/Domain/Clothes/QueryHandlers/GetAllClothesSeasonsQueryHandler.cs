@@ -5,16 +5,15 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Clothes.QueryHandlers
 {
-    public class GetAllClothesSeasonsQueryHandler : IRequestHandler<GetAllClothesSeasonsQuery, IEnumerable<SpecificationResponseDTO>>
+    public class GetAllClothesSeasonsQueryHandler : IRequestHandler<GetAllClothesSeasonsQuery, IEnumerable<SpecificationResponseDTO<string>>>
     {
         private readonly IClothesSeasonRepository _clothesSeasonRepository;
 
         public GetAllClothesSeasonsQueryHandler(IClothesSeasonRepository clothesSeasonRepository) => _clothesSeasonRepository = clothesSeasonRepository;
 
-        public async Task<IEnumerable<SpecificationResponseDTO>> Handle(GetAllClothesSeasonsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllClothesSeasonsQuery request, CancellationToken cancellationToken)
         {
-            var result = (await _clothesSeasonRepository.GetAllAsync()).Select(x => new SpecificationResponseDTO(x.Id, x.Name));
-            return result;
+            return await _clothesSeasonRepository.GetAllAsync(request.Language);
         }
     }
 }

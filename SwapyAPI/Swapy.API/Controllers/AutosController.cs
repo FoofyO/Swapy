@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.BLL.Domain.Autos.Commands;
 using Swapy.BLL.Domain.Autos.Queries;
+using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Autos.Requests.Commands;
 using Swapy.Common.DTO.Autos.Requests.Queries;
 using Swapy.Common.DTO.Products.Requests.Queries;
+using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using System.Security.Claims;
 
@@ -147,6 +149,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -181,7 +184,8 @@ namespace Swapy.API.Controllers
                     ReleaseYearNewer = dto.ReleaseYearNewer,
                     EngineCapacityMin = dto.EngineCapacityMin,
                     EngineCapacityMax = dto.EngineCapacityMax,
-                    TransmissionTypesId = dto.TransmissionTypesId
+                    TransmissionTypesId = dto.TransmissionTypesId,
+                    Language = (Languages)HttpContext.Items["Language"]
                 };
                 var result = await _mediator.Send(query);
                 return Ok(result);
@@ -197,6 +201,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("{ProductId}")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -204,7 +209,13 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetByIdAutoAttributeQuery() { ProductId = dto.ProductId });
+                var query = new GetByIdAutoAttributeQuery()
+                {
+                    ProductId = dto.ProductId,
+                    Language = (Languages)HttpContext.Items["Language"]
+                };
+
+                var result = await _mediator.Send(query);
                 return Ok(result);
             }
             catch (NotFoundException ex)
@@ -222,13 +233,14 @@ namespace Swapy.API.Controllers
         /// Autos Attributes
         /// </summary>
         [HttpGet("FuelTypes")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllFuelTypesAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllFuelTypesQuery());
+                var result = await _mediator.Send(new GetAllFuelTypesQuery() { Language = (Languages)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)
@@ -238,13 +250,14 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("TransmissionTypes")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllTransmissionTypesAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllTransmissionTypesQuery());
+                var result = await _mediator.Send(new GetAllTransmissionTypesQuery() { Language = (Languages)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)
@@ -292,13 +305,14 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("Types")]
+        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllAutoTypesAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllAutoTypesQuery());
+                var result = await _mediator.Send(new GetAllAutoTypesQuery() { Language = (Languages)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)

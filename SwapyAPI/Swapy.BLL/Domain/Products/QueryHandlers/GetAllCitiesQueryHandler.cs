@@ -5,16 +5,15 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Products.QueryHandlers
 {
-    public class GetAllCitiesQueryHandler : IRequestHandler<GetAllCitiesQuery, IEnumerable<SpecificationResponseDTO>>
+    public class GetAllCitiesQueryHandler : IRequestHandler<GetAllCitiesQuery, IEnumerable<SpecificationResponseDTO<string>>>
     {
         private readonly ICityRepository _cityRepository;
 
         public GetAllCitiesQueryHandler(ICityRepository cityRepository) => _cityRepository = cityRepository;
 
-        public async Task<IEnumerable<SpecificationResponseDTO>> Handle(GetAllCitiesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllCitiesQuery request, CancellationToken cancellationToken)
         {
-            var result = (await _cityRepository.GetAllAsync()).Select(x => new SpecificationResponseDTO(x.Id, x.Name));
-            return result;
+            return await _cityRepository.GetAllAsync(request.Language);
         }
     }
 }

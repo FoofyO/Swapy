@@ -31,7 +31,8 @@ namespace Swapy.BLL.Domain.Electronics.QueryHandlers
                                                                         request.BrandsId,
                                                                         request.TypesId,
                                                                         request.SortByPrice,
-                                                                        request.ReverseSort);
+                                                                        request.ReverseSort,
+                                                                        request.Language);
         }
     }
 }

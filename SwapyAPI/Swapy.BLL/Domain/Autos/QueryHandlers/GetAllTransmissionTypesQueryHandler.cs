@@ -5,16 +5,15 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Autos.QueryHandlers
 {
-    public class GetAllTransmissionTypesQueryHandler : IRequestHandler<GetAllTransmissionTypesQuery, IEnumerable<SpecificationResponseDTO>>
+    public class GetAllTransmissionTypesQueryHandler : IRequestHandler<GetAllTransmissionTypesQuery, IEnumerable<SpecificationResponseDTO<string>>>
     {
         private readonly ITransmissionTypeRepository _transmissionTypeRepository;
 
         public GetAllTransmissionTypesQueryHandler(ITransmissionTypeRepository transmissionTypeRepository) => _transmissionTypeRepository = transmissionTypeRepository;
 
-        public async Task<IEnumerable<SpecificationResponseDTO>> Handle(GetAllTransmissionTypesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllTransmissionTypesQuery request, CancellationToken cancellationToken)
         {
-            var result = (await _transmissionTypeRepository.GetAllAsync()).Select(x => new SpecificationResponseDTO(x.Id, x.Name));
-            return result;
+            return await _transmissionTypeRepository.GetAllAsync(request.Language);
         }
     }
 }

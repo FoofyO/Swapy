@@ -5,15 +5,15 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Clothes.QueryHandlers
 {
-    public class GetAllClothesSizesQueryHandler : IRequestHandler<GetAllClothesSizesQuery, IEnumerable<SpecificationResponseDTO>>
+    public class GetAllClothesSizesQueryHandler : IRequestHandler<GetAllClothesSizesQuery, IEnumerable<SpecificationResponseDTO<string>>>
     {
         private readonly IClothesSizeRepository _clothesSizeRepository;
 
         public GetAllClothesSizesQueryHandler(IClothesSizeRepository clothesSizeRepository) => _clothesSizeRepository = clothesSizeRepository;
 
-        public async Task<IEnumerable<SpecificationResponseDTO>> Handle(GetAllClothesSizesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllClothesSizesQuery request, CancellationToken cancellationToken)
         {
-            var result = (await _clothesSizeRepository.GetByChildAndShoeAsync(request.IsChild, request.IsShoe)).Select(x => new SpecificationResponseDTO(x.Id, x.Name));
+            var result = (await _clothesSizeRepository.GetByChildAndShoeAsync(request.IsChild, request.IsShoe)).Select(x => new SpecificationResponseDTO<string>(x.Id, x.Name));
             return result;
         }
     }
