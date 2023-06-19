@@ -6,6 +6,6 @@ namespace Swapy.BLL.Domain.Animals.Queries
 {
     public class GetAllAnimalTypesQuery : IRequest<IEnumerable<SpecificationResponseDTO<string>>>
     {
-        public Languages Language { get; set; }
+        public Language Language { get; set; }
     }
 }

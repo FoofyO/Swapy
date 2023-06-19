@@ -6,6 +6,6 @@ namespace Swapy.BLL.Domain.TVs.Queries
 {
     public class GetAllTVTypesQuery : IRequest<IEnumerable<SpecificationResponseDTO<string>>>
     {
-        public Languages Language { get; set; }
+        public Language Language { get; set; }
     }
 }

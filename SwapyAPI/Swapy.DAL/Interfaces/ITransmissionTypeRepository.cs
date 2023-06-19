@@ -6,6 +6,6 @@ namespace Swapy.DAL.Interfaces
 {
     public interface ITransmissionTypeRepository : IRepository<TransmissionType>
     {
-        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Languages language);
+        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Language language);
     }
 }

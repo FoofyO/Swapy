@@ -7,7 +7,7 @@ namespace Swapy.Common.Entities
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public UserTypes Type { get; set; }
+        public UserType Type { get; set; }
         public DateTime RegistrationDate { get; set; }
         public string Logo { get; set; }
         public string UserTokenId { get; set; }

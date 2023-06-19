@@ -251,7 +251,7 @@ namespace Swapy.API.Controllers
                     EngineCapacityMin = dto.EngineCapacityMin,
                     EngineCapacityMax = dto.EngineCapacityMax,
                     TransmissionTypesId = dto.TransmissionTypesId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 };
                 var result = await _mediator.Send(query);
                 return Ok(result);
@@ -278,7 +278,7 @@ namespace Swapy.API.Controllers
                 var query = new GetByIdAutoAttributeQuery()
                 {
                     ProductId = dto.ProductId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -306,7 +306,7 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetAllFuelTypesQuery() { Language = (Languages)HttpContext.Items["Language"] });
+                var result = await _mediator.Send(new GetAllFuelTypesQuery() { Language = (Language)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)
@@ -323,7 +323,7 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetAllTransmissionTypesQuery() { Language = (Languages)HttpContext.Items["Language"] });
+                var result = await _mediator.Send(new GetAllTransmissionTypesQuery() { Language = (Language)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)
@@ -378,7 +378,7 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetAllAutoTypesQuery() { Language = (Languages)HttpContext.Items["Language"] });
+                var result = await _mediator.Send(new GetAllAutoTypesQuery() { Language = (Language)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)

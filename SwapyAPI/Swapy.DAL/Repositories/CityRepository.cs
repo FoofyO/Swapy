@@ -45,7 +45,7 @@ namespace Swapy.DAL.Repositories
             return await _context.Cities.ToListAsync();
         }
 
-        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Languages language)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Language language)
         {
             return _context.Cities.Include(s => s.Names)
                                   .AsEnumerable()

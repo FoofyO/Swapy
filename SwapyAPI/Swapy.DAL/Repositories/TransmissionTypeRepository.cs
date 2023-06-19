@@ -45,7 +45,7 @@ namespace Swapy.DAL.Repositories
             return await _context.TransmissionTypes.ToListAsync();
         }
 
-        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Languages language)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Language language)
         {
             return _context.TransmissionTypes.Include(s => s.Names)
                                              .AsEnumerable()

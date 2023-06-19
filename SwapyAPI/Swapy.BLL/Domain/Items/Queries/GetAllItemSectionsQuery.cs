@@ -6,6 +6,6 @@ namespace Swapy.BLL.Domain.Items.Queries
 {
     public class GetAllItemSectionsQuery : IRequest<IEnumerable<SpecificationResponseDTO<string>>>
     {
-        public Languages Language { get; set; }
+        public Language Language { get; set; }
     }
 }

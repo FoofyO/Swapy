@@ -1,6 +1,6 @@
 ﻿namespace Swapy.Common.Enums
 {
-    public enum UserTypes
+    public enum UserType
     {
         Seller,
         Shop

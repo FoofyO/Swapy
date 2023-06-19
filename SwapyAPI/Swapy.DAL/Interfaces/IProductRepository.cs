@@ -23,6 +23,6 @@ namespace Swapy.DAL.Interfaces
                                                                           bool? isDisable,
                                                                           bool? sortByPrice,
                                                                           bool? reverseSort,
-                                                                          Languages language);
+                                                                          Language language);
     }
 }

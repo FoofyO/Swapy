@@ -44,7 +44,7 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.Colors.ToListAsync();
         }
-        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Languages language)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Language language)
         {
             return _context.Colors.Include(s => s.Names)
                                   .AsEnumerable()
@@ -53,7 +53,7 @@ namespace Swapy.DAL.Repositories
                                   .ToList();
         }
 
-        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetByModelAsync(string modelId, Languages language)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetByModelAsync(string modelId, Language language)
         {
             return _context.Colors.Include(x => x.ModelsColors)
                                   .Where(x => modelId == null || x.ModelsColors.Select(x => x.ModelId).Contains(modelId))

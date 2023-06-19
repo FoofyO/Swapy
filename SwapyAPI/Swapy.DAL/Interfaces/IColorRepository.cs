@@ -6,7 +6,7 @@ namespace Swapy.DAL.Interfaces
 {
     public interface IColorRepository : IRepository<Color>
     {
-        Task<IEnumerable<SpecificationResponseDTO<string>>> GetByModelAsync(string modelId, Languages language);
-        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Languages language);
+        Task<IEnumerable<SpecificationResponseDTO<string>>> GetByModelAsync(string modelId, Language language);
+        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Language language);
     }
 }

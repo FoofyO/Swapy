@@ -238,7 +238,7 @@ namespace Swapy.API.Controllers
                     ClothesBrandsId = dto.ClothesBrandsId,
                     ClothesGendersId = dto.ClothesGendersId,
                     ClothesSeasonsId = dto.ClothesSeasonsId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -266,7 +266,7 @@ namespace Swapy.API.Controllers
                 var query = new GetByIdClothesAttributeQuery()
                 {
                     ProductId = dto.ProductId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 };
                 var result = await _mediator.Send(query);
                 return Ok(result);
@@ -315,7 +315,7 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetAllClothesSeasonsQuery() { Language = (Languages)HttpContext.Items["Language"] });
+                var result = await _mediator.Send(new GetAllClothesSeasonsQuery() { Language = (Language)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)
@@ -352,7 +352,7 @@ namespace Swapy.API.Controllers
                 {
                     GenderId = dto.GenderId,
                     ClothesTypeId = dto.ClothesTypeId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -372,7 +372,7 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetAllGendersQuery() { Language = (Languages)HttpContext.Items["Language"] });
+                var result = await _mediator.Send(new GetAllGendersQuery() { Language = (Language)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)
@@ -392,7 +392,7 @@ namespace Swapy.API.Controllers
                 var query = new GetAllClothesTypesQuery()
                 {
                     GenderId = dto.GenderId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 };
                 var result = await _mediator.Send(query);
                 return Ok(result);

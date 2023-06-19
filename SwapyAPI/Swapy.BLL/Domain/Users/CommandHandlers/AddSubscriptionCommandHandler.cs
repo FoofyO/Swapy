@@ -28,7 +28,7 @@ namespace Swapy.BLL.Domain.Users.CommandHandlers
 
             if (request.UserId.Equals(request.RecipientId)) throw new DuplicateValueException("The provided SubscriberId and RecipientId are the same");
 
-            if (request.Type != UserTypes.Seller) throw new InvalidOperationException("The provided item Id can't subscribe other users");
+            if (request.Type != UserType.Seller) throw new InvalidOperationException("The provided item Id can't subscribe other users");
 
             var subscribe = new Subscription() { SubscriberId = request.UserId };
             var userSubscription = new UserSubscription(request.RecipientId, subscribe.Id);

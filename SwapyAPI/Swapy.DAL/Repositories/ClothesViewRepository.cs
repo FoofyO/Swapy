@@ -45,7 +45,7 @@ namespace Swapy.DAL.Repositories
             return await _context.ClothesViews.ToListAsync();
         }
 
-        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetByGenderAndTypeAsync(string genderId, string clothesTypeId, Languages language)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetByGenderAndTypeAsync(string genderId, string clothesTypeId, Language language)
         {
             return _context.ClothesViews.Where(x => (clothesTypeId == null || x.ClothesTypeId.Equals(clothesTypeId)) && (genderId == null || x.GenderId.Equals(genderId)))
                                         .Include(s => s.Names)

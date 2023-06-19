@@ -27,6 +27,6 @@ namespace Swapy.DAL.Interfaces
                                                                                List<string> clothesGendersId,
                                                                                bool? sortByPrice,
                                                                                bool? reverseSort,
-                                                                               Languages language);
+                                                                               Language language);
     }
 }

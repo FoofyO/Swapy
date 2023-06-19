@@ -6,6 +6,6 @@ namespace Swapy.BLL.Domain.Electronics.Queries
 {
     public class GetAllElectronicTypesQuery : IRequest<IEnumerable<SpecificationResponseDTO<string>>>
     {
-        public Languages Language { get; set; }
+        public Language Language { get; set; }
     }
 }

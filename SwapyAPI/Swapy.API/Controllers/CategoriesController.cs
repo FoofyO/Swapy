@@ -42,7 +42,7 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetAllCategoriesQuery() { Language = (Languages)HttpContext.Items["Language"] });
+                var result = await _mediator.Send(new GetAllCategoriesQuery() { Language = (Language)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)
@@ -63,7 +63,7 @@ namespace Swapy.API.Controllers
                 var query = new GetAllSubcategoriesByCategoryQuery()
                 {
                     CategoryId = dto.CategoryId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -91,7 +91,7 @@ namespace Swapy.API.Controllers
                 var query = new GetAllSubcategoriesBySubcategoryQuery()
                 {
                     SubcategoryId = dto.SubcategoryId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);

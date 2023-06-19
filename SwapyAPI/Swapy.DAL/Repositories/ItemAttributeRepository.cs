@@ -94,7 +94,7 @@ namespace Swapy.DAL.Repositories
                                                                                        List<string> itemTypesId,
                                                                                        bool? sortByPrice,
                                                                                        bool? reverseSort,
-                                                                                       Languages language)
+                                                                                       Language language)
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
 

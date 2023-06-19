@@ -27,7 +27,7 @@ namespace Swapy.BLL.Domain.Users.CommandHandlers
 
             if (request.UserId.Equals(request.RecipientId)) throw new DuplicateValueException("The provided LikerId and RecepientId are the same");
 
-            if (request.Type != UserTypes.Seller) throw new InvalidOperationException("The provided item Id can't like other users");
+            if (request.Type != UserType.Seller) throw new InvalidOperationException("The provided item Id can't like other users");
             
             var like = new Like() { LikerId = request.UserId };
             var userLike = new UserLike(request.RecipientId, like.Id);

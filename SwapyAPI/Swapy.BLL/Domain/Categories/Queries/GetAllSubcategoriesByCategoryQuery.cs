@@ -7,6 +7,6 @@ namespace Swapy.BLL.Domain.Categories.Queries
     public class GetAllSubcategoriesByCategoryQuery : IRequest<IEnumerable<SpecificationResponseDTO<string>>>
     {
         public string CategoryId { get; set; }
-        public Languages Language { get; set; }
+        public Language Language { get; set; }
     }
 }

@@ -163,7 +163,7 @@ namespace Swapy.API.Controllers
                 var type = User.FindFirstValue(ClaimTypes.Role);
                 var command = new AddLikeCommand()
                 {
-                    Type = (UserTypes)Enum.Parse(typeof(UserTypes), type),
+                    Type = (UserType)Enum.Parse(typeof(UserType), type),
                     UserId = userId,
                     RecipientId = dto.RecipientId,
                 };
@@ -275,7 +275,7 @@ namespace Swapy.API.Controllers
                 var type = User.FindFirstValue(ClaimTypes.Role);
                 var command = new AddSubscriptionCommand()
                 {
-                    Type = (UserTypes)Enum.Parse(typeof(UserTypes), type),
+                    Type = (UserType)Enum.Parse(typeof(UserType), type),
                     UserId = userId,
                     RecipientId = dto.RecipientId,
                 };

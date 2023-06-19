@@ -24,6 +24,6 @@ namespace Swapy.BLL.Domain.Products.Queries
         public bool? IsDisable { get; set; }
         public bool? SortByPrice { get; set; }
         public bool? ReverseSort { get; set; }
-        public Languages Language { get; set; }
+        public Language Language { get; set; }
     }
 }

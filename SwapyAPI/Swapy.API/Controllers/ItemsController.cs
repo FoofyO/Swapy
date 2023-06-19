@@ -229,7 +229,7 @@ namespace Swapy.API.Controllers
                     ReverseSort = dto.ReverseSort,
                     ItemTypesId = dto.ItemTypesId,
                     SubcategoryId = dto.SubcategoryId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -256,7 +256,7 @@ namespace Swapy.API.Controllers
             {
                 var result = await _mediator.Send(new GetByIdItemAttributeQuery() { 
                     ProductId = dto.ProductId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 });
                 return Ok(result);
             }
@@ -281,7 +281,7 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetAllItemSectionsQuery() { Language = (Languages)HttpContext.Items["Language"] });
+                var result = await _mediator.Send(new GetAllItemSectionsQuery() { Language = (Language)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)
@@ -301,7 +301,7 @@ namespace Swapy.API.Controllers
                 var result = await _mediator.Send(new GetAllItemTypesQuery()
                 {
                     ParentSubcategoryId = dto.ParentSubcategoryId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 });
                 return Ok(result);
             }

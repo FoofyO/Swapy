@@ -6,6 +6,6 @@ namespace Swapy.BLL.Domain.RealEstates.Queries
 {
     public class GetAllRealEstateTypesQuery : IRequest<IEnumerable<SpecificationResponseDTO<string>>>
     {
-        public Languages Language { get; set; }
+        public Language Language { get; set; }
     }
 }

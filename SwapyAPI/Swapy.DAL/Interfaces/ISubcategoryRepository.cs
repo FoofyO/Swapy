@@ -8,15 +8,15 @@ namespace Swapy.DAL.Interfaces
     public interface ISubcategoryRepository : IRepository<Subcategory>
     {
         Task<Subcategory> GetDetailByIdAsync(string id);
-        Task<IEnumerable<SpecificationResponseDTO<string>>> GetByCategoryAsync(string categoryId, Languages language);
-        Task<IEnumerable<SpecificationResponseDTO<string>>> GetBySubcategoryAsync(string subcategoryId, Languages language);
-        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAutoTypesAsync(Languages language);
-        Task<IEnumerable<SpecificationResponseDTO<string>>> GetClothesTypesByGenderAsync(string genderId, Languages language);
-        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllElectronicTypesAsync(Languages language);
-        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllRealEstateTypesAsync(Languages language);
-        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAnimalTypesAsync(Languages language);
-        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllItemSectionsAsync(Languages language);
-        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllItemTypesAsync(string parentSubcategoryId, Languages language);
-        Task<IEnumerable<CategoryNode>> GetSequenceOfSubcategories(string subcategoryId, Languages language);
+        Task<IEnumerable<SpecificationResponseDTO<string>>> GetByCategoryAsync(string categoryId, Language language);
+        Task<IEnumerable<SpecificationResponseDTO<string>>> GetBySubcategoryAsync(string subcategoryId, Language language);
+        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAutoTypesAsync(Language language);
+        Task<IEnumerable<SpecificationResponseDTO<string>>> GetClothesTypesByGenderAsync(string genderId, Language language);
+        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllElectronicTypesAsync(Language language);
+        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllRealEstateTypesAsync(Language language);
+        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAnimalTypesAsync(Language language);
+        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllItemSectionsAsync(Language language);
+        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllItemTypesAsync(string parentSubcategoryId, Language language);
+        Task<IEnumerable<CategoryNode>> GetSequenceOfSubcategories(string subcategoryId, Language language);
     }
 }

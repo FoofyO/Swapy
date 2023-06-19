@@ -45,7 +45,7 @@ namespace Swapy.DAL.Repositories
             return await _context.TVTypes.ToListAsync();
         }
 
-        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Languages language)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Language language)
         {
             return _context.TVTypes.Include(t => t.Names)
                                    .AsEnumerable()

@@ -5,7 +5,7 @@ namespace Swapy.Common.Entities
     public class LocalizationValue
     {
         public string Id { get; set; }
-        public Languages Language { get; set; }
+        public Language Language { get; set; }
         public string Value { get; set; }
 
         //public string AnimalBreedId { get; set; }

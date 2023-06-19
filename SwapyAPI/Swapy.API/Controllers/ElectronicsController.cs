@@ -236,7 +236,7 @@ namespace Swapy.API.Controllers
                     SortByPrice = dto.SortByPrice,
                     ReverseSort = dto.ReverseSort,
                     SubcategoryId = dto.SubcategoryId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -264,7 +264,7 @@ namespace Swapy.API.Controllers
                 var query = new GetByIdElectronicAttributeQuery()
                 {
                     ProductId = dto.ProductId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -346,7 +346,7 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetAllElectronicTypesQuery() { Language = (Languages)HttpContext.Items["Language"] });
+                var result = await _mediator.Send(new GetAllElectronicTypesQuery() { Language = (Language)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)
@@ -366,7 +366,7 @@ namespace Swapy.API.Controllers
                 var query = new GetAllColorsByModelQuery()
                 {
                     ModelId = dto.ModelId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 };
                 
                 var result = await _mediator.Send(query);

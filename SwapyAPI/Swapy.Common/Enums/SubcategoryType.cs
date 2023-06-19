@@ -1,6 +1,6 @@
 ﻿namespace Swapy.Common.Enums
 {
-    public enum SubcategoryTypes
+    public enum SubcategoryType
     {
         AnimalsType,
         AutosType,

@@ -37,7 +37,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
                 LastName = request.LastName,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
-                Type = UserTypes.Seller,
+                Type = UserType.Seller,
                 Logo = "path",
             };
             
@@ -52,7 +52,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             user.UserTokenId = refreshToken;
             await _userTokenRepository.CreateAsync(new UserToken(accessToken, refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
 
-            return new AuthResponseDTO { Type = UserTypes.Seller, UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
+            return new AuthResponseDTO { Type = UserType.Seller, UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
         }
     }
 }

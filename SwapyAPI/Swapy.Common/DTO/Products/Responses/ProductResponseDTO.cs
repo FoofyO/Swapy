@@ -12,7 +12,7 @@ namespace Swapy.Common.DTO.Products.Responses
         public string CurrencySymbol { get; set; }
         public DateTime DateTime { get; set; }
         public List<string> Images { get; set; }
-        public UserTypes UserType { get; set; }
+        public UserType UserType { get; set; }
         public bool IsFavorite { get; set; }
         public bool IsDisable { get; set; }
     }

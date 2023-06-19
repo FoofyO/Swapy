@@ -26,6 +26,6 @@ namespace Swapy.DAL.Interfaces
                                                                                List<string> typesId,
                                                                                bool? sortByPrice,
                                                                                bool? reverseSort,
-                                                                               Languages language);
+                                                                               Language language);
     }
 }

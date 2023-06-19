@@ -6,7 +6,7 @@ namespace Swapy.DAL.Interfaces
 {
     public interface IAnimalBreedRepository : IRepository<AnimalBreed>
     {
-        Task<IEnumerable<SpecificationResponseDTO<string>>> GetByAnimalTypeAsync(string animalType, Languages language);
+        Task<IEnumerable<SpecificationResponseDTO<string>>> GetByAnimalTypeAsync(string animalType, Language language);
     } 
 }
  

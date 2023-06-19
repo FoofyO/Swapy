@@ -6,6 +6,6 @@ namespace Swapy.DAL.Interfaces
 {
     public interface IClothesSeasonRepository : IRepository<ClothesSeason>
     {
-        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Languages language);
+        Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Language language);
     }
 }

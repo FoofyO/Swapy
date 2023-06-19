@@ -208,7 +208,7 @@ namespace Swapy.API.Controllers
                     SubcategoryId = dto.SubcategoryId,
                     ScreenDiagonalsId = dto.ScreenDiagonalsId,
                     ScreenResolutionsId = dto.ScreenResolutionsId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -235,7 +235,7 @@ namespace Swapy.API.Controllers
             {
                 var result = await _mediator.Send(new GetByIdTVAttributeQuery() {
                     ProductId = dto.ProductId,
-                    Language = (Languages)HttpContext.Items["Language"]
+                    Language = (Language)HttpContext.Items["Language"]
                 });
                 return Ok(result);
             }
@@ -308,7 +308,7 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetAllTVTypesQuery() { Language = (Languages)HttpContext.Items["Language"] });
+                var result = await _mediator.Send(new GetAllTVTypesQuery() { Language = (Language)HttpContext.Items["Language"] });
                 return Ok(result);
             }
             catch (Exception ex)

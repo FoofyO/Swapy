@@ -1,6 +1,6 @@
 ﻿namespace Swapy.Common.Enums
 {
-    public enum Languages
+    public enum Language
     {
         English,
         Russian,

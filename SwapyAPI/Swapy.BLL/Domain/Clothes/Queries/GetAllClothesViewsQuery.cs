@@ -8,6 +8,6 @@ namespace Swapy.BLL.Domain.Clothes.Queries
     {
         public string GenderId { get; set; }
         public string ClothesTypeId { get; set; }
-        public Languages Language { get; set; }
+        public Language Language { get; set; }
     }
 }

@@ -12,21 +12,21 @@ namespace Swapy.API.Middlewares
             if (shouldLocalize)
             {
                 string localizationValue = context.Request.Headers["Localization"];
-                Languages language;
+                Language language;
 
                 switch (localizationValue?.ToLower())
                 {
                     case "en":
-                        language = Languages.English;
+                        language = Language.English;
                         break;
                     case "ru":
-                        language = Languages.Russian;
+                        language = Language.Russian;
                         break;
                     case "az":
-                        language = Languages.Azerbaijani;
+                        language = Language.Azerbaijani;
                         break;
                     default:
-                        language = Languages.English;
+                        language = Language.English;
                         break;
                 }
 
