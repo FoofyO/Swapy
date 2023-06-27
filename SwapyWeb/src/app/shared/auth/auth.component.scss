@@ -1,0 +1,91 @@
+@import "/src/colors.scss";
+
+.header-account {
+    display: flex;
+    align-items: center;
+
+    .header-link {    
+        display: flex;
+        color: $primary;
+        font-weight: 500;
+        align-items: center;
+        margin-right: 0.5rem;
+        border-radius: 0.3rem;
+        text-decoration: none;
+        padding: 0.9rem 0.9rem;
+        transition: all 0.3s ease;
+        
+        &:hover {
+            color: $additional;
+            background: $primary !important; 
+        }
+
+        span { margin-left: 0.4rem; }
+    }
+
+    @media (max-width: 767px) { display: none; }
+}
+
+.header-account-minimized {
+    display: none;
+    align-items: center;
+
+    .header-link {    
+        display: flex;
+        color: $primary;
+        font-weight: 500;
+        align-items: center;
+        margin-right: 0.5rem;
+        border-radius: 0.3rem;
+        text-decoration: none;
+        padding: 0.9rem 0.9rem;
+        transition: all 0.3s ease;
+        
+        &:hover {
+            color: $additional;
+            background: $primary !important; 
+        }
+
+        span { margin-left: 0.4rem; }
+    }
+
+    @media (max-width: 767px) { display: flex; }
+
+    @media (max-width: 610px) { display: none; }
+}
+
+.header-account-collapsed {
+    display: none;
+
+    ul {
+        padding: 0;
+        width: 100%;
+        margin-bottom: 0;
+        list-style: none;
+
+        li {
+            cursor: pointer;
+            transition: 0.3s;
+
+            &:hover { background-color: $additional; }
+
+            .header-link {
+                display: flex;
+                color: $primary;
+                font-weight: 500;
+                align-items: center;
+                margin-right: 0.5rem;
+                border-radius: 0.3rem;
+                text-decoration: none;
+                padding: 0.9rem 0.9rem;
+                transition: all 0.3s ease;
+
+                i { margin-right: 1rem };
+
+                &:focus { outline: none; }
+            }
+        }
+    }
+
+    @media (max-width: 610px) { display: flex; }
+}
