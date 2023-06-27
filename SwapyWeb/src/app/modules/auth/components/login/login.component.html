@@ -1,0 +1,44 @@
+<div class="login-container">
+    <div class="card custom-card">
+        <form class="card-body custom-card-body" [formGroup]="loginForm" (submit)="onSubmit()">
+            <h3 class="custom-card-title">Welcome back!</h3>
+            <div class="custom-default-card-group custom-valid-card-group">
+                <input type="text" required="required" formControlName="emailOrPhone"/>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="input-placeholder">Email or Phone number</label>
+                <label class="input-error">Invali Email or phone number</label>
+            </div>
+            <div class="custom-default-card-group custom-invalid-card-group">
+                <input type="password" required="required" formControlName="password"/>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="input-placeholder">Password</label>
+                <label class="input-error">* Invalid Email or phone number Invalid Email or phone number Invalid Email or phone number Invalid Email or phone number Invalid Email or phone number</label>
+            </div>
+            <div class="custom-card-option">
+                <div class="custom-option-checkbox-group">
+                    <input type="checkbox" id="cb" name="cb"/>
+                    <svg class="custom-option-checkbox-svg" viewBox="0 0 21 21">
+                        <path d="M5,10.75 L8.5,14.25 L19.4,2.3 C18.8333333,1.43333333 18.0333333,1 17,1 L4,1 C2.35,1 1,2.35 1,4 L1,17 C1,18.65 2.35,20 4,20 L17,20 C18.65,20 20,18.65 20,17 L20,7.99769186"></path>
+                    </svg>
+                    <label class="custom-option-checkbox-label">Remember me</label>
+                </div>
+                <a class="custom-option-link" href="#">Forgot password?</a>
+            </div>
+            <button class="custom-card-button">Sign in</button>
+            <p class="custom-card-footer">Don't have account yet? <a class="custom-card-link" type="button" onclick="window.dialog.showModal();">Sign Up</a></p>
+        </form>
+    </div>
+</div>
+
+<dialog id="dialog" class="custom-modal" role="dialog">
+    <div class="custom-modal-header">
+        <h4 class="custom-modal-header-title">Register as</h4>
+        <button class="custom-modal-header-close" aria-label="close" onclick="window.dialog.close();">❌</button>
+    </div>
+    <div class="custom-modal-body">
+        <a class="custom-modal-link" href="/auth/register/user">User</a>
+        <a class="custom-modal-link" href="/auth/register/shop">Shop</a>
+    </div>
+</dialog>
