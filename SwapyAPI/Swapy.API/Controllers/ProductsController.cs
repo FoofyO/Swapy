@@ -1,14 +1,19 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swapy.API.Validators;
 using Swapy.BLL.Domain.Products.Commands;
 using Swapy.BLL.Domain.Products.Queries;
+using Swapy.BLL.Domain.Shops.Commands;
+using Swapy.BLL.Domain.Users.Commands;
 using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Products.Requests.Commands;
 using Swapy.Common.DTO.Products.Requests.Queries;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using System.Security.Claims;
+using System.Text;
 
 namespace Swapy.API.Controllers
 {
@@ -25,7 +30,7 @@ namespace Swapy.API.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> Ping()
+        public async Task<IActionResult> PingAsync()
         {
             try
             {
@@ -183,6 +188,100 @@ namespace Swapy.API.Controllers
             }
         }
 
+        [HttpPost("PreviewUploadImages")]
+        [Authorize]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> PreviewUploadImageAsync([FromForm] UploadImagesCommandDTO dto)
+        {
+            try
+            {
+                var validator = new ImagePreviewUploadValidator();
+                var validatorResult = validator.Validate(dto);
+                if (!validatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in validatorResult.Errors)
+                    {
+                        builder.Append($"Product image preview upload property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                var result = await _mediator.Send(new PreviewUploadImageCommand()
+                {
+                    UserId = userId,
+                    Images = dto.Files
+                });
+                return Ok(result);
+            }
+            catch (NoAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpPost("UploadImages")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UploadImageAsync(UploadImageCommandDTO dto)
+        {
+            try
+            {
+                var validator = new ImageUploadValidator();
+                var validatorResult = validator.Validate(dto);
+                if (!validatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in validatorResult.Errors)
+                    {
+                        builder.Append($"Product image upload property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+                var command = new UploadImageCommand()
+                {
+                    ProductId = dto.ProductId,
+                    Paths = dto.Paths
+                };
+
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (NoAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
 
         /// <summary>
         /// Favorite products
@@ -364,14 +463,14 @@ namespace Swapy.API.Controllers
 
         [HttpHead]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Head()
+        public async Task<IActionResult> HeadAsync()
         {
             return Ok();
         }
 
         [HttpOptions]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Options()
+        public async Task<IActionResult> OptionsAsync()
         {
             return Ok("x6 GET, POST, PATCH, x2 DELETE, HEAD, OPTIONS");
         }

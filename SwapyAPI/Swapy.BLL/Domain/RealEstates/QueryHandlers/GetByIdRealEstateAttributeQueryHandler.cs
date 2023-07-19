@@ -46,7 +46,7 @@ namespace Swapy.BLL.Domain.RealEstates.QueryHandlers
                 Categories = categories,
                 Images = realEstateAttribute.Product.Images.Select(i => i.Image).ToList(),
                 Area = realEstateAttribute.Area,
-                Rooms = realEstateAttribute.Rooms,
+                Rooms = (int)realEstateAttribute.Rooms,
                 IsRent = realEstateAttribute.IsRent
             };
             return result;

@@ -3,6 +3,7 @@ using Swapy.BLL.Domain.Items.Commands;
 using Swapy.BLL.Interfaces;
 using Swapy.BLL.Services;
 using Swapy.Common.Entities;
+using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Items.CommandHandlers
@@ -10,14 +11,16 @@ namespace Swapy.BLL.Domain.Items.CommandHandlers
     public class AddItemAttributeCommandHandler : IRequestHandler<AddItemAttributeCommand, ItemAttribute>
     {
         private readonly IProductRepository _productRepository;
-        private readonly IItemAttributeRepository _itemAttributeRepository;
+        private readonly INotificationService _notificationService;
         private readonly ISubcategoryRepository _subcategoryRepository;
+        private readonly IItemAttributeRepository _itemAttributeRepository;
 
-        public AddItemAttributeCommandHandler(IProductRepository productRepository, IItemAttributeRepository itemAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public AddItemAttributeCommandHandler(IProductRepository productRepository, IItemAttributeRepository itemAttributeRepository, ISubcategoryRepository subcategoryRepository, INotificationService notificationService)
         {
             _productRepository = productRepository;
-            _itemAttributeRepository = itemAttributeRepository;
+            _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
+            _itemAttributeRepository = itemAttributeRepository;
         }
 
         public async Task<ItemAttribute> Handle(AddItemAttributeCommand request, CancellationToken cancellationToken)
@@ -30,6 +33,19 @@ namespace Swapy.BLL.Domain.Items.CommandHandlers
 
             ItemAttribute itemAttribute = new ItemAttribute(request.IsNew, request.ItemTypeId, product.Id);
             await _itemAttributeRepository.CreateAsync(itemAttribute);
+
+            var model = new NotificationModel()
+            {
+                UserId = request.UserId,
+                Title = request.Title,
+                Description = request.Description,
+                CityId = request.CityId,
+                Price = request.Price,
+                CurrencyId = request.CurrencyId,
+                ProductId = product.Id
+            };
+
+            await _notificationService.Notificate(model);
 
             return itemAttribute;
         }

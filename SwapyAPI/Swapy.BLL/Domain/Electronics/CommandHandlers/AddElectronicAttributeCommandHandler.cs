@@ -3,6 +3,7 @@ using Swapy.BLL.Domain.Electronics.Commands;
 using Swapy.BLL.Interfaces;
 using Swapy.BLL.Services;
 using Swapy.Common.Entities;
+using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Electronics.CommandHandlers
@@ -10,14 +11,16 @@ namespace Swapy.BLL.Domain.Electronics.CommandHandlers
     public class AddElectronicAttributeCommandHandler : IRequestHandler<AddElectronicAttributeCommand, ElectronicAttribute>
     {
         private readonly IProductRepository _productRepository;
-        private readonly IElectronicAttributeRepository _electronicAttributeRepository;
+        private readonly INotificationService _notificationService;
         private readonly ISubcategoryRepository _subcategoryRepository;
+        private readonly IElectronicAttributeRepository _electronicAttributeRepository;
 
-        public AddElectronicAttributeCommandHandler(IProductRepository productRepository, IElectronicAttributeRepository electronicAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public AddElectronicAttributeCommandHandler(IProductRepository productRepository, IElectronicAttributeRepository electronicAttributeRepository, ISubcategoryRepository subcategoryRepository, INotificationService notificationService)
         {
             _productRepository = productRepository;
-            _electronicAttributeRepository = electronicAttributeRepository;
+            _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
+            _electronicAttributeRepository = electronicAttributeRepository;
         }
 
         public async Task<ElectronicAttribute> Handle(AddElectronicAttributeCommand request, CancellationToken cancellationToken)
@@ -30,6 +33,19 @@ namespace Swapy.BLL.Domain.Electronics.CommandHandlers
 
             ElectronicAttribute electronicAttribute = new ElectronicAttribute(request.IsNew, request.MemoryModelId, request.ModelColorId, product.Id);
             await _electronicAttributeRepository.CreateAsync(electronicAttribute);
+
+            var model = new NotificationModel()
+            {
+                UserId = request.UserId,
+                Title = request.Title,
+                Description = request.Description,
+                CityId = request.CityId,
+                Price = request.Price,
+                CurrencyId = request.CurrencyId,
+                ProductId = product.Id
+            };
+
+            await _notificationService.Notificate(model);
 
             return electronicAttribute;
         }

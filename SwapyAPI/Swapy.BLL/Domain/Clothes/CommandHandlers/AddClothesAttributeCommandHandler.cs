@@ -3,6 +3,7 @@ using Swapy.BLL.Domain.Clothes.Commands;
 using Swapy.BLL.Interfaces;
 using Swapy.BLL.Services;
 using Swapy.Common.Entities;
+using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Clothes.CommandHandlers
@@ -10,14 +11,16 @@ namespace Swapy.BLL.Domain.Clothes.CommandHandlers
     public class AddClothesAttributeCommandHandler : IRequestHandler<AddClothesAttributeCommand, ClothesAttribute>
     {
         private readonly IProductRepository _productRepository;
-        private readonly IClothesAttributeRepository _clothesAttributeRepository;
+        private readonly INotificationService _notificationService;
         private readonly ISubcategoryRepository _subcategoryRepository;
+        private readonly IClothesAttributeRepository _clothesAttributeRepository;
 
-        public AddClothesAttributeCommandHandler(IProductRepository productRepository, IClothesAttributeRepository clothesAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public AddClothesAttributeCommandHandler(IProductRepository productRepository, IClothesAttributeRepository clothesAttributeRepository, ISubcategoryRepository subcategoryRepository, INotificationService notificationService)
         {
             _productRepository = productRepository;
-            _clothesAttributeRepository = clothesAttributeRepository;
+            _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
+            _clothesAttributeRepository = clothesAttributeRepository;
         }
 
         public async Task<ClothesAttribute> Handle(AddClothesAttributeCommand request, CancellationToken cancellationToken)
@@ -30,6 +33,19 @@ namespace Swapy.BLL.Domain.Clothes.CommandHandlers
 
             ClothesAttribute clothesAttribute = new ClothesAttribute(request.IsNew, request.ClothesSeasonId, request.ClothesSizeId, request.ClothesBrandViewId, product.Id);
             await _clothesAttributeRepository.CreateAsync(clothesAttribute);
+
+            var model = new NotificationModel()
+            {
+                UserId = request.UserId,
+                Title = request.Title,
+                Description = request.Description,
+                CityId = request.CityId,
+                Price = request.Price,
+                CurrencyId = request.CurrencyId,
+                ProductId = product.Id
+            };
+
+            await _notificationService.Notificate(model);
 
             return clothesAttribute;
         }

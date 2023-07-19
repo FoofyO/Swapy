@@ -23,7 +23,7 @@ namespace Swapy.API.Validators
                 .WithMessage("Password field should have a minimum length of 8 characters")
             .MaximumLength(32)
                 .WithMessage("Password field exceeds maximum length of 32 characters")
-            .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,32}$")
+            .Matches(@"^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,32}$")
                 .WithMessage("Password field has invalid format")
             .WithErrorCode("InvalidPasswordFormat");
         }

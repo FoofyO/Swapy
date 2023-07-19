@@ -53,5 +53,14 @@ namespace Swapy.DAL.Repositories
                                   .OrderBy(s => s.Value)
                                   .ToList();
         }
+
+        public async Task<string> GetLocalizeByIdAsync(string cityId, Language language)
+        {
+            var city = await _context.Cities.Where(c => c.Id.Equals(cityId))
+                                            .Include(s => s.Names)
+                                            .FirstOrDefaultAsync();
+
+            return city.Names.FirstOrDefault(l => l.Language == language).Value;
+        }
     }
 }

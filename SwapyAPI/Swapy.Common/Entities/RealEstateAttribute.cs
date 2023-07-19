@@ -4,7 +4,7 @@
     {
         public string Id { get; set; }
         public int Area { get; set; }
-        public int Rooms { get;  set; }
+        public int? Rooms { get;  set; }
         public bool IsRent{ get; set; } 
         public string RealEstateTypeId { get; set; }
         public Subcategory RealEstateType { get; set; }
@@ -16,9 +16,9 @@
         public RealEstateAttribute(int area, int rooms, bool isRent, string realEstateTypeId, string productId) : this()
         {
             Area = area;
-            Rooms = rooms; 
             IsRent = isRent;
             ProductId = productId;
+            Rooms = rooms;
             RealEstateTypeId = realEstateTypeId;
         }
     }

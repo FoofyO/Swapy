@@ -26,7 +26,6 @@ using Swapy.BLL.Domain.Products.QueryHandlers;
 using Swapy.BLL.Domain.Shops.QueryHandlers;
 using Swapy.BLL.Domain.Chats.QueryHandlers;
 using Swapy.BLL.Domain.Shops.CommandHandlers;
-using System.Security.Claims;
 using Microsoft.OpenApi.Models;
 using Swapy.API.Middlewares;
 using Swapy.Common.DTO.Products.Responses;
@@ -125,7 +124,7 @@ namespace Swapy.API
             /// </summary>
             builder.Services.AddDbContext<SwapyDbContext>(option =>
             {
-                option.UseSqlServer(builder.Configuration.GetConnectionString("SamedSQL"));
+                option.UseSqlServer(builder.Configuration.GetConnectionString("AzureSQL"));
             });
 
 
@@ -194,6 +193,8 @@ namespace Swapy.API
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IUserTokenService, UserTokenService>();
             builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
+            builder.Services.AddScoped<IKeyVaultService, KeyVaultService>(provider => new KeyVaultService(builder.Configuration.GetValue<string>("KeyVaultUrl")));
 
 
             /// <summary>
@@ -210,7 +211,9 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<AddSubscriptionCommand, Subscription>, AddSubscriptionCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<AddTVAttributeCommand, TVAttribute>, AddTVAttributeCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<ChangePasswordCommand, Unit>, ChangePasswordCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<ConfirmEmailCommand, Unit>, ConfirmEmailCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<EmailCommand, bool>, CheckEmailCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<ForgotPasswordCommand, Unit>, ForgotPasswordCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<CheckLikeQuery, bool>, CheckLikeQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<PhoneNumberCommand, bool>, CheckPhoneNumberCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<ShopNameCommand, bool>, CheckShopNameCommandHandler>();
@@ -268,18 +271,24 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<GetByIdTVAttributeQuery, TVAttributeResponseDTO>, GetByIdTVAttributeQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetByIdUserQuery, UserResponseDTO>, GetByIdUserQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetDetailChatQuery, DetailChatResponseDTO>, GetDetailChatQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetShopDataQuery, ShopDataResponseDTO>, GetShopDataQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetUserDataQuery, UserDataResponseDTO>, GetUserDataQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetUserSubscriptionsQuery, IEnumerable<Subscription>>, GetUserSubscriptionsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<IncrementProductViewsCommand, Unit>, IncrementProductViewsCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<LoginCommand, AuthResponseDTO>, LoginCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<LogoutCommand, Unit>, LogoutCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<PreviewUploadImageCommand, ImageResponseDTO>, PreviewUploadImageCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<RemoveFavoriteProductCommand, Unit>, RemoveFavoriteProductCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<RemoveLikeCommand, Unit>, RemoveLikeCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<RemoveProductCommand, Unit>, RemoveProductCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<RemoveSubscriptionCommand, Unit>, RemoveSubscriptionCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<RemoveUserCommand, Unit>, RemoveUserCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<ResetPasswordCommand, Unit>, ResetPasswordCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<SendMessageCommand, Message>, SendMessageCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<ShopRegistrationCommand, AuthResponseDTO>, ShopRegistrationCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<SwitchProductEnablingCommand, Unit>, SwitchProductEnablingCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<SendMessageToRemoveCommand, Unit>, SendMessageToRemoveCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<ToggleSubscriptionStatusCommand, Unit>, ToggleSubscriptionStatusCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UpdateAnimalAttributeCommand, Unit>, UpdateAnimalAttributeCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UpdateAutoAttributeCommand, Unit>, UpdateAutoAttributeCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UpdateClothesAttributeCommand, Unit>, UpdateClothesAttributeCommandHandler>();
@@ -290,6 +299,9 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<UpdateTVAttributeCommand, Unit>, UpdateTVAttributeCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UpdateUserCommand, Unit>, UpdateUserCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UpdateUserTokenCommand, AuthResponseDTO>, UpdateUserTokenCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UploadBannerCommand, Unit>, UploadBannerCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UploadImageCommand, Unit>, UploadImageCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UploadLogoCommand, Unit>, UploadLogoCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UserRegistrationCommand, AuthResponseDTO>, UserRegistrationCommandHandler>();
 
 
@@ -298,7 +310,7 @@ namespace Swapy.API
             /// </summary>
             builder.Services.AddHttpContextAccessor();
 
-            builder.Services.AddScoped<ClaimsPrincipal>(provider =>
+            builder.Services.AddScoped(provider =>
             {
                 var httpContextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
                 return httpContextAccessor.HttpContext?.User;
@@ -322,9 +334,16 @@ namespace Swapy.API
             /// <summary>
             /// Register Identity Service
             /// </summary>
-            builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+            builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<SwapyDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddTokenProvider<DataProtectorTokenProvider<User>>("UserTokenProvider");
+
+            //Token life time
+            builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+            {
+                options.TokenLifespan = TimeSpan.FromHours(1);
+            });
 
 
             /// <summary>
@@ -341,6 +360,7 @@ namespace Swapy.API
                 options.DefaultAuthenticateScheme = "Basic";
                 options.DefaultChallengeScheme = "Basic";
             }).AddScheme<BasicAuthenticationOptions, SwapyAuthenticationMiddleware>("Basic", null);
+
 
             /// <summary>
             /// Configurations for MediatR

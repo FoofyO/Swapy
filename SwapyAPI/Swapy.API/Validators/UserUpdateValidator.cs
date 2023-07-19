@@ -47,7 +47,7 @@ namespace Swapy.API.Validators
                 .WithMessage("PhoneNumber field should have a minimum length of 1 characters")
             .MaximumLength(64)
                 .WithMessage("PhoneNumber field exceeds maximum length of 64 characters")
-            .Matches(@"^\+\d{ 1,3}\d{ 1,3}\d{ 7}$")
+            .Matches(@"^\+\d{1,3}\d{1,3}\d{7}$")
                 .WithMessage("PhoneNumber field has invalid format")
             .WithErrorCode("InvalidPhoneNumberFormat");
         }

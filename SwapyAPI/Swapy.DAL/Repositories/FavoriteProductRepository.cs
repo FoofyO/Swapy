@@ -111,6 +111,8 @@ namespace Swapy.DAL.Repositories
             query.Skip(pageSize * (page - 1))
                  .Take(pageSize)
                  .Include(a => a.Product)
+                    .ThenInclude(p => p.Subcategory)
+                 .Include(a => a.Product)
                     .ThenInclude(p => p.City)
                         .ThenInclude(c => c.Names);
 
@@ -125,7 +127,8 @@ namespace Swapy.DAL.Repositories
                 DateTime = x.Product.DateTime,
                 IsDisable = x.Product.IsDisable,
                 Images = x.Product.Images.Select(i => i.Image).ToList(),
-                UserType = x.Product.User.Type
+                UserType = x.Product.User.Type,
+                Type = x.Product.Subcategory.Type
             }).ToListAsync();
 
             foreach (var item in result)

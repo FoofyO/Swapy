@@ -1,15 +1,21 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Swapy.BLL.Domain.Auth.Commands;
+using Swapy.BLL.Interfaces;
 using Swapy.Common.Entities;
 
 namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
     public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand, Unit>
     {
+        private readonly IEmailService _emailService;
         private readonly UserManager<User> _userManager;
 
-        public ChangePasswordCommandHandler(UserManager<User> userManager) => _userManager = userManager;
+        public ChangePasswordCommandHandler(UserManager<User> userManager, IEmailService emailService)
+        {
+            _userManager = userManager;
+            _emailService = emailService;
+        }
 
         public async Task<Unit> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
         {
@@ -22,6 +28,8 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
 
             if (!changePasswordResult.Succeeded) throw new InvalidOperationException("An error occurred while changing the password");
+
+            await _emailService.SendPasswordChangedSuccessfullyAsync(user.Email);
 
             return Unit.Value;
         }

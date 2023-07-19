@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using Swapy.BLL.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -9,16 +8,17 @@ namespace Swapy.BLL.Services
 {
     public class UserTokenService : IUserTokenService
     {
-        private readonly IConfiguration _configuration;
+        private readonly IKeyVaultService _keyVaultService;
 
-        public UserTokenService(IConfiguration configuration) => _configuration = configuration;
+        public UserTokenService(IKeyVaultService keyVaultService) => _keyVaultService = keyVaultService;
 
         public async Task<string> GenerateRefreshToken() => Guid.NewGuid().ToString();
 
         public async Task<string> GenerateJwtToken(string userId, string email, string firstName, string lastname)
         {
+            var guid = await _keyVaultService.GetSecretValue("JWTKey");
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(guid));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -30,7 +30,7 @@ namespace Swapy.BLL.Services
                     new Claim(JwtRegisteredClaimNames.FamilyName, lastname ?? string.Empty),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddHours(24),
                 SigningCredentials = credentials
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

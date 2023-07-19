@@ -24,7 +24,7 @@ namespace Swapy.API.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> Ping()
+        public async Task<IActionResult> PingAsync()
         {
             try
             {
@@ -141,18 +141,100 @@ namespace Swapy.API.Controllers
             }
         }
 
+        [HttpGet("ShopData")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetShopDataAsync()
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                var result = await _mediator.Send(new GetShopDataQuery() { UserId = userId });
+                return Ok();
+            }
+            catch (NoAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpPost("UploadBanner")]
+        [Authorize]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UploadBannerAsync([FromForm] UploadBannerCommandDTO dto)
+        {
+            try
+            {
+                if (User.FindFirstValue(ClaimTypes.Role).Equals("Shop"))
+                {
+                    var validator = new BannerUploadValidator();
+                    var validatorResult = validator.Validate(dto);
+                    if (!validatorResult.IsValid)
+                    {
+                        StringBuilder builder = new StringBuilder();
+
+                        foreach (var failure in validatorResult.Errors)
+                        {
+                            builder.Append($"Banner upload property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                        }
+
+                        return BadRequest(builder.ToString());
+                    }
+
+                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                    var result = await _mediator.Send(new UploadBannerCommand()
+                    {
+                        UserId = userId,
+                        Banner = dto.Banner
+                    });
+
+                    return Ok();
+                }
+                return Unauthorized("Invalid operation");
+            }
+            catch (NoAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
         [HttpHead]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Head()
+        public async Task<IActionResult> HeadAsync()
         {
             return Ok();
         }
 
         [HttpOptions]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Options()
+        public async Task<IActionResult> OptionsAsync()
         {
-            return Ok("x3 GET, PUT, HEAD, OPTIONS");
+            return Ok("x4 GET, POST, PUT, HEAD, OPTIONS");
         }
     }
 }

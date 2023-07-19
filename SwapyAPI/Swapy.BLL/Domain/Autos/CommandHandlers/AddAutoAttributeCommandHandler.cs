@@ -3,6 +3,7 @@ using Swapy.BLL.Domain.Autos.Commands;
 using Swapy.BLL.Interfaces;
 using Swapy.BLL.Services;
 using Swapy.Common.Entities;
+using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Autos.CommandHandlers
@@ -10,14 +11,16 @@ namespace Swapy.BLL.Domain.Autos.CommandHandlers
     public class AddAutoAttributeCommandHandler : IRequestHandler<AddAutoAttributeCommand, AutoAttribute>
     {
         private readonly IProductRepository _productRepository;
-        private readonly IAutoAttributeRepository _autoAttributeRepository;
+        private readonly INotificationService _notificationService;
         private readonly ISubcategoryRepository _subcategoryRepository;
+        private readonly IAutoAttributeRepository _autoAttributeRepository;
 
-        public AddAutoAttributeCommandHandler(IProductRepository productRepository, IAutoAttributeRepository autoAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public AddAutoAttributeCommandHandler(IProductRepository productRepository, IAutoAttributeRepository autoAttributeRepository, ISubcategoryRepository subcategoryRepository, INotificationService notificationService)
         {
             _productRepository = productRepository;
-            _autoAttributeRepository = autoAttributeRepository;
+            _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
+            _autoAttributeRepository = autoAttributeRepository;
         }
 
         public async Task<AutoAttribute> Handle(AddAutoAttributeCommand request, CancellationToken cancellationToken)
@@ -30,6 +33,19 @@ namespace Swapy.BLL.Domain.Autos.CommandHandlers
 
             AutoAttribute autoAttribute = new AutoAttribute(request.Miliage, request.EngineCapacity, request.ReleaseYear, request.IsNew, request.FuelTypeId, request.AutoColorId, request.TransmissionTypeId, request.AutoModelId, product.Id);
             await _autoAttributeRepository.CreateAsync(autoAttribute);
+
+            var model = new NotificationModel()
+            {
+                UserId = request.UserId,
+                Title = request.Title,
+                Description = request.Description,
+                CityId = request.CityId,
+                Price = request.Price,
+                CurrencyId = request.CurrencyId,
+                ProductId = product.Id
+            };
+
+            await _notificationService.Notificate(model);
 
             return autoAttribute;
         }

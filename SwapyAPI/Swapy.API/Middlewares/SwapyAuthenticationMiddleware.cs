@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using Swapy.Common.Attributes;
+using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -45,7 +46,7 @@ namespace Swapy.API.Middlewares
 
             var userToken = await _userTokenRepository.GetByAccessTokenAsync(accessToken);
 
-            if(userToken == null) throw new UnauthorizedAccessException("Access token expired");
+            if (!userToken.User.EmailConfirmed) throw new UnconfirmedEmailException("Email is not confirmed");
 
             var claims = new List<Claim>
             {

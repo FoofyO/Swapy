@@ -1,11 +1,9 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.API.Validators;
 using Swapy.BLL.Domain.Electronics.Commands;
 using Swapy.BLL.Domain.Electronics.Queries;
-using Swapy.BLL.Domain.Products.Queries;
 using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Electronics.Requests.Commands;
 using Swapy.Common.DTO.Electronics.Requests.Queries;
@@ -30,7 +28,7 @@ namespace Swapy.API.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> Ping()
+        public async Task<IActionResult> PingAsync()
         {
             try
             {
@@ -380,14 +378,14 @@ namespace Swapy.API.Controllers
 
         [HttpHead]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Head()
+        public async Task<IActionResult> HeadAsync()
         {
             return Ok();
         }
 
         [HttpOptions]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Options()
+        public async Task<IActionResult> OptionsAsync()
         {
             return Ok("x7 GET, POST, PUT, DELETE, HEAD, OPTIONS");
         }

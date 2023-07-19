@@ -1,5 +1,4 @@
 ﻿using Castle.Core.Internal;
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,6 @@ using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Auth.Requests;
 using Swapy.Common.Exceptions;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
@@ -28,7 +26,7 @@ namespace Swapy.API.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> Ping()
+        public async Task<IActionResult> PingAsync()
         {
             try
             {
@@ -238,38 +236,23 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Check([FromQuery] CheckCommandDTO dto)
+        public async Task<IActionResult> CheckAsync([FromQuery] CheckCommandDTO dto)
         {
             try
             {
                 if (!string.IsNullOrEmpty(dto.Email) && string.IsNullOrEmpty(dto.PhoneNumber) && string.IsNullOrEmpty(dto.ShopName))
                 {
-                    var command = new EmailCommand()
-                    {
-                        Email = dto.Email
-                    };
-
-                    var result = await _mediator.Send(command);
+                    var result = await _mediator.Send(new EmailCommand() { Email = dto.Email });
                     return Ok(result);
                 }
                 else if (string.IsNullOrEmpty(dto.Email) && !string.IsNullOrEmpty(dto.PhoneNumber) && string.IsNullOrEmpty(dto.ShopName))
                 {
-                    var command = new PhoneNumberCommand()
-                    {
-                        PhoneNumber = dto.PhoneNumber
-                    };
-
-                    var result = await _mediator.Send(command);
+                    var result = await _mediator.Send(new PhoneNumberCommand() { PhoneNumber = dto.PhoneNumber });
                     return Ok(result);
                 }
                 else if (string.IsNullOrEmpty(dto.Email) && string.IsNullOrEmpty(dto.PhoneNumber) && !string.IsNullOrEmpty(dto.ShopName))
                 {
-                    var command = new ShopNameCommand()
-                    {
-                        ShopName = dto.ShopName
-                    };
-
-                    var result = await _mediator.Send(command);
+                    var result = await _mediator.Send(new ShopNameCommand() { ShopName = dto.ShopName });
                     return Ok(result);
                 }
                 else throw new Exception("You can't send more than 1 parameter");
@@ -291,10 +274,25 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ChangePassword(ChangePasswordCommandDTO dto)
+        public async Task<IActionResult> ChangePasswordAsync(ChangePasswordCommandDTO dto)
         {
             try
             {
+                var validator = new ChangePasswordValidator();
+                var validatorResult = validator.Validate(dto);
+                if (!validatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in validatorResult.Errors)
+                    {
+                        builder.Append($"Password property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new ChangePasswordCommand()
                 {
@@ -320,20 +318,148 @@ namespace Swapy.API.Controllers
             }
         }
 
+        [HttpPatch("ConfirmEmail")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ConfirmEmailAsync(ConfirmEmailDTO dto)
+        {
+            try
+            {
+                var validator = new ConfirmEmailValidator();
+                var validatorResult = validator.Validate(dto);
+                if (!validatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in validatorResult.Errors)
+                    {
+                        builder.Append($"Confirm email property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+                var command = new ConfirmEmailCommand()
+                {
+                    UserId = dto.UserId,
+                    Token = dto.Token,
+                };
+
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (TokenExpiredException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpPost("ForgotPassword")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordCommandDTO dto)
+        {
+            try
+            {
+                var validator = new ForgotPasswordValidator();
+                var validatorResult = validator.Validate(dto);
+                if (!validatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in validatorResult.Errors)
+                    {
+                        builder.Append($"Forgot Password property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+                var result = await _mediator.Send(new ForgotPasswordCommand { Email = dto.Email });
+                return Ok();
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpPatch("ResetPassword")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ResetPassword(ResetPasswordCommandDTO dto)
+        {
+            try
+            {
+                var validator = new ResetPasswordValidator();
+                var validatorResult = validator.Validate(dto);
+                if (!validatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in validatorResult.Errors)
+                    {
+                        builder.Append($"Reset Password property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+                var command = new ResetPasswordCommand
+                {
+                    UserId = dto.UserId,
+                    Password = dto.Password,
+                    Token = dto.Token
+                };
+
+                var result = await _mediator.Send(command);
+                return Ok();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (TokenExpiredException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
 
         [HttpHead]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Head()
+        public async Task<IActionResult> HeadAsync()
         {
             return Ok();
         }
 
-
         [HttpOptions]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Options()
+        public async Task<IActionResult> OptionsAsync()
         {
-            return Ok("x4 GET, x3 POST, PATCH, HEAD, OPTIONS");
+            return Ok("x3 GET, x4 POST, x3 PATCH, HEAD, OPTIONS");
         }
     }
 }
