@@ -64,5 +64,14 @@ namespace Swapy.DAL.Repositories
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {subscriberId} id not found");
             return item;
         }
+
+        public async Task<List<User>> GetUserSubscriptionsAsync(string recipientId)
+        {
+            return await _context.UsersSubscriptions.Where(us => us.RecipientId.Equals(recipientId))
+                                                        .Include(us => us.Subscription)
+                                                            .ThenInclude(s => s.Subscriber)
+                                                        .Select(us => us.Subscription.Subscriber)
+                                                        .ToListAsync();
+        }
     }
 }

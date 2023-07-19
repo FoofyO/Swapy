@@ -13,6 +13,7 @@ namespace Swapy.Common.DTO.Products.Responses
         public DateTime DateTime { get; set; }
         public List<string> Images { get; set; }
         public UserType UserType { get; set; }
+        public CategoryType Type { get; set; }
         public bool IsFavorite { get; set; }
         public bool IsDisable { get; set; }
     }

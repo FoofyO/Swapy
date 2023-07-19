@@ -52,6 +52,9 @@ namespace Swapy.DAL.Configurations
                    .HasMaxLength(128)
                    .IsRequired();
 
+            builder.Property(u => u.IsSubscribed)
+                   .HasColumnType("BIT");
+
             builder.HasOne(u => u.UserToken)
                    .WithOne(ur => ur.User)
                    .HasForeignKey<UserToken>(ur => ur.UserId)

@@ -36,6 +36,8 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
                 if (user == null) throw new NotFoundException("Invalid email or password");
             }
 
+            if (!user.EmailConfirmed) throw new UnconfirmedEmailException("Confirm email before login");
+
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
             if (!result.Succeeded) throw new AuthenticationException("Invalid email or password");
 
@@ -47,8 +49,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             user.UserTokenId = refreshToken;
             await _userTokenRepository.CreateAsync(new UserToken(accessToken, refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
 
-            var authDTO = new AuthResponseDTO { Type = user.Type, UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
-            return authDTO;
+            return new AuthResponseDTO { Type = user.Type, UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
         }
     }
 }

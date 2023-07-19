@@ -14,6 +14,9 @@ namespace Swapy.BLL.Domain.Shops.QueryHandlers
         public async Task<ShopDetailResponseDTO> Handle(GetByIdShopQuery request, CancellationToken cancellationToken)
         {
             var shop = await _shopAttributeRepository.GetByUserIdAsync(request.UserId);
+            
+            await _shopAttributeRepository.IncrementViewsAsync(shop.Id);
+            
             return new ShopDetailResponseDTO()
             {
                 Id = shop.Id,

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.API.Validators;
@@ -25,7 +26,7 @@ namespace Swapy.API.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> Ping()
+        public async Task<IActionResult> PingAsync()
         {
             try
             {
@@ -45,7 +46,7 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetById([FromRoute] GetByIdUserQueryDTO dto)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] GetByIdUserQueryDTO dto)
         {
             try
             {
@@ -118,18 +119,170 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpGet("SendRemoveMessage")]
         [Authorize]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveAsync()
+        public async Task<IActionResult> SendRemoveMessageAsync()
         {
             try
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var result = await _mediator.Send(new RemoveUserCommand() { UserId = userId });
+                var result = await _mediator.Send(new SendMessageToRemoveCommand() { UserId = userId });
                 return NoContent();
+            }
+            catch (NoAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> RemoveAsync(RemoveUserCommandDTO dto)
+        {
+            try
+            {
+                var validator = new RemoveUserValidator();
+                var validatorResult = validator.Validate(dto);
+                if (!validatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in validatorResult.Errors)
+                    {
+                        builder.Append($"Remove User property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var command = new RemoveUserCommand()
+                {
+                    UserId = userId,
+                    Token = dto.Token
+                };
+
+                var result = await _mediator.Send(command);
+                return NoContent();
+            }
+            catch (NoAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpPatch]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ToggleSubscriptionStatusAsync()
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                var result = await _mediator.Send(new ToggleSubscriptionStatusCommand() { UserId = userId});
+                return Ok();
+            }
+            catch (NoAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpGet("UserData")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetUserDataAsync()
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                var result = await _mediator.Send(new GetUserDataQuery() { UserId = userId });
+                return Ok();
+            }
+            catch (NoAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpPost("UploadLogo")]
+        [Authorize]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UploadLogoAsync([FromForm] UploadLogoCommandDTO dto)
+        {
+            try
+            {
+                var validator = new LogoUploadValidator();
+                var validatorResult = validator.Validate(dto);
+                if (!validatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in validatorResult.Errors)
+                    {
+                        builder.Append($"Logo upload property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                var result = await _mediator.Send(new UploadLogoCommand()
+                {
+                    UserId = userId,
+                    Logo = dto.Logo
+                });
+
+                return Ok();
             }
             catch (NoAccessException ex)
             {
@@ -155,7 +308,7 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddLike([FromRoute] AddLikeCommandDTO dto)
+        public async Task<IActionResult> AddLikeAsync([FromRoute] AddLikeCommandDTO dto)
         {
             try
             {
@@ -196,7 +349,7 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveLike([FromRoute] RemoveLikeCommandDTO dto)
+        public async Task<IActionResult> RemoveLikeAsync([FromRoute] RemoveLikeCommandDTO dto)
         {
             try
             {
@@ -233,7 +386,7 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CheckLike([FromRoute] CheckLikeQueryDTO dto)
+        public async Task<IActionResult> CheckLikeAsync([FromRoute] CheckLikeQueryDTO dto)
         {
             try
             {
@@ -267,7 +420,7 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddSubscription([FromRoute] AddSubscriptionCommandDTO dto)
+        public async Task<IActionResult> AddSubscriptionAsync([FromRoute] AddSubscriptionCommandDTO dto)
         {
             try
             {
@@ -308,7 +461,7 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveSubscription([FromRoute] RemoveSubscriptionCommandDTO dto)
+        public async Task<IActionResult> RemoveSubscriptionAsync([FromRoute] RemoveSubscriptionCommandDTO dto)
         {
             try
             {
@@ -345,7 +498,7 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CheckSubscription([FromRoute] CheckSubscriptionQueryDTO dto)
+        public async Task<IActionResult> CheckSubscriptionAsync([FromRoute] CheckSubscriptionQueryDTO dto)
         {
             try
             {
@@ -371,16 +524,16 @@ namespace Swapy.API.Controllers
 
         [HttpHead]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Head()
+        public async Task<IActionResult> HeadAsync()
         {
             return Ok();
         }
 
         [HttpOptions]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Options()
+        public async Task<IActionResult> OptionsAsync()
         {
-            return Ok("x4 GET, x2 POST, PUT, x3 DELETE, HEAD, OPTIONS");
+            return Ok("x5 GET, x3 POST, PUT, x3 DELETE, HEAD, OPTIONS");
         }
     }
 }

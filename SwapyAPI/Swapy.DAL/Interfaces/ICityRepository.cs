@@ -6,6 +6,7 @@ namespace Swapy.DAL.Interfaces
 {
     public interface ICityRepository : IRepository<City>
     {
+        Task<string> GetLocalizeByIdAsync(string cityId, Language language);
         Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Language language);
     }
 }

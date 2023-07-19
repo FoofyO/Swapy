@@ -8,10 +8,7 @@ namespace Swapy.BLL.Services
     {
         private ISubcategoryRepository _subcategoryRepository { get; set; }
 
-        public SubcategoryService(ISubcategoryRepository subcategoryRepository)
-        {
-            _subcategoryRepository = subcategoryRepository;
-        }
+        public SubcategoryService(ISubcategoryRepository subcategoryRepository) => _subcategoryRepository = subcategoryRepository;
         
         public async Task<bool> SubcategoryValidationAsync(string SubcategoryId)
         {

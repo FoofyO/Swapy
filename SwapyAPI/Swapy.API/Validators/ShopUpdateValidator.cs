@@ -29,7 +29,7 @@ namespace Swapy.API.Validators
             .WithErrorCode("InvalidLocationFormat");
 
             RuleFor(shop => shop.Slogan)
-            .MaximumLength(128)
+            .MaximumLength(64)
                 .WithMessage("Location field exceeds maximum length of 64 characters")
             .WithErrorCode("InvalidSloganFormat");
         }   
