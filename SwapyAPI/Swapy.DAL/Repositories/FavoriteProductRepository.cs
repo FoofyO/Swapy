@@ -62,6 +62,9 @@ namespace Swapy.DAL.Repositories
                                                             .ThenInclude(c => c.Names)
                                                       .Include(fp => fp.Product)
                                                         .ThenInclude(p => p.Currency)
+                                                      .Include(a => a.Product)
+                                                        .ThenInclude(p => p.User)
+                                                            .ThenInclude(u => u.ShopAttribute)
                                                       .FirstOrDefaultAsync();
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");

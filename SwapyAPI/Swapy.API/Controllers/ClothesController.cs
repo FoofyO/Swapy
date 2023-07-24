@@ -41,6 +41,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
         [HttpPost]
@@ -107,6 +111,10 @@ namespace Swapy.API.Controllers
                 return Created(locationUri, result.ProductId);
             }
             catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
             {
                 return Unauthorized(ex.Message);
             }
@@ -188,6 +196,10 @@ namespace Swapy.API.Controllers
                 return NoContent();
             }
             catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
             {
                 return Unauthorized(ex.Message);
             }

@@ -142,6 +142,9 @@ namespace Swapy.DAL.Repositories
                                                             .ThenInclude(c => c.Names)
                                                       .Include(a => a.Product)
                                                         .ThenInclude(p => p.Currency)
+                                                      .Include(a => a.Product)
+                                                        .ThenInclude(p => p.User)
+                                                            .ThenInclude(u => u.ShopAttribute)
                                                       .Include(a => a.AnimalBreed)
                                                         .ThenInclude(ab => ab.Names)
                                                       .FirstOrDefaultAsync();

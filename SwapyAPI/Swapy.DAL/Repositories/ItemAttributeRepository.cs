@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
@@ -71,11 +72,15 @@ namespace Swapy.DAL.Repositories
                                                             .ThenInclude(c => c.Names)
                                                     .Include(a => a.Product)
                                                         .ThenInclude(p => p.Currency)
+                                                    .Include(a => a.Product)
+                                                        .ThenInclude(p => p.User)
+                                                            .ThenInclude(u => u.ShopAttribute)
                                                     .Include(i => i.ItemType)
                                                         .ThenInclude(it => it.Names)
                                                     .FirstOrDefaultAsync();
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
+
             return item;
         }
 

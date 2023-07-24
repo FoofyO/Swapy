@@ -36,6 +36,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
 
@@ -105,6 +109,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
             catch (NoAccessException ex)
             {
                 return Unauthorized(ex.Message);
@@ -130,6 +138,10 @@ namespace Swapy.API.Controllers
                 return NoContent();
             }
             catch (NoAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
             {
                 return Unauthorized(ex.Message);
             }
@@ -181,6 +193,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
@@ -210,6 +226,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
@@ -236,6 +256,10 @@ namespace Swapy.API.Controllers
                 return Ok();
             }
             catch (NoAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
             {
                 return Unauthorized(ex.Message);
             }
@@ -288,6 +312,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
@@ -329,6 +357,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
             catch (DuplicateValueException ex)
             {
                 return Conflict(ex.Message);
@@ -364,6 +396,10 @@ namespace Swapy.API.Controllers
                 return NoContent();
             }
             catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
             {
                 return Unauthorized(ex.Message);
             }
@@ -404,6 +440,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
@@ -438,6 +478,10 @@ namespace Swapy.API.Controllers
                 return Created(locationUri, result.Id);
             }
             catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
             {
                 return Unauthorized(ex.Message);
             }
@@ -479,6 +523,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
             catch (NoAccessException ex)
             {
                 return Unauthorized(ex.Message);
@@ -513,6 +561,10 @@ namespace Swapy.API.Controllers
                 return Ok(result);
             }
             catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
             {
                 return Unauthorized(ex.Message);
             }

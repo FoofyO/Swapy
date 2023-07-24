@@ -100,7 +100,9 @@ namespace Swapy.DAL.Repositories
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
 
-            if ((bool)isDisable && (string.IsNullOrEmpty(userId) && string.IsNullOrEmpty(otherUserId))) throw new NoAccessException("No access to get disabled products");
+            bool isDisableResult = isDisable ?? false;
+
+            if (isDisableResult && (string.IsNullOrEmpty(userId) && string.IsNullOrEmpty(otherUserId))) throw new NoAccessException("No access to get disabled products");
 
             var query = _context.Products.Include(p => p.Images)
                                          .Include(p => p.Currency)

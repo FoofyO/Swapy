@@ -285,7 +285,7 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<RemoveUserCommand, Unit>, RemoveUserCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<ResetPasswordCommand, Unit>, ResetPasswordCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<SendMessageCommand, Message>, SendMessageCommandHandler>();
-            builder.Services.AddTransient<IRequestHandler<ShopRegistrationCommand, AuthResponseDTO>, ShopRegistrationCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<ShopRegistrationCommand, Unit>, ShopRegistrationCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<SwitchProductEnablingCommand, Unit>, SwitchProductEnablingCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<SendMessageToRemoveCommand, Unit>, SendMessageToRemoveCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<ToggleSubscriptionStatusCommand, Unit>, ToggleSubscriptionStatusCommandHandler>();
@@ -302,7 +302,7 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<UploadBannerCommand, Unit>, UploadBannerCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UploadImageCommand, Unit>, UploadImageCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UploadLogoCommand, Unit>, UploadLogoCommandHandler>();
-            builder.Services.AddTransient<IRequestHandler<UserRegistrationCommand, AuthResponseDTO>, UserRegistrationCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UserRegistrationCommand, Unit>, UserRegistrationCommandHandler>();
 
 
             /// <summary>
@@ -342,7 +342,7 @@ namespace Swapy.API
             //Token life time
             builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
             {
-                options.TokenLifespan = TimeSpan.FromHours(1);
+                options.TokenLifespan = TimeSpan.FromDays(1);
             });
 
 
@@ -379,7 +379,7 @@ namespace Swapy.API
                 app.UseSwaggerUI();
             }
 
-            app.UseCors();
+            app.UseCors("Default");
 
             app.UseHttpsRedirection();
 
@@ -390,7 +390,10 @@ namespace Swapy.API
 
             app.UseLocalization();
 
-            app.MapControllers();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             app.Run();
         }
