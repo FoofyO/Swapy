@@ -24,6 +24,8 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 
             if (user == null) throw new NotFoundException($"User with {request.UserId} id not found");
 
+            if (!user.EmailConfirmed) throw new UnconfirmedEmailException("Email is not confirmed");
+
             var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", request.Token);
             
             if (!isValidToken) throw new TokenExpiredException("Provided token already expired");

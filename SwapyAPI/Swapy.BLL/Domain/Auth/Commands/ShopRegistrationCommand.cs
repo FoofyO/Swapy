@@ -3,7 +3,7 @@ using Swapy.Common.DTO.Auth.Responses;
 
 namespace Swapy.BLL.Domain.Auth.Commands
 {
-    public class ShopRegistrationCommand : IRequest<AuthResponseDTO>
+    public class ShopRegistrationCommand : IRequest<Unit>
     {
         public string ShopName { get; set; }
         public string Email { get; set; }

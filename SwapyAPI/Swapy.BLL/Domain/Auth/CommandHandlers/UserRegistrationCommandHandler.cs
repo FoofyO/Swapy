@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.BLL.Interfaces;
-using Swapy.Common.DTO.Auth.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
@@ -12,7 +11,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
-    public class UserRegistrationCommandHandler : IRequestHandler<UserRegistrationCommand, AuthResponseDTO>
+    public class UserRegistrationCommandHandler : IRequestHandler<UserRegistrationCommand, Unit>
     {
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
@@ -29,7 +28,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             _userTokenRepository = userTokenRepository;
         }
 
-        public async Task<AuthResponseDTO> Handle(UserRegistrationCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UserRegistrationCommand request, CancellationToken cancellationToken)
         {
             var emailExists = await _userManager.FindByEmailAsync(request.Email);
             var phoneExists = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber.Equals(request.PhoneNumber));
@@ -44,7 +43,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
                 PhoneNumber = request.PhoneNumber,
                 Type = UserType.Seller,
                 IsSubscribed = true,
-                Logo = "path"
+                Logo = "default-profile-logo"
             };
             
             var refreshToken = await _userTokenService.GenerateRefreshToken();
@@ -63,7 +62,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             callbackUrl.Query = $"userid={user.Id}&token={confirmationToken}";
             await _emailService.SendConfirmationEmailAsync(user.Email, callbackUrl.Uri.ToString());
 
-            return new AuthResponseDTO { Type = UserType.Seller, UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
+            return Unit.Value;
         }
     }
 }

@@ -38,6 +38,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
         /// <summary>
@@ -112,6 +116,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
             catch (ArgumentException ex)
             {
                 return BadRequest("Invalid parameters: " + ex.Message);
@@ -160,6 +168,10 @@ namespace Swapy.API.Controllers
                 return NoContent();
             }
             catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
             {
                 return Unauthorized(ex.Message);
             }

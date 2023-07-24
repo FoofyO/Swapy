@@ -27,6 +27,8 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 
             if (user == null) throw new NotFoundException($"User with {request.Email} email not found");
 
+            if(!user.EmailConfirmed) throw new UnconfirmedEmailException("Email is not confirmed");
+
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
             var callbackUrl = new UriBuilder(_configuration["WebUrl"]);
             callbackUrl.Path = "/auth/reset-password";

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.BLL.Interfaces;
-using Swapy.Common.DTO.Auth.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
@@ -12,7 +11,7 @@ using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
-    public class ShopRegistrationCommandHandler : IRequestHandler<ShopRegistrationCommand, AuthResponseDTO>
+    public class ShopRegistrationCommandHandler : IRequestHandler<ShopRegistrationCommand, Unit>
     {
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
@@ -31,7 +30,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             _shopAttributeRepository = shopAttributeRepository;
         }
 
-        public async Task<AuthResponseDTO> Handle(ShopRegistrationCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(ShopRegistrationCommand request, CancellationToken cancellationToken)
         {
             var emailExists = await _userManager.FindByEmailAsync(request.Email);
             var phoneExists = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
@@ -45,14 +44,14 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
                 PhoneNumber = request.PhoneNumber,
                 Type = UserType.Shop,
                 IsSubscribed = false,
-                Logo = "path"
+                Logo = "default-profile-logo"
             };
 
             var shop = new ShopAttribute()
             {
                 UserId = user.Id,
                 ShopName = request.ShopName,
-                Banner = "path"
+                Banner = "default-shop-banner"
             };
             
             var refreshToken = await _userTokenService.GenerateRefreshToken();
@@ -75,7 +74,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             callbackUrl.Query = $"userid={user.Id}&token={confirmationToken}";
             await _emailService.SendConfirmationEmailAsync(user.Email, callbackUrl.Uri.ToString());
 
-            return new AuthResponseDTO { Type = UserType.Shop, UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
+            return Unit.Value;
         }
     }
 }

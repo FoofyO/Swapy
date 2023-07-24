@@ -6,6 +6,7 @@ using Swapy.API.Validators;
 using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Auth.Requests;
+using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
 using System.Security.Authentication;
 using System.Security.Claims;
@@ -36,11 +37,14 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> LoginAsync(LoginCommandDTO dto)
@@ -62,7 +66,7 @@ namespace Swapy.API.Controllers
             }
             catch (AuthenticationException ex)
             {
-                return Unauthorized(ex.Message);
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
@@ -221,6 +225,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
             catch (Exception ex)
             {
                 if (ex is System.ComponentModel.DataAnnotations.ValidationException)
@@ -308,6 +316,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
             catch (InvalidOperationException ex)
             {
                 return BadRequest(ex.Message);
@@ -365,6 +377,7 @@ namespace Swapy.API.Controllers
 
         [HttpPost("ForgotPassword")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordCommandDTO dto)
@@ -391,6 +404,10 @@ namespace Swapy.API.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (Exception ex)
             {
@@ -441,6 +458,10 @@ namespace Swapy.API.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (Exception ex)
             {

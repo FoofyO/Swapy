@@ -34,6 +34,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
         [HttpGet]
@@ -127,6 +131,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
             catch (NoAccessException ex)
             {
                 return Unauthorized(ex.Message);
@@ -157,6 +165,10 @@ namespace Swapy.API.Controllers
                 return Ok();
             }
             catch (NoAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
             {
                 return Unauthorized(ex.Message);
             }
@@ -210,6 +222,10 @@ namespace Swapy.API.Controllers
                 return Unauthorized("Invalid operation");
             }
             catch (NoAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
             {
                 return Unauthorized(ex.Message);
             }

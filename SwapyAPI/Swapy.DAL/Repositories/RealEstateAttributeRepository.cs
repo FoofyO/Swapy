@@ -70,6 +70,9 @@ namespace Swapy.DAL.Repositories
                                                             .ThenInclude(p => p.Currency)
                                                           .Include(re => re.Product)
                                                             .ThenInclude(p => p.Subcategory)
+                                                          .Include(a => a.Product)
+                                                            .ThenInclude(p => p.User)
+                                                                .ThenInclude(u => u.ShopAttribute)
                                                           .Include(re => re.RealEstateType)
                                                           .FirstOrDefaultAsync(a => a.ProductId.Equals(productId));
 

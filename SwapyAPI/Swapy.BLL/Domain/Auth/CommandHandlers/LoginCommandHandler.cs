@@ -33,13 +33,13 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             if (user == null)
             {
                 user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber.Equals(request.EmailOrPhone));
-                if (user == null) throw new NotFoundException("Invalid email or password");
+                if (user == null) throw new NotFoundException("Invalid email, phone number or password");
             }
 
             if (!user.EmailConfirmed) throw new UnconfirmedEmailException("Confirm email before login");
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
-            if (!result.Succeeded) throw new AuthenticationException("Invalid email or password");
+            if (!result.Succeeded) throw new AuthenticationException("Invalid email, phone number or password");
 
             if (!string.IsNullOrEmpty(user.UserTokenId)) await _userTokenRepository.DeleteByIdAsync(user.UserTokenId);
 

@@ -34,6 +34,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
         [HttpPost]
@@ -73,6 +77,10 @@ namespace Swapy.API.Controllers
                 return Created(locationUri, result.Id);
             }
             catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
             {
                 return Unauthorized(ex.Message);
             }
@@ -128,6 +136,10 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
             catch (ArgumentException ex)
             {
                 return BadRequest("Invalid parameters: " + ex.Message);
@@ -151,6 +163,10 @@ namespace Swapy.API.Controllers
                 var result = await _mediator.Send(new GetAllBuyerChatsQuery() { UserId = userId });
                 return Ok(result);
             }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
@@ -169,6 +185,10 @@ namespace Swapy.API.Controllers
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var result = await _mediator.Send(new GetAllSellerChatsQuery() { UserId = userId });
                 return Ok(result);
+            }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (Exception ex)
             {
