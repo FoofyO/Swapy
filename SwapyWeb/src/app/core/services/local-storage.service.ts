@@ -1,7 +1,6 @@
 <<<<<<< Updated upstream
 import { Injectable } from '@angular/core';
-import { Language } from '../enums/language';
-import { UserType } from '../enums/user-type';
+import { Language } from '../enums/language.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +17,7 @@ export class LocalStorageService {
     localStorage.setItem('accessToken', token);
   }
 
-  public removeToken() {
+  public removeToken() : void {
     localStorage.removeItem('accessToken');
   }
 
@@ -32,17 +31,17 @@ export class LocalStorageService {
     localStorage.setItem('userId', id);
   }
 
-  public removeUserId() {
+  public removeUserId() : void {
     localStorage.removeItem('userId');
   }
 
   ////////////////////////////////////////////////////////////
 
-  public get userType() : UserType {
-    return localStorage.getItem('userType') as UserType;
+  public get userType(): string {
+    return localStorage.getItem('userType') as string;
   }
 
-  public set userType(type : UserType) {
+  public set userType(type: string) {
     localStorage.setItem('userType', type);
   }
 
@@ -60,8 +59,22 @@ export class LocalStorageService {
     localStorage.setItem('localization', type);
   }
 
-  public removeLocalization() {
+  public removeLocalization() : void {
     localStorage.removeItem('localization');
+  }
+
+////////////////////////////////////////////////////////////
+
+  public get rememberMe() : string {
+    return localStorage.getItem('rememberMe') as string;
+  }
+
+  public set rememberMe(type : string) {
+    localStorage.setItem('rememberMe', type);
+  }
+
+  public removeRememberMe() : void {
+    localStorage.removeItem('rememberMe');
   }
 }
 =======

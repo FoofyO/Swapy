@@ -6,10 +6,10 @@ import { ErrorComponent } from './shared/error/error.component';
 import { LoginComponent } from './modules/auth/components/login/login.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: '/auth/login', pathMatch: 'full'},
+  {path: '', loadChildren: () => import('./modules/main/main.module').then(m => m.MainModule)},
   {path: 'auth', loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)},
-//   {path: 'folder', loadChildren: () => import('./modules/folder/folder.module').then(m=>m.FolderModule), canActivate: [AuthGuard]},
-//   {path: 'account', loadChildren: () => import('./modules/account/account.module').then(m=>m.AccountModule)},
+  {path: 'users', loadChildren: () => import('./modules/users/users.module').then(m => m.UsersModule)},
+  {path: 'shops', loadChildren: () => import('./modules/shops/shops.module').then(m => m.ShopsModule)},
   {path: '**', component: ErrorComponent}
 ];
 

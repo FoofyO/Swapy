@@ -16,7 +16,7 @@ namespace Swapy.BLL.Domain.Shops.QueryHandlers
             var shop = await _shopAttributeRepository.GetByUserIdAsync(request.UserId);
             
             await _shopAttributeRepository.IncrementViewsAsync(shop.Id);
-            
+
             return new ShopDetailResponseDTO()
             {
                 Id = shop.Id,
@@ -36,7 +36,8 @@ namespace Swapy.BLL.Domain.Shops.QueryHandlers
                 PhoneNumber = shop.User.PhoneNumber,
                 ProductsCount = shop.User.ProductsCount,
                 RegistrationDate = shop.User.RegistrationDate,
-                SubscriptionsCount = shop.User.SubscriptionsCount
+                SubscriptionsCount = shop.User.SubscriptionsCount,
+                Type = shop.User.Type
             };
         }
     }

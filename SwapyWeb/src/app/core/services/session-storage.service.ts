@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Language } from '../enums/language.enum';
-import { UserType } from '../enums/user-type.enum';
 
 @Injectable({
   providedIn: 'root'

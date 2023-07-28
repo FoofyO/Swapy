@@ -3,9 +3,14 @@
 .header-account {
     display: flex;
     align-items: center;
+    margin-right: -1rem;
+
+    > *:last-child { margin-right: 0 !important; }
 
     .header-link {    
         display: flex;
+        background-color: transparent;
+        border: 0;
         color: $primary;
         font-weight: 500;
         align-items: center;
@@ -15,23 +20,36 @@
         padding: 0.9rem 0.9rem;
         transition: all 0.3s ease;
         
-        &:hover {
+        @media (hover: hover) {
+            &:hover{
+                color: $additional;
+                background: $primary !important; 
+            }
+        }
+        @media (hover: none) {
+          &:active{
             color: $additional;
             background: $primary !important; 
+          }
         }
 
         span { margin-left: 0.4rem; }
     }
 
-    @media (max-width: 767px) { display: none; }
+    @media (max-width: 1180px) { display: none; }
 }
 
 .header-account-minimized {
     display: none;
     align-items: center;
+    margin-right: -1rem;
+
+    > *:last-child { margin-right: 0 !important; }
 
     .header-link {    
         display: flex;
+        background-color: transparent;
+        border: 0;
         color: $primary;
         font-weight: 500;
         align-items: center;
@@ -41,17 +59,25 @@
         padding: 0.9rem 0.9rem;
         transition: all 0.3s ease;
         
-        &:hover {
-            color: $additional;
-            background: $primary !important; 
+        @media (hover: hover) {
+            &:hover{
+                color: $additional;
+                background: $primary !important; 
+            }
+        }
+        @media (hover: none) {
+            &:active{
+              color: $additional;
+              background: $primary !important; 
+            }
         }
 
         span { margin-left: 0.4rem; }
     }
 
-    @media (max-width: 767px) { display: flex; }
+    @media (max-width: 1180px) { display: flex; }
 
-    @media (max-width: 610px) { display: none; }
+    @media (max-width: 840px) { display: none; }
 }
 
 .header-account-collapsed {
@@ -59,18 +85,32 @@
 
     ul {
         padding: 0;
-        width: 100%;
+        width: 15rem;
         margin-bottom: 0;
         list-style: none;
+
+        @media (max-width: 530px) { width: 100%; }
 
         li {
             cursor: pointer;
             transition: 0.3s;
 
-            &:hover { background-color: $additional; }
+            @media (hover: hover) {
+                &:hover{
+                    background-color: $additional;
+                }
+            }
+            @media (hover: none) {
+              &:active{
+                background-color: $additional;
+              }
+            }
 
             .header-link {
                 display: flex;
+                background-color: transparent;
+                border: 0;
+                width: 100%;
                 color: $primary;
                 font-weight: 500;
                 align-items: center;
@@ -87,5 +127,5 @@
         }
     }
 
-    @media (max-width: 610px) { display: flex; }
+    @media (max-width: 840px) { display: flex; }
 }

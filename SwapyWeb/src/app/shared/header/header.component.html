@@ -1,11 +1,18 @@
-<header id="header-navigation" class="header-navigation navbar">
+<header id="header-navigation" class="navbar header-navigation">
+    <app-category-tree></app-category-tree>
     <div class="header-wrapper container-fluid">
-        <a class="header-banner" routerLink="#" routerLinkActive="active">
+        <a class="header-banner" routerLink="/" routerLinkActive="active">
             <h1 class="banner-text">Swapy</h1>
             <img alt="logo swapy" class="banner-image" height="45" src="../../../assets/images/swapy-logo.png">
         </a>
 
         <div class="header-content">
+
+            <button title="Departments" (click)="toggleCategoryMenuAnimation()" class="header-button-departments" href="/createAd">
+                <i class="fa-solid fa-qrcode"></i>
+                <span>Departments</span>
+            </button>
+
             <form class="header-search-form">
                 <input class="header-search-field" id="search" type="text" placeholder="Search..." />
                 <button class="header-search-btn">
@@ -22,7 +29,7 @@
                 </ul>
             </div>
             
-            <button class="header-navbar-toggler" type="button" (click)="toggleAnimation('navbarMenu')">
+            <button class="header-navbar-toggler" type="button" (click)="toggleCollapsedMenuAnimation('navbarMenu')">
                 <span><i class="fa-solid fa-bars"></i></span>
             </button>
 
@@ -32,8 +39,12 @@
         </div>
 
         <div class="header-content-collapsed">
-            <button class="header-navbar-toggler" type="button" (click)="toggleAnimation('navbarCollapsedMenu')">
+            <button class="header-navbar-toggler" type="button" (click)="toggleCollapsedMenuAnimation('navbarCollapsedMenu')">
                 <span><i class="fa-solid fa-bars"></i></span>
+            </button>
+
+            <button (click)="toggleCategoryMenuAnimation()" class="header-button-departments" href="/createAd">
+                <i class="fa-solid fa-qrcode"></i>
             </button>
 
             <div id="navbarCollapsedMenu" class="header-offnav">
