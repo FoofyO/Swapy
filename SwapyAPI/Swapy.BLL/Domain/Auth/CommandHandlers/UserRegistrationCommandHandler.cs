@@ -8,6 +8,7 @@ using Swapy.Common.Entities;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
+using System.Web;
 
 namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
@@ -43,7 +44,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
                 PhoneNumber = request.PhoneNumber,
                 Type = UserType.Seller,
                 IsSubscribed = true,
-                Logo = "default-profile-logo"
+                Logo = "default-user-logo.png"
             };
             
             var refreshToken = await _userTokenService.GenerateRefreshToken();
@@ -57,6 +58,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             await _userTokenRepository.CreateAsync(new UserToken(accessToken, refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
 
             var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            confirmationToken = HttpUtility.HtmlEncode(confirmationToken);
             var callbackUrl = new UriBuilder(_configuration["WebUrl"]);
             callbackUrl.Path = "/auth/verify-email";
             callbackUrl.Query = $"userid={user.Id}&token={confirmationToken}";

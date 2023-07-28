@@ -1,4 +1,5 @@
 ﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Swapy.BLL.Domain.Users.Commands;
@@ -24,9 +25,22 @@ namespace Swapy.BLL.Domain.Users.CommandHandlers
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(request.Logo.FileName);
             var blobServiceClient = new BlobServiceClient(blobUrl);
             var containerClient = blobServiceClient.GetBlobContainerClient("logos");
-            
+
+            var fileExtension = Path.GetExtension(request.Logo.FileName).ToLower();
+            fileExtension = fileExtension.Substring(1);
+
             await containerClient.UploadBlobAsync(fileName, request.Logo.OpenReadStream());
-            
+
+            var blobClient = containerClient.GetBlobClient(fileName);
+
+            var blobHttpHeaders = new BlobHttpHeaders
+            {
+                ContentType = "image/" + fileExtension,
+                ContentDisposition = "inline; filename=\"" + fileName + "\""
+            };
+
+            await blobClient.SetHttpHeadersAsync(blobHttpHeaders);
+
             var user = await _userManager.FindByIdAsync(request.UserId);
             user.Logo = fileName;
             await _userManager.UpdateAsync(user);

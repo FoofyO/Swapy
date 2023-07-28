@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <div *ngIf="!IsLoadingUI">
     <app-header *ngIf="!IsShowUI"></app-header>
     <main>
@@ -11,3 +12,13 @@
       <span class="visually-hidden">Loading...</span>
     </div>
 </div>
+=======
+<div class="root">
+    <app-header *ngIf="IsShowUI"></app-header>
+    <main>
+        <router-outlet class="router"></router-outlet>
+    </main>
+    <app-footer *ngIf="IsShowUI"></app-footer>
+    <app-spinner></app-spinner>
+</div>
+>>>>>>> Stashed changes

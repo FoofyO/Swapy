@@ -5,6 +5,7 @@ using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.BLL.Interfaces;
 using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
+using System.Web;
 
 namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
@@ -30,6 +31,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             if(!user.EmailConfirmed) throw new UnconfirmedEmailException("Email is not confirmed");
 
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            resetToken = HttpUtility.HtmlEncode(resetToken);
             var callbackUrl = new UriBuilder(_configuration["WebUrl"]);
             callbackUrl.Path = "/auth/reset-password";
             callbackUrl.Query = $"userid={user.Id}&token={resetToken}";

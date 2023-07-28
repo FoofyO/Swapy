@@ -11,7 +11,7 @@ export class AuthComponent {
 
   constructor(public authFacade: AuthFacadeService, public router: Router) { }
 
-  onLogout() {
+  onLogout(): void {
     this.authFacade.logout();
     this.router.navigate(['/auth/login']);
   }

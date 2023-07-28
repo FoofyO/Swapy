@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
+using System.Web;
 
 namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
@@ -17,6 +18,11 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             var user = await _userManager.FindByIdAsync(request.UserId);
             
             if (user == null) throw new NotFoundException($"UserId {request.UserId} not found");
+
+            if (user.EmailConfirmed) throw new InvalidOperationException($"Invalid operation");
+
+            request.Token = HttpUtility.HtmlDecode(request.Token);
+            request.Token = request.Token.Replace(" ", "+");
 
             var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.EmailConfirmationTokenProvider, "EmailConfirmation", request.Token);
 

@@ -73,6 +73,10 @@ using Swapy.BLL.Domain.TVs.QueryHandlers;
 using Swapy.BLL.Domain.Electronics.QueryHandlers;
 using FluentValidation.AspNetCore;
 using Swapy.API.Extensions;
+<<<<<<< Updated upstream
+=======
+using Swapy.Common.DTO.Categories.Responses;
+>>>>>>> Stashed changes
 
 namespace Swapy.API
 {
@@ -303,7 +307,10 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<UploadImageCommand, Unit>, UploadImageCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UploadLogoCommand, Unit>, UploadLogoCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UserRegistrationCommand, Unit>, UserRegistrationCommandHandler>();
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
             /// <summary>
             /// Claims Principal Registration

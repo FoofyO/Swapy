@@ -21,7 +21,7 @@ namespace Swapy.BLL.Services
             try
             {
                 var client = new MailMessage();
-                client.From = new MailAddress(_configuration.GetSection("Email:Domain").Value, "Swapy");
+                client.From = new MailAddress(_configuration["Email-Domain"], "Swapy");
                 client.Subject = subject;
                 client.To.Add(new MailAddress(email));
                 client.Body = $"<html><body>{message}</body></html>";
@@ -31,7 +31,7 @@ namespace Swapy.BLL.Services
                 var smptClient = new SmtpClient("smtp.gmail.com")
                 {
                     Port = 587,
-                    Credentials = new NetworkCredential(_configuration.GetSection("Email:Domain").Value, token),
+                    Credentials = new NetworkCredential(_configuration["Email-Domain"], token),
                     EnableSsl = true
                 };
 
