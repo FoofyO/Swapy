@@ -1,0 +1,18 @@
+.category-card {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 5rem;
+    user-select: none;
+    .category-card-image {
+        width: 5rem;
+        height: 5rem;
+        border-radius: 10%;
+        margin-bottom: 0.5rem;
+        -webkit-user-drag: none; /* Safari */
+        -khtml-user-drag: none; /* Konqueror HTML */
+        -moz-user-drag: none; /* Firefox */
+        -o-user-drag: none; /* Opera */        
+    }
+    .category-card-title { margin: auto; }
+}

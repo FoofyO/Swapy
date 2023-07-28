@@ -113,5 +113,8 @@
       }
     }
   },
-  "defaultProject": "SwapyWeb"
+  "defaultProject": "SwapyWeb",
+  "cli": {
+    "analytics": false
+  }
 }

@@ -1,73 +1,106 @@
 <div class="header-account">
-    <a class="header-link" href="/createAd">
-        <i class="fa-solid fa-heart"></i>
-    </a>
+    <button title="Chats" class="header-link" (click)="transferToLogin()">
+        <i class="fa-solid fa-message"></i>
+    </button>
 
-    <a class="header-link" href="/createAd">
+    <button title="Favorites" class="header-link" (click)="transferToFavorites()">
+        <i class="fa-solid fa-heart"></i>
+    </button>
+
+    <button title="Place an ad" class="header-link" (click)="transferToAddProduct()">
         <i class="fa-solid fa-circle-plus"></i>
         <span>Place an ad</span>
-    </a>
+    </button>
 
-    <a class="header-link" href="/createAd">
+    <button *ngIf="authFacade.isAuthenticated()" title="Profile" class="header-link" (click)="transferToProfile()">
         <i class="fa-solid fa-user"></i>
         <span>Profile</span>
-    </a>
+    </button>
 
-    <!-- <a class="header-link" href="/auth/login">
+    <button *ngIf="!authFacade.isAuthenticated()" title="Sign in" class="header-link" (click)="transferToLogin()">
         <i class="fa-solid fa-right-to-bracket"></i>
         <span>Sign in</span>
-    </a> -->
+    </button>
+
+    <button *ngIf="authFacade.isAuthenticated()" title="Logout" class="header-link" (click)="onLogout()">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Logout</span>
+    </button>
 </div>
+
+<!-- ////////////////////////////////////////////////////////////// -->
 
 <div class="header-account-minimized">
-    <a class="header-link" href="/createAd">
+    <button title="Chats" class="header-link" (click)="transferToLogin()">
+        <i class="fa-solid fa-message"></i>
+    </button>
+
+    <button title="Favorites" class="header-link" (click)="transferToFavorites()">
         <i class="fa-solid fa-heart"></i>
-    </a>
+    </button>
 
-    <a class="header-link" href="/createAd">
+    <button title="Place an ad" class="header-link" (click)="transferToAddProduct()">
         <i class="fa-solid fa-circle-plus"></i>
-    </a>
+    </button>
 
-    <a class="header-link" href="/createAd">
+    <button *ngIf="authFacade.isAuthenticated()" title="Profile" class="header-link" (click)="transferToProfile()">
         <i class="fa-solid fa-user"></i>
-    </a>
+    </button>
 
-    <!-- <a class="header-link" href="/auth/login">
+    <button *ngIf="!authFacade.isAuthenticated()" title="Sign in" class="header-link" (click)="transferToLogin()">
         <i class="fa-solid fa-right-to-bracket"></i>
-    </a> -->
+    </button>
+
+    <button *ngIf="authFacade.isAuthenticated()" title="Logout" class="header-link" (click)="onLogout()">
+        <i class="fa-solid fa-right-from-bracket"></i>
+    </button>
 </div>
+
+<!-- ////////////////////////////////////////////////////////////// -->
 
 <div class="header-account-collapsed">
     <ul>
-        <li>
-            <a class="header-link" href="/createAd">
-                <i class="fa-solid fa-user"></i>
-                <span>Profile</span>
-            </a>
-        </li>
-        <li>
-            <a class="header-link" href="/createAd">
-                <i class="fa-solid fa-circle-plus"></i>
-                <span>Place an ad</span>
-            </a>
-        </li>   
-        <li>
-            <a class="header-link" href="/createAd">
-                <i class="fa-solid fa-heart"></i>
-                <span>Favorites</span>
-            </a>
-        </li>
-        <li>
-            <a class="header-link" href="/createAd">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span>Logout</span>
-            </a>
-        </li>   
-        <!-- <li>
-            <a class="header-link" href="/auth/login">
+        <li *ngIf="!authFacade.isAuthenticated()">
+            <button class="header-link" href="/auth/login" (click)="transferToLogin()">
                 <i class="fa-solid fa-right-to-bracket"></i>
                 <span>Sign in</span>
-            </a>
-        </li>    -->
+            </button>
+        </li>  
+        <li>
+            <button *ngIf="authFacade.isAuthenticated()" class="header-link" (click)="transferToProfile()">
+                <i class="fa-solid fa-user"></i>
+                <span>Profile</span>
+            </button>
+        </li>
+        <li>
+            <button class="header-link" (click)="transferToAddProduct()">
+                <i class="fa-solid fa-circle-plus"></i>
+                <span>Place an ad</span>
+            </button>
+        </li>   
+        <li>
+            <button (click)="toggleCategoryMenuAnimation()" class="header-link">
+                <i class="fa-solid fa-qrcode"></i>
+                <span>Departments</span>
+            </button>
+        </li>
+        <li>
+            <button class="header-link" (click)="transferToProfile()">
+                <i class="fa-solid fa-heart"></i>
+                <span>Favorites</span>
+            </button>
+        </li>
+        <li>
+            <button class="header-link" (click)="transferToLogin()">
+                <i class="fa-solid fa-message"></i>
+                <span>Chats</span>
+            </button>
+        </li>
+        <li *ngIf="authFacade.isAuthenticated()">
+            <button class="header-link" (click)="onLogout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </button>
+        </li>    
     </ul>
 </div>

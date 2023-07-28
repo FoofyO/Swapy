@@ -1,0 +1,18 @@
+
+<div class="wrapper">
+    <div class="shop-section" *ngIf="shops$ | async as shops">
+      <div class="shop-section-table-of-contents">
+        <p>Shops</p>
+        <select class="form-select select-filter" [(ngModel)]="selectedFilter" (ngModelChange)="onSelectFilterChange()">
+          <option class="option" value="1">From A to Z</option>
+          <option class="option" value="2">From Z to A</option>
+          <option class="option" value="3">Most views</option>
+          <option class="option" value="4">Least views</option>
+        </select>
+      </div>
+      <div class="shops-container" *ngIf="shops$ | async as shops">
+          <app-shop-card *ngFor="let shop of shops.items" [shop]="shop"></app-shop-card>
+      </div>
+      <app-pagination></app-pagination>
+    </div>
+</div>

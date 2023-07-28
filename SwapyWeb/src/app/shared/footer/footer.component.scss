@@ -44,10 +44,17 @@
                     
                     #footer-small-sectiom-link-ig { font-size: 1.6rem; }
 
-                    &:hover {
-                        background-color: $primary;
-
-                        & > span { color: $additional; }                      
+                    @media (hover: hover) {
+                        &:hover{
+                            background-color: $primary;
+                            & > span { color: $additional; }     
+                        }
+                    }
+                    @media (hover: none) {
+                        &:active{
+                            background-color: $primary;
+                            & > span { color: $additional; }     
+                        }
                     }
                 }
             }
@@ -72,7 +79,16 @@
                         font-weight: 500;
                         cursor: pointer;
                         
-                        &:hover { color: $primary; }
+                        @media (hover: hover) {
+                            &:hover{
+                                color: $primary; 
+                            }
+                        }
+                        @media (hover: none) {
+                            &:active{
+                                color: $primary;  
+                            }
+                        }
                     }
                 }
             }
@@ -82,7 +98,16 @@
                 font-weight: 500;
                 text-decoration: none;
 
-                &:hover { opacity: 0.8; }
+                @media (hover: hover) {
+                    &:hover{
+                        opacity: 0.8;
+                    }
+                }
+                @media (hover: none) {
+                    &:active{
+                        opacity: 0.8;
+                    }
+                }
             }
 
             .footer-small-section-button-link {
@@ -95,9 +120,17 @@
                 border: 1px $primary solid;
                 background-color: $additional;
 
-                &:hover { 
-                    color: $additional;
-                    background-color: $primary; 
+                @media (hover: hover) {
+                    &:hover{
+                        color: $additional;
+                        background-color: $primary; 
+                    }
+                }
+                @media (hover: none) {
+                    &:active{
+                        color: $additional;
+                        background-color: $primary; 
+                    }
                 }
             }
         }

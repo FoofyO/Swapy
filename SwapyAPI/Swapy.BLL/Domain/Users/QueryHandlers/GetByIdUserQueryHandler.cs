@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Swapy.BLL.Domain.Users.Queries;
 using Swapy.Common.DTO.Users.Responses;
 using Swapy.Common.Entities;
+using Swapy.Common.Exceptions;
 
 namespace Swapy.BLL.Domain.Users.QueryHandlers
 {
@@ -16,6 +17,8 @@ namespace Swapy.BLL.Domain.Users.QueryHandlers
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
 
+            if (user == null) throw new NotFoundException($"UserId {request.UserId} not found");
+
             return new UserResponseDTO()
             {
                 Logo = user.Logo,
@@ -26,7 +29,8 @@ namespace Swapy.BLL.Domain.Users.QueryHandlers
                 PhoneNumber = user.PhoneNumber,
                 ProductsCount = user.ProductsCount,
                 RegistrationDate = user.RegistrationDate,
-                SubscriptionsCount = user.SubscriptionsCount
+                SubscriptionsCount = user.SubscriptionsCount,
+                Type = user.Type
             };
         }
     }

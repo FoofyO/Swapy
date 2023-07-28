@@ -32,10 +32,6 @@ namespace Swapy.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
-            catch (UnconfirmedEmailException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
         }
 
         [HttpGet]
@@ -55,7 +51,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("Subcategories/{CategoryId}")]
+        [HttpGet("Subcategories/Category/{CategoryId}")]
         [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -83,7 +79,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("Subcategories/{SubcategoryId}")]
+        [HttpGet("Subcategories/Subcategory/{SubcategoryId}")]
         [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -93,6 +89,34 @@ namespace Swapy.API.Controllers
             try
             {
                 var query = new GetAllSubcategoriesBySubcategoryQuery()
+                {
+                    SubcategoryId = dto.SubcategoryId,
+                    Language = (Language)HttpContext.Items["Language"]
+                };
+
+                var result = await _mediator.Send(query);
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpGet("Subcategories/Siblings/{SubcategoryId}")]
+        [Localize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetSiblingsAsync([FromRoute] GetSiblingsQueryDTO dto)
+        {
+            try
+            {
+                var query = new GetSiblingsQuery()
                 {
                     SubcategoryId = dto.SubcategoryId,
                     Language = (Language)HttpContext.Items["Language"]
