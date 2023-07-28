@@ -1,0 +1,72 @@
+<div class="wrapper" *ngIf="userDetail$ | async as userDetail">
+
+  <div class="user-banner">      
+    <h2 class="user-fullname"><span name="user-firstname">{{userDetail.firstName}}</span>&nbsp;<span name="user-lastname">{{userDetail.lastName}}</span></h2>
+  </div>
+
+  <img class="user-image" (error)="userImageLoadError($event)" [src]="userDetail.logo"/> 
+
+  <h2 class="user-collapsed-fullname"><span name="user-firstname">{{userDetail.firstName}}</span>&nbsp;<span name="user-lastname">{{userDetail.lastName}}</span></h2>
+
+  <div class="user-description">
+    <h2 class="user-description-fullname"><span name="user-firstname">{{userDetail.firstName}}</span>&nbsp;<span name="user-lastname">{{userDetail.lastName}}</span></h2>
+    <div class="buttons-container" *ngIf="!(isMe || isIShop)">
+      <button [class.active-button]="isSubscription" (click)="subscribe()">Subscribe</button>
+      <button [class.active-button]="isLike" (click)="like()">
+          <i class="fa-regular fa-thumbs-up inactive"></i>
+          <i class="fa-solid fa-thumbs-up active"></i>
+      </button>
+    </div>
+    <div class="buttons-container" *ngIf="isMe">
+      <button  class="active-button" (click)="transferToSettings()">Settings</button>
+    </div>
+  </div>
+  
+  <div class="user-information">
+      <div class="information" *ngIf="userDetail.registrationDate">
+          <i class="fa-regular fa-calendar"></i>
+          <p>{{userDetail.registrationDate | dateOnly}}</p>
+      </div>
+      <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="userDetail.phoneNumber">
+          <i class="fa-solid fa-phone"></i>
+          <p>{{userDetail.phoneNumber | phoneNumber}}</p>
+      </div>
+      <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="userDetail.email">
+          <i class="fa-solid fa-envelope"></i>
+          <p>{{userDetail.email}}</p>
+      </div>
+      <div class="line"></div>
+      <div class="status-information">
+          <div class="information">
+              <i class="fa-solid fa-users"></i>
+              <p>{{userDetail.subscriptionsCount | shortNumber}}</p>
+          </div>
+          <div class="information">
+              <i class="fa-solid fa-thumbs-up"></i>
+              <p>{{userDetail.likesCount | shortNumber}}</p>
+          </div>
+          <div class="information">
+              <i class="fa-solid fa-bag-shopping"></i>
+              <p>{{userDetail.productsCount | shortNumber}}</p>
+          </div>
+      </div>
+  </div>
+
+  <div class="product-section" *ngIf="userProducts">
+      <div class="product-section-table-of-contents">
+        <p>Products</p>
+        <select class="form-select select-filter" [(ngModel)]="selectedFilter" (ngModelChange)="onSelectFilterChange()">
+          <option class="option" value="1">Newest first</option>
+          <option class="option" value="2">Oldest first</option>
+          <option class="option" value="4">Price: High to Low</option>
+          <option class="option" value="3">Price: Low to High</option>
+        </select>
+      </div>
+      <div class="products-container">
+        <app-product-card *ngFor="let product of userProducts; trackBy: trackByProductId" [product]="product"></app-product-card>
+      </div>
+      <button class="button-load-more" *ngIf="currentPage < allPages" (click)="loadUserProducts()">Load more</button>
+  </div>
+    
+</div>
+

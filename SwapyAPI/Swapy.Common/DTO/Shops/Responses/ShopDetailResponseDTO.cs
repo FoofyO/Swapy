@@ -1,4 +1,6 @@
-﻿namespace Swapy.Common.DTO.Shops.Responses
+﻿using Swapy.Common.Enums;
+
+namespace Swapy.Common.DTO.Shops.Responses
 {
     public class ShopDetailResponseDTO
     {
@@ -20,5 +22,6 @@
         public TimeSpan? EndWorkTime { get; set; }
         public TimeSpan? StartWorkTime { get; set; }
         public DateTime RegistrationDate { get; set; }
+        public UserType Type { get; set;}
     }
 }

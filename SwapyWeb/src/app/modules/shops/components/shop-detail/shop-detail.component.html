@@ -1,0 +1,85 @@
+<div class="wrapper" *ngIf="shopDetail$ | async as shopDetail">
+
+    <div class="shop-banner" #shopBannerDiv>
+        <h2 class="shop-name">{{shopDetail.shopName}}</h2>
+        <div class="shop-views">
+            <i class="fa-solid fa-eye"></i>
+            <p>{{shopDetail.views}}</p>
+        </div>
+    </div>
+
+    <img class="shop-logo" (error)="shopLogoLoadError($event)" [src]="shopDetail.logo"/> 
+
+    <h2 class="shop-collapsed-name">{{shopDetail.shopName}}</h2>
+
+    <div class="shop-description">
+      <h2 class="shop-description-name">{{shopDetail.shopName}}</h2>
+        <p class="tagline" *ngIf="shopDetail.slogan">{{shopDetail.slogan}}</p>
+        <p class="description" *ngIf="shopDetail.description">{{shopDetail.description}}</p>
+        <div class="buttons-container" *ngIf="!(isMe || isIShop)">
+            <button [class.active-button]="isSubscription" (click)="subscribe()">Subscribe</button>
+            <button [class.active-button]="isLike" (click)="like()">
+                <i class="fa-regular fa-thumbs-up inactive"></i>
+                <i class="fa-solid fa-thumbs-up active"></i>
+            </button>
+        </div>
+        <div class="buttons-container" *ngIf="isMe">
+          <button  class="active-button" (click)="transferToSettings()">Settings</button>
+        </div>
+    </div>
+    
+    <div class="shop-information">
+        <div class="information" *ngIf="shopDetail.registrationDate">
+            <i class="fa-regular fa-calendar"></i>
+            <p>{{shopDetail.registrationDate | dateOnly}}</p>
+        </div>
+        <div class="information" *ngIf="shopDetail.startWorkTime && shopDetail.endWorkTime">
+            <i class="fa-solid fa-clock"></i>
+            <p>{{shopDetail.workDays}} {{shopDetail.startWorkTime}} - {{shopDetail.endWorkTime}}</p>
+        </div>
+        <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="shopDetail.phoneNumber">
+            <i class="fa-solid fa-phone"></i>
+            <p>{{shopDetail.phoneNumber | phoneNumber}}</p>
+        </div>
+        <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="shopDetail.email">
+            <i class="fa-solid fa-envelope"></i>
+            <p>{{shopDetail.email}}</p>
+        </div>
+        <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="shopDetail.location">
+            <i class="fa-solid fa-location-dot"></i>
+            <p>{{shopDetail.location}}</p>
+        </div>
+        <div class="line"></div>
+        <div class="status-information">
+            <div class="information">
+                <i class="fa-solid fa-users"></i>
+                <p>{{shopDetail.subscriptionsCount | shortNumber}}</p>
+            </div>
+            <div class="information">
+                <i class="fa-solid fa-thumbs-up"></i>
+                <p>{{shopDetail.likesCount | shortNumber}}</p>
+            </div>
+            <div class="information">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <p>{{shopDetail.productsCount | shortNumber}}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="product-section" *ngIf="shopProducts">
+        <div class="product-section-table-of-contents">
+          <p>Products</p>
+          <select class="form-select select-filter" [(ngModel)]="selectedFilter" (ngModelChange)="onSelectFilterChange()">
+            <option class="option" value="1">Newest first</option>
+            <option class="option" value="2">Oldest first</option>
+            <option class="option" value="4">Price: High to Low</option>
+            <option class="option" value="3">Price: Low to High</option>
+          </select>
+        </div>
+        <div class="products-container">
+          <app-product-card *ngFor="let product of shopProducts; trackBy: trackByProductId" [product]="product"></app-product-card>
+        </div>
+        <button class="button-load-more" *ngIf="currentPage < allPages" (click)="loadShopProducts()">Load more</button>
+    </div>
+      
+</div>

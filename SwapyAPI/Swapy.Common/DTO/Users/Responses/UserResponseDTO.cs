@@ -1,4 +1,6 @@
-﻿namespace Swapy.Common.DTO.Users.Responses
+﻿using Swapy.Common.Enums;
+
+namespace Swapy.Common.DTO.Users.Responses
 {
     public class UserResponseDTO
     {
@@ -11,5 +13,6 @@
         public int LikesCount { get; set; }
         public int ProductsCount { get; set; }
         public int SubscriptionsCount { get; set; }
+        public UserType Type { get; set; }
     }
 }

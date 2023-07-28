@@ -1,9 +1,9 @@
 <div *ngIf="!IsLoadingUI">
-    <app-header *ngIf="!IsShowUI"></app-header>
+    <app-header *ngIf="IsShowUI"></app-header>
     <main>
         <router-outlet class="router"></router-outlet>
     </main>
-    <app-footer *ngIf="!IsShowUI"></app-footer>
+    <app-footer *ngIf="IsShowUI"></app-footer>
 </div>
 
 <div *ngIf="IsLoadingUI" class="d-flex justify-content-center">

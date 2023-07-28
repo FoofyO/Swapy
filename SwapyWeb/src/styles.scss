@@ -20,10 +20,9 @@ input { outline:none; }
 
 
 //Window size
-html, body { height: 100vh; }
+html, body { min-height: 100dvh; }
 
 main { 
-    height: 100vh;
     padding-top: 5rem; 
-    min-height: 100vh;
+    min-height: 100dvh;
 }

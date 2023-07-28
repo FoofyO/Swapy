@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.DTO.Categories.Responses;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
@@ -45,11 +46,11 @@ namespace Swapy.DAL.Repositories
             return await _context.Categories.ToListAsync();
         }
 
-        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Language language)
+        public async Task<IEnumerable<CategoryTreeResponseDTO>> GetAllAsync(Language language)
         {
             return _context.Categories.Include(s => s.Names)
                                       .AsEnumerable()
-                                      .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
+                                      .Select(s => new CategoryTreeResponseDTO(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value, false, null, null))
                                       .OrderBy(s => s.Value)
                                       .ToList();
         }

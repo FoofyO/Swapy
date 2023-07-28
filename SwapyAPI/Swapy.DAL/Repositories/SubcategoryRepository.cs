@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Swapy.Common.DTO.Categories.Responses;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
+using System.Linq;
 
 namespace Swapy.DAL.Repositories
 {
@@ -65,97 +66,113 @@ namespace Swapy.DAL.Repositories
         /// </summary>
         public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAnimalTypesAsync(Language language)
         {
-            return _context.Subcategories.Where(s => s.Type == CategoryType.AnimalsType)
+            return (await _context.Subcategories.Where(s => s.Type == CategoryType.AnimalsType)
                                          .Include(s => s.Names)
-                                         .AsEnumerable()
                                          .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
-                                         .OrderBy(s => s.Value)
-                                         .ToList();
+                                         .ToListAsync())
+                                         .OrderBy(s => s.Value);
         }
 
         public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAutoTypesAsync(Language language)
         {
-            return _context.Subcategories.Where(s => s.Type == CategoryType.AutosType)
+            return (await _context.Subcategories.Where(s => s.Type == CategoryType.AutosType)
                                          .Include(s => s.Names)
-                                         .AsEnumerable()
                                          .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
-                                         .OrderBy(s => s.Value)
-                                         .ToList();
+                                         .ToListAsync())
+                                         .OrderBy(s => s.Value);
         }
 
         public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllElectronicTypesAsync(Language language)
         {
-            return _context.Subcategories.Where(s => s.Type == CategoryType.ElectronicsType)
+            return (await _context.Subcategories.Where(s => s.Type == CategoryType.ElectronicsType)
                                          .Include(s => s.Names)
-                                         .AsEnumerable()
                                          .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
-                                         .OrderBy(s => s.Value)
-                                         .ToList();
+                                         .ToListAsync())
+                                         .OrderBy(s => s.Value);
         }
 
         public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllItemSectionsAsync(Language language)
         {
-            return _context.Subcategories.Include(s => s.ChildSubcategories)
+            return (await _context.Subcategories.Include(s => s.ChildSubcategories)
                                          .Where(s => s.Type == CategoryType.ItemsType && s.ChildSubcategories.Count != 0)
                                          .Include(s => s.Names)
-                                         .AsEnumerable()
                                          .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
-                                         .OrderBy(s => s.Value)
-                                         .ToList();
+                                         .ToListAsync())
+                                         .OrderBy(s => s.Value);
         }
 
         public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllItemTypesAsync(string parentSubcategoryId, Language language)
         {
-            return await _context.Subcategories.Where(s => s.Type == CategoryType.ItemsType && s.ParentSubcategoryId.Equals(parentSubcategoryId))
+            return (await _context.Subcategories.Where(s => s.Type == CategoryType.ItemsType && s.ParentSubcategoryId.Equals(parentSubcategoryId))
                                                .Include(s => s.Names)
                                                .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
-                                               .OrderBy(s => s.Value)
-                                               .ToListAsync();
+                                               .ToListAsync())
+                                               .OrderBy(s => s.Value);
         }
 
         public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllRealEstateTypesAsync(Language language)
         {
-            return await _context.Subcategories.Where(s => s.Type == CategoryType.RealEstatesType)
+            return (await _context.Subcategories.Where(s => s.Type == CategoryType.RealEstatesType)
                                                .Include(s => s.Names)
                                                .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
-                                               .OrderBy(s => s.Value)
-                                               .ToListAsync();
+                                               .ToListAsync())
+                                               .OrderBy(s => s.Value);
         }
 
-        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetByCategoryAsync(string categoryId, Language language)
+        public async Task<IEnumerable<CategoryTreeResponseDTO>> GetByCategoryAsync(string categoryId, Language language)
         {
             var item = await _context.Subcategories.Where(s => s.CategoryId.Equals(categoryId) && s.ParentSubcategoryId == null)
                                                    .Include(s => s.Names)
-                                                   .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
-                                                   .OrderBy(s => s.Value)
+                                                   .Include(s => s.Category)
+                                                   .Include(s => s.ChildSubcategories)
+                                                   .Select(s => new CategoryTreeResponseDTO(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value, s.ChildSubcategories.Count <= 0, s.CategoryId, s.Category.Names.FirstOrDefault(l => l.Language == language).Value))                                                   
                                                    .ToListAsync();
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {categoryId} id not found");
-            return item;
+            return item.OrderBy(s => s.Value);
         }
 
-        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetBySubcategoryAsync(string subcategoryId, Language language)
+        public async Task<IEnumerable<CategoryTreeResponseDTO>> GetBySubcategoryAsync(string subcategoryId, Language language)
         {
-            var item = _context.Subcategories.Where(s => s.ParentSubcategoryId.Equals(subcategoryId))
+            var item = (await _context.Subcategories.Where(s => s.ParentSubcategoryId.Equals(subcategoryId))
                                              .Include(s => s.Names)
-                                             .AsEnumerable()
-                                             .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
-                                             .OrderBy(s => s.Value)
-                                             .ToList();
+                                             .Include(s => s.ParentSubcategory)
+                                                .ThenInclude(b => b.Parent)
+                                             .Include(s => s.ChildSubcategories)                                                                                                                                                                                
+                                             .Select(s => new CategoryTreeResponseDTO(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value, s.ChildSubcategories.Count <= 0,  s.ParentSubcategoryId, s.ParentSubcategory.Parent.Names.FirstOrDefault(l => l.Language == language).Value)) 
+                                             .ToListAsync())
+                                             .OrderBy(s => s.Value);
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {subcategoryId} id not found");
             return item;
         }
 
+        public async Task<IEnumerable<CategoryTreeResponseDTO>> GetSiblingsQuery(string subcategoryId, Language language)
+        {
+            var currentSubcategory = await GetByIdAsync(subcategoryId);
+
+            if (currentSubcategory.ParentSubcategoryId == null) 
+            {
+                return _context.Categories.Include(s => s.Names)
+                                          .AsEnumerable()
+                                          .Select(s => new CategoryTreeResponseDTO(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value, false, null, null))
+                                          .OrderBy(s => s.Value)
+                                          .ToList();
+            }
+            else
+            {
+                return await GetBySubcategoryAsync(currentSubcategory.ParentSubcategoryId, language);
+            }
+        }
+
         public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetClothesTypesByGenderAsync(string genderId, Language language)
         {
-            return _context.Subcategories.Include(s => s.ClothesViews)
+            return (await _context.Subcategories.Include(s => s.ClothesViews)
                                          .Where(s => (s.Type == CategoryType.ClothesType) && (s.ClothesViews.Select(cv => cv.GenderId).Contains(genderId)))
                                          .Include(s => s.Names)
-                                         .AsEnumerable()
                                          .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
-                                         .OrderBy(s => s.Value)
-                                         .ToList();
+                                         .ToListAsync())
+                                         .OrderBy(s => s.Value);
         }
         
         public async Task<IEnumerable<CategoryNode>> GetSequenceOfSubcategories(string subcategoryId, Language language)
@@ -170,7 +187,7 @@ namespace Swapy.DAL.Repositories
             do
             {
                 result.Insert(0, currentSubcategory);
-                currentSubcategory = await _context.Subcategories.Where(s => s.Id.Equals(currentSubcategory.ParentSubcategoryId))
+                currentSubcategory = await _context.Subcategories.Where(s => s.ParentSubcategoryId.Equals(currentSubcategory.ParentSubcategoryId))
                                                                  .Include(s => s.Names)
                                                                  .FirstOrDefaultAsync();
             } while (currentSubcategory != null);
