@@ -5,14 +5,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './components/login/login.component';
-import { ShopRegisterComponent } from './components/shop-register/shop-register.component';
-import { UserRegisterComponent } from './components/user-register/user-register.component';
+import { UserRegistrationComponent } from './components/user-registration/user-registration.component';
+import { ShopRegistrationComponent } from './components/shop-registration/shop-registration.component';
+import { EmailVerifyComponent } from './components/email-verify/email-verify.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
-    ShopRegisterComponent,
-    UserRegisterComponent
+    ShopRegistrationComponent,
+    UserRegistrationComponent,
+    EmailVerifyComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent
   ],
   imports: [
     FormsModule,

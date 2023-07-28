@@ -1,5 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 //General styles
+@import "/src/colors.scss";
+
 * {
     margin: 0;
     box-sizing: border-box;
@@ -12,17 +14,59 @@ input { outline:none; }
 //Scroll bar
 ::-webkit-scrollbar { width: 0.7rem; }
 
-::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-track { background: $scroll-white; }
 
-::-webkit-scrollbar-thumb { background: #888; }
+::-webkit-scrollbar-thumb { background: $scroll-gray; }
 
-::-webkit-scrollbar-thumb:hover { background: #555; }
+::-webkit-scrollbar-thumb:hover { background: $scroll-black; }
 
 
 //Window size
-html, body { min-height: 100dvh; }
+html, body { min-height: 100vh; }
 
 main { 
-    padding-top: 5rem; 
-    min-height: 100dvh;
+    padding-top: 5rem;
+    min-height: 100vh;
+}
+
+app-login {
+    display: block;
+    padding-bottom: 5rem;
+    height: calc(100vh - 5rem);
+}
+
+app-shop-registration {
+    height: 100vh;
+    display: block;
+    padding-bottom: 5rem;
+}
+
+app-user-registration {
+    height: 100dvh;
+    display: block;
+    padding-bottom: 5rem;
+}
+
+app-email-verify {
+    display: block;
+    padding-bottom: 5rem;
+    height: calc(100vh - 5rem);
+}
+
+app-forgot-password {
+    display: block;
+    padding-bottom: 5rem;
+    height: calc(100vh - 5rem);
+}
+
+app-reset-password {
+    display: block;
+    padding-bottom: 5rem;
+    height: calc(100vh - 5rem);
+}
+
+app-error {
+    display: block;
+    padding-bottom: 5rem;
+    height: calc(100vh - 5rem);
 }

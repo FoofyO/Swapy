@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Swapy.Common.DTO.Auth.Responses;
 
 namespace Swapy.BLL.Domain.Auth.Commands
 {

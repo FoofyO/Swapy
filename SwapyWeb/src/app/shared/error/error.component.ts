@@ -6,7 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./error.component.scss']
 })
 export class ErrorComponent {
-  showFooter: boolean = false;
-
+  
   constructor() { }
 }

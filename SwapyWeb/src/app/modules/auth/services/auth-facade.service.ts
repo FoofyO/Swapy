@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthApiService } from './auth-api.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
-// import { EmailVerifyCredential, LoginCredential, ResetPasswordCredential, ShopRegistrationCredential, UserRegistrationCredential } from '../models/auth-credentials';
+import { EmailVerifyCredential, LoginCredential, ResetPasswordCredential, ShopRegistrationCredential, UserRegistrationCredential } from '../models/auth-credentials';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { UserType } from 'src/app/core/enums/user-type.enum';
 
@@ -12,74 +12,74 @@ export class AuthFacadeService {
 
   constructor(private authApi: AuthApiService, private localStorage: LocalStorageService, private sessionStorage: SessionStorageService) { }
 
-  // async login(credential: LoginCredential): Promise<void> {
-  //   try {
-  //     const result = await this.authApi.login(credential).toPromise();
-  //     if(result) {
-  //       if (this.localStorage.rememberMe) {
-  //         if (this.localStorage.rememberMe === 'true') {
-  //           this.localStorage.userId = result.userId;
-  //           this.localStorage.userType = result.type.toString();
-  //           this.localStorage.accessToken = result.accessToken;
-  //         } else {
-  //           this.sessionStorage.userId = result.userId;
-  //           this.sessionStorage.userType = result.type.toString();
-  //           this.sessionStorage.accessToken = result.accessToken;
-  //         }
-  //       }
-  //     }
-  //   } catch(error) { throw error; }
-  // }
+  async login(credential: LoginCredential): Promise<void> {
+    try {
+      const result = await this.authApi.login(credential).toPromise();
+      if(result) {
+        if (this.localStorage.rememberMe) {
+          if (this.localStorage.rememberMe === 'true') {
+            this.localStorage.userId = result.userId;
+            this.localStorage.userType = result.type.toString();
+            this.localStorage.accessToken = result.accessToken;
+          } else {
+            this.sessionStorage.userId = result.userId;
+            this.sessionStorage.userType = result.type.toString();
+            this.sessionStorage.accessToken = result.accessToken;
+          }
+        }
+      }
+    } catch(error) { throw error; }
+  }
   
-  // async userRegistration(credential: UserRegistrationCredential): Promise<void> {
-  //   await this.authApi.userRegistration(credential).toPromise();
-  // }
+  async userRegistration(credential: UserRegistrationCredential): Promise<void> {
+    await this.authApi.userRegistration(credential).toPromise();
+  }
 
-  // async shopRegistration(credential: ShopRegistrationCredential): Promise<void> {
-  //   await this.authApi.shopRegistration(credential).toPromise();
-  // }
+  async shopRegistration(credential: ShopRegistrationCredential): Promise<void> {
+    await this.authApi.shopRegistration(credential).toPromise();
+  }
 
-  // async checkEmailAvailability(email: string): Promise<boolean> {
-  //   try {
-  //     const result = await this.authApi.checkEmailAvailability(email).toPromise()
-  //     if(result) return result;
-  //     return false;
-  //   } catch (error) { throw error }
-  // }
+  async checkEmailAvailability(email: string): Promise<boolean> {
+    try {
+      const result = await this.authApi.checkEmailAvailability(email).toPromise()
+      if(result) return result;
+      return false;
+    } catch (error) { throw error }
+  }
 
-  // async checkPhoneNumberAvailability(phoneNumber: string): Promise<boolean> {
-  //   try {
-  //     const result = await this.authApi.checkPhoneNumberAvailability(phoneNumber).toPromise()
-  //     if(result) return result;
-  //     return false;
-  //   } catch (error) { throw error }
-  // }
+  async checkPhoneNumberAvailability(phoneNumber: string): Promise<boolean> {
+    try {
+      const result = await this.authApi.checkPhoneNumberAvailability(phoneNumber).toPromise()
+      if(result) return result;
+      return false;
+    } catch (error) { throw error }
+  }
 
-  // async checkShopNameAvailability(shopName: string): Promise<boolean> {
-  //   try {
-  //     const result = await this.authApi.checkShopNameAvailability(shopName).toPromise()
-  //     if(result) return result;
-  //     return false;
-  //   } catch (error) { throw error }
-  // }
+  async checkShopNameAvailability(shopName: string): Promise<boolean> {
+    try {
+      const result = await this.authApi.checkShopNameAvailability(shopName).toPromise()
+      if(result) return result;
+      return false;
+    } catch (error) { throw error }
+  }
 
-  // async forgotPassword(email: string) : Promise<void> {
-  //   try {
-  //     await this.authApi.forgotPassword(email).toPromise()
-  //   } catch (error) { throw error }
-  // }
+  async forgotPassword(email: string) : Promise<void> {
+    try {
+      await this.authApi.forgotPassword(email).toPromise()
+    } catch (error) { throw error }
+  }
 
-  // async resetPassword(credential: ResetPasswordCredential) : Promise<void> {
-  //   try {
-  //     await this.authApi.resetPassword(credential).toPromise()
-  //   } catch (error) { throw error; }
-  // }
+  async resetPassword(credential: ResetPasswordCredential) : Promise<void> {
+    try {
+      await this.authApi.resetPassword(credential).toPromise()
+    } catch (error) { throw error; }
+  }
 
-  // async emailVerify(credential: EmailVerifyCredential) : Promise<void> {
-  //   try {
-  //     await this.authApi.emailVerify(credential).toPromise()
-  //   } catch (error) { throw error; }
-  // }
+  async emailVerify(credential: EmailVerifyCredential) : Promise<void> {
+    try {
+      await this.authApi.emailVerify(credential).toPromise()
+    } catch (error) { throw error; }
+  }
 
   isAuthenticated(): boolean {
     if(this.localStorage.rememberMe) {

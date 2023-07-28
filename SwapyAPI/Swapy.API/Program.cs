@@ -73,6 +73,7 @@ using Swapy.BLL.Domain.TVs.QueryHandlers;
 using Swapy.BLL.Domain.Electronics.QueryHandlers;
 using FluentValidation.AspNetCore;
 using Swapy.API.Extensions;
+using Swapy.Common.DTO.Categories.Responses;
 using Microsoft.Extensions.Options;
 using Swapy.Common.DTO.Categories.Responses;
 
@@ -288,7 +289,7 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<RemoveUserCommand, Unit>, RemoveUserCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<ResetPasswordCommand, Unit>, ResetPasswordCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<SendMessageCommand, Message>, SendMessageCommandHandler>();
-            builder.Services.AddTransient<IRequestHandler<ShopRegistrationCommand, AuthResponseDTO>, ShopRegistrationCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<ShopRegistrationCommand, Unit>, ShopRegistrationCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<SwitchProductEnablingCommand, Unit>, SwitchProductEnablingCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<SendMessageToRemoveCommand, Unit>, SendMessageToRemoveCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<ToggleSubscriptionStatusCommand, Unit>, ToggleSubscriptionStatusCommandHandler>();
@@ -305,8 +306,7 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<UploadBannerCommand, Unit>, UploadBannerCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UploadImageCommand, Unit>, UploadImageCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UploadLogoCommand, Unit>, UploadLogoCommandHandler>();
-            builder.Services.AddTransient<IRequestHandler<UserRegistrationCommand, AuthResponseDTO>, UserRegistrationCommandHandler>();
-
+            builder.Services.AddTransient<IRequestHandler<UserRegistrationCommand, Unit>, UserRegistrationCommandHandler>();
 
             /// <summary>
             /// Claims Principal Registration

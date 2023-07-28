@@ -13,7 +13,7 @@ export class AuthComponent {
 
   constructor(public authFacade: AuthFacadeService, public router: Router, private renderer: Renderer2, private headerService: HeaderService,private categoryTreeService: CategoryTreeService) { }
 
-  onLogout() {
+  onLogout(): void {
     this.authFacade.logout();
     this.router.navigate(['/']);
   }

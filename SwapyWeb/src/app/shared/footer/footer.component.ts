@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class FooterComponent {
   constructor() { }
 
-  copyToClipboard(text: string) {
+  copyToClipboard(text: string): void {
     if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
       const el = document.createElement('textarea');
       el.value = text;
@@ -28,7 +28,7 @@ export class FooterComponent {
     }
   }
 
-  onFooterTextClick(event: Event) {
+  onFooterTextClick(event: Event): void {
     const target = event.target as HTMLElement;
     const text = target.innerText;
     this.copyToClipboard(text);

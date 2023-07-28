@@ -8,21 +8,18 @@ import { NavigationEnd, Router } from '@angular/router';
 })
 export class AppComponent {
   title: string = 'SwapyWeb';
-  IsLoadingUI: boolean = false;
-  IsShowUI: boolean = false;
+  IsShowUI: boolean = true;
 
   constructor(private router: Router) {
     this.router.events.subscribe(event => this.onShowUI(event));
   }
 
   onShowUI(location: any): void {
-    this.IsLoadingUI = true;
     if (location instanceof NavigationEnd) {
       if (location.url === '/') this.IsShowUI = true;
       else if (location.url.includes('/shops')) this.IsShowUI = true;
       else if (location.url.includes('/users')) this.IsShowUI = true;
       else this.IsShowUI = false;
     }
-    this.IsLoadingUI = false;
   }
 }

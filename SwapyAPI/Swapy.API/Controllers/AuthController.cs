@@ -6,7 +6,6 @@ using Swapy.API.Validators;
 using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Auth.Requests;
-using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
 using System.Security.Authentication;
 using System.Security.Claims;
@@ -332,6 +331,7 @@ namespace Swapy.API.Controllers
 
         [HttpPatch("ConfirmEmail")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ConfirmEmailAsync(ConfirmEmailDTO dto)
@@ -364,6 +364,10 @@ namespace Swapy.API.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (TokenExpiredException ex)
             {
