@@ -20,12 +20,12 @@ namespace Swapy.API.Validators
 
             RuleFor(shop => shop.Description)
             .MaximumLength(512)
-                .WithMessage("Description field exceeds maximum length of 64 characters")
+                .WithMessage("Description field exceeds maximum length of 512 characters")
             .WithErrorCode("InvalidDescriptionFormat");
 
             RuleFor(shop => shop.Location)
             .MaximumLength(256)
-                .WithMessage("Location field exceeds maximum length of 64 characters")
+                .WithMessage("Location field exceeds maximum length of 256 characters")
             .WithErrorCode("InvalidLocationFormat");
 
             RuleFor(shop => shop.Slogan)

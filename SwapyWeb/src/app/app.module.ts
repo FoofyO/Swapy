@@ -9,6 +9,7 @@ import { CoreModule } from './core/core.module';
 import { InterceptorService } from './core/services/interceptor.service';
 import { SharedModule } from './shared/shared.module';
 import { PaginationComponent } from './shared/pagination/pagination.component';
+import { ChatsModule } from './modules/chats/chats.module';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { PaginationComponent } from './shared/pagination/pagination.component';
   imports: [
     AppRoutingModule,
     BrowserModule,
+    ChatsModule,
     CoreModule,
     FormsModule,
     HttpClientModule,

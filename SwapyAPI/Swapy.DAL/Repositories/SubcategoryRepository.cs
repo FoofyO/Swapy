@@ -187,7 +187,7 @@ namespace Swapy.DAL.Repositories
             do
             {
                 result.Insert(0, currentSubcategory);
-                currentSubcategory = await _context.Subcategories.Where(s => s.ParentSubcategoryId.Equals(currentSubcategory.ParentSubcategoryId))
+                currentSubcategory = await _context.Subcategories.Where(s => s.ParentSubcategoryId.Equals(currentSubcategory.Id))
                                                                  .Include(s => s.Names)
                                                                  .FirstOrDefaultAsync();
             } while (currentSubcategory != null);

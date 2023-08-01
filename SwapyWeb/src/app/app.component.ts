@@ -17,6 +17,7 @@ export class AppComponent {
   onShowUI(location: any): void {
     if (location instanceof NavigationEnd) {
       if (location.url === '/') this.IsShowUI = true;
+      else if (location.url.includes('/chats')) this.IsShowUI = true;
       else if (location.url.includes('/shops')) this.IsShowUI = true;
       else if (location.url.includes('/users')) this.IsShowUI = true;
       else this.IsShowUI = false;

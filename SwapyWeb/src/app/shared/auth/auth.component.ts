@@ -40,6 +40,7 @@ export class AuthComponent {
   }
 
   transferToChats(): void{
-    this.router.navigate([this.authFacade.isAuthenticated() ? '/chats' : '/auth/login']);
+    //this.router.navigate([this.authFacade.isAuthenticated() ? '/chats' : '/auth/login']);
+    this.router.navigate(['/chats']);
   }
 }

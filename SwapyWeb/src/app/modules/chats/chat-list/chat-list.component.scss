@@ -1,0 +1,101 @@
+@import "/src/colors.scss";
+
+.chat-list-container {
+    display: grid;
+    grid-gap: 0.8rem;    
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr 1fr;
+
+    .chat-list-button {
+        border: 0;
+        height: 2.7rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: $primary;
+        font-size: 1.4rem;
+        font-weight: 500;
+        align-items: center;
+        margin-right: 0.5rem;
+        border-radius: 2rem;
+        text-decoration: none;
+        padding: 0.9rem 0.9rem;
+        transition: all 0.3s ease;
+        background-color: $additional;
+        
+        @media (hover: hover) {
+            &:hover{
+                color: $additional;
+                background: $primary; 
+            }
+        }
+        @media (hover: none) {
+            &:active{
+                color: $additional;
+                background: $primary; 
+            }
+        }
+
+        .active{
+            display: none;
+        }
+
+        .inactive{
+            display: block;
+        }
+    }
+
+    .active-button{
+        color: $primary !important;
+        background: $secondary !important; 
+
+        @media (hover: hover) {
+            &:hover{
+            color: $primary !important;
+            background-color: $additional !important;
+            }
+        }
+        @media (hover: none) {
+            &:active{
+            color: $primary !important;
+            background-color: $additional !important;
+            }
+        }
+
+        .active{
+            display: block !important;
+        }
+
+        .inactive{
+            display: none !important;
+        }
+    }
+
+    .chat-list-chats-container {
+        grid-column: span 2;
+        border-radius: 0.6rem;
+        border: 0.12rem $black solid;
+
+        .chat-list-chats {
+            margin: 1rem;
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            grid-template-columns: auto 1fr auto;
+
+            .chat-image {
+                width: 5rem;
+                height: 5rem;
+                border-radius: 100%;
+                z-index: 2;
+                grid-row: span 2;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                object-fit: cover;
+                user-select: none;
+                -webkit-user-drag: none; /* Safari */
+                -khtml-user-drag: none; /* Konqueror HTML */
+                -moz-user-drag: none; /* Firefox */
+                -o-user-drag: none; /* Opera */
+            }
+        }
+    }
+}
