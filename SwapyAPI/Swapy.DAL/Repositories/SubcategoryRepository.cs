@@ -125,7 +125,7 @@ namespace Swapy.DAL.Repositories
                                                    .Include(s => s.Names)
                                                    .Include(s => s.Category)
                                                    .Include(s => s.ChildSubcategories)
-                                                   .Select(s => new CategoryTreeResponseDTO(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value, s.ChildSubcategories.Count <= 0, s.CategoryId, s.Category.Names.FirstOrDefault(l => l.Language == language).Value))                                                   
+                                                   .Select(s => new CategoryTreeResponseDTO(s.Id, s.Type, s.Names.FirstOrDefault(l => l.Language == language).Value, s.ChildSubcategories.Count <= 0, s.CategoryId, s.Category.Names.FirstOrDefault(l => l.Language == language).Value))                                                   
                                                    .ToListAsync();
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {categoryId} id not found");
@@ -139,7 +139,7 @@ namespace Swapy.DAL.Repositories
                                              .Include(s => s.ParentSubcategory)
                                                 .ThenInclude(b => b.Parent)
                                              .Include(s => s.ChildSubcategories)                                                                                                                                                                                
-                                             .Select(s => new CategoryTreeResponseDTO(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value, s.ChildSubcategories.Count <= 0,  s.ParentSubcategoryId, s.ParentSubcategory.Parent.Names.FirstOrDefault(l => l.Language == language).Value)) 
+                                             .Select(s => new CategoryTreeResponseDTO(s.Id, s.Type, s.Names.FirstOrDefault(l => l.Language == language).Value, s.ChildSubcategories.Count <= 0,  s.ParentSubcategoryId, s.ParentSubcategory.Parent.Names.FirstOrDefault(l => l.Language == language).Value)) 
                                              .ToListAsync())
                                              .OrderBy(s => s.Value);
 
@@ -155,7 +155,7 @@ namespace Swapy.DAL.Repositories
             {
                 return _context.Categories.Include(s => s.Names)
                                           .AsEnumerable()
-                                          .Select(s => new CategoryTreeResponseDTO(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value, false, null, null))
+                                          .Select(s => new CategoryTreeResponseDTO(s.Id, s.Type, s.Names.FirstOrDefault(l => l.Language == language).Value, false, null, null))
                                           .OrderBy(s => s.Value)
                                           .ToList();
             }

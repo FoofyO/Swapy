@@ -191,7 +191,15 @@ namespace Swapy.API.Controllers
                 var result = await _mediator.Send(command);
                 return Ok(result);
             }
-            catch (Exception ex) when (ex is UnauthorizedAccessException || ex is TokenExpiredException)
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (TokenExpiredException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
             {
                 return Unauthorized(ex.Message);
             }

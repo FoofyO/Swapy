@@ -7,6 +7,7 @@ import { Product } from 'src/app/modules/products/models/product.model';
 import { Specification } from 'src/app/core/models/specification';
 import { Shop } from '../../shops/models/shop.model';
 import { CategoryNode } from 'src/app/core/models/category-node.interface';
+import { AxiosInterceptorService } from 'src/app/core/services/axios-interceptor.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,10 @@ export class SharedApiService {
     private readonly categoriesApiUrl : string = environment.categoriesApiUrl; 
     private readonly shopsApiUrl : string =environment.shopsApiUrl;
 
+    constructor(private axiosInterceptorService: AxiosInterceptorService) {
+
+    }
+ 
     getCategories(): Observable<CategoryNode[]> {
         return from(axios.get(`${this.categoriesApiUrl}`)).pipe(
           map((response: AxiosResponse<any>) => {
@@ -66,7 +71,7 @@ export class SharedApiService {
 
     getShops(page: number, pageSize: number, sortByViews : boolean, reverseSort : boolean): Observable<PageResponse<Shop>> {
       return from(
-        axios.get(`${this.shopsApiUrl}?Page=${page}&PageSize=${pageSize}&SortByViews=true&ReverseSort=true`)
+        this.axiosInterceptorService.get<any>(`${this.shopsApiUrl}?Page=${page}&PageSize=${pageSize}&SortByViews=true&ReverseSort=true`)
       ).pipe(
         map(response => ({
           items: response.data.items.$values,

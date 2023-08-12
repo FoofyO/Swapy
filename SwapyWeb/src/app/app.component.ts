@@ -8,7 +8,8 @@ import { NavigationEnd, Router } from '@angular/router';
 })
 export class AppComponent {
   title: string = 'SwapyWeb';
-  IsShowUI: boolean = true;
+  IsShowHeader: boolean = true;
+  IsShowFooter: boolean = true;
 
   constructor(private router: Router) {
     this.router.events.subscribe(event => this.onShowUI(event));
@@ -16,11 +17,24 @@ export class AppComponent {
 
   onShowUI(location: any): void {
     if (location instanceof NavigationEnd) {
-      if (location.url === '/') this.IsShowUI = true;
-      else if (location.url.includes('/chats')) this.IsShowUI = true;
-      else if (location.url.includes('/shops')) this.IsShowUI = true;
-      else if (location.url.includes('/users')) this.IsShowUI = true;
-      else this.IsShowUI = false;
+      if (location.url === '/') this.isShowUI(true);
+      else if (location.url.includes('/chats')) this.isShowUI(true);
+      else if (location.url.includes('/settings')) this.showUIWithOutFooter();
+      else if (location.url.includes('/shops')) this.isShowUI(true);
+      else if (location.url.includes('/users')) this.isShowUI(true);
+      else this.isShowUI(false);
     }
+  }
+
+  isShowUI(value: boolean): void { this.IsShowHeader = this.IsShowFooter = value; }
+
+  showUIWithOutFooter(): void {
+    this.IsShowHeader = true;
+    this.IsShowFooter = false;
+  }
+
+  showUIWithOutHeader(): void {
+    this.IsShowFooter = true;
+    this.IsShowHeader = false;
   }
 }

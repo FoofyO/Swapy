@@ -13,6 +13,10 @@ namespace Swapy.DAL.Configurations
 
             builder.Property(s => s.Id).IsRequired();
 
+            builder.Property(s => s.Type)
+                   .HasColumnType("INT")
+                   .IsRequired();
+
             builder.HasOne(s => s.ParentSubcategory)
                    .WithOne(s => s.Parent)
                    .HasForeignKey<SubcategoryBranch>(s => s.ParentId)
