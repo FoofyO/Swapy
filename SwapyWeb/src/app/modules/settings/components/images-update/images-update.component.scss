@@ -1,0 +1,14 @@
+@import "/src/colors.scss";
+
+$width: 100%;
+$trans-time: 300ms; 
+
+.images-update-container {
+    padding: 1rem;
+    display: flex;
+    user-select: none;
+    align-items: center;
+    border-radius: 1rem;
+    justify-content: center;
+    background-color: $additional;
+}

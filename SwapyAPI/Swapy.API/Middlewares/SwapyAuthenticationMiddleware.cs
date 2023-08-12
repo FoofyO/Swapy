@@ -21,19 +21,30 @@ namespace Swapy.API.Middlewares
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            if (!Request.Headers.ContainsKey("Authorization")) return AuthenticateResult.NoResult();
+            try
+            {
+                if (!Request.Headers.ContainsKey("Authorization")) return AuthenticateResult.NoResult();
 
-            string authorizationHeader = Request.Headers["Authorization"];
+                string authorizationHeader = Request.Headers["Authorization"];
+                if (string.IsNullOrEmpty(authorizationHeader)) return AuthenticateResult.NoResult();
 
-            if (string.IsNullOrEmpty(authorizationHeader)) return AuthenticateResult.NoResult();
+                if (!authorizationHeader.StartsWith("Bearer", StringComparison.OrdinalIgnoreCase)) throw new UnauthorizedAccessException("Unauthorized");
 
-            if (!authorizationHeader.StartsWith("Bearer", StringComparison.OrdinalIgnoreCase)) throw new UnauthorizedAccessException("Unauthorized");
+                string token = authorizationHeader.Substring("Bearer".Length).Trim();
 
-            string token = authorizationHeader.Substring("Bearer".Length).Trim();
+                Console.WriteLine("Token: " + token);
+                if (string.IsNullOrEmpty(token)) throw new UnauthorizedAccessException("Unauthorized");
 
-            if (string.IsNullOrEmpty(token)) throw new UnauthorizedAccessException("Unauthorized");
-
-            return await ValidateToken(token);
+                return await ValidateToken(token);
+            }
+            catch(UnauthorizedAccessException ex)
+            {
+                return AuthenticateResult.Fail(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
+            {
+                return AuthenticateResult.Fail(ex.Message);
+            }
         }
 
         private async Task<AuthenticateResult> ValidateToken(string accessToken)
@@ -41,6 +52,7 @@ namespace Swapy.API.Middlewares
             var expirationTime = new JwtSecurityToken(accessToken).ValidTo;
 
             var IsIgnore = Context.GetEndpoint()?.Metadata?.GetMetadata<AuthorizeIgnoreAttribute>() != null;
+            Console.WriteLine("IsIgnore: " + IsIgnore);
 
             if (!IsIgnore && expirationTime < DateTime.UtcNow) throw new UnauthorizedAccessException("Access token expired");
 

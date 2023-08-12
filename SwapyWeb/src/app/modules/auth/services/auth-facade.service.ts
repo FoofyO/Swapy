@@ -81,6 +81,25 @@ export class AuthFacadeService {
     } catch (error) { throw error; }
   }
 
+  async logout(): Promise<void> {
+    try {
+      await this.authApi.logout().toPromise();
+      
+      if(this.localStorage.rememberMe) {
+        if(this.localStorage.rememberMe === 'true') {
+          this.localStorage.removeToken();
+          this.localStorage.removeUserId();
+          this.localStorage.removeUserType();
+        } else {
+          this.sessionStorage.removeToken();
+          this.sessionStorage.removeUserId();
+          this.sessionStorage.removeUserType();
+        }
+        this.localStorage.removeRememberMe();
+      }
+    } catch(error) { console.log(error); }
+  }
+
   isAuthenticated(): boolean {
     if(this.localStorage.rememberMe) {
       if(this.localStorage.rememberMe === 'true') {
@@ -128,21 +147,6 @@ export class AuthFacadeService {
   }
 
   setRememberMe(value: string): void { this.localStorage.rememberMe = value; }
-
-  logout(): void {
-    if(this.localStorage.rememberMe) {
-      if(this.localStorage.rememberMe === 'true') {
-        this.localStorage.removeToken();
-        this.localStorage.removeUserId();
-        this.localStorage.removeUserType();
-      } else {
-        this.sessionStorage.removeToken();
-        this.sessionStorage.removeUserId();
-        this.sessionStorage.removeUserType();
-      }
-      this.localStorage.removeRememberMe();
-    }
-  }
 }
 
 function convertToNumber(value: string): number | null { 

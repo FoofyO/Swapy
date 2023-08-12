@@ -9,12 +9,12 @@ import { UserRegistrationComponent } from './components/user-registration/user-r
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
+  {path: 'forgot-password', component: ForgotPasswordComponent },
   {path: 'login', component: LoginComponent }, //canActivate: [DeauthGuard]},
-  {path: 'registration/user', component: UserRegistrationComponent }, //canActivate: [DeauthGuard]},
   {path: 'registration/shop', component: ShopRegistrationComponent }, //canActivate: [DeauthGuard]},
-  {path: 'verify-email', component: EmailVerifyComponent },
+  {path: 'registration/user', component: UserRegistrationComponent }, //canActivate: [DeauthGuard]},
   {path: 'reset-password', component: ResetPasswordComponent },
-  {path: 'forgot-password', component: ForgotPasswordComponent }
+  {path: 'verify-email', component: EmailVerifyComponent }
 ];
 
 @NgModule({

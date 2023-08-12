@@ -127,7 +127,7 @@ namespace Swapy.API
             /// </summary>
             builder.Services.AddDbContext<SwapyDbContext>(option =>
             {
-                option.UseSqlServer(builder.Configuration.GetConnectionString("AzureSQL"));
+                option.UseSqlServer(builder.Configuration.GetConnectionString("SamedSQL"));
             });
 
 
