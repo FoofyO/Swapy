@@ -6,7 +6,6 @@ using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
-using System.Linq;
 
 namespace Swapy.DAL.Repositories
 {
@@ -47,9 +46,7 @@ namespace Swapy.DAL.Repositories
         public async Task<Subcategory> GetDetailByIdAsync(string id)
         {
             var item = await _context.Subcategories.Include(s => s.ChildSubcategories)
-                                                    .ThenInclude(b => b.Child)
                                                    .Include(s => s.ParentSubcategory)
-                                                    .ThenInclude(b => b.Parent)
                                                    .FirstOrDefaultAsync(s => s.Id.Equals(id));
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
@@ -135,13 +132,12 @@ namespace Swapy.DAL.Repositories
         public async Task<IEnumerable<CategoryTreeResponseDTO>> GetBySubcategoryAsync(string subcategoryId, Language language)
         {
             var item = (await _context.Subcategories.Where(s => s.ParentSubcategoryId.Equals(subcategoryId))
-                                             .Include(s => s.Names)
-                                             .Include(s => s.ParentSubcategory)
-                                                .ThenInclude(b => b.Parent)
-                                             .Include(s => s.ChildSubcategories)                                                                                                                                                                                
-                                             .Select(s => new CategoryTreeResponseDTO(s.Id, s.Type, s.Names.FirstOrDefault(l => l.Language == language).Value, s.ChildSubcategories.Count <= 0,  s.ParentSubcategoryId, s.ParentSubcategory.Parent.Names.FirstOrDefault(l => l.Language == language).Value)) 
-                                             .ToListAsync())
-                                             .OrderBy(s => s.Value);
+                                                    .Include(s => s.ParentSubcategory)
+                                                        .ThenInclude(ps => ps.Names)
+                                                    .Include(s => s.ChildSubcategories)
+                                                    .Select(s => new CategoryTreeResponseDTO(s.Id, s.Type, s.Names.FirstOrDefault(l => l.Language == language).Value, s.ChildSubcategories.Count <= 0, s.ParentSubcategoryId, s.ParentSubcategory.Names.FirstOrDefault(l => l.Language == language).Value))
+                                                    .ToListAsync())
+                                                    .OrderBy(s => s.Value);
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {subcategoryId} id not found");
             return item;

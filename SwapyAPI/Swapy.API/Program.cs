@@ -74,8 +74,6 @@ using Swapy.BLL.Domain.Electronics.QueryHandlers;
 using FluentValidation.AspNetCore;
 using Swapy.API.Extensions;
 using Swapy.Common.DTO.Categories.Responses;
-using Microsoft.Extensions.Options;
-using Swapy.Common.DTO.Categories.Responses;
 
 namespace Swapy.API
 {
@@ -179,7 +177,6 @@ namespace Swapy.API
             builder.Services.AddScoped<IScreenResolutionRepository, ScreenResolutionRepository>();
             builder.Services.AddScoped<IShopAttributeRepository, ShopAttributeRepository>();
             builder.Services.AddScoped<ISubcategoryRepository, SubcategoryRepository>();
-            builder.Services.AddScoped<ISubcategoryBranchRepository, SubcategoryBranchRepository>();
             builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             builder.Services.AddScoped<ITransmissionTypeRepository, TransmissionTypeRepository>();
             builder.Services.AddScoped<ITVAttributeRepository, TVAttributeRepository>();

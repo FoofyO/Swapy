@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Swapy.Common.DTO.Categories.Responses;
-using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
