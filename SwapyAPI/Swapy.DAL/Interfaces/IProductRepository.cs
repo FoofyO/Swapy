@@ -9,6 +9,7 @@ namespace Swapy.DAL.Interfaces
         Task<IEnumerable<Product>> GetAllByUserId(string userId);
         Task IncrementViewsAsync(string id);
         Task<int> GetProductCountForShopAsync(string userId);
+        Task<SpecificationResponseDTO<CategoryType>> GetProductCategoryTypeAsync(string id);
         Task<ProductsResponseDTO<ProductResponseDTO>> GetAllFilteredAsync(int page,
                                                                           int pageSize,
                                                                           string userId,
@@ -24,5 +25,17 @@ namespace Swapy.DAL.Interfaces
                                                                           bool? sortByPrice,
                                                                           bool? reverseSort,
                                                                           Language language);
+        Task<ProductsResponseDTO<ProductResponseDTO>> GetSimilarProductsById(int page,
+                                                                               int pageSize,
+                                                                               string productId,
+                                                                               string userId,
+                                                                               string title,
+                                                                               string currencyId,
+                                                                               decimal? priceMin,
+                                                                               decimal? priceMax,
+                                                                               string categoryId,
+                                                                               string subcategoryId,
+                                                                               string cityId,
+                                                                               Language language);
     }
 }

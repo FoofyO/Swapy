@@ -1,8 +1,11 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Clothes.Queries;
 using Swapy.Common.DTO.Clothes.Responses;
+using Swapy.Common.DTO.Products.Responses;
+using Swapy.Common.Entities;
 using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
+using Swapy.DAL.Repositories;
 
 namespace Swapy.BLL.Domain.Clothes.QueryHandlers
 {
@@ -10,18 +13,20 @@ namespace Swapy.BLL.Domain.Clothes.QueryHandlers
     {
         private readonly IClothesAttributeRepository _clothesAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
+        private readonly IFavoriteProductRepository _favoriteProductRepository;
 
-        public GetByIdClothesAttributeQueryHandler(IClothesAttributeRepository clothesAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public GetByIdClothesAttributeQueryHandler(IClothesAttributeRepository clothesAttributeRepository, ISubcategoryRepository subcategoryRepository, IFavoriteProductRepository favoriteProductRepository)
         {
             _clothesAttributeRepository = clothesAttributeRepository;
             _subcategoryRepository = subcategoryRepository;
+            _favoriteProductRepository = favoriteProductRepository;
         }
 
         public async Task<ClothesAttributeResponseDTO> Handle(GetByIdClothesAttributeQuery request, CancellationToken cancellationToken)
         {
             var clothesAttribute = await _clothesAttributeRepository.GetDetailByIdAsync(request.ProductId);
-            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(clothesAttribute.Product.SubcategoryId, request.Language)).ToList();
-            categories.Insert(0, new CategoryNode(clothesAttribute.Product.CategoryId, clothesAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
+            List<SpecificationResponseDTO<string>> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(clothesAttribute.Product.SubcategoryId, request.Language)).ToList();
+            categories.Insert(0, new SpecificationResponseDTO<string>(clothesAttribute.Product.CategoryId, clothesAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
 
             ClothesAttributeResponseDTO result = new ClothesAttributeResponseDTO()
             {
@@ -40,10 +45,12 @@ namespace Swapy.BLL.Domain.Clothes.QueryHandlers
                 Title = clothesAttribute.Product.Title,
                 Views = clothesAttribute.Product.Views,
                 Price = clothesAttribute.Product.Price,
+                Description = clothesAttribute.Product.Description,
                 DateTime = clothesAttribute.Product.DateTime,
                 Categories = categories,
                 Images = clothesAttribute.Product.Images.Select(i => i.Image).ToList(),
                 IsNew = clothesAttribute.IsNew,
+                IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(clothesAttribute.Product.Id, request.UserId),
                 ClothesSizeId = clothesAttribute.ClothesSizeId,
                 ClothesSize = clothesAttribute.ClothesSize.Name,
                 IsShoe = clothesAttribute.ClothesSize.IsShoe,

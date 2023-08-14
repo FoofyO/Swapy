@@ -49,7 +49,7 @@ namespace Swapy.DAL.Repositories
         {
             return _context.Categories.Include(s => s.Names)
                                       .AsEnumerable()
-                                      .Select(s => new CategoryTreeResponseDTO(s.Id, s.Type, s.Names.FirstOrDefault(l => l.Language == language).Value, false, null, null))
+                                      .Select(s => new CategoryTreeResponseDTO(s.Id, s.Type, null, s.Names.FirstOrDefault(l => l.Language == language).Value, false, null, null))
                                       .OrderBy(s => s.Value)
                                       .ToList();
         }

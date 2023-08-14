@@ -13,8 +13,8 @@
                 <span>Departments</span>
             </button>
 
-            <form class="header-search-form">
-                <input class="header-search-field" id="search" type="text" placeholder="Search..." />
+            <form class="header-search-form" [formGroup]="searchQueryForm" (submit)="onSearch()">
+                <input formControlName="title" class="header-search-field" id="search" type="text" placeholder="Search..." />
                 <button class="header-search-btn">
                     <span><i class="header-search-lens fa-solid fa-magnifying-glass"></i></span>
                 </button>
@@ -48,8 +48,8 @@
             </button>
 
             <div id="navbarCollapsedMenu" class="header-offnav">
-                <form class="header-search-form">
-                    <input class="header-search-field" id="searchCollapsed" type="text" placeholder="Search..." />
+                <form class="header-search-form" [formGroup]="searchQueryForm" (submit)="onSearch()">
+                    <input formControlName="title" class="header-search-field" id="searchCollapsed" type="text" placeholder="Search..." />
                     <button class="header-search-btn">
                         <span><i class="header-search-lens fa-solid fa-magnifying-glass"></i></span>
                     </button>

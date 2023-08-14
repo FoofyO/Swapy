@@ -1,4 +1,5 @@
 ﻿using Swapy.Common.DTO.Products.Responses;
+using Swapy.Common.DTO.RealEstates.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
 
@@ -7,7 +8,7 @@ namespace Swapy.DAL.Interfaces
     public interface IRealEstateAttributeRepository : IAttributeRepository<RealEstateAttribute>
     {
         Task<RealEstateAttribute> GetByProductIdAsync(string productId);
-        Task<ProductsResponseDTO<ProductResponseDTO>> GetAllFilteredAsync(int page,
+        Task<RealEstateAttributesResponseDTO> GetAllFilteredAsync(int page,
                                                                           int pageSize,
                                                                           string userId,
                                                                           string title,

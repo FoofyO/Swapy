@@ -1,5 +1,6 @@
+
 <div class="wrapper">
-    <div class="shop-section" *ngIf="shops$ | async as shops">
+    <div class="shop-section" *ngIf="!isNotFoundShops">
       <div class="shop-section-table-of-contents">
         <p>Shops</p>
         <select class="form-select select-filter" [(ngModel)]="selectedFilter" (ngModelChange)="onSelectFilterChange()">
@@ -9,9 +10,23 @@
           <option class="option" value="4">Least views</option>
         </select>
       </div>
-      <div class="shops-container" *ngIf="shops$ | async as shops">
-          <app-shop-card *ngFor="let shop of shops.items" [shop]="shop"></app-shop-card>
+      <div class="shops-container" *ngIf="!isLoadingShops">
+          <app-shop-card *ngFor="let shop of shops; trackBy: trackByShopId" [shop]="shop"></app-shop-card>
       </div>
-      <app-pagination></app-pagination>
+      <div class="shops-container" *ngIf="isLoadingShops">
+        <app-shop-card *ngFor="let shop of shops; trackBy: trackByShopId" [shop]="shop"></app-shop-card>
+        <app-shop-loading-card *ngFor="let loadingProduct of generateRange(!(shopsCount && allPages && currentPage) || (currentPage < allPages) ? pageSize : shopsCount - (pageSize * (currentPage - 1)));"></app-shop-loading-card>
     </div>
+      <button class="button-load-more" *ngIf="(currentPage && allPages) && currentPage < allPages" (click)="loadShops()">Load more</button>
+    </div> 
+    <div class="shop-section" *ngIf="isNotFoundShops">
+      <div class="shop-section-table-of-contents">
+        <p>Shops</p>
+      </div>
+      <div class="shop-section-not-found">
+        <i class="fa-solid fa-shop"></i>
+        <p class="not-found-text">No shop yet</p>
+        <p class="not-found-description">No store has been registered yet</p>
+      </div>
+  </div>
 </div>

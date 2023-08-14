@@ -13,10 +13,13 @@ namespace Swapy.DAL.Repositories
 
         private readonly IFavoriteProductRepository _favoriteProductRepository;
 
-        public ElectronicAttributeRepository(SwapyDbContext context, IFavoriteProductRepository favoriteProductRepository)
+        private readonly ISubcategoryRepository _subcategoryRepository;
+
+        public ElectronicAttributeRepository(SwapyDbContext context, IFavoriteProductRepository favoriteProductRepository, ISubcategoryRepository subcategoryRepository)
         {
             _context = context;
             _favoriteProductRepository = favoriteProductRepository;
+            _subcategoryRepository = subcategoryRepository;
         }
 
         public async Task CreateAsync(ElectronicAttribute item)
@@ -81,6 +84,8 @@ namespace Swapy.DAL.Repositories
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
 
+            List<SpecificationResponseDTO<string>> sequenceOfSubcategories = subcategoryId == null ? new() : (await _subcategoryRepository.GetSequenceOfSubcategories(subcategoryId, language)).ToList();
+
             var query = _context.ElectronicAttributes.Include(e => e.Product)
                                                         .ThenInclude(p => p.Images)
                                                      .Include(e => e.Product)
@@ -91,10 +96,8 @@ namespace Swapy.DAL.Repositories
                                                      .Include(e => e.ModelColor)
                                                      .Where(x => (title == null || x.Product.Title.Contains(title)) &&
                                                            (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
-                                                           (priceMin == null || x.Product.Price >= priceMin) &&
-                                                           (priceMax == null || x.Product.Price <= priceMax) &&
                                                            (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
-                                                           (subcategoryId == null || x.Product.SubcategoryId.Equals(subcategoryId)) &&
+                                                           (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
                                                            (cityId == null || x.Product.CityId.Equals(cityId)) &&
                                                            (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
                                                            (isNew == null || x.IsNew == isNew) &&
@@ -106,15 +109,23 @@ namespace Swapy.DAL.Repositories
                                                            (typesId == null && modelsId != null || typesId.Contains(x.MemoryModel.Model.ElectronicBrandType.ElectronicTypeId)))
                                                      .AsQueryable();
 
+            decimal minPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).FirstOrDefaultAsync();
+            decimal maxPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).LastOrDefaultAsync();
+
+            query = query.Where(x => (priceMin == null || x.Product.Price >= priceMin) &&
+                    (priceMax == null || x.Product.Price <= priceMax));
+
             var count = await query.CountAsync();
             if (count <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
 
-            if (sortByPrice == true) query.OrderBy(x => x.Product.Price);
-            else query.OrderBy(x => x.Product.DateTime);
-            if (reverseSort == true) query.Reverse();
+            if (sortByPrice == true) query = query.OrderBy(x => x.Product.Price);
+            else query = query.OrderBy(x => x.Product.DateTime);
+            if (reverseSort == true) query = query.Reverse();
 
             query = query.Skip(pageSize * (page - 1))
                  .Take(pageSize)
+                 .Include(a => a.Product)
+                    .ThenInclude(p => p.Subcategory)
                  .Include(a => a.Product)
                     .ThenInclude(p => p.City)
                         .ThenInclude(c => c.Names);
@@ -130,7 +141,8 @@ namespace Swapy.DAL.Repositories
                 DateTime = x.Product.DateTime,
                 IsDisable = x.Product.IsDisable,
                 Images = x.Product.Images.Select(i => i.Image).ToList(),
-                UserType = x.Product.User.Type
+                UserType = x.Product.User.Type,
+                Type = x.Product.Subcategory.Type
             }).ToListAsync();
 
             foreach (var item in result)
@@ -138,7 +150,7 @@ namespace Swapy.DAL.Repositories
                 item.IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(item.Id, userId);
             }
 
-            return new ProductsResponseDTO<ProductResponseDTO>(result, count, (int)Math.Ceiling(Convert.ToDouble(count) / pageSize));
+            return new ProductsResponseDTO<ProductResponseDTO>(result, count, (int)Math.Ceiling(Convert.ToDouble(count) / pageSize), maxPrice, minPrice);
         }
 
         public async Task<ElectronicAttribute> GetDetailByIdAsync(string productId)

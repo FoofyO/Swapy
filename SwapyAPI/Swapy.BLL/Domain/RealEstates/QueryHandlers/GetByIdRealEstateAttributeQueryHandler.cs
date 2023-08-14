@@ -1,9 +1,11 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.RealEstates.Queries;
+using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.DTO.RealEstates.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
+using Swapy.DAL.Repositories;
 
 namespace Swapy.BLL.Domain.RealEstates.QueryHandlers
 {
@@ -11,6 +13,7 @@ namespace Swapy.BLL.Domain.RealEstates.QueryHandlers
     {
         private readonly IRealEstateAttributeRepository _realEstateAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
+        private readonly IFavoriteProductRepository _favoriteProductRepository;
 
         public GetByIdRealEstateAttributeQueryHandler(IRealEstateAttributeRepository realEstateAttributeRepository, ISubcategoryRepository subcategoryRepository)
         {
@@ -21,8 +24,8 @@ namespace Swapy.BLL.Domain.RealEstates.QueryHandlers
         public async Task<RealEstateAttributeResponseDTO> Handle(GetByIdRealEstateAttributeQuery request, CancellationToken cancellationToken)
         {
             var realEstateAttribute = await _realEstateAttributeRepository.GetDetailByIdAsync(request.ProductId);
-            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(realEstateAttribute.Product.SubcategoryId, request.Language)).ToList();
-            categories.Insert(0, new CategoryNode(realEstateAttribute.Product.CategoryId, realEstateAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
+            List<SpecificationResponseDTO<string>> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(realEstateAttribute.Product.SubcategoryId, request.Language)).ToList();
+            categories.Insert(0, new SpecificationResponseDTO<string>(realEstateAttribute.Product.CategoryId, realEstateAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
 
             RealEstateAttributeResponseDTO result = new RealEstateAttributeResponseDTO()
             {
@@ -42,12 +45,14 @@ namespace Swapy.BLL.Domain.RealEstates.QueryHandlers
                 Views = realEstateAttribute.Product.Views,
                 IsDisable = realEstateAttribute.Product.IsDisable,
                 Price = realEstateAttribute.Product.Price,
+                Description = realEstateAttribute.Product.Description,
                 DateTime = realEstateAttribute.Product.DateTime,
                 Categories = categories,
                 Images = realEstateAttribute.Product.Images.Select(i => i.Image).ToList(),
                 Area = realEstateAttribute.Area,
                 Rooms = (int)realEstateAttribute.Rooms,
-                IsRent = realEstateAttribute.IsRent
+                IsRent = realEstateAttribute.IsRent,
+                IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(realEstateAttribute.Product.Id, request.UserId)
             };
             return result;
         }

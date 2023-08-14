@@ -53,6 +53,7 @@ namespace Swapy.API.Controllers
         [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllProductsAsync([FromQuery] GetAllProductsQueryDTO dto)
         {
@@ -85,9 +86,66 @@ namespace Swapy.API.Controllers
             {
                 return NotFound(ex.Message);
             }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+            catch (InvalidPageNumberException ex)
+            {
+                return StatusCode(417, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpGet("GetSimilarProductsByProductId")]
+        [Localize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetSimilarProductsByProductId([FromQuery] GetSimilarProductsByProductIdQueryDTO dto)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var query = new GetSimilarProductsByProductIdQuery()
+                {
+                    ProductId = dto.ProductId,
+                    UserId = userId,
+                    Page = dto.Page,
+                    PageSize = dto.PageSize,
+                    Title = dto.Title,
+                    CurrencyId = dto.CurrencyId,
+                    PriceMin = dto.PriceMin,
+                    PriceMax = dto.PriceMax,
+                    CategoryId = dto.CategoryId,
+                    SubcategoryId = dto.SubcategoryId,
+                    CityId = dto.CityId,
+                    Language = (Language)HttpContext.Items["Language"]
+                };
+
+                var result = await _mediator.Send(query);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidPageNumberException ex)
+            {
+                return StatusCode(417, ex.Message);
             }
             catch (Exception ex)
             {
@@ -136,6 +194,38 @@ namespace Swapy.API.Controllers
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
             }
         }
+
+        [HttpGet("GetCategoryType/{ProductId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetProductCategoryTypeAsync([FromRoute] GetProductCategoryQueryDTO dto)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var query = new GetProductCategoryTypeQuery()
+                {
+                    ProductId = dto.ProductId,
+                };
+
+                var result = await _mediator.Send(query);
+                return Ok(result);
+            }
+            catch (NoAccessException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
 
         [HttpPatch("Views/{ProductId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

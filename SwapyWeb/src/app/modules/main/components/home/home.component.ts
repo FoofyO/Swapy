@@ -27,7 +27,10 @@ export class HomeComponent implements OnInit {
   allPages: number = 0;
   currentPage: number = 0;
   latestProductsCount: number = 0;
-  pageSize: number = 20;
+  pageSize: number = 10;
+  isLoadingCategories: boolean = true;
+  isLoadingShops: boolean = true;
+  isLoadingProducts: boolean = true;
 
   constructor(private sharedApiService : SharedApiService, private router: Router, private changeDetectorRef : ChangeDetectorRef){}
 
@@ -39,6 +42,7 @@ export class HomeComponent implements OnInit {
 
   initShopSliders(): void{
     (<any>$('.shop-slider')).slick({
+      lazyLoad: 'ondemand',
       arrows:true,
       prevArrow: $('.shop-slider-controls .prev'),
       nextArrow: $('.shop-slider-controls .next'),
@@ -48,9 +52,9 @@ export class HomeComponent implements OnInit {
       slidesToScroll: 1,
       speed:500,
       easing:'ease',
-      infinite:true,
+      infinite:false,
       initialSlide:0,
-      autoplay:true,
+      autoplay:false,
       autoplaySpeed:3000,
       pauseOnFocus:true,
       pauseOnHover:true,
@@ -92,7 +96,7 @@ export class HomeComponent implements OnInit {
             slidesToShow: 1 
           }
         }
-      ]
+      ],
     });
   }
 
@@ -181,19 +185,28 @@ export class HomeComponent implements OnInit {
   }
 
   loadCategories(): void{
-    this.sharedApiService.getCategories().subscribe(
-      (result) => { this.categories = result;console.log(this.categories); this.changeDetectorRef.detectChanges(); this.initCategorySliders(); }
-    );
+    this.isLoadingCategories = true;
+    this.sharedApiService.getCategories().subscribe((result) => { 
+      this.categories = result;
+      this.changeDetectorRef.detectChanges();
+      this.initCategorySliders(); 
+      this.isLoadingCategories = false;
+    });
 
   }
 
   loadShops(): void{
-    this.sharedApiService.getShops(1, 10, true, true).subscribe(
-      (result) => { this.popularShops = result; this.changeDetectorRef.detectChanges(); this.initShopSliders(); }
-    );
+    this.isLoadingShops = true;
+    this.sharedApiService.getShops(1, 10, true, true).subscribe((result) => {
+      this.popularShops = result;
+      this.changeDetectorRef.detectChanges();
+      this.initShopSliders(); 
+      this.isLoadingShops = false;
+    });
   }
 
   loadLatestProducts(): void {
+    this.isLoadingProducts = true;
     this.sharedApiService.getProducts(++this.currentPage, this.pageSize, false, true).subscribe((response: PageResponse<Product>) => { 
       response.items.forEach(item => {
         if (Array.isArray(item.images)) {
@@ -205,11 +218,13 @@ export class HomeComponent implements OnInit {
       this.allPages = response.allPages;
       if(this.latestProducts != null) { this.latestProducts.push(...response.items); }
       else { this.latestProducts = response.items; }
+      this.isLoadingProducts = false;
     });
   }
 
   trackByProductId(index: number, product: Product): string {
     return product.id;
   }
-  
+
+  generateRange(count: number): number[] { return Array.from({length: count}, (_, i) => i + 1); }
 }

@@ -74,6 +74,7 @@ using Swapy.BLL.Domain.Electronics.QueryHandlers;
 using FluentValidation.AspNetCore;
 using Swapy.API.Extensions;
 using Swapy.Common.DTO.Categories.Responses;
+using Swapy.Common.Enums;
 
 namespace Swapy.API
 {
@@ -222,7 +223,7 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<GetAllAnimalAttributesQuery, ProductsResponseDTO<ProductResponseDTO>>, GetAllAnimalAttributesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllAnimalBreedsQuery, IEnumerable<SpecificationResponseDTO<string>>>, GetAllAnimalBreedsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllAnimalTypesQuery, IEnumerable<SpecificationResponseDTO<string>>>, GetAllAnimalTypesQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetAllAutoAttributesQuery, ProductsResponseDTO<ProductResponseDTO>>, GetAllAutoAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllAutoAttributesQuery, AutoAttributesResponseDTO>, GetAllAutoAttributesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllAutoBrandsQuery, IEnumerable<SpecificationResponseDTO<string>>>, GetAllAutoBrandsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllAutoModelsQuery, IEnumerable<SpecificationResponseDTO<string>>>, GetAllAutoModelsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllAutoTypesQuery, IEnumerable<SpecificationResponseDTO<string>>>, GetAllAutoTypesQueryHandler>();
@@ -249,7 +250,7 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<GetAllMemoriesQuery, IEnumerable<SpecificationResponseDTO<string>>>, GetAllMemoriesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllModelsQuery, IEnumerable<SpecificationResponseDTO<string>>>, GetAllModelsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllProductsQuery, ProductsResponseDTO<ProductResponseDTO>>, GetAllProductsQueryHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetAllRealEstateAttributesQuery, ProductsResponseDTO<ProductResponseDTO>>, GetAllRealEstateAttributesQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetAllRealEstateAttributesQuery, RealEstateAttributesResponseDTO>, GetAllRealEstateAttributesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllRealEstateTypesQuery, IEnumerable<SpecificationResponseDTO<string>>>, GetAllRealEstateTypesQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllScreenDiagonalsQuery, IEnumerable<SpecificationResponseDTO<int>>>, GetAllScreenDiagonalsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetAllScreenResolutionsQuery, IEnumerable<SpecificationResponseDTO<string>>>, GetAllScreenResolutionsQueryHandler>();
@@ -273,8 +274,10 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<GetDetailChatQuery, DetailChatResponseDTO>, GetDetailChatQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetShopDataQuery, ShopDataResponseDTO>, GetShopDataQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetSiblingsQuery, IEnumerable<CategoryTreeResponseDTO>>, GetSiblingsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetSimilarProductsByProductIdQuery, ProductsResponseDTO<ProductResponseDTO>>, GetSimilarProductsByProductIdQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetUserDataQuery, UserDataResponseDTO>, GetUserDataQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetUserSubscriptionsQuery, IEnumerable<Subscription>>, GetUserSubscriptionsQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetProductCategoryTypeQuery, SpecificationResponseDTO<CategoryType>>, GetProductCategoryTypeQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<IncrementProductViewsCommand, Unit>, IncrementProductViewsCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<LoginCommand, AuthResponseDTO>, LoginCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<LogoutCommand, Unit>, LogoutCommandHandler>();
@@ -304,6 +307,7 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<UploadImageCommand, Unit>, UploadImageCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UploadLogoCommand, Unit>, UploadLogoCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UserRegistrationCommand, Unit>, UserRegistrationCommandHandler>();
+
 
             /// <summary>
             /// Claims Principal Registration

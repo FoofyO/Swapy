@@ -1,58 +1,74 @@
-<div class="wrapper" *ngIf="userDetail$ | async as userDetail">
+<div class="wrapper">
 
-  <div class="user-banner">      
+  <div class="user-banner" *ngIf="userDetail">      
     <h2 class="user-fullname"><span name="user-firstname">{{userDetail.firstName}}</span>&nbsp;<span name="user-lastname">{{userDetail.lastName}}</span></h2>
   </div>
 
-  <img class="user-image" (error)="userImageLoadError($event)" [src]="userDetail.logo"/> 
+  <div class="user-banner-loading" *ngIf="!userDetail"></div>
 
-  <h2 class="user-collapsed-fullname"><span name="user-firstname">{{userDetail.firstName}}</span>&nbsp;<span name="user-lastname">{{userDetail.lastName}}</span></h2>
+  <img *ngIf="userDetail" class="user-image" (error)="userImageLoadError($event)" [src]="userDetail.logo"/> 
+  <p *ngIf="!userDetail" class="user-image-loading"></p>
 
-  <div class="user-description">
-    <h2 class="user-description-fullname"><span name="user-firstname">{{userDetail.firstName}}</span>&nbsp;<span name="user-lastname">{{userDetail.lastName}}</span></h2>
+  <h2 *ngIf="userDetail" class="user-collapsed-fullname"><span name="user-firstname">{{userDetail.firstName}}</span>&nbsp;<span name="user-lastname">{{userDetail.lastName}}</span></h2>
+  <h2 *ngIf="!userDetail" class="user-collapsed-fullname-loading"></h2>
+
+  <div  class="user-description">
+    <h2 *ngIf="userDetail" class="user-description-fullname"><span name="user-firstname">{{userDetail.firstName}}</span>&nbsp;<span name="user-lastname">{{userDetail.lastName}}</span></h2>
+    <h2 *ngIf="!userDetail" class="user-description-fullname-loading"></h2>
+    
     <div class="buttons-container" *ngIf="!(isMe || isIShop)">
-      <button [class.active-button]="isSubscription" (click)="subscribe()">Subscribe</button>
-      <button [class.active-button]="isLike" (click)="like()">
+      <button *ngIf="userDetail" [class.active-button]="isSubscription" (click)="subscribe()">Subscribe</button>
+      <p *ngIf="!userDetail" class="button-loading"></p>
+      <button *ngIf="userDetail" [class.active-button]="isLike" (click)="like()">
           <i class="fa-regular fa-thumbs-up inactive"></i>
           <i class="fa-solid fa-thumbs-up active"></i>
       </button>
+      <p *ngIf="!userDetail" class="button-loading"></p>
     </div>
     <div class="buttons-container" *ngIf="isMe">
-      <button  class="active-button" (click)="transferToSettings()">Settings</button>
+      <button *ngIf="userDetail" class="active-button" (click)="transferToSettings()">Settings</button>
+      <p *ngIf="!userDetail" class="button-loading"></p>
     </div>
+
   </div>
   
   <div class="user-information">
-      <div class="information" *ngIf="userDetail.registrationDate">
+      <div class="information" *ngIf="userDetail && userDetail.registrationDate">
           <i class="fa-regular fa-calendar"></i>
           <p>{{userDetail.registrationDate | dateOnly}}</p>
       </div>
-      <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="userDetail.phoneNumber">
+      <p class="information-loading" *ngIf="!userDetail"></p>
+      <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="userDetail && userDetail.phoneNumber">
           <i class="fa-solid fa-phone"></i>
           <p>{{userDetail.phoneNumber | phoneNumber}}</p>
       </div>
-      <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="userDetail.email">
+      <p class="information-loading" *ngIf="!userDetail"></p>
+      <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="userDetail && userDetail.email">
           <i class="fa-solid fa-envelope"></i>
           <p>{{userDetail.email}}</p>
       </div>
-      <div class="line"></div>
+      <p class="information-loading" *ngIf="!userDetail"></p>
+      <div *ngIf="userDetail" class="line"></div>
+      <div *ngIf="!userDetail" class="line-loading"></div>
       <div class="status-information">
-          <div class="information">
+          <p class="information-loading" *ngIf="!userDetail"></p>
+          <div *ngIf="userDetail" class="information">
               <i class="fa-solid fa-users"></i>
               <p>{{userDetail.subscriptionsCount | shortNumber}}</p>
           </div>
-          <div class="information">
+          <div *ngIf="userDetail" class="information">
               <i class="fa-solid fa-thumbs-up"></i>
               <p>{{userDetail.likesCount | shortNumber}}</p>
           </div>
-          <div class="information">
+          <div *ngIf="userDetail" class="information">
               <i class="fa-solid fa-bag-shopping"></i>
               <p>{{userDetail.productsCount | shortNumber}}</p>
           </div>
       </div>
   </div>
 
-  <div class="product-section" *ngIf="userProducts">
+  <div class="product-section-container" *ngIf="userDetail">
+    <div class="product-section" *ngIf="!isNotFoundProducts">
       <div class="product-section-table-of-contents">
         <p>Products</p>
         <select class="form-select select-filter" [(ngModel)]="selectedFilter" (ngModelChange)="onSelectFilterChange()">
@@ -62,11 +78,28 @@
           <option class="option" value="3">Price: Low to High</option>
         </select>
       </div>
-      <div class="products-container">
+      <div class="products-container" *ngIf="!isLoadingProducts">
         <app-product-card *ngFor="let product of userProducts; trackBy: trackByProductId" [product]="product"></app-product-card>
       </div>
-      <button class="button-load-more" *ngIf="currentPage < allPages" (click)="loadUserProducts()">Load more</button>
+      <div class="products-container" *ngIf="isLoadingProducts">
+        <app-product-card *ngFor="let product of userProducts; trackBy: trackByProductId;" [product]="product"></app-product-card>
+        <app-product-loading-card *ngFor="let loadingProduct of generateRange(!(userProductsCount && allPages && currentPage) || (currentPage < allPages) ? pageSize : userProductsCount - (pageSize * (currentPage - 1)));"></app-product-loading-card>
+      </div>
+      <button class="button-load-more" *ngIf="(currentPage && allPages) && currentPage < allPages" (click)="loadUserProducts()">Load more</button>
+    </div>
+
+    <div class="product-section" *ngIf="isNotFoundProducts">
+      <div class="product-section-table-of-contents">
+        <p>Products</p>
+      </div>  
+      <div class="product-section-not-found">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <p class="not-found-text">No product yet</p>
+          <p class="not-found-description">The shop has not added products yet</p>
+      </div>
+    </div>
   </div>
+
     
 </div>
 

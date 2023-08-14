@@ -246,6 +246,7 @@ namespace Swapy.API.Controllers
             try
             {
                 var result = await _mediator.Send(new GetByIdTVAttributeQuery() {
+                    UserId = (string)HttpContext.Items["Check"],
                     ProductId = dto.ProductId,
                     Language = (Language)HttpContext.Items["Language"]
                 });

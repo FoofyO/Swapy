@@ -1,6 +1,6 @@
-<div class="wrapper" *ngIf="shopDetail$ | async as shopDetail">
+<div class="wrapper">
 
-    <div class="shop-banner" #shopBannerDiv>
+    <div *ngIf="shopDetail" class="shop-banner" #shopBannerDiv>
         <h2 class="shop-name">{{shopDetail.shopName}}</h2>
         <div class="shop-views">
             <i class="fa-solid fa-eye"></i>
@@ -8,78 +8,114 @@
         </div>
     </div>
 
-    <img class="shop-logo" (error)="shopLogoLoadError($event)" [src]="shopDetail.logo"/> 
+    <div *ngIf="!shopDetail" class="shop-banner-loading"></div>
 
-    <h2 class="shop-collapsed-name">{{shopDetail.shopName}}</h2>
+    <img *ngIf="shopDetail" class="shop-logo" (error)="shopLogoLoadError($event)" [src]="shopDetail.logo"/> 
+    <p *ngIf="!shopDetail" class="shop-logo-loading"></p>
+
+    <h2 *ngIf="shopDetail" class="shop-collapsed-name">{{shopDetail.shopName}}</h2>
+    <h2 *ngIf="!shopDetail" class="shop-collapsed-name-loading"></h2>
 
     <div class="shop-description">
-      <h2 class="shop-description-name">{{shopDetail.shopName}}</h2>
-        <p class="tagline" *ngIf="shopDetail.slogan">{{shopDetail.slogan}}</p>
-        <p class="description" *ngIf="shopDetail.description">{{shopDetail.description}}</p>
+      <h2 *ngIf="shopDetail" class="shop-description-name">{{shopDetail.shopName}}</h2>
+      <h2 *ngIf="!shopDetail" class="shop-description-name-loading"></h2>
+
+        <p class="tagline" *ngIf="shopDetail && shopDetail.slogan">{{shopDetail.slogan}}</p>
+        <p class="tagline-loading" *ngIf="!shopDetail"></p>
+
+        <p class="description" *ngIf="shopDetail && shopDetail.description">{{shopDetail.description}}</p>
+        <p class="description-loading" *ngIf="!shopDetail"></p>
+
         <div class="buttons-container" *ngIf="!(isMe || isIShop)">
-            <button [class.active-button]="isSubscription" (click)="subscribe()">Subscribe</button>
-            <button [class.active-button]="isLike" (click)="like()">
+            <button *ngIf="shopDetail" [class.active-button]="isSubscription" (click)="subscribe()">Subscribe</button>
+            <p *ngIf="!shopDetail" class="button-loading"></p>
+            <button *ngIf="shopDetail" [class.active-button]="isLike" (click)="like()">
                 <i class="fa-regular fa-thumbs-up inactive"></i>
                 <i class="fa-solid fa-thumbs-up active"></i>
             </button>
+            <p *ngIf="!shopDetail" class="button-loading"></p>
         </div>
         <div class="buttons-container" *ngIf="isMe">
-          <button  class="active-button" (click)="transferToSettings()">Settings</button>
+          <button *ngIf="shopDetail" class="active-button" (click)="transferToSettings()">Settings</button>
+          <p *ngIf="!shopDetail" class="button-loading"></p>
         </div>
     </div>
     
     <div class="shop-information">
-        <div class="information" *ngIf="shopDetail.registrationDate">
+        <div class="information" *ngIf="shopDetail && shopDetail.registrationDate">
             <i class="fa-regular fa-calendar"></i>
             <p>{{shopDetail.registrationDate | dateOnly}}</p>
         </div>
-        <div class="information" *ngIf="shopDetail.startWorkTime && shopDetail.endWorkTime">
+        <p class="information-loading" *ngIf="!shopDetail"></p>
+        <div class="information" *ngIf="shopDetail && shopDetail.startWorkTime && shopDetail.endWorkTime">
             <i class="fa-solid fa-clock"></i>
             <p>{{shopDetail.workDays}} {{shopDetail.startWorkTime}} - {{shopDetail.endWorkTime}}</p>
         </div>
-        <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="shopDetail.phoneNumber">
+        <p class="information-loading" *ngIf="!shopDetail"></p>
+        <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="shopDetail && shopDetail.phoneNumber">
             <i class="fa-solid fa-phone"></i>
             <p>{{shopDetail.phoneNumber | phoneNumber}}</p>
         </div>
-        <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="shopDetail.email">
+        <p class="information-loading" *ngIf="!shopDetail"></p>
+        <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="shopDetail && shopDetail.email">
             <i class="fa-solid fa-envelope"></i>
             <p>{{shopDetail.email}}</p>
         </div>
-        <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="shopDetail.location">
+        <p class="information-loading" *ngIf="!shopDetail"></p>
+        <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="shopDetail && shopDetail.location">
             <i class="fa-solid fa-location-dot"></i>
             <p>{{shopDetail.location}}</p>
         </div>
-        <div class="line"></div>
+        <p class="information-loading" *ngIf="!shopDetail"></p>
+        <div *ngIf="shopDetail" class="line"></div>
+        <div *ngIf="!shopDetail" class="line-loading"></div>
         <div class="status-information">
-            <div class="information">
+            <p class="information-loading" *ngIf="!shopDetail"></p>
+            <div *ngIf="shopDetail" class="information">
                 <i class="fa-solid fa-users"></i>
                 <p>{{shopDetail.subscriptionsCount | shortNumber}}</p>
             </div>
-            <div class="information">
+            <div *ngIf="shopDetail" class="information">
                 <i class="fa-solid fa-thumbs-up"></i>
                 <p>{{shopDetail.likesCount | shortNumber}}</p>
             </div>
-            <div class="information">
+            <div *ngIf="shopDetail" class="information">
                 <i class="fa-solid fa-bag-shopping"></i>
                 <p>{{shopDetail.productsCount | shortNumber}}</p>
             </div>
         </div>
     </div>
 
-    <div class="product-section" *ngIf="shopProducts">
-        <div class="product-section-table-of-contents">
-          <p>Products</p>
-          <select class="form-select select-filter" [(ngModel)]="selectedFilter" (ngModelChange)="onSelectFilterChange()">
-            <option class="option" value="1">Newest first</option>
-            <option class="option" value="2">Oldest first</option>
-            <option class="option" value="4">Price: High to Low</option>
-            <option class="option" value="3">Price: Low to High</option>
-          </select>
+    <div class="product-section-container" *ngIf="shopDetail">
+        <div class="product-section" *ngIf="!isNotFoundProducts">
+            <div class="product-section-table-of-contents">
+              <p>Products</p>
+              <select class="form-select select-filter" [(ngModel)]="selectedFilter" (ngModelChange)="onSelectFilterChange()">
+                <option class="option" value="1">Newest first</option>
+                <option class="option" value="2">Oldest first</option>
+                <option class="option" value="4">Price: High to Low</option>
+                <option class="option" value="3">Price: Low to High</option>
+              </select>
+            </div>
+            <div class="products-container" *ngIf="!isLoadingProducts">
+              <app-product-card *ngFor="let product of shopProducts; trackBy: trackByProductId" [product]="product"></app-product-card>
+            </div>
+            <div class="products-container" *ngIf="isLoadingProducts">
+                <app-product-card *ngFor="let product of shopProducts; trackBy: trackByProductId;" [product]="product"></app-product-card>
+                <app-product-loading-card *ngFor="let loadingProduct of generateRange(!(shopProductsCount && allPages && currentPage) || (currentPage < allPages) ? pageSize : shopProductsCount - (pageSize * (currentPage - 1)));"></app-product-loading-card>
+            </div>
+            <button class="button-load-more" *ngIf="(currentPage && allPages) && currentPage < allPages" (click)="loadShopProducts()">Load more</button>
         </div>
-        <div class="products-container">
-          <app-product-card *ngFor="let product of shopProducts; trackBy: trackByProductId" [product]="product"></app-product-card>
+          
+        <div class="product-section" *ngIf="isNotFoundProducts">
+            <div class="product-section-table-of-contents">
+              <p>Products</p>
+            </div>
+            <div class="product-section-not-found">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <p class="not-found-text">No product yet</p>
+                <p class="not-found-description">The shop has not added products yet</p>
+            </div>
         </div>
-        <button class="button-load-more" *ngIf="currentPage < allPages" (click)="loadShopProducts()">Load more</button>
     </div>
-      
 </div>

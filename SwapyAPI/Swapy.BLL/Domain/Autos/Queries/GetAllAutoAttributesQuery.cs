@@ -1,10 +1,28 @@
-﻿using Swapy.BLL.Domain.Products.Queries;
+﻿using MediatR;
+using Swapy.BLL.Domain.Products.Queries;
+using Swapy.Common.DTO.Autos.Responses;
 using Swapy.Common.DTO.Products.Responses;
+using Swapy.Common.Enums;
 
 namespace Swapy.BLL.Domain.Autos.Queries
 {
-    public class GetAllAutoAttributesQuery : GetAllProductQuery<ProductResponseDTO>
+    public class GetAllAutoAttributesQuery : IRequest<AutoAttributesResponseDTO>
     {
+        public string UserId { get; set; }
+        public int Page { get; set; }
+        public int PageSize { get; set; }
+        public string? Title { get; set; }
+        public string? CurrencyId { get; set; }
+        public decimal? PriceMin { get; set; }
+        public decimal? PriceMax { get; set; }
+        public string? CategoryId { get; set; }
+        public string? SubcategoryId { get; set; }
+        public string? CityId { get; set; }
+        public string? OtherUserId { get; set; }
+        public bool? IsDisable { get; set; }
+        public bool? SortByPrice { get; set; }
+        public bool? ReverseSort { get; set; }
+        public Language Language { get; set; }
         public int? MiliageMin { get; set; }
         public int? MiliageMax { get; set; }
         public int? EngineCapacityMin { get; set; }

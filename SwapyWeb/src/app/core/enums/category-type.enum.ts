@@ -4,5 +4,6 @@ export enum CategoryType {
     ClothesType,
     ElectronicsType,
     ItemsType,
-    RealEstatesType
+    RealEstatesType,
+    TVsType
 }

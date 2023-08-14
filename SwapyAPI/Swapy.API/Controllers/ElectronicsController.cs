@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.API.Validators;
@@ -273,6 +274,7 @@ namespace Swapy.API.Controllers
             {
                 var query = new GetByIdElectronicAttributeQuery()
                 {
+                    UserId = (string)HttpContext.Items["Check"],
                     ProductId = dto.ProductId,
                     Language = (Language)HttpContext.Items["Language"]
                 };
@@ -294,10 +296,10 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Electronics Attributes
         /// </summary>
-        [HttpGet("Memories/{ModelId}")]
+        [HttpGet("Memories")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllMemoriesAsync([FromRoute] GetAllMemoriesQueryDTO dto)
+        public async Task<IActionResult> GetAllMemoriesAsync([FromQuery] GetAllMemoriesQueryDTO dto)
         {
             try
             {
@@ -365,11 +367,11 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("Colors/{ModelId}")]
+        [HttpGet("Colors")]
         [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllColorsByModelAsync([FromRoute] GetAllColorsQueryDTO dto)
+        public async Task<IActionResult> GetAllColorsByModelAsync([FromQuery] GetAllColorsQueryDTO dto)
         {
             try
             {

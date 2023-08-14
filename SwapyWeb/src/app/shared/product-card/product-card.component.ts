@@ -20,11 +20,11 @@ export class ProductCardComponent implements OnInit {
   constructor(private sharedApiService : SharedApiService, private router: Router){}
 
   ngOnInit(): void {
-    console.log(this.product.images)
   }
 
-  addToFavorites(product : Product) : void {
-    this.sharedApiService.addToFavorites(product.id).subscribe(
+  changeFavorite(product : Product) : void {
+    (product.isFavorite ? this.sharedApiService.removeFavorites(product.id) : this.sharedApiService.addToFavorites(product.id))
+    .subscribe(
       (result) => {},
       (error) => {
         if(error.response.status === HttpStatusCode.Unauthorized){

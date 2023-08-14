@@ -2,7 +2,7 @@
 {
     public class GetAllModelsQueryDTO
     {
-        public List<string> ElectronicBrandsId { get; set; }
-        public string ElectronicTypeId { get; set; }
+        public List<string>? ElectronicBrandsId { get; set; }
+        public string? ElectronicTypeId { get; set; }
     }
 }

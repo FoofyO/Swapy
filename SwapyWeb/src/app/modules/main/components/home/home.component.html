@@ -7,10 +7,11 @@
         </div>
     </div>
 
-    <div class="category-section">
+    <div class="category-section" *ngIf="categories">
       <div class="category-slider">
           <app-category-card *ngFor="let category of categories" [category]="category"></app-category-card>
-      </div>
+          <app-category-loading-card></app-category-loading-card>
+        </div>
       <div class="category-slider-controls">
         <button class="button prev">
           <i class="fa-sharp fa-solid fa-arrow-left"></i>
@@ -21,13 +22,14 @@
       </div>
     </div>
 
-    <div class="shop-section">
+    <div class="shop-section" *ngIf="popularShops">
       <div class="shop-section-table-of-contents">
         <p>Shops</p>
         <a href="/shops">See all</a>
       </div>
       <div class="shop-slider">
-        <app-shop-card class="slider-item" *ngFor="let shop of popularShops.items" [shop]="shop"></app-shop-card>
+        <app-shop-card *ngFor="let shop of popularShops.items" [shop]="shop"></app-shop-card>
+        <app-shop-loading-card></app-shop-loading-card>
       </div>
       <div class="shop-slider-controls">
         <button class="button prev">
@@ -43,10 +45,14 @@
       <div class="product-section-table-of-contents">
         <p><span>The Lastes.</span> Take A Look At What's New, Right Now.</p>
       </div>
-      <div class="products-container">
+      <div class="products-container" *ngIf="!isLoadingProducts">
         <app-product-card *ngFor="let product of latestProducts; trackBy: trackByProductId;" [product]="product"></app-product-card>
+      </div>
+      <div class="products-container" *ngIf="isLoadingProducts">
+        <app-product-card *ngFor="let product of latestProducts; trackBy: trackByProductId;" [product]="product"></app-product-card>
+        <app-product-loading-card *ngFor="let loadingProduct of generateRange(!(latestProductsCount && allPages && currentPage) || (currentPage < allPages) ? pageSize : latestProductsCount - (pageSize * (currentPage - 1)));"></app-product-loading-card>
       </div>
       <button class="button-load-more" *ngIf="currentPage < allPages" (click)="loadLatestProducts()">Load more</button>
     </div>
 
-</div>
+</div>      

@@ -15,6 +15,7 @@ namespace Swapy.Common.DTO.Products.Responses
         public string PhoneNumber { get; set; }
         public string ShopId { get; set; }
         public bool IsDisable { get; set; }
+        public bool IsFavorite { get; set; }
         public string Shop { get; set; }
         public UserType UserType { get; set; }
         public string ProductId { get; set; }
@@ -23,7 +24,7 @@ namespace Swapy.Common.DTO.Products.Responses
         public int Views { get; set; }
         public decimal Price { get; set; }
         public DateTime DateTime { get; set; }
-        public List<CategoryNode> Categories { get; set; }
+        public List<SpecificationResponseDTO<string>> Categories { get; set; }
         public List<string> Images { get; set; }
     }
 }

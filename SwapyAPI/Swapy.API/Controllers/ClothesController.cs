@@ -276,6 +276,7 @@ namespace Swapy.API.Controllers
             {
                 var query = new GetByIdClothesAttributeQuery()
                 {
+                    UserId = (string)HttpContext.Items["Check"],
                     ProductId = dto.ProductId,
                     Language = (Language)HttpContext.Items["Language"]
                 };

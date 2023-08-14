@@ -19,6 +19,6 @@ namespace Swapy.DAL.Interfaces
         Task<IEnumerable<CategoryTreeResponseDTO>> GetSiblingsQuery(string subcategoryId, Language language);
         Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllItemSectionsAsync(Language language);
         Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllItemTypesAsync(string parentSubcategoryId, Language language);
-        Task<IEnumerable<CategoryNode>> GetSequenceOfSubcategories(string subcategoryId, Language language);
+        Task<IEnumerable<SpecificationResponseDTO<string>>> GetSequenceOfSubcategories(string subcategoryId, Language language);
     }
 }

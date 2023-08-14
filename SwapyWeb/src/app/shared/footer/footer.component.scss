@@ -4,14 +4,15 @@
     padding: 0;
     min-width: 100%;
     user-select: none;
+    margin-top: auto;
     
     .footer-top {
         width: 100%;
         background-color: $secondary;
 
-        .footer-big-section {
+        // .footer-big-section {
 
-        }
+        // }
 
         .footer-small-section {
             display: flex;

@@ -104,6 +104,9 @@ namespace Swapy.DAL.Repositories
                                                        (productId == null || x.ProductId.Equals(productId)))
                                                  .AsQueryable();
 
+            decimal maxPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).FirstOrDefaultAsync();
+            decimal minPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).LastOrDefaultAsync();
+
             var count = await query.CountAsync();
             if (count <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
 
@@ -139,7 +142,7 @@ namespace Swapy.DAL.Repositories
                 item.IsFavorite = await CheckProductOnFavorite(item.Id, userId);
             }
 
-            return new ProductsResponseDTO<ProductResponseDTO>(result, count, (int)Math.Ceiling(Convert.ToDouble(count) / pageSize));
+            return new ProductsResponseDTO<ProductResponseDTO>(result, count, (int)Math.Ceiling(Convert.ToDouble(count) / pageSize), maxPrice, minPrice);
         }
 
         public async Task<bool> CheckProductOnFavorite(string productId, string userId)
