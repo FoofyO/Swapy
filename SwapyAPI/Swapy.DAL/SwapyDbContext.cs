@@ -62,7 +62,6 @@ namespace Swapy.DAL
             builder.ApplyConfiguration(new ScreenResolutionConfiguration());
             builder.ApplyConfiguration(new ShopAttributeConfiguration());
             builder.ApplyConfiguration(new SubcategoryConfiguration());
-            builder.ApplyConfiguration(new SubcategoryBranchConfiguration());
             builder.ApplyConfiguration(new SubscriptionConfiguration());
             builder.ApplyConfiguration(new TVAttributeConfiguration());
             builder.ApplyConfiguration(new TVBrandConfiguration());
@@ -111,7 +110,6 @@ namespace Swapy.DAL
         public DbSet<ScreenResolution> ScreenResolutions { get; set; }
         public DbSet<ShopAttribute> ShopAttributes { get; set; }
         public DbSet<Subcategory> Subcategories { get; set; }
-        public DbSet<SubcategoryBranch> SubcategoryBranches { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<TVAttribute> TVAttributes { get; set; }
         public DbSet<TVBrand> TVBrands { get; set; }

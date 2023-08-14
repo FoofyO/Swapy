@@ -252,7 +252,7 @@ namespace Swapy.API.Controllers
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 var result = await _mediator.Send(new GetUserDataQuery() { UserId = userId });
-                return Ok();
+                return Ok(result);
             }
             catch (NoAccessException ex)
             {

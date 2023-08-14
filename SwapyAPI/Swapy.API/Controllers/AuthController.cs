@@ -50,6 +50,20 @@ namespace Swapy.API.Controllers
         {
             try
             {
+                var validator = new LoginValidator();
+                var validatorResult = validator.Validate(dto);
+                if (!validatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in validatorResult.Errors)
+                    {
+                        builder.Append($"Login property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
                 var command = new LoginCommand()
                 {
                     EmailOrPhone = dto.EmailOrPhone,

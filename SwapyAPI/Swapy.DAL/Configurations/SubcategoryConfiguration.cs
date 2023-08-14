@@ -18,17 +18,12 @@ namespace Swapy.DAL.Configurations
                    .IsRequired();
 
             builder.HasOne(s => s.ParentSubcategory)
-                   .WithOne(s => s.Parent)
-                   .HasForeignKey<SubcategoryBranch>(s => s.ParentId)
-                   .IsRequired();
+                   .WithMany(s => s.ChildSubcategories)
+                   .HasForeignKey(s => s.ParentSubcategoryId)
+                   .IsRequired(false);
 
             builder.HasMany(a => a.Names)
                    .WithOne()
-                   .IsRequired(false);
-
-            builder.HasMany(s => s.ChildSubcategories)
-                   .WithOne(s => s.Child)
-                   .HasForeignKey(s => s.ChildId)
                    .IsRequired(false);
 
             builder.HasOne(s => s.Category)
