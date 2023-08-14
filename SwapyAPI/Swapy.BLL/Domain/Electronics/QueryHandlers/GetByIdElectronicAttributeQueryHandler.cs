@@ -1,9 +1,11 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Electronics.Queries;
 using Swapy.Common.DTO.Electronics.Responses;
+using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
+using Swapy.DAL.Repositories;
 
 namespace Swapy.BLL.Domain.Electronics.QueryHandlers
 {
@@ -11,18 +13,20 @@ namespace Swapy.BLL.Domain.Electronics.QueryHandlers
     {
         private readonly IElectronicAttributeRepository _electronicAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
+        private readonly IFavoriteProductRepository _favoriteProductRepository;
 
-        public GetByIdElectronicAttributeQueryHandler(IElectronicAttributeRepository electronicAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public GetByIdElectronicAttributeQueryHandler(IElectronicAttributeRepository electronicAttributeRepository, ISubcategoryRepository subcategoryRepository, IFavoriteProductRepository favoriteProductRepository)
         {
             _electronicAttributeRepository = electronicAttributeRepository;
             _subcategoryRepository = subcategoryRepository;
+            _favoriteProductRepository = favoriteProductRepository;
         }
 
         public async Task<ElectronicAttributeResponseDTO> Handle(GetByIdElectronicAttributeQuery request, CancellationToken cancellationToken)
         {
             var electronicAttribute = await _electronicAttributeRepository.GetDetailByIdAsync(request.ProductId);
-            List<CategoryNode> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(electronicAttribute.Product.SubcategoryId, request.Language)).ToList();
-            categories.Insert(0, new CategoryNode(electronicAttribute.Product.CategoryId, electronicAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
+            List<SpecificationResponseDTO<string>> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(electronicAttribute.Product.SubcategoryId, request.Language)).ToList();
+            categories.Insert(0, new SpecificationResponseDTO<string>(electronicAttribute.Product.CategoryId, electronicAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
 
             ElectronicAttributeResponseDTO result = new ElectronicAttributeResponseDTO()
             {
@@ -41,11 +45,13 @@ namespace Swapy.BLL.Domain.Electronics.QueryHandlers
                 Title = electronicAttribute.Product.Title,
                 Views = electronicAttribute.Product.Views,
                 Price = electronicAttribute.Product.Price,
+                Description = electronicAttribute.Product.Description,
                 DateTime = electronicAttribute.Product.DateTime,
                 Categories = categories,
                 IsDisable = electronicAttribute.Product.IsDisable,
                 Images = electronicAttribute.Product.Images.Select(i => i.Image).ToList(),
                 IsNew = electronicAttribute.IsNew,
+                IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(electronicAttribute.Product.Id, request.UserId),
                 ColorId = electronicAttribute.ModelColor.ColorId,
                 Color = electronicAttribute.ModelColor.Color.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 MemoryId = electronicAttribute.MemoryModel.MemoryId,

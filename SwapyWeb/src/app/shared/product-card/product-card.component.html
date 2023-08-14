@@ -6,7 +6,7 @@
         <p class="product-card-title">{{ product.title }}</p> 
         <p class="product-card-additionalInformation">{{ product.city }}, {{ product.dateTime | customDateEn }}</p>
         <div class="favorite-button">
-            <input type="checkbox" class="favorite-checkbox" [id]="'favorite-checkbox-' + product.id" [(ngModel)]="product.isFavorite" (change)="addToFavorites(product)"/>
+            <input type="checkbox" class="favorite-checkbox" [id]="'favorite-checkbox-' + product.id" [(ngModel)]="product.isFavorite" (change)="changeFavorite(product)"/>
             <label [for]="'favorite-checkbox-' + product.id">
                 <svg id="heart-svg" viewBox="467 392 58 57">
                   <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">

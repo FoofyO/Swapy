@@ -7,6 +7,7 @@
         ClothesType,
         ElectronicsType,
         ItemsType,
-        RealEstatesType
+        RealEstatesType,
+        TVsType
     }
 }

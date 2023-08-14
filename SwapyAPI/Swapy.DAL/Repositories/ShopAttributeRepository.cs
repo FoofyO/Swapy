@@ -70,11 +70,11 @@ namespace Swapy.DAL.Repositories
             var count = await query.CountAsync();
             if (count <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
 
-            if (sortByViews == true) query.OrderBy(s => s.Views);
-            else query.OrderBy(s => s.ShopName);
-            if (reverseSort == true) query.Reverse();
+            if (sortByViews == true) query = query.OrderBy(s => s.Views);
+            else query = query.OrderBy(s => s.ShopName);
+            if (reverseSort == true) query = query.Reverse();
 
-            query.Skip(pageSize * (page - 1))
+            query = query.Skip(pageSize * (page - 1))
                  .Take(pageSize);
 
             var result = await query.Select(x => new ShopResponseDTO

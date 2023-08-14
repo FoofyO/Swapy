@@ -54,11 +54,6 @@ a { text-decoration: none; }
     
     .slider { position: relative; }
     
-    .slider-item {
-        display: flex !important;
-        justify-content: center;
-    }
-    
     .slick-slider {
         display: block;
         box-sizing: border-box;
@@ -86,6 +81,19 @@ a { text-decoration: none; }
         flex-direction: column;
         min-width: 0;
         min-height: 0;
+
+        .category-slider{
+          .slick-slide{
+            display: flex;
+            justify-content: center;
+          }
+          .slick-list {
+            display: flex;
+            justify-content: center;
+            min-width: 0;
+            min-height: 0;
+          }
+        }
 
         .category-slider-controls {
             display: flex;
@@ -123,7 +131,17 @@ a { text-decoration: none; }
                     font-size: 1.8rem;
                     color: #ffffff;
                 }
-              }
+            }
+
+            .slick-disabled{
+              cursor: default;
+              opacity: 0.4;
+            }
+
+            .slick-hidden{
+              cursor: default;
+              display: none;
+            }
         }
     }
 
@@ -132,6 +150,13 @@ a { text-decoration: none; }
         flex-direction: column;
         min-width: 0;
         min-height: 0;
+
+        .shop-slider{
+          .slick-slide{
+            display: flex;
+            justify-content: center;
+          }
+        }
 
         .shop-section-table-of-contents {
             display: flex;
@@ -186,7 +211,17 @@ a { text-decoration: none; }
                     font-size: 1.8rem;
                     color: #ffffff;
                 }
-              }
+            }
+
+            .slick-disabled{
+              cursor: default;
+              opacity: 0.4;
+            }
+
+            .slick-hidden{
+              cursor: default;
+              display: none;
+            }
         }
     }
 

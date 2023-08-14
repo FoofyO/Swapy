@@ -3,6 +3,8 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
 import { CategoryTreeService } from 'src/app/shared/category-tree/category-tree.service';
 import { Language } from 'src/app/core/enums/language.enum';
 import { HeaderService } from './header.service';
+import { ActivatedRoute, Route, Router } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
@@ -14,16 +16,31 @@ export class HeaderComponent implements OnInit {
   buttonText: string;
   showElement: boolean;
 
+  searchQueryForm: FormGroup;
+  get title() { return this.searchQueryForm.get('title'); }
+
   constructor(
     private renderer: Renderer2,
     private elementRef: ElementRef,
     private localStorage: LocalStorageService,
     private headerService: HeaderService,
-    private categoryTreeService: CategoryTreeService
+    private categoryTreeService: CategoryTreeService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.oldScroll = 0;
     this.buttonText = '';
     this.showElement = false;
+
+    this.route.queryParams.subscribe(params => {
+      this.searchQueryForm.setValue({
+        title: params['title']
+      });
+    });
+
+    this.searchQueryForm = new FormGroup({
+      title: new FormControl(null, [Validators.required])
+    });
 
     window.addEventListener('resize', () => {
       if(window.innerWidth > 840){
@@ -143,5 +160,13 @@ export class HeaderComponent implements OnInit {
     const animationName = window.getComputedStyle(element).animationName;
     if (animationName !== 'none') { element.addEventListener('animationend', callback, { once: true }); }
     else { callback(); }
+  }
+
+  onSearch(): void {
+    if(this.searchQueryForm.valid) {
+      if (this.title?.value.trim().length !== 0) {
+        this.router.navigateByUrl('products/search?title=' + this.title?.value);
+      }
+    }
   }
 }

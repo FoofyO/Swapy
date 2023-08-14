@@ -20,19 +20,21 @@ import { UserType } from 'src/app/core/enums/user-type.enum';
 })
 export class ShopDetailComponent implements OnInit {
   userId!: string | null;
-  shopDetail$!: Observable<ShopDetail>;
+  shopDetail!: ShopDetail;
   shopProducts!: Product[];
-  allPages: number = 0;
+  allPages: number | null = 0;
   currentPage: number = 0;
-  shopProductsCount: number = 0;
+  shopProductsCount: number | null = 0;
   isMe: boolean;
   isIShop: boolean;
   isLike!: boolean;
   isSubscription!: boolean;
-  pageSize: number = 20;
+  pageSize: number = 10;
   selectedFilter: string = '1';
   sortByPrice: boolean = false;
   reverseSort: boolean = true;
+  isLoadingProducts: boolean = true;
+  isNotFoundProducts: boolean = false;
 
   @ViewChild('shopBannerDiv') shopBannerDiv!: ElementRef<HTMLDivElement>;
 
@@ -57,9 +59,9 @@ export class ShopDetailComponent implements OnInit {
         (result) => { this.isSubscription = result; }
       );
     }
-    this.shopDetail$ = this.shopApiService.getShopById(this.userId as string);
-    this.shopDetail$.subscribe(
+    this.shopApiService.getShopById(this.userId as string).subscribe(
       (result) => {
+        this.shopDetail = result;
         if(result.type !== UserType.Shop) { this.router.navigateByUrl('/404', { skipLocationChange: true }); }
         result.banner = `${environment.blobUrl}/banners/${result.banner}`;
         result.logo = `${environment.blobUrl}/logos/${result.logo}`
@@ -126,16 +128,29 @@ export class ShopDetailComponent implements OnInit {
   }
 
   loadShopProducts(isNewRequest: boolean = false): void {
+    this.isLoadingProducts = true;
     if(isNewRequest){
+      this.shopProductsCount = null;
+      this.allPages = null;
       this.shopProducts = [];
       this.currentPage = 1;
     }
     else { this.currentPage++; }
     this.sharedApiService.getProducts(this.currentPage, this.pageSize, this.sortByPrice, this.reverseSort, this.userId).subscribe((response: PageResponse<Product>) => { 
+      response.items.forEach(item => {
+        if (Array.isArray(item.images)) {
+          item.images = item.images.map((image) => `${environment.blobUrl}/product-images/${image}`);
+        }
+      });
       this.shopProductsCount = response.count;
       this.allPages = response.allPages;
       if(this.shopProducts != null) { this.shopProducts.push(...response.items); }
       else { this.shopProducts = response.items; }
+      this.isLoadingProducts = false;
+    },
+    (error) => {
+      this.isLoadingProducts = false;
+      this.isNotFoundProducts = true;
     });
   }
 
@@ -195,4 +210,6 @@ export class ShopDetailComponent implements OnInit {
       }, 1500);
     }
   }
+
+  generateRange(count: number): number[] { return Array.from({length: count}, (_, i) => i + 1); }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.DTO.Autos.Responses;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
@@ -10,7 +11,7 @@ namespace Swapy.DAL.Interfaces
     public interface IAutoAttributeRepository : IAttributeRepository<AutoAttribute>
     {
         Task<AutoAttribute> GetByProductIdAsync(string productId);
-        Task<ProductsResponseDTO<ProductResponseDTO>> GetAllFilteredAsync(int page,
+        Task<AutoAttributesResponseDTO> GetAllFilteredAsync(int page,
                                                                                int pageSize,
                                                                                string userId,
                                                                                string title,

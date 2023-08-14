@@ -257,6 +257,7 @@ namespace Swapy.API.Controllers
 
         [HttpGet("{ProductId}")]
         [Localize]
+        [Check]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -266,6 +267,7 @@ namespace Swapy.API.Controllers
             {
                 var query = new GetByIdAnimalAttributeQuery()
                 {
+                    UserId = (string)HttpContext.Items["Check"],
                     ProductId = dto.ProductId,
                     Language = (Language)HttpContext.Items["Language"]
                 };

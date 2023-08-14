@@ -273,6 +273,7 @@ namespace Swapy.API.Controllers
             try
             {
                 var result = await _mediator.Send(new GetByIdRealEstateAttributeQuery() {
+                    UserId = (string)HttpContext.Items["Check"],
                     ProductId = dto.ProductId,
                     Language = (Language)HttpContext.Items["Language"]
                 });

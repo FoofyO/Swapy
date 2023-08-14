@@ -10,6 +10,7 @@ namespace Swapy.Common.Entities
         public Category Category { get; set; }
         public string ParentSubcategoryId { get; set; }
         public Subcategory ParentSubcategory { get; set; }
+        public SubcategoryType SubType { get; set; }
         public ICollection<Product> Products { get; set; } = new List<Product>();
         public ICollection<AutoModel> AutoModels { get; set; } = new List<AutoModel>();
         public ICollection<AnimalBreed> AnimalBreeds { get; set; } = new List<AnimalBreed>();
@@ -22,11 +23,12 @@ namespace Swapy.Common.Entities
 
         public Subcategory() => Id = Guid.NewGuid().ToString();
              
-        public Subcategory(CategoryType type, string categoryId, string parentSubcategoryId) : this()
+        public Subcategory(CategoryType type, string categoryId, string parentSubcategoryId, SubcategoryType subType) : this()
         {
             Type = type;
             CategoryId = categoryId;
             ParentSubcategoryId = parentSubcategoryId;
+            SubType = subType;
         }
     }
 }

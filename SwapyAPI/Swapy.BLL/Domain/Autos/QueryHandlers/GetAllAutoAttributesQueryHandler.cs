@@ -1,17 +1,18 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Autos.Queries;
+using Swapy.Common.DTO.Autos.Responses;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Autos.QueryHandlers
 {
-    public class GetAllAutoAttributesQueryHandler : IRequestHandler<GetAllAutoAttributesQuery, ProductsResponseDTO<ProductResponseDTO>>
+    public class GetAllAutoAttributesQueryHandler : IRequestHandler<GetAllAutoAttributesQuery, AutoAttributesResponseDTO>
     {
         private readonly IAutoAttributeRepository _autoAttributeRepository;
 
         public GetAllAutoAttributesQueryHandler(IAutoAttributeRepository autoAttributeRepository, IFavoriteProductRepository favoriteProductRepository) => _autoAttributeRepository = autoAttributeRepository;
 
-        public async Task<ProductsResponseDTO<ProductResponseDTO>> Handle(GetAllAutoAttributesQuery request, CancellationToken cancellationToken)
+        public async Task<AutoAttributesResponseDTO> Handle(GetAllAutoAttributesQuery request, CancellationToken cancellationToken)
         {
             return await _autoAttributeRepository.GetAllFilteredAsync(request.Page,
                                                                       request.PageSize,

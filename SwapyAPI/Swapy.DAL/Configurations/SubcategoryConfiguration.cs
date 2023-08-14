@@ -22,6 +22,10 @@ namespace Swapy.DAL.Configurations
                    .HasForeignKey(s => s.ParentSubcategoryId)
                    .IsRequired(false);
 
+            builder.Property(s => s.SubType)
+                   .HasColumnType("INT")
+                   .IsRequired();
+
             builder.HasMany(a => a.Names)
                    .WithOne()
                    .IsRequired(false);

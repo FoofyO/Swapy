@@ -9,13 +9,18 @@ import { CategoryTreeComponent } from './category-tree/category-tree.component';
 import { PaginationComponent } from './pagination/pagination.component';
 import { ProductCardComponent } from './product-card/product-card.component';
 import { CustomDatePipeEn } from '../core/pipes/custom-date-en.pipe';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ShopCardComponent } from './shop-card/shop-card.component';
 import { CategoryCardComponent } from './category-card/category-card.component';
 import { ShortNumberPipe } from '../core/pipes/short-number.pipe';
 import { DateOnlyPipe } from '../core/pipes/date-only.pipe';
 import { PhoneNumberPipe } from '../core/pipes/phone-number.pipe';
 import { SpinnerComponent } from './spinner/spinner.component';
+import { ProductLoadingCardComponent } from './product-loading-card/product-loading-card.component';
+import { ShopLoadingCardComponent } from './shop-loading-card/shop-loading-card.component';
+import { CategoryLoadingCardComponent } from './category-loading-card/category-loading-card.component';
+import { BooleanToYesNoPipe } from '../core/pipes/boolean-to-yes-no.pipe';
+import { ChildOrAdultPipe } from '../core/pipes/child-or-adult.pipe';
 
 @NgModule({
   declarations: [
@@ -32,14 +37,20 @@ import { SpinnerComponent } from './spinner/spinner.component';
     CategoryCardComponent,
     DateOnlyPipe,
     PhoneNumberPipe,
-    SpinnerComponent
+    BooleanToYesNoPipe,
+    ChildOrAdultPipe,
+    SpinnerComponent,
+    ProductLoadingCardComponent,
+    ShopLoadingCardComponent,
+    CategoryLoadingCardComponent
   ],
   imports: [
     FormsModule,
     CommonModule,
-    RouterModule
+    RouterModule,
+    ReactiveFormsModule
   ],
-  exports: [HeaderComponent, FooterComponent, ErrorComponent, PaginationComponent, ProductCardComponent, ShopCardComponent, CategoryCardComponent, ShortNumberPipe, DateOnlyPipe, PhoneNumberPipe, SpinnerComponent],
+  exports: [HeaderComponent, FooterComponent, ErrorComponent, PaginationComponent, ProductCardComponent, ProductLoadingCardComponent, ShopCardComponent, ShopLoadingCardComponent, CategoryCardComponent, CategoryLoadingCardComponent, ShortNumberPipe, DateOnlyPipe, PhoneNumberPipe, BooleanToYesNoPipe, ChildOrAdultPipe, SpinnerComponent],
   providers: [PaginationComponent]
 })
 export class SharedModule { }

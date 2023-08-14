@@ -22,11 +22,12 @@ input { outline:none; }
 
 
 //Window size
-html, body { min-height: 100vh; }
+html, body { min-height: 100dvh; }
 
 main { 
-    padding-top: 5rem;
-    min-height: 100vh;
+    padding-top: 4.5rem;
+    height: 100dvh;
+    overflow: auto;
 }
 
 app-login {

@@ -2,6 +2,6 @@
 {
     public class GetAllColorsQueryDTO
     {
-        public string ModelId { get; set; }
+        public string? ModelId { get; set; }
     }
 }

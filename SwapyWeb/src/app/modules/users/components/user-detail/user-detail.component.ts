@@ -18,7 +18,7 @@ import { environment } from 'src/environments/environment';
 })
 export class UserDetailComponent implements OnInit {
   userId!: string | null;
-  userDetail$!: Observable<UserDetail>;
+  userDetail!: UserDetail;
   userProducts!: Product[];
   allPages: number = 0;
   currentPage: number = 0;
@@ -27,10 +27,12 @@ export class UserDetailComponent implements OnInit {
   isIShop: boolean;
   isLike!: boolean;
   isSubscription!: boolean;
-  pageSize: number = 20;
+  pageSize: number = 10;
   selectedFilter: string = '1';
   sortByPrice: boolean = false;
   reverseSort: boolean = true;
+  isLoadingProducts: boolean = true;
+  isNotFoundProducts: boolean = false;
 
   constructor(private authFacade : AuthFacadeService , private userApiService : UserApiService,private sharedApiService : SharedApiService, private route: ActivatedRoute, private router: Router) { 
     this.userId = this.route.snapshot.paramMap.get('id');
@@ -53,9 +55,9 @@ export class UserDetailComponent implements OnInit {
         (result) => { this.isSubscription = result; }
       );
     }
-    this.userDetail$ = this.userApiService.getUserById(this.userId as string);
-    this.userDetail$.subscribe(
+    this.userApiService.getUserById(this.userId as string).subscribe(
       (result) => {
+        this.userDetail = result;
         if(result.type !== UserType.Seller) { this.router.navigateByUrl('/404', { skipLocationChange: true }); }
         result.logo = `${environment.blobUrl}/logos/${result.logo}`
       },
@@ -107,16 +109,27 @@ export class UserDetailComponent implements OnInit {
   }
 
   loadUserProducts(isNewRequest: boolean = false): void {
+    this.isLoadingProducts = true;
     if(isNewRequest){
       this.userProducts = [];
       this.currentPage = 1;
     }
     else { this.currentPage++; }
     this.sharedApiService.getProducts(this.currentPage, this.pageSize, this.sortByPrice, this.reverseSort, this.userId).subscribe((response: PageResponse<Product>) => { 
+      response.items.forEach(item => {
+        if (Array.isArray(item.images)) {
+          item.images = item.images.map((image) => `${environment.blobUrl}/product-images/${image}`);
+        }
+      });
       this.userProductsCount = response.count;
       this.allPages = response.allPages;
       if(this.userProducts != null) { this.userProducts.push(...response.items); }
       else { this.userProducts = response.items; }
+      this.isLoadingProducts = false;
+    },
+    (error) => {
+      this.isLoadingProducts = false;
+      this.isNotFoundProducts = true;
     });
   }
 
@@ -176,4 +189,6 @@ export class UserDetailComponent implements OnInit {
       }, 1500);
     }
   }
+
+  generateRange(count: number): number[] { return Array.from({length: count}, (_, i) => i + 1); }
 }
