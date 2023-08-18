@@ -10,13 +10,15 @@ namespace Swapy.BLL.Domain.Autos.CommandHandlers
 {
     public class AddAutoAttributeCommandHandler : IRequestHandler<AddAutoAttributeCommand, AutoAttribute>
     {
+        private readonly IImageService _imageService;
         private readonly IProductRepository _productRepository;
         private readonly INotificationService _notificationService;
         private readonly ISubcategoryRepository _subcategoryRepository;
         private readonly IAutoAttributeRepository _autoAttributeRepository;
 
-        public AddAutoAttributeCommandHandler(IProductRepository productRepository, IAutoAttributeRepository autoAttributeRepository, ISubcategoryRepository subcategoryRepository, INotificationService notificationService)
+        public AddAutoAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IAutoAttributeRepository autoAttributeRepository)
         {
+            _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
@@ -34,6 +36,8 @@ namespace Swapy.BLL.Domain.Autos.CommandHandlers
             AutoAttribute autoAttribute = new AutoAttribute(request.Miliage, request.EngineCapacity, request.ReleaseYear, request.IsNew, request.FuelTypeId, request.AutoColorId, request.TransmissionTypeId, request.AutoModelId, product.Id);
             await _autoAttributeRepository.CreateAsync(autoAttribute);
 
+            if (request.Files.Count > 0) await _imageService.UploadImages(request.Files, product.Id);
+            
             var model = new NotificationModel()
             {
                 UserId = request.UserId,

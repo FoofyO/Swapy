@@ -32,7 +32,6 @@ namespace Swapy.API.Middlewares
 
                 string token = authorizationHeader.Substring("Bearer".Length).Trim();
 
-                Console.WriteLine("Token: " + token);
                 if (string.IsNullOrEmpty(token)) throw new UnauthorizedAccessException("Unauthorized");
 
                 return await ValidateToken(token);
@@ -52,7 +51,6 @@ namespace Swapy.API.Middlewares
             var expirationTime = new JwtSecurityToken(accessToken).ValidTo;
 
             var IsIgnore = Context.GetEndpoint()?.Metadata?.GetMetadata<AuthorizeIgnoreAttribute>() != null;
-            Console.WriteLine("IsIgnore: " + IsIgnore);
 
             if (!IsIgnore && expirationTime < DateTime.UtcNow) throw new UnauthorizedAccessException("Access token expired");
 

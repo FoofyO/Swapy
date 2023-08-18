@@ -11,13 +11,15 @@ namespace Swapy.BLL.Domain.RealEstates.CommandHandlers
 {
     public class AddRealEstateAttributeCommandHandler : IRequestHandler<AddRealEstateAttributeCommand, RealEstateAttribute>
     {
+        private readonly IImageService _imageService;
         private readonly IProductRepository _productRepository;
         private readonly INotificationService _notificationService;
         private readonly ISubcategoryRepository _subcategoryRepository;
         private readonly IRealEstateAttributeRepository _realEstateAttributeRepository;
 
-        public AddRealEstateAttributeCommandHandler(IProductRepository productRepository, IRealEstateAttributeRepository realEstateAttributeRepository, ISubcategoryRepository subcategoryRepository, INotificationService notificationService)
+        public AddRealEstateAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IRealEstateAttributeRepository realEstateAttributeRepository)
         {
+            _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
@@ -35,6 +37,8 @@ namespace Swapy.BLL.Domain.RealEstates.CommandHandlers
             RealEstateAttribute animalAttribute = new RealEstateAttribute(request.Area, request.Rooms, request.IsRent, request.RealEstateTypeId, product.Id);
             await _realEstateAttributeRepository.CreateAsync(animalAttribute);
 
+            if (request.Files.Count > 0) await _imageService.UploadImages(request.Files, product.Id);
+            
             var model = new NotificationModel()
             {
                 UserId = request.UserId,

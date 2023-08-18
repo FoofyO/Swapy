@@ -50,6 +50,7 @@ namespace Swapy.API.Controllers
         /// </summary>
         [HttpPost]
         [Authorize]
+        [Consumes("multipart/form-data")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -90,6 +91,22 @@ namespace Swapy.API.Controllers
                     return BadRequest(builder.ToString());
                 }
 
+
+                var imageValidator = new AddImageUploadValidator();
+                var imageValidatorResult = imageValidator.Validate(dto);
+                if (!imageValidatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in imageValidatorResult.Errors)
+                    {
+                        builder.Append($"Product image upload property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new AddElectronicAttributeCommand()
                 {
@@ -103,7 +120,8 @@ namespace Swapy.API.Controllers
                     Description = dto.Description,
                     ModelColorId = dto.ModelColorId,
                     MemoryModelId = dto.MemoryModelId,
-                    SubcategoryId = dto.SubcategoryId
+                    SubcategoryId = dto.SubcategoryId,
+                    Files = dto.Files
                 };
 
                 var result = await _mediator.Send(command);
@@ -134,6 +152,7 @@ namespace Swapy.API.Controllers
 
         [HttpPut]
         [Authorize]
+        [Consumes("multipart/form-data")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -174,6 +193,22 @@ namespace Swapy.API.Controllers
                     return BadRequest(builder.ToString());
                 }
 
+
+                var imageValidator = new UpdateImageUploadValidator();
+                var imageValidatorResult = imageValidator.Validate(dto);
+                if (!imageValidatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in imageValidatorResult.Errors)
+                    {
+                        builder.Append($"Product image upload property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new UpdateElectronicAttributeCommand()
                 {
@@ -188,7 +223,9 @@ namespace Swapy.API.Controllers
                     Description = dto.Description,
                     ModelColorId = dto.ModelColorId,
                     MemoryModelId = dto.MemoryModelId,
-                    SubcategoryId = dto.SubcategoryId
+                    SubcategoryId = dto.SubcategoryId,
+                    OldPaths = dto.OldPaths,
+                    NewFiles = dto.NewFiles
                 };
 
                 var result = await _mediator.Send(command);

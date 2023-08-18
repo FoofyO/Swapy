@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.RealEstates.Commands;
+using Swapy.BLL.Interfaces;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -7,11 +8,13 @@ namespace Swapy.BLL.Domain.RealEstates.CommandHandlers
 {
     public class UpdateRealEstateAttributeCommandHandler : IRequestHandler<UpdateRealEstateAttributeCommand, Unit>
     {
+        private readonly IImageService _imageService;
         private readonly IProductRepository _productRepository;
         private readonly IRealEstateAttributeRepository _realEstateAttributeRepository;
 
-        public UpdateRealEstateAttributeCommandHandler(IProductRepository productRepository, IRealEstateAttributeRepository realEstateAttributeRepository)
+        public UpdateRealEstateAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, IRealEstateAttributeRepository realEstateAttributeRepository)
         {
+            _imageService = imageService;
             _productRepository = productRepository;
             _realEstateAttributeRepository = realEstateAttributeRepository;
         }
@@ -37,6 +40,10 @@ namespace Swapy.BLL.Domain.RealEstates.CommandHandlers
             if (request.IsRent != null) realEstateAttribute.IsRent = (bool)request.IsRent;
             if (!string.IsNullOrEmpty(request.RealEstateTypeId)) realEstateAttribute.RealEstateTypeId = request.RealEstateTypeId;
             await _realEstateAttributeRepository.UpdateAsync(realEstateAttribute);
+
+            if (request.OldPaths.Count > 0) await _imageService.RemoveImages(request.OldPaths, request.ProductId);
+
+            if (request.NewFiles.Count > 0) await _imageService.UploadImages(request.NewFiles, request.ProductId);
 
             return Unit.Value;
         }

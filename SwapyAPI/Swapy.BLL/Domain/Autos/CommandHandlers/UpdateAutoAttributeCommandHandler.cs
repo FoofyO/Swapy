@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Autos.Commands;
+using Swapy.BLL.Interfaces;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -7,11 +8,13 @@ namespace Swapy.BLL.Domain.Autos.CommandHandlers
 {
     public class UpdateAutoAttributeCommandHandler : IRequestHandler<UpdateAutoAttributeCommand, Unit>
     {
+        private readonly IImageService _imageService;
         private readonly IProductRepository _productRepository;
         private readonly IAutoAttributeRepository _autoAttributeRepository;
 
-        public UpdateAutoAttributeCommandHandler(IProductRepository productRepository, IAutoAttributeRepository autoAttributeRepository)
+        public UpdateAutoAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, IAutoAttributeRepository autoAttributeRepository)
         {
+            _imageService = imageService;
             _productRepository = productRepository;
             _autoAttributeRepository = autoAttributeRepository;
         }
@@ -41,6 +44,10 @@ namespace Swapy.BLL.Domain.Autos.CommandHandlers
             if (!string.IsNullOrEmpty(request.TransmissionTypeId)) autoAttribute.TransmissionTypeId = request.TransmissionTypeId;
             if (!string.IsNullOrEmpty(request.AutoModelId)) autoAttribute.AutoModelId = request.AutoModelId;
             await _autoAttributeRepository.UpdateAsync(autoAttribute);
+
+            if (request.OldPaths.Count > 0) await _imageService.RemoveImages(request.OldPaths, request.ProductId);
+
+            if (request.NewFiles.Count > 0) await _imageService.UploadImages(request.NewFiles, request.ProductId);
 
             return Unit.Value;
         }

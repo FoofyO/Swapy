@@ -49,6 +49,7 @@ namespace Swapy.API.Controllers
 
         [HttpPost]
         [Authorize]
+        [Consumes("multipart/form-data")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -89,6 +90,22 @@ namespace Swapy.API.Controllers
                     return BadRequest(builder.ToString());
                 }
 
+
+                var imageValidator = new AddImageUploadValidator();
+                var imageValidatorResult = imageValidator.Validate(dto);
+                if (!imageValidatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in imageValidatorResult.Errors)
+                    {
+                        builder.Append($"Product image upload property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
+
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new AddClothesAttributeCommand()
                 {
@@ -103,7 +120,8 @@ namespace Swapy.API.Controllers
                     SubcategoryId = dto.SubcategoryId,
                     ClothesSizeId = dto.ClothesSizeId,
                     ClothesSeasonId = dto.ClothesSeasonId,
-                    ClothesBrandViewId = dto.ClothesBrandViewId
+                    ClothesBrandViewId = dto.ClothesBrandViewId,
+                    Files = dto.Files
                 };
 
                 var result = await _mediator.Send(command);
@@ -134,6 +152,7 @@ namespace Swapy.API.Controllers
 
         [HttpPut]
         [Authorize]
+        [Consumes("multipart/form-data")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -173,6 +192,22 @@ namespace Swapy.API.Controllers
 
                     return BadRequest(builder.ToString());
                 }
+
+
+                var imageValidator = new UpdateImageUploadValidator();
+                var imageValidatorResult = imageValidator.Validate(dto);
+                if (!imageValidatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in imageValidatorResult.Errors)
+                    {
+                        builder.Append($"Product image upload property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
 
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new UpdateClothesAttributeCommand()

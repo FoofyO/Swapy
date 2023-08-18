@@ -1,17 +1,21 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Electronics.Commands;
+using Swapy.BLL.Interfaces;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
+using Swapy.DAL.Repositories;
 
 namespace Swapy.BLL.Domain.Electronics.CommandHandlers
 {
     public class UpdateElectronicAttributeCommandHandler : IRequestHandler<UpdateElectronicAttributeCommand, Unit>
     {
+        private readonly IImageService _imageService;
         private readonly IProductRepository _productRepository;
         private readonly IElectronicAttributeRepository _electronicAttributeRepository;
 
-        public UpdateElectronicAttributeCommandHandler(IProductRepository productRepository, IElectronicAttributeRepository electronicAttributeRepository)
+        public UpdateElectronicAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, IElectronicAttributeRepository electronicAttributeRepository)
         {
+            _imageService = imageService;
             _productRepository = productRepository;
             _electronicAttributeRepository = electronicAttributeRepository;
         }
@@ -36,6 +40,10 @@ namespace Swapy.BLL.Domain.Electronics.CommandHandlers
             if (!string.IsNullOrEmpty(request.MemoryModelId)) electronicAttribute.MemoryModelId = request.MemoryModelId;
             if (!string.IsNullOrEmpty(request.ModelColorId)) electronicAttribute.ModelColorId = request.ModelColorId;
             await _electronicAttributeRepository.UpdateAsync(electronicAttribute);
+
+            if (request.OldPaths.Count > 0) await _imageService.RemoveImages(request.OldPaths, request.ProductId);
+
+            if (request.NewFiles.Count > 0) await _imageService.UploadImages(request.NewFiles, request.ProductId);
 
             return Unit.Value;
         }

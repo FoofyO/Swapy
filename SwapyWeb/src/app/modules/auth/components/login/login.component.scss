@@ -334,6 +334,15 @@ $checkbox-border: #D1D6EE;
                 }
             }
 
+            .custom-card-form-error {
+                font-size: 0.8rem;
+                text-align: center;
+                color: $invalid-red;
+                margin-bottom: 1rem;
+
+                @media (max-width: 500px) { font-size: 0.7rem; }
+            }
+
             .custom-card-footer {
                 display: flex;
                 

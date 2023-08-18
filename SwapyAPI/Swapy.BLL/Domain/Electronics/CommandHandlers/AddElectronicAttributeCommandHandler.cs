@@ -10,13 +10,15 @@ namespace Swapy.BLL.Domain.Electronics.CommandHandlers
 {
     public class AddElectronicAttributeCommandHandler : IRequestHandler<AddElectronicAttributeCommand, ElectronicAttribute>
     {
+        private readonly IImageService _imageService;
         private readonly IProductRepository _productRepository;
         private readonly INotificationService _notificationService;
         private readonly ISubcategoryRepository _subcategoryRepository;
         private readonly IElectronicAttributeRepository _electronicAttributeRepository;
 
-        public AddElectronicAttributeCommandHandler(IProductRepository productRepository, IElectronicAttributeRepository electronicAttributeRepository, ISubcategoryRepository subcategoryRepository, INotificationService notificationService)
+        public AddElectronicAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IElectronicAttributeRepository electronicAttributeRepository)
         {
+            _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
@@ -33,6 +35,8 @@ namespace Swapy.BLL.Domain.Electronics.CommandHandlers
 
             ElectronicAttribute electronicAttribute = new ElectronicAttribute(request.IsNew, request.MemoryModelId, request.ModelColorId, product.Id);
             await _electronicAttributeRepository.CreateAsync(electronicAttribute);
+
+            if (request.Files.Count > 0) await _imageService.UploadImages(request.Files, product.Id);
 
             var model = new NotificationModel()
             {

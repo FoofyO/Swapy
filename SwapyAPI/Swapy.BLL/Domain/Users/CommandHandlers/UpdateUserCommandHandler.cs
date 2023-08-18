@@ -20,14 +20,10 @@ namespace Swapy.BLL.Domain.Users.CommandHandlers
 
             if(!string.IsNullOrEmpty(request.Logo)) user.Logo = request.Logo;
             if(!string.IsNullOrEmpty(request.Email)) user.Email = request.Email;
-            if(!string.IsNullOrEmpty(request.FirstName)) user.FirstName = request.FirstName;
             if(!string.IsNullOrEmpty(request.LastName)) user.LastName = request.LastName;
-
-            if (!user.PhoneNumber.Equals(request.PhoneNumber))
-            {
-                user.PhoneNumber = request.PhoneNumber;
-                user.UserName = request.PhoneNumber;
-            }
+            if(!string.IsNullOrEmpty(request.FirstName)) user.FirstName = request.FirstName;
+            if (!string.IsNullOrEmpty(request.FirstName) && !user.PhoneNumber.Equals(request.PhoneNumber)) user.PhoneNumber = request.PhoneNumber;
+            user.IsSubscribed = request.IsSubscribed;
 
             await _userManager.UpdateAsync(user);
 
