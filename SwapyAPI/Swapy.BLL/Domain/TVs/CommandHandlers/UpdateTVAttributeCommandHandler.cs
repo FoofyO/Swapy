@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.TVs.Commands;
+using Swapy.BLL.Interfaces;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -7,11 +8,13 @@ namespace Swapy.BLL.Domain.TVs.CommandHandlers
 {
     public class UpdateTVAttributeCommandHandler : IRequestHandler<UpdateTVAttributeCommand, Unit>
     {
+        private readonly IImageService _imageService;
         private readonly IProductRepository _productRepository;
         private readonly ITVAttributeRepository _tvAttributeRepository;
 
-        public UpdateTVAttributeCommandHandler(IProductRepository productRepository, ITVAttributeRepository tvAttributeRepository)
+        public UpdateTVAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, ITVAttributeRepository tvAttributeRepository)
         {
+            _imageService = imageService;
             _productRepository = productRepository;
             _tvAttributeRepository = tvAttributeRepository;
         }
@@ -39,6 +42,10 @@ namespace Swapy.BLL.Domain.TVs.CommandHandlers
             if (!string.IsNullOrEmpty(request.ScreenResolutionId)) tvAttribute.ScreenResolutionId = request.ScreenResolutionId;
             if (!string.IsNullOrEmpty(request.ScreenDiagonalId)) tvAttribute.ScreenDiagonalId = request.ScreenDiagonalId;
             await _tvAttributeRepository.UpdateAsync(tvAttribute);
+
+            if (request.OldPaths.Count > 0) await _imageService.RemoveImages(request.OldPaths, request.ProductId);
+
+            if (request.NewFiles.Count > 0) await _imageService.UploadImages(request.NewFiles, request.ProductId);
 
             return Unit.Value;
         }

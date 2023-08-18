@@ -10,13 +10,15 @@ namespace Swapy.BLL.Domain.TVs.CommandHandlers
 {
     public class AddTVAttributeCommandHandler : IRequestHandler<AddTVAttributeCommand, TVAttribute>
     {
+        private readonly IImageService _imageService;
         private readonly IProductRepository _productRepository;
         private readonly INotificationService _notificationService;
         private readonly ITVAttributeRepository _tvAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
 
-        public AddTVAttributeCommandHandler(IProductRepository productRepository, ITVAttributeRepository tvAttributeRepository, ISubcategoryRepository subcategoryRepository, INotificationService notificationService)
+        public AddTVAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ITVAttributeRepository tvAttributeRepository, ISubcategoryRepository subcategoryRepository)
         {
+            _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _tvAttributeRepository = tvAttributeRepository;
@@ -33,6 +35,8 @@ namespace Swapy.BLL.Domain.TVs.CommandHandlers
 
             TVAttribute tvAttribute = new TVAttribute(request.IsNew, request.IsSmart, request.TVTypeId, request.TVBrandId, request.ScreenResolutionId, request.ScreenDiagonalId, product.Id);
             await _tvAttributeRepository.CreateAsync(tvAttribute);
+
+            if (request.Files.Count > 0) await _imageService.UploadImages(request.Files, product.Id);
 
             var model = new NotificationModel()
             {

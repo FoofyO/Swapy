@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace Swapy.BLL.Domain.Products.Commands
 {
@@ -12,5 +13,6 @@ namespace Swapy.BLL.Domain.Products.Commands
         public string CategoryId { get; set; }
         public string SubcategoryId { get; set; }
         public string CityId { get; set; }
+        public IFormFileCollection? Files { get; set; }
     }
 }

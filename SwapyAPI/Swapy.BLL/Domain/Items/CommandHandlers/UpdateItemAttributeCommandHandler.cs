@@ -1,17 +1,21 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Items.Commands;
+using Swapy.BLL.Interfaces;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
+using Swapy.DAL.Repositories;
 
 namespace Swapy.BLL.Domain.Items.CommandHandlers
 {
     public class UpdateItemAttributeCommandHandler : IRequestHandler<UpdateItemAttributeCommand, Unit>
     {
+        private readonly IImageService _imageService;
         private readonly IProductRepository _productRepository;
         private readonly IItemAttributeRepository _itemAttributeRepository;
 
-        public UpdateItemAttributeCommandHandler(IProductRepository productRepository, IItemAttributeRepository itemAttributeRepository)
+        public UpdateItemAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, IItemAttributeRepository itemAttributeRepository)
         {
+            _imageService = imageService;
             _productRepository = productRepository;
             _itemAttributeRepository = itemAttributeRepository;
         }
@@ -36,6 +40,10 @@ namespace Swapy.BLL.Domain.Items.CommandHandlers
             if (request.IsNew != null) itemAttribute.IsNew = (bool)request.IsNew;
             if (!string.IsNullOrEmpty(request.ItemTypeId)) itemAttribute.ItemTypeId = request.ItemTypeId;
             await _itemAttributeRepository.UpdateAsync(itemAttribute);
+
+            if (request.OldPaths.Count > 0) await _imageService.RemoveImages(request.OldPaths, request.ProductId);
+
+            if (request.NewFiles.Count > 0) await _imageService.UploadImages(request.NewFiles, request.ProductId);
 
             return Unit.Value;
         }

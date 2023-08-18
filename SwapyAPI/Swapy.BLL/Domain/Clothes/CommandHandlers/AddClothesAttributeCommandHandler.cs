@@ -10,13 +10,15 @@ namespace Swapy.BLL.Domain.Clothes.CommandHandlers
 {
     public class AddClothesAttributeCommandHandler : IRequestHandler<AddClothesAttributeCommand, ClothesAttribute>
     {
+        private readonly IImageService _imageService;
         private readonly IProductRepository _productRepository;
         private readonly INotificationService _notificationService;
         private readonly ISubcategoryRepository _subcategoryRepository;
         private readonly IClothesAttributeRepository _clothesAttributeRepository;
 
-        public AddClothesAttributeCommandHandler(IProductRepository productRepository, IClothesAttributeRepository clothesAttributeRepository, ISubcategoryRepository subcategoryRepository, INotificationService notificationService)
+        public AddClothesAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IClothesAttributeRepository clothesAttributeRepository)
         {
+            _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
@@ -33,6 +35,8 @@ namespace Swapy.BLL.Domain.Clothes.CommandHandlers
 
             ClothesAttribute clothesAttribute = new ClothesAttribute(request.IsNew, request.ClothesSeasonId, request.ClothesSizeId, request.ClothesBrandViewId, product.Id);
             await _clothesAttributeRepository.CreateAsync(clothesAttribute);
+
+            if (request.Files.Count > 0) await _imageService.UploadImages(request.Files, product.Id);
 
             var model = new NotificationModel()
             {

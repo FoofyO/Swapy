@@ -10,13 +10,15 @@ namespace Swapy.BLL.Domain.Animals.CommandHandlers
 {
     public class AddAnimalAttributeCommandHandler : IRequestHandler<AddAnimalAttributeCommand, AnimalAttribute>
     {
+        private readonly IImageService _imageService;
         private readonly IProductRepository _productRepository;
         private readonly INotificationService _notificationService;
         private readonly ISubcategoryRepository _subcategoryRepository;
         private readonly IAnimalAttributeRepository _animalAttributeRepository;
 
-        public AddAnimalAttributeCommandHandler(IProductRepository productRepository, IAnimalAttributeRepository animalAttributeRepository, ISubcategoryRepository subcategoryRepository, INotificationService notificationService)
+        public AddAnimalAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IAnimalAttributeRepository animalAttributeRepository)
         {
+            _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
@@ -33,6 +35,8 @@ namespace Swapy.BLL.Domain.Animals.CommandHandlers
 
             AnimalAttribute animalAttribute = new AnimalAttribute(request.AnimalBreedId, product.Id);
             await _animalAttributeRepository.CreateAsync(animalAttribute);
+
+            if (request.Files.Count > 0) await _imageService.UploadImages(request.Files, product.Id);
 
             var model = new NotificationModel()
             {

@@ -66,7 +66,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("Update")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -98,7 +98,8 @@ namespace Swapy.API.Controllers
                     Email = dto.Email,
                     LastName = dto.LastName,
                     FirstName = dto.FirstName,
-                    PhoneNumber = dto.PhoneNumber
+                    PhoneNumber = dto.PhoneNumber,
+                    IsSubscribed = dto.IsSubscribed
                 };
 
                 var result = await _mediator.Send(command);

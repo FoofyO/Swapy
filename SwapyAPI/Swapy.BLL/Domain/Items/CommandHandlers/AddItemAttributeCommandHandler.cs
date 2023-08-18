@@ -10,13 +10,15 @@ namespace Swapy.BLL.Domain.Items.CommandHandlers
 {
     public class AddItemAttributeCommandHandler : IRequestHandler<AddItemAttributeCommand, ItemAttribute>
     {
+        private readonly IImageService _imageService;
         private readonly IProductRepository _productRepository;
         private readonly INotificationService _notificationService;
         private readonly ISubcategoryRepository _subcategoryRepository;
         private readonly IItemAttributeRepository _itemAttributeRepository;
 
-        public AddItemAttributeCommandHandler(IProductRepository productRepository, IItemAttributeRepository itemAttributeRepository, ISubcategoryRepository subcategoryRepository, INotificationService notificationService)
+        public AddItemAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IItemAttributeRepository itemAttributeRepository)
         {
+            _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
@@ -33,6 +35,8 @@ namespace Swapy.BLL.Domain.Items.CommandHandlers
 
             ItemAttribute itemAttribute = new ItemAttribute(request.IsNew, request.ItemTypeId, product.Id);
             await _itemAttributeRepository.CreateAsync(itemAttribute);
+
+            if (request.Files.Count > 0) await _imageService.UploadImages(request.Files, product.Id);
 
             var model = new NotificationModel()
             {

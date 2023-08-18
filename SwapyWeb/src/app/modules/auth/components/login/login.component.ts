@@ -18,6 +18,7 @@ export class LoginComponent {
 
   loginError: boolean = false;
   showPassword: boolean = false;
+  emailNotConfirmed : boolean = false;
 
   loginForm: FormGroup;
   get emailOrPhone() { return this.loginForm.get('emailOrPhone'); }
@@ -35,7 +36,7 @@ export class LoginComponent {
   async onSubmit() : Promise<void> {
     try {
       if(this.loginForm.valid) {
-        this.loginError = false;
+        this.loginError = this.emailNotConfirmed = false;
         this.spinnerService.changeSpinnerState(true);
         this.authFacade.setRememberMe(this.rememberMe?.value);
         await this.authFacade.login(this.loginForm.value);
@@ -46,6 +47,7 @@ export class LoginComponent {
     } catch(error : any) {
       this.spinnerService.changeSpinnerState(false);
       if(error.response.status === HttpStatusCode.NotFound) this.loginError = true;
+      else if(error.response.status === HttpStatusCode.Conflict) this.emailNotConfirmed = true;
     }
   }
 

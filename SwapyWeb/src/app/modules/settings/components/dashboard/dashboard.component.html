@@ -10,9 +10,9 @@
         </div>
 
         <div class="settings-router">
-            <app-user-general *ngIf="currentPage == 0  && userType"></app-user-general>
+            <app-user-general *ngIf="currentPage == 0  && !userType"></app-user-general>
             
-            <app-shop-general *ngIf="currentPage == 0 && !userType"></app-shop-general>
+            <app-shop-general *ngIf="currentPage == 0 && userType"></app-shop-general>
             
             <app-change-password *ngIf="currentPage == 1"></app-change-password>
             

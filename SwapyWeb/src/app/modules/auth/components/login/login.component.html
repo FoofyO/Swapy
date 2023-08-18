@@ -37,6 +37,7 @@
             </div>
             <button class="custom-card-button" type="submit">Sign in</button>
             <label *ngIf="loginError" class="custom-card-form-error">* Invalid Email/Phone or Password. Please try again.</label>
+            <label *ngIf="emailNotConfirmed" class="custom-card-form-error">* Confirm your email address before signing in.</label>
             <div class="custom-card-footer">
                 <p class="custom-card-text">Don't have account yet?</p>
                 <a class="custom-card-link" type="button" onclick="window.dialog.showModal();">Sign Up</a>

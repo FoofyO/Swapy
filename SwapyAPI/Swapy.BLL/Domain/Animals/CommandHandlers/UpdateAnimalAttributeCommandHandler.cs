@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Animals.Commands;
+using Swapy.BLL.Interfaces;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -7,11 +8,13 @@ namespace Swapy.BLL.Domain.Animals.CommandHandlers
 {
     public class UpdateAnimalAttributeCommandHandler : IRequestHandler<UpdateAnimalAttributeCommand, Unit>
     {
+        private readonly IImageService _imageService;
         private readonly IProductRepository _productRepository;
         private readonly IAnimalAttributeRepository _animalAttributeRepository;
 
-        public UpdateAnimalAttributeCommandHandler(IProductRepository productRepository, IAnimalAttributeRepository animalAttributeRepository)
+        public UpdateAnimalAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, IAnimalAttributeRepository animalAttributeRepository)
         {
+            _imageService = imageService;
             _productRepository = productRepository;
             _animalAttributeRepository = animalAttributeRepository;
         }
@@ -34,6 +37,10 @@ namespace Swapy.BLL.Domain.Animals.CommandHandlers
 
             if (!string.IsNullOrEmpty(request.AnimalBreedId)) animalAttribute.AnimalBreedId = request.AnimalBreedId;
             await _animalAttributeRepository.UpdateAsync(animalAttribute);
+
+            if (request.OldPaths.Count > 0) await _imageService.RemoveImages(request.OldPaths, request.ProductId);
+
+            if (request.NewFiles.Count > 0) await _imageService.UploadImages(request.NewFiles, request.ProductId);
 
             return Unit.Value;
         }

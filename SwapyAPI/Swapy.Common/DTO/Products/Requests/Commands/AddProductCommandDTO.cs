@@ -1,4 +1,6 @@
-﻿namespace Swapy.Common.DTO.Products.Requests.Commands
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Swapy.Common.DTO.Products.Requests.Commands
 {
     public abstract class AddProductCommandDTO
     {
@@ -9,5 +11,6 @@
         public string CategoryId { get; set; }
         public string SubcategoryId { get; set; }
         public string CityId { get; set; }
+        public IFormFileCollection Files { get; set; }
     }
 }

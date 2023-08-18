@@ -1,17 +1,21 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Clothes.Commands;
+using Swapy.BLL.Interfaces;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
+using Swapy.DAL.Repositories;
 
 namespace Swapy.BLL.Domain.Clothes.CommandHandlers
 {
     public class UpdateClothesAttributeCommandHandler : IRequestHandler<UpdateClothesAttributeCommand, Unit>
     {
+        private readonly IImageService _imageService;
         private readonly IProductRepository _productRepository;
         private readonly IClothesAttributeRepository _clothesAttributeRepository;
 
-        public UpdateClothesAttributeCommandHandler(IProductRepository productRepository, IClothesAttributeRepository clothesAttributeRepository)
+        public UpdateClothesAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, IClothesAttributeRepository clothesAttributeRepository)
         {
+            _imageService = imageService;
             _productRepository = productRepository;
             _clothesAttributeRepository = clothesAttributeRepository;
         }
@@ -38,6 +42,10 @@ namespace Swapy.BLL.Domain.Clothes.CommandHandlers
             if (!string.IsNullOrEmpty(request.ClothesSizeId)) clothesAttribute.ClothesSizeId = request.ClothesSizeId;
             if (!string.IsNullOrEmpty(request.ClothesBrandViewId)) clothesAttribute.ClothesBrandViewId = request.ClothesBrandViewId;
             await _clothesAttributeRepository.UpdateAsync(clothesAttribute);
+
+            if (request.OldPaths.Count > 0) await _imageService.RemoveImages(request.OldPaths, request.ProductId);
+
+            if (request.NewFiles.Count > 0) await _imageService.UploadImages(request.NewFiles, request.ProductId);
 
             return Unit.Value;
         }

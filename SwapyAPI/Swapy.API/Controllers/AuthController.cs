@@ -45,6 +45,7 @@ namespace Swapy.API.Controllers
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> LoginAsync(LoginCommandDTO dto)
         {
@@ -80,6 +81,10 @@ namespace Swapy.API.Controllers
             catch (AuthenticationException ex)
             {
                 return NotFound(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Conflict(ex.Message);
             }
             catch (Exception ex)
             {
