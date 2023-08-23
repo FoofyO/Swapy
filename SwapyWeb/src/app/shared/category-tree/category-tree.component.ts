@@ -62,7 +62,7 @@ export class CategoryTreeComponent implements OnInit {
 
     if(category.isFinal){
       this.disableCategoryMenuAnimationAsync();
-      this.router.navigate(['/']);
+      window.location.replace(`products/search?subcategory=${category.id}`);
       return;
     }
 

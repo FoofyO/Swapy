@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Swapy.Common.DTO.Categories.Responses;
+using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
@@ -38,6 +39,17 @@ namespace Swapy.DAL.Repositories
             var item = await _context.Categories.FindAsync(id);
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
+        }
+
+        public async Task<SpecificationResponseDTO<string>> GetBySubcategoryIdAsync(string subcategoryId, Language language)
+        {
+            var result = await _context.Categories.Include(c => c.Subcategories)
+                .Where(c => (c.Subcategories.Select(sc => sc.Id)).Contains(subcategoryId))
+                .Include(c => c.Names).Select(c => new SpecificationResponseDTO<string>(c.Id, c.Names.FirstOrDefault(l => l.Language == language).Value)).FirstOrDefaultAsync();
+
+            if (result == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with subcategory by {subcategoryId} id not found");
+
+            return result;
         }
 
         public async Task<IEnumerable<Category>> GetAllAsync()

@@ -5,7 +5,9 @@ import { Specification } from "src/app/core/models/specification";
 export interface ProductAttribute {
     id: string;
     city: string;
+    cityId: string;
     currency: string;
+    currencyId: string;
     currencySymbol: string;
     userId: string;
     sellerName: string;

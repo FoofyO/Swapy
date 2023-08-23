@@ -31,6 +31,7 @@ export class ProductDetailComponent implements OnInit, AfterViewInit  {
   pageSize: number = 10;
   isLoadingProducts: boolean = true;
   isNotFoundProducts: boolean = false;
+  isMe: boolean = false;
 
   constructor(private authFacade : AuthFacadeService , private sharedApiService : SharedApiService, private productApiService : ProductApiService, private route: ActivatedRoute, private router: Router, private changeDetectorRef : ChangeDetectorRef) {
     this.productId = this.route.snapshot.paramMap.get('id');
@@ -38,7 +39,7 @@ export class ProductDetailComponent implements OnInit, AfterViewInit  {
 
   ngOnInit(): void {
     const regex = /^[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}$/;
-    if (!((this.productId))) { // && regex.test(this.productId)
+    if (!((this.productId) )) { //&& regex.test(this.productId)
       this.router.navigateByUrl('/404', { skipLocationChange: true });
       return; 
     } 
@@ -57,8 +58,12 @@ export class ProductDetailComponent implements OnInit, AfterViewInit  {
     this.loadSimilarProducts();
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit(): void {}
 
+  incrementViews(): void{
+    if (this.productId && (!this.isMe)) { 
+      this.productApiService.incrementViewsAsync(this.productId).subscribe();
+    } 
   }
 
   initProductImagesSliders(): void {
@@ -155,8 +160,10 @@ export class ProductDetailComponent implements OnInit, AfterViewInit  {
             result.images = result.images && result.images.length > 0 ? result.images.map(i => environment.blobUrl + '/product-images/' + i) : [environment.blobUrl + '/product-images/default-product-image.png'];
             this.product = result;
             this.productCategoryType = category.value;
+            this.isMe = this.authFacade.getUserId() ===  result.userId;
             this.changeDetectorRef.detectChanges();
             this.initProductImagesSliders();
+            this.incrementViews();
           },
           (error) => {
             if(error.response.status === HttpStatusCode.NotFound){
@@ -173,8 +180,10 @@ export class ProductDetailComponent implements OnInit, AfterViewInit  {
             result.images = result.images && result.images.length > 0 ? result.images.map(i => environment.blobUrl + '/product-images/' + i) : [environment.blobUrl + '/product-images/default-product-image.png'];
             this.product = result;
             this.productCategoryType = category.value;
+            this.isMe = this.authFacade.getUserId() ===  result.userId;
             this.changeDetectorRef.detectChanges();
             this.initProductImagesSliders();
+            this.incrementViews();
           },
           (error) => {
             if(error.response.status === HttpStatusCode.NotFound){
@@ -191,8 +200,10 @@ export class ProductDetailComponent implements OnInit, AfterViewInit  {
             result.images = result.images && result.images.length > 0 ? result.images.map(i => environment.blobUrl + '/product-images/' + i) : [environment.blobUrl + '/product-images/default-product-image.png'];
             this.product = result;
             this.productCategoryType = category.value;
+            this.isMe = this.authFacade.getUserId() ===  result.userId;
             this.changeDetectorRef.detectChanges();
             this.initProductImagesSliders();
+            this.incrementViews();
           },
           (error) => {
             if(error.response.status === HttpStatusCode.NotFound){
@@ -209,8 +220,10 @@ export class ProductDetailComponent implements OnInit, AfterViewInit  {
             result.images = result.images && result.images.length > 0 ? result.images.map(i => environment.blobUrl + '/product-images/' + i) : [environment.blobUrl + '/product-images/default-product-image.png'];
             this.product = result;
             this.productCategoryType = category.value;
+            this.isMe = this.authFacade.getUserId() ===  result.userId;
             this.changeDetectorRef.detectChanges();
             this.initProductImagesSliders();
+            this.incrementViews();
           },
           (error) => {
             if(error.response.status === HttpStatusCode.NotFound){
@@ -227,8 +240,10 @@ export class ProductDetailComponent implements OnInit, AfterViewInit  {
             result.images = result.images && result.images.length > 0 ? result.images.map(i => environment.blobUrl + '/product-images/' + i) : [environment.blobUrl + '/product-images/default-product-image.png'];
             this.product = result;
             this.productCategoryType = category.value;
+            this.isMe = this.authFacade.getUserId() ===  result.userId;
             this.changeDetectorRef.detectChanges();
             this.initProductImagesSliders();
+            this.incrementViews();
           },
           (error) => {
             if(error.response.status === HttpStatusCode.NotFound){
@@ -245,8 +260,10 @@ export class ProductDetailComponent implements OnInit, AfterViewInit  {
             result.images = result.images && result.images.length > 0 ? result.images.map(i => environment.blobUrl + '/product-images/' + i) : [environment.blobUrl + '/product-images/default-product-image.png'];
             this.product = result;
             this.productCategoryType = category.value;
+            this.isMe = this.authFacade.getUserId() ===  result.userId;
             this.changeDetectorRef.detectChanges();
             this.initProductImagesSliders();
+            this.incrementViews();
           },
           (error) => {
             if(error.response.status === HttpStatusCode.NotFound){
@@ -263,8 +280,10 @@ export class ProductDetailComponent implements OnInit, AfterViewInit  {
             result.images = result.images && result.images.length > 0 ? result.images.map(i => environment.blobUrl + '/product-images/' + i) : [environment.blobUrl + '/product-images/default-product-image.png'];
             this.product = result;
             this.productCategoryType = category.value;
+            this.isMe = this.authFacade.getUserId() ===  result.userId;
             this.changeDetectorRef.detectChanges();
             this.initProductImagesSliders();
+            this.incrementViews();
           },
           (error) => {
             if(error.response.status === HttpStatusCode.NotFound){
@@ -282,19 +301,68 @@ export class ProductDetailComponent implements OnInit, AfterViewInit  {
     }
   }
 
-  changeFavorite() : void {
+  changeFavorite(event: any) : void {
+    event.preventDefault();
     (this.product.isFavorite ? this.sharedApiService.removeFavorites(this.product.productId) : this.sharedApiService.addToFavorites(this.product.productId))
     .subscribe(
-      (result) => {
-        console.log(result);
-      },
+      (result) => { this.product.isFavorite = !this.product.isFavorite },
       (error) => {
-        console.log(error);
         if(error.response.status === HttpStatusCode.Unauthorized){
           this.router.navigate(['/auth/login']);
         }
       }
     );
+  }
+
+  async onIsDisableChange(event: any) : Promise<void> {
+    event.preventDefault();
+    await this.productApiService.switchProductEnabling(this.product.productId).subscribe(
+      (response) => { this.product.isDisable = !this.product.isDisable; },
+      (error) => {
+        if(error.response.status === HttpStatusCode.Unauthorized){
+          this.authFacade.logout();
+        }
+      }
+    )
+  }
+
+  copyToClipboard(event: Event) {
+    const target = event.target as HTMLElement;
+    const text = target.innerText;
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      const el = document.createElement('textarea');
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+
+      //Toast
+      const toastElement = document.getElementById('footer-toast');
+      const toast = new (window as any).bootstrap.Toast(toastElement as HTMLElement);
+      toast.show();
+      
+      setTimeout(() => {
+        toast.hide();
+      }, 1500);
+    }
+  }
+
+  removeProduct() : void {
+    this.productApiService.removeProduct(this.product.productId).subscribe(
+      (response) => {window.history.back();},
+      (error) => {
+        if(error.response.status === HttpStatusCode.Unauthorized){
+          this.authFacade.logout();
+          this.router.navigateByUrl('auth/login');
+          return;
+        }
+      }
+    )
+  }
+
+  transferToEditPage() : void {
+    this.router.navigateByUrl('products/edit/' + this.product.productId);
   }
 
   loadSimilarProducts(isNewRequest: boolean = false): void {

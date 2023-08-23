@@ -32,7 +32,9 @@ namespace Swapy.BLL.Domain.TVs.QueryHandlers
             {
                 Id = tvAttribute.Id,
                 City = tvAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
+                CityId = tvAttribute.Product.City.Id,
                 Currency = tvAttribute.Product.Currency.Name,
+                CurrencyId = tvAttribute.Product.Currency.Id,
                 CurrencySymbol = tvAttribute.Product.Currency.Symbol,
                 UserId = tvAttribute.Product.UserId,
                 FirstName = tvAttribute.Product.User.FirstName,

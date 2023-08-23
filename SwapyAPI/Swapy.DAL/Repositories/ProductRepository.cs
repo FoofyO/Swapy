@@ -124,20 +124,20 @@ namespace Swapy.DAL.Repositories
 
             var query = _context.Products.Include(p => p.Images)
                                          .Include(p => p.Currency)
-                                         .Where(x => (title == null || x.Title.Contains(title)) &&
-                                               (currencyId == null || x.CurrencyId.Equals(currencyId)) &&
-                                               (categoryId == null || x.CategoryId.Equals(categoryId)) &&
-                                               (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
-                                               (cityId == null || x.CityId.Equals(cityId)) &&
-                                               (otherUserId == null ? !x.UserId.Equals(userId) : x.UserId.Equals(otherUserId)) &&
-                                               (isDisable == null || x.IsDisable.Equals(isDisable)))
                                          .AsQueryable();
 
             decimal minPrice = await query.Select(x => x.Price).OrderBy(p => p).FirstOrDefaultAsync();
             decimal maxPrice = await query.Select(x => x.Price).OrderBy(p => p).LastOrDefaultAsync();
 
             query = query.Where(x => (priceMin == null || x.Price >= priceMin) &&
-                                     (priceMax == null || x.Price <= priceMax));
+                                     (priceMax == null || x.Price <= priceMax) &&
+                                     (title == null || x.Title.Contains(title)) &&
+                                     (currencyId == null || x.CurrencyId.Equals(currencyId)) &&
+                                     (categoryId == null || x.CategoryId.Equals(categoryId)) &&
+                                     (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
+                                     (cityId == null || x.CityId.Equals(cityId)) &&
+                                     (otherUserId == null ? !x.UserId.Equals(userId) : x.UserId.Equals(otherUserId)) &&
+                                     (isDisable == null || !x.UserId.Equals(userId) ? x.IsDisable == false : x.IsDisable.Equals(isDisable)));
 
             var count = await query.CountAsync();
             if (count <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
@@ -163,6 +163,7 @@ namespace Swapy.DAL.Repositories
                 DateTime = x.DateTime,
                 Images = x.Images.Select(i => i.Image).ToList(),
                 UserType = x.User.Type,
+                UserId = x.UserId,
                 IsDisable = x.IsDisable,
                 Type = x.Subcategory.Type
             }).ToListAsync();
@@ -222,7 +223,7 @@ namespace Swapy.DAL.Repositories
                                      .Include(p => p.User)
                                      .ToListAsync())
                                      .OrderBy(p => ComputeLevenshteinDistance(p.Title.ToLower(), currentProduct.Title.ToLower()))
-                                     .ThenBy(p => ComputeLevenshteinDistance(p.Description.ToLower(), currentProduct.Description.ToLower()))
+                                     .ThenBy(p => (p.Description != null && currentProduct.Description != null) ? ComputeLevenshteinDistance(p.Description.ToLower(), currentProduct.Description.ToLower()) : int.MaxValue)
                                      .Skip(pageSize * (page - 1))
                                      .Take(pageSize)
                                      .Select(x => new ProductResponseDTO()

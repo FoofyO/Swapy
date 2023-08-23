@@ -25,6 +25,10 @@ export class ShopDetailComponent implements OnInit {
   allPages: number | null = 0;
   currentPage: number = 0;
   shopProductsCount: number | null = 0;
+  shopDisabledProducts!: Product[];
+  allDisabledPages: number | null = 0;
+  currentDisabledPage: number = 0;
+  shopDisabledProductsCount: number | null = 0;
   isMe: boolean;
   isIShop: boolean;
   isLike!: boolean;
@@ -35,6 +39,11 @@ export class ShopDetailComponent implements OnInit {
   reverseSort: boolean = true;
   isLoadingProducts: boolean = true;
   isNotFoundProducts: boolean = false;
+  selectedDisabledFilter: string = '1';
+  sortDisabledByPrice: boolean = false;
+  reverseDisabledSort: boolean = true;
+  isLoadingDisabledProducts: boolean = true;
+  isNotFoundDisabledProducts: boolean = false;
 
   @ViewChild('shopBannerDiv') shopBannerDiv!: ElementRef<HTMLDivElement>;
 
@@ -154,6 +163,38 @@ export class ShopDetailComponent implements OnInit {
     });
   }
 
+  loadShopDisabledProducts(isNewRequest: boolean = false): void {
+    if(!this.isMe)
+    {
+      this.isNotFoundProducts = true;
+      return;
+    }
+    this.isLoadingDisabledProducts = true;
+    if(isNewRequest){
+      this.shopDisabledProductsCount = null;
+      this.allDisabledPages = null;
+      this.shopDisabledProducts = [];
+      this.currentDisabledPage = 1;
+    }
+    else { this.currentDisabledPage++; }
+    this.sharedApiService.getDisabledProducts(this.currentDisabledPage, this.pageSize, this.sortDisabledByPrice, this.reverseDisabledSort, this.userId).subscribe((response: PageResponse<Product>) => { 
+      response.items.forEach(item => {
+        if (Array.isArray(item.images)) {
+          item.images = item.images.map((image) => `${environment.blobUrl}/product-images/${image}`);
+        }
+      });
+      this.shopDisabledProductsCount = response.count;
+      this.allDisabledPages = response.allPages;
+      if(this.shopDisabledProducts != null) { this.shopDisabledProducts.push(...response.items); }
+      else { this.shopDisabledProducts = response.items; }
+      this.isLoadingDisabledProducts = false;
+    },
+    (error) => {
+      this.isLoadingDisabledProducts = false;
+      this.isNotFoundDisabledProducts = true;
+    });
+  }
+
   trackByProductId(index: number, product: Product): string {
     return product.id;
   }
@@ -176,7 +217,7 @@ export class ShopDetailComponent implements OnInit {
         break;
       }
       case '4':{
-        this.sortByPrice = false;
+        this.sortByPrice = true;
         this.reverseSort = true;
         break;
       }
@@ -187,6 +228,37 @@ export class ShopDetailComponent implements OnInit {
       }
     }
     this.loadShopProducts(true);
+  }
+
+  onSelectDisabledFilterChange(): void{
+    switch(this.selectedDisabledFilter) {
+      case '1':{
+        this.sortDisabledByPrice = false;
+        this.reverseDisabledSort = true;
+        break;
+      }
+      case '2':{
+        this.sortDisabledByPrice = false;
+        this.reverseDisabledSort = false;
+        break;
+      }
+      case '3':{
+        this.sortDisabledByPrice = true;
+        this.reverseDisabledSort = false;
+        break;
+      }
+      case '4':{
+        this.sortDisabledByPrice = true;
+        this.reverseDisabledSort = true;
+        break;
+      }
+      default:{
+        this.sortDisabledByPrice = false;
+        this.reverseDisabledSort = true;
+        break;
+      }
+    }
+    this.loadShopDisabledProducts(true);
   }
 
   copyToClipboard(event: Event) {

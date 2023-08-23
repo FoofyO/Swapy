@@ -55,10 +55,11 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddClothesAsync(AddClothesAttributeCommandDTO dto)
+        public async Task<IActionResult> AddClothesAsync([FromForm] AddClothesAttributeCommandDTO dto)
         {
             try
             {
+                IFormFileCollection formFiles = HttpContext.Request.Form.Files;
                 var productValidator = new AddProductValidator();
                 var productValidatorResult = productValidator.Validate(dto);
 
@@ -92,7 +93,7 @@ namespace Swapy.API.Controllers
 
 
                 var imageValidator = new AddImageUploadValidator();
-                var imageValidatorResult = imageValidator.Validate(dto);
+                var imageValidatorResult = imageValidator.Validate(formFiles);
                 if (!imageValidatorResult.IsValid)
                 {
                     StringBuilder builder = new StringBuilder();
@@ -114,6 +115,7 @@ namespace Swapy.API.Controllers
                     Price = dto.Price,
                     Title = dto.Title,
                     CityId = dto.CityId,
+                    Files = formFiles,
                     CategoryId = dto.CategoryId,
                     CurrencyId = dto.CurrencyId,
                     Description = dto.Description,
@@ -121,7 +123,6 @@ namespace Swapy.API.Controllers
                     ClothesSizeId = dto.ClothesSizeId,
                     ClothesSeasonId = dto.ClothesSeasonId,
                     ClothesBrandViewId = dto.ClothesBrandViewId,
-                    Files = dto.Files
                 };
 
                 var result = await _mediator.Send(command);
@@ -158,10 +159,11 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateClothesAsync([FromQuery] UpdateClothesAttributeCommandDTO dto)
+        public async Task<IActionResult> UpdateClothesAsync([FromForm] UpdateClothesAttributeCommandDTO dto)
         {
             try
             {
+                IFormFileCollection formFiles = HttpContext.Request.Form.Files;
                 var productValidator = new UpdateProductValidator();
                 var productValidatorResult = productValidator.Validate(dto);
 
@@ -195,7 +197,7 @@ namespace Swapy.API.Controllers
 
 
                 var imageValidator = new UpdateImageUploadValidator();
-                var imageValidatorResult = imageValidator.Validate(dto);
+                var imageValidatorResult = imageValidator.Validate(formFiles);
                 if (!imageValidatorResult.IsValid)
                 {
                     StringBuilder builder = new StringBuilder();
@@ -224,7 +226,9 @@ namespace Swapy.API.Controllers
                     ClothesSizeId = dto.ClothesSizeId,
                     SubcategoryId = dto.SubcategoryId,
                     ClothesSeasonId = dto.ClothesSeasonId,
-                    ClothesBrandViewId = dto.ClothesBrandViewId
+                    ClothesBrandViewId = dto.ClothesBrandViewId,
+                    OldPaths = dto.OldPaths,
+                    NewFiles = formFiles
                 };
 
                 var result = await _mediator.Send(command);
@@ -364,6 +368,31 @@ namespace Swapy.API.Controllers
             {
                 var result = await _mediator.Send(new GetAllClothesSeasonsQuery() { Language = (Language)HttpContext.Items["Language"] });
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpGet("GetClothesBrandViewId")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetClothesBrandViewIdAsync([FromQuery] GetClothesBrandViewIdQueryDTO dto)
+        {
+            try
+            {
+                var result = await _mediator.Send(new GetClothesBrandViewIdQuery()
+                {
+                    BrandId = dto.BrandId,
+                    ClothesViewId = dto.ClothesViewId
+                });
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {

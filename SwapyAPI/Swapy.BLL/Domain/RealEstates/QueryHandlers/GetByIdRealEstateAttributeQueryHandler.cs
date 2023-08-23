@@ -31,7 +31,9 @@ namespace Swapy.BLL.Domain.RealEstates.QueryHandlers
             {
                 Id = realEstateAttribute.Id,
                 City = realEstateAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
+                CityId = realEstateAttribute.Product.City.Id,
                 Currency = realEstateAttribute.Product.Currency.Name,
+                CurrencyId = realEstateAttribute.Product.Currency.Id,
                 CurrencySymbol = realEstateAttribute.Product.Currency.Symbol,
                 UserId = realEstateAttribute.Product.UserId,
                 FirstName = realEstateAttribute.Product.User.FirstName,

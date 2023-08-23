@@ -6,6 +6,7 @@ using Swapy.Common.Entities;
 using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
 using Swapy.DAL.Repositories;
+using System.Runtime.InteropServices;
 
 namespace Swapy.BLL.Domain.Animals.QueryHandlers
 {
@@ -32,7 +33,9 @@ namespace Swapy.BLL.Domain.Animals.QueryHandlers
             {
                 Id = animalAttribute.Id,
                 City = animalAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
+                CityId = animalAttribute.Product.City.Id,
                 Currency = animalAttribute.Product.Currency.Name,
+                CurrencyId = animalAttribute.Product.Currency.Id,
                 CurrencySymbol = animalAttribute.Product.Currency.Symbol,
                 UserId = animalAttribute.Product.UserId,
                 FirstName = animalAttribute.Product.User.FirstName,

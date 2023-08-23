@@ -56,10 +56,11 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddItemAsync(AddItemAttributeCommandDTO dto)
+        public async Task<IActionResult> AddItemAsync([FromForm] AddItemAttributeCommandDTO dto)
         {
             try
             {
+                IFormFileCollection formFiles = HttpContext.Request.Form.Files;
                 var productValidator = new AddProductValidator();
                 var productValidatorResult = productValidator.Validate(dto);
 
@@ -93,7 +94,7 @@ namespace Swapy.API.Controllers
 
 
                 var imageValidator = new AddImageUploadValidator();
-                var imageValidatorResult = imageValidator.Validate(dto);
+                var imageValidatorResult = imageValidator.Validate(formFiles);
                 if (!imageValidatorResult.IsValid)
                 {
                     StringBuilder builder = new StringBuilder();
@@ -115,12 +116,12 @@ namespace Swapy.API.Controllers
                     Title = dto.Title,
                     Price = dto.Price,
                     CityId = dto.CityId,
+                    Files = formFiles,
                     ItemTypeId = dto.ItemTypeId,
                     CategoryId = dto.CategoryId,
                     CurrencyId = dto.CurrencyId,
                     Description = dto.Description,
                     SubcategoryId = dto.SubcategoryId,
-                    Files = dto.Files
                 };
 
                 var result = await _mediator.Send(command);
@@ -157,10 +158,11 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateItemAsync([FromQuery] UpdateItemAttributeCommandDTO dto)
+        public async Task<IActionResult> UpdateItemAsync([FromForm] UpdateItemAttributeCommandDTO dto)
         {
             try
             {
+                IFormFileCollection formFiles = HttpContext.Request.Form.Files;
                 var productValidator = new UpdateProductValidator();
                 var productValidatorResult = productValidator.Validate(dto);
 
@@ -194,7 +196,7 @@ namespace Swapy.API.Controllers
 
 
                 var imageValidator = new UpdateImageUploadValidator();
-                var imageValidatorResult = imageValidator.Validate(dto);
+                var imageValidatorResult = imageValidator.Validate(formFiles);
                 if (!imageValidatorResult.IsValid)
                 {
                     StringBuilder builder = new StringBuilder();
@@ -223,7 +225,7 @@ namespace Swapy.API.Controllers
                     Description = dto.Description,
                     SubcategoryId = dto.SubcategoryId,
                     OldPaths = dto.OldPaths,
-                    NewFiles = dto.NewFiles
+                    NewFiles = formFiles
                 };
 
                 var result = await _mediator.Send(command);

@@ -8,5 +8,6 @@ namespace Swapy.DAL.Interfaces
     public interface ICategoryRepository : IRepository<Category>
     {
         Task<IEnumerable<CategoryTreeResponseDTO>> GetAllAsync(Language language);
+        Task<SpecificationResponseDTO<string>> GetBySubcategoryIdAsync(string subcategoryId, Language language);
     }
 }

@@ -6,6 +6,7 @@
     flex-direction: column;
     flex-wrap: nowrap;
     width: 24rem;
+    height: 33.61525rem;
     border-radius: 3%;
     background-color: whitesmoke;
     user-select: none;
@@ -42,6 +43,8 @@
         flex-direction: column;
         flex-wrap: nowrap;
         padding: 0.8rem;
+        cursor: pointer;
+
         .shop-card-title {
             font-size: 1.5rem;
             font-weight: bold;

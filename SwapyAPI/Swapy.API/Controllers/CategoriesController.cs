@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swapy.BLL.Domain.Categories.Queries;
 using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Categories.Requests.Queries;
+using Swapy.Common.Entities;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 
@@ -117,6 +118,34 @@ namespace Swapy.API.Controllers
             try
             {
                 var query = new GetSiblingsQuery()
+                {
+                    SubcategoryId = dto.SubcategoryId,
+                    Language = (Language)HttpContext.Items["Language"]
+                };
+
+                var result = await _mediator.Send(query);
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpGet("Subcategories/SubcategoryPath/{SubcategoryId}")]
+        [Localize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetSubcategoryPathAsync([FromRoute] GetSubcategoryPathQueryDTO dto)
+        {
+            try
+            {
+                var query = new GetSubcategoryPathQuery()
                 {
                     SubcategoryId = dto.SubcategoryId,
                     Language = (Language)HttpContext.Items["Language"]

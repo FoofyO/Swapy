@@ -17,6 +17,21 @@ import { CategoryType } from 'src/app/core/enums/category-type.enum';
 import { UserType } from 'src/app/core/enums/user-type.enum';
 import { AutoResponse } from '../models/auto-response.interface';
 import { RealEstateResponse } from '../models/real-estate-response.interface';
+import { AnimalAddRequest } from '../models/animal-add-request.interface';
+import { AutoAddRequest } from '../models/auto-add-request.interface';
+import { ClothesAddRequest } from '../models/clothes-add-request.interface';
+import { ElectronicsAddRequest } from '../models/electronics-add-request.interface';
+import { ItemAddRequest } from '../models/item-add-request.interface';
+import { RealEstateAddRequest } from '../models/real-estate-add-request.interface';
+import { TvAddRequest } from '../models/tv-add-request.interface';
+import { AxiosInterceptorService } from 'src/app/core/services/axios-interceptor.service';
+import { AnimalEditRequest } from '../models/animal-edit-request.interface';
+import { AutoEditRequest } from '../models/auto-edit-request.interface';
+import { ClothesEditRequest } from '../models/clothes-edit-request.interface';
+import { ElectronicsEditRequest } from '../models/electronics-edit-request.interface';
+import { ItemEditRequest } from '../models/item-edit-request.interface';
+import { RealEstateEditRequest } from '../models/real-estate-edit-request.interface';
+import { TvEditRequest } from '../models/tv-edit-request.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -32,11 +47,11 @@ export class ProductApiService {
   private readonly realEstatesApiUrl: string = environment.realEstatesApiUrl;
   private readonly tvsApiUrl: string = environment.tvsApiUrl;
 
-  constructor() { }
+  constructor(private axiosInterceptorService: AxiosInterceptorService) {}
 
   GetAnimalDetail(productId : string): Observable<AnimalAttribute> {
     let url = `${this.animalsApiUrl}/${productId}`
-    return from(axios.get(url)).pipe(
+    return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const product: AnimalAttribute = response.data;
         product.sellerName = response.data.userType === UserType.Shop ? response.data.shop : `${response.data.firstName} ${response.data.lastName}`;
@@ -52,7 +67,7 @@ export class ProductApiService {
   
   GetAutoDetail(productId : string): Observable<AutoAttribute> {
     let url = `${this.autosApiUrl}/${productId}`
-    return from(axios.get(url)).pipe(
+    return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const product: AutoAttribute = response.data;
         product.sellerName = response.data.userType === UserType.Shop ? response.data.shop : `${response.data.firstName} ${response.data.lastName}`;
@@ -68,7 +83,7 @@ export class ProductApiService {
 
   GetClothesDetail(productId : string): Observable<ClothesAttribute> {
     let url = `${this.clothesApiUrl}/${productId}`
-    return from(axios.get(url)).pipe(
+    return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const product: ClothesAttribute = response.data;
         product.sellerName = response.data.userType === UserType.Shop ? response.data.shop : `${response.data.firstName} ${response.data.lastName}`;
@@ -84,7 +99,7 @@ export class ProductApiService {
   
   GetElectronicDetail(productId : string): Observable<ElectronicAttribute> {
     let url = `${this.electronicsApiUrl}/${productId}`
-    return from(axios.get(url)).pipe(
+    return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const product: ElectronicAttribute = response.data;
         product.sellerName = response.data.userType === UserType.Shop ? response.data.shop : `${response.data.firstName} ${response.data.lastName}`;
@@ -100,9 +115,8 @@ export class ProductApiService {
   
   GetItemDetail(productId : string): Observable<ItemAttribute> {
     let url = `${this.itemsApiUrl}/${productId}`
-    return from(axios.get(url)).pipe(
+    return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
-        console.log(response);
         const product: ItemAttribute = response.data;
         product.sellerName = response.data.userType === UserType.Shop ? response.data.shop : `${response.data.firstName} ${response.data.lastName}`;
         product.categories = response.data.categories.$values;
@@ -117,7 +131,7 @@ export class ProductApiService {
   
   GetRealEstateDetail(productId : string): Observable<RealEstateAttribute> {
     let url = `${this.realEstatesApiUrl}/${productId}`
-    return from(axios.get(url)).pipe(
+    return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const product: RealEstateAttribute = response.data;
         product.sellerName = response.data.userType === UserType.Shop ? response.data.shop : `${response.data.firstName} ${response.data.lastName}`;
@@ -133,7 +147,7 @@ export class ProductApiService {
   
   GetTVDetail(productId : string): Observable<TVAttribute> {
     let url = `${this.tvsApiUrl}/${productId}`
-    return from(axios.get(url)).pipe(
+    return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const product: TVAttribute = response.data;
         product.sellerName = response.data.userType === UserType.Shop ? response.data.shop : `${response.data.firstName} ${response.data.lastName}`;
@@ -149,7 +163,7 @@ export class ProductApiService {
 
   GetProductCategoryType(productId : string): Observable<Specification<CategoryType>>{
     let url = `${this.productsApiUrl}/GetCategoryType/${productId}`
-    return from(axios.get(url)).pipe(
+    return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const category: Specification<CategoryType> = response.data;
         return category;
@@ -163,9 +177,9 @@ export class ProductApiService {
   getSimilarProducts(page: number, pageSize: number, productId : string): Observable<PageResponse<Product>> {
     let url = `${this.productsApiUrl}/GetSimilarProductsByProductId?Page=${page}&PageSize=${pageSize}&ProductId=${productId}`
     return from(
-      axios.get(url)
+      this.axiosInterceptorService.get(url)
     ).pipe(
-      map(response => ({
+      map((response: AxiosResponse<any>) => ({
         items: response.data.items.$values.map((item: any) => ({
           ...item,
           images: item.images.$values
@@ -205,9 +219,9 @@ export class ProductApiService {
     url += subcategoryId != null ? `&SubcategoryId=${subcategoryId}` : '';
     url += cityId != null ? `&CityId=${cityId}` : '';
     return from(
-      axios.get(url)
+      this.axiosInterceptorService.get(url)
     ).pipe(
-      map(response => ({
+      map((response: AxiosResponse<any>) => ({
         items: response.data.items.$values.map((item: any) => ({
           ...item,
           images: item.images.$values
@@ -251,9 +265,9 @@ export class ProductApiService {
     url += animalBreedsId != null ? animalBreedsId.map(value => `&AnimalBreedsId=${encodeURIComponent(value)}`).join("&") : '';
     url += animalTypesId != null ? animalTypesId.map(value => `&AnimalTypesId=${encodeURIComponent(value)}`).join("&") : '';
     return from(
-    axios.get(url)
+    this.axiosInterceptorService.get(url)
     ).pipe(
-    map(response => ({
+    map((response: AxiosResponse<any>) => ({
     items: response.data.items.$values.map((item: any) => ({
     ...item,
     images: item.images.$values
@@ -318,9 +332,9 @@ export class ProductApiService {
     url += autoTypesId != null ? autoTypesId.map(value => `&AutoTypesId=${encodeURIComponent(value)}`).join("&") : '';
     
     return from(
-    axios.get(url)
+    this.axiosInterceptorService.get(url)
     ).pipe(
-    map(response => ({
+    map((response: AxiosResponse<any>) => ({
     items: response.data.items.$values.map((item: any) => ({
     ...item,
     images: item.images.$values
@@ -381,9 +395,9 @@ export class ProductApiService {
     url += clothesGendersId != null ? clothesGendersId.map(value => `&ClothesGendersId=${encodeURIComponent(value)}`).join("&") : '';
 
     return from(
-    axios.get(url)
+    this.axiosInterceptorService.get(url)
     ).pipe(
-    map(response => ({
+    map((response: AxiosResponse<any>) => ({
     items: response.data.items.$values.map((item: any) => ({
     ...item,
     images: item.images.$values
@@ -435,9 +449,9 @@ export class ProductApiService {
     url += brandsId != null ? brandsId.map(value => `&BrandsId=${encodeURIComponent(value)}`).join("&") : '';
     url += typesId != null ? typesId.map(value => `&TypesId=${encodeURIComponent(value)}`).join("&") : '';
     return from(
-    axios.get(url)
+    this.axiosInterceptorService.get(url)
     ).pipe(
-    map(response => ({
+    map((response: AxiosResponse<any>) => ({
     items: response.data.items.$values.map((item: any) => ({
     ...item,
     images: item.images.$values
@@ -481,9 +495,9 @@ export class ProductApiService {
     url += isNew != null ? `&IsNew=${isNew}` : '';
     url += itemTypesId != null ? itemTypesId.map(value => `&ItemTypesId=${encodeURIComponent(value)}`).join("&") : '';
     return from(
-    axios.get(url)
+    this.axiosInterceptorService.get(url)
     ).pipe(
-    map(response => ({
+    map((response: AxiosResponse<any>) => ({
     items: response.data.items.$values.map((item: any) => ({
     ...item,
     images: item.images.$values
@@ -536,9 +550,9 @@ export class ProductApiService {
     url += realEstateTypesId != null ? realEstateTypesId.map(value => `&RealEstateTypesId=${encodeURIComponent(value)}`).join("&") : '';
 
     return from(
-    axios.get(url)
+    this.axiosInterceptorService.get(url)
     ).pipe(
-    map(response => ({
+    map((response: AxiosResponse<any>) => ({
     items: response.data.items.$values.map((item: any) => ({
     ...item,
     images: item.images.$values
@@ -595,9 +609,9 @@ export class ProductApiService {
     url += screenDiagonalsId != null ? screenDiagonalsId.map(value => `&ScreenDiagonalsId=${encodeURIComponent(value)}`).join("&") : '';
 
     return from(
-    axios.get(url)
+    this.axiosInterceptorService.get(url)
     ).pipe(
-    map(response => ({
+    map((response: AxiosResponse<any>) => ({
     items: response.data.items.$values.map((item: any) => ({
     ...item,
     images: item.images.$values
@@ -614,7 +628,7 @@ export class ProductApiService {
   }
 
   getFuelTypes(): Observable<Specification<string>[]>{
-    return from(axios.get(`${this.autosApiUrl}/FuelTypes`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.autosApiUrl}/FuelTypes`)).pipe(
       map((response: AxiosResponse<any>) => {
         const fuelTypes: Specification<string>[] = response.data.$values;
         return fuelTypes;
@@ -626,7 +640,7 @@ export class ProductApiService {
   }
 
   getColors(): Observable<Specification<string>[]>{
-    return from(axios.get(`${this.productsApiUrl}/Colors`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.productsApiUrl}/Colors`)).pipe(
       map((response: AxiosResponse<any>) => {
         const colors: Specification<string>[] = response.data.$values;
         return colors;
@@ -638,7 +652,7 @@ export class ProductApiService {
   }
 
   getTransmissionTypes(): Observable<Specification<string>[]>{
-    return from(axios.get(`${this.autosApiUrl}/TransmissionTypes`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.autosApiUrl}/TransmissionTypes`)).pipe(
       map((response: AxiosResponse<any>) => {
         const transmissionTypes: Specification<string>[] = response.data.$values;
         return transmissionTypes;
@@ -650,7 +664,7 @@ export class ProductApiService {
   }
 
   getAutoBrands(AutoTypesId: string[]): Observable<Specification<string>[]>{
-    return from(axios.get(`${this.autosApiUrl}/Brands/${AutoTypesId.join(',')}`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.autosApiUrl}/Brands/${AutoTypesId.join(',')}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;
         return brands;
@@ -662,7 +676,7 @@ export class ProductApiService {
   }
 
   getClotheBrands(ClothesViewsId: string[]): Observable<Specification<string>[]>{
-    return from(axios.get(`${this.clothesApiUrl}/Brands/${ClothesViewsId.join(',')}`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.clothesApiUrl}/Brands/${ClothesViewsId.join(',')}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;
         return brands;
@@ -674,7 +688,7 @@ export class ProductApiService {
   }
 
   getElectronicBrands(ElectronicTypeId: string): Observable<Specification<string>[]>{
-    return from(axios.get(`${this.electronicsApiUrl}/Brands/${ElectronicTypeId}`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.electronicsApiUrl}/Brands/${ElectronicTypeId}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;
         return brands;
@@ -686,7 +700,7 @@ export class ProductApiService {
   }
 
   getTVBrands(): Observable<Specification<string>[]>{
-    return from(axios.get(`${this.tvsApiUrl}/Brands`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.tvsApiUrl}/Brands`)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;
         return brands;
@@ -698,7 +712,7 @@ export class ProductApiService {
   }
 
   getClothesSizes(IsChild: boolean, IsShoe: boolean): Observable<Specification<string>[]>{
-    return from(axios.get(`${this.clothesApiUrl}/Sizes?IsChild=${IsChild}&IsShoe=${IsShoe}`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.clothesApiUrl}/Sizes?IsChild=${IsChild}&IsShoe=${IsShoe}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;
         return brands;
@@ -710,7 +724,7 @@ export class ProductApiService {
   }
 
   getGenders(): Observable<Specification<string>[]>{
-    return from(axios.get(`${this.clothesApiUrl}/Genders`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.clothesApiUrl}/Genders`)).pipe(
       map((response: AxiosResponse<any>) => {
         const genders: Specification<string>[] = response.data.$values;
         return genders;
@@ -722,7 +736,7 @@ export class ProductApiService {
   }
 
   getClothesSeasons(): Observable<Specification<string>[]>{
-    return from(axios.get(`${this.clothesApiUrl}/Seasons`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.clothesApiUrl}/Seasons`)).pipe(
       map((response: AxiosResponse<any>) => {
         const clothesSeasons: Specification<string>[] = response.data.$values;
         return clothesSeasons;
@@ -742,7 +756,7 @@ export class ProductApiService {
     else{
       url += `?GenderId=${GenderId}&ClothesTypeId=${ClothesTypeId}`;
     }
-    return from(axios.get(url)).pipe(
+    return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const clothesViews: Specification<string>[] = response.data.$values;
         return clothesViews;
@@ -754,7 +768,7 @@ export class ProductApiService {
   }
 
   getElectronicMemories(ModelId: string | null = null): Observable<Specification<string>[]>{
-    return from(axios.get(`${this.electronicsApiUrl}/Memories/${ModelId}`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.electronicsApiUrl}/Memories/${ModelId}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const electronicMemories: Specification<string>[] = response.data.$values;
         return electronicMemories;
@@ -766,7 +780,7 @@ export class ProductApiService {
   }
 
   getElectronicColors(ModelId: string | null = null): Observable<Specification<string>[]>{
-    return from(axios.get(`${this.electronicsApiUrl}/Colors/${ModelId}`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.electronicsApiUrl}/Colors/${ModelId}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const electronicColors: Specification<string>[] = response.data.$values;
         return electronicColors;
@@ -787,7 +801,7 @@ export class ProductApiService {
       url += `?ElectronicTypeId=${ElectronicTypeId}`;
       url += ElectronicBrandsId.map(value => `&ElectronicBrandsId=${encodeURIComponent(value)}`).join("&");
     }
-    return from(axios.get(url)).pipe(
+    return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const electronicModels: Specification<string>[] = response.data.$values;
         return electronicModels;
@@ -799,7 +813,7 @@ export class ProductApiService {
   }
 
   getTVTypes(): Observable<Specification<string>[]>{
-    return from(axios.get(`${this.tvsApiUrl}/Types`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.tvsApiUrl}/Types`)).pipe(
       map((response: AxiosResponse<any>) => {
         const tvTypes: Specification<string>[] = response.data.$values;
         return tvTypes;
@@ -811,7 +825,7 @@ export class ProductApiService {
   }
 
   getTVScreenResolutions(): Observable<Specification<string>[]>{
-    return from(axios.get(`${this.tvsApiUrl}/ScreenResolutions`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.tvsApiUrl}/ScreenResolutions`)).pipe(
       map((response: AxiosResponse<any>) => {
         const screenResolutions: Specification<string>[] = response.data.$values;
         return screenResolutions;
@@ -823,7 +837,7 @@ export class ProductApiService {
   }
 
   getTVScreenDiagonals(): Observable<Specification<number>[]>{
-    return from(axios.get(`${this.tvsApiUrl}/ScreenDiagonals`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.tvsApiUrl}/ScreenDiagonals`)).pipe(
       map((response: AxiosResponse<any>) => {
         const screenDiagonals: Specification<number>[] = response.data.$values;
         return screenDiagonals;
@@ -834,6 +848,219 @@ export class ProductApiService {
     );
   }
 
+  getClothesBrandViewId(brandId: string, clothesViewId: string): Observable<string>{
+    return from(this.axiosInterceptorService.get(`${this.clothesApiUrl}/GetClothesBrandViewId?BrandId=${brandId}&ClothesViewId=${clothesViewId}`)).pipe(
+      map((response: AxiosResponse<any>) => {
+        const clothesBrandViewId: string = response.data;
+        return clothesBrandViewId;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  getMemoryModelId(memoryId: string, modelId: string): Observable<string>{
+    return from(this.axiosInterceptorService.get(`${this.clothesApiUrl}/GetClothesBrandViewId?MemoryId=${memoryId}&ModelId=${modelId}`)).pipe(
+      map((response: AxiosResponse<any>) => {
+        const memoryModelId: string = response.data;
+        return memoryModelId;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  getModelColorId(colorId: string, modelId: string): Observable<string>{
+    return from(this.axiosInterceptorService.get(`${this.clothesApiUrl}/GetClothesBrandViewId?ColorId=${colorId}&ModelId=${modelId}`)).pipe(
+      map((response: AxiosResponse<any>) => {
+        const modelColorId: string = response.data;
+        return modelColorId;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  createAnimal(data: FormData): Observable<void>{
+    return from(this.axiosInterceptorService.post(`${this.animalsApiUrl}`, data)).pipe(
+      map((response: AxiosResponse<any>) => {
+        return response.data;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  createAuto(data: FormData): Observable<void>{
+    return from(this.axiosInterceptorService.post(`${this.autosApiUrl}`, data)).pipe(
+      map((response: AxiosResponse<any>) => {
+        return response.data;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  createClothes(data: FormData): Observable<void>{
+    return from(this.axiosInterceptorService.post(`${this.clothesApiUrl}`, data)).pipe(
+      map((response: AxiosResponse<any>) => {
+        return response.data;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  createElectronics(data: FormData): Observable<void>{
+    return from(this.axiosInterceptorService.post(`${this.electronicsApiUrl}`, data)).pipe(
+      map((response: AxiosResponse<any>) => {
+        return response.data;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  createItem(data: FormData): Observable<void>{
+    return from(this.axiosInterceptorService.post(`${this.itemsApiUrl}`, data)).pipe(
+      map((response: AxiosResponse<any>) => {
+        return response.data;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  createRealEstate(data: FormData): Observable<void>{
+    return from(this.axiosInterceptorService.post(`${this.itemsApiUrl}`, data)).pipe(
+      map((response: AxiosResponse<any>) => {
+        return response.data;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  createTv(data: FormData): Observable<void>{
+    return from(this.axiosInterceptorService.post(`${this.itemsApiUrl}`, data)).pipe(
+      map((response: AxiosResponse<any>) => {
+        return response.data;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  updateAnimal(data: FormData): Observable<void>{
+    return from(this.axiosInterceptorService.put(`${this.animalsApiUrl}`, data)).pipe(
+      map((response: AxiosResponse<any>) => {
+        return response.data;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  updateAuto(data: FormData): Observable<void>{
+    return from(this.axiosInterceptorService.put(`${this.autosApiUrl}`, data)).pipe(
+      map((response: AxiosResponse<any>) => {
+        return response.data;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  updateClothes(data: FormData): Observable<void>{
+    return from(this.axiosInterceptorService.put(`${this.clothesApiUrl}`, data)).pipe(
+      map((response: AxiosResponse<any>) => {
+        return response.data;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  updateElectronics(data: FormData): Observable<void>{
+    return from(this.axiosInterceptorService.put(`${this.electronicsApiUrl}`, data)).pipe(
+      map((response: AxiosResponse<any>) => {
+        return response.data;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  updateItem(data: FormData): Observable<void>{
+    return from(this.axiosInterceptorService.put(`${this.itemsApiUrl}`, data)).pipe(
+      map((response: AxiosResponse<any>) => {
+        return response.data;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  updateRealEstate(data: FormData): Observable<void>{
+    return from(this.axiosInterceptorService.put(`${this.itemsApiUrl}`, data)).pipe(
+      map((response: AxiosResponse<any>) => {
+        return response.data;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  updateTv(data: FormData): Observable<void>{
+    return from(this.axiosInterceptorService.put(`${this.itemsApiUrl}`, data)).pipe(
+      map((response: AxiosResponse<any>) => {
+        return response.data;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  switchProductEnabling(productId: string): Observable<any>{
+    return from(this.axiosInterceptorService.patch<any>(`${this.productsApiUrl}/Enabling/${productId}`)).pipe(
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  removeProduct(productId: string): Observable<any>{
+    return from(this.axiosInterceptorService.delete<any>(`${this.productsApiUrl}/${productId}`)).pipe(
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  incrementViewsAsync(productId: string): Observable<any>{
+    return from(this.axiosInterceptorService.patch<any>(`${this.productsApiUrl}/Views/${productId}`)).pipe(
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
 }
 
 

@@ -11,6 +11,5 @@ namespace Swapy.Common.DTO.Products.Requests.Commands
         public string CategoryId { get; set; }
         public string SubcategoryId { get; set; }
         public string CityId { get; set; }
-        public IFormFileCollection Files { get; set; }
     }
 }

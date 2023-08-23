@@ -5,6 +5,7 @@ import { Language } from 'src/app/core/enums/language.enum';
 import { HeaderService } from './header.service';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ProductsSearchService } from 'src/app/modules/products/components/products-search/products-search.service';
 
 @Component({
   selector: 'app-header',
@@ -26,20 +27,23 @@ export class HeaderComponent implements OnInit {
     private headerService: HeaderService,
     private categoryTreeService: CategoryTreeService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private productsSearchService: ProductsSearchService
   ) {
     this.oldScroll = 0;
     this.buttonText = '';
     this.showElement = false;
 
     this.route.queryParams.subscribe(params => {
-      this.searchQueryForm.setValue({
-        title: params['title']
-      });
+      if (params['title']){
+        this.searchQueryForm.setValue({
+          title: params['title']
+        });
+      }
     });
 
     this.searchQueryForm = new FormGroup({
-      title: new FormControl(null, [Validators.required])
+      title: new FormControl(null)
     });
 
     window.addEventListener('resize', () => {
@@ -164,8 +168,18 @@ export class HeaderComponent implements OnInit {
 
   onSearch(): void {
     if(this.searchQueryForm.valid) {
-      if (this.title?.value.trim().length !== 0) {
-        this.router.navigateByUrl('products/search?title=' + this.title?.value);
+      if (window.location.href.includes('products/search')) {
+        if (this.title?.value.trim().length !== 0) {
+          this.productsSearchService.changeTitleFilter(this.title?.value);
+        }
+        else{
+          this.productsSearchService.changeTitleFilter(null);
+        }
+      }
+      else{
+        if (this.title?.value.trim().length !== 0) {
+          this.router.navigateByUrl('products/search?title=' + this.title?.value);
+        }
       }
     }
   }

@@ -114,15 +114,6 @@ namespace Swapy.DAL.Repositories
                                                         .ThenInclude(p => p.Images)
                                                      .Include(re => re.Product)
                                                         .ThenInclude(p => p.Currency)
-                                                     .Where(x => (title == null || x.Product.Title.Contains(title)) &&
-                                                           (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
-                                                           (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
-                                                           (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
-                                                           (cityId == null || x.Product.CityId.Equals(cityId)) &&
-                                                           (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
-                                                           x.Product.IsDisable.Equals(false) &&
-                                                           (isRent == null || x.IsRent == isRent) &&
-                                                           (realEstateTypesId == null || realEstateTypesId.Contains(x.RealEstateTypeId)))
                                                      .AsQueryable();
 
             decimal minPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).FirstOrDefaultAsync();
@@ -139,7 +130,16 @@ namespace Swapy.DAL.Repositories
                     (areaMin == null || x.Area >= areaMin) &&
                     (areaMax == null || x.Area <= areaMax) &&
                     (roomsMin == null || x.Rooms >= roomsMin) &&
-                    (roomsMax == null || x.Rooms <= roomsMax));
+                    (roomsMax == null || x.Rooms <= roomsMax) &&
+                    (title == null || x.Product.Title.Contains(title)) &&
+                    (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
+                    (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
+                    (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
+                    (cityId == null || x.Product.CityId.Equals(cityId)) &&
+                    (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
+                    x.Product.IsDisable.Equals(false) &&
+                    (isRent == null || x.IsRent == isRent) &&
+                    (realEstateTypesId == null || realEstateTypesId.Contains(x.RealEstateTypeId)));
 
 
             var count = await query.CountAsync();
@@ -169,6 +169,7 @@ namespace Swapy.DAL.Repositories
                 IsDisable = x.Product.IsDisable,
                 Images = x.Product.Images.Select(i => i.Image).ToList(),
                 UserType = x.Product.User.Type,
+                UserId = x.Product.UserId,
                 Type = x.Product.Subcategory.Type
             }).ToListAsync();
 

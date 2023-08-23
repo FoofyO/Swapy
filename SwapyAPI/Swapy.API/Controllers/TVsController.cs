@@ -56,10 +56,11 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddTVAsync(AddTVAttributeCommandDTO dto)
+        public async Task<IActionResult> AddTVAsync([FromForm] AddTVAttributeCommandDTO dto)
         {
             try
             {
+                IFormFileCollection formFiles = HttpContext.Request.Form.Files;
                 var productValidator = new AddProductValidator();
                 var productValidatorResult = productValidator.Validate(dto);
 
@@ -93,7 +94,7 @@ namespace Swapy.API.Controllers
 
 
                 var imageValidator = new AddImageUploadValidator();
-                var imageValidatorResult = imageValidator.Validate(dto);
+                var imageValidatorResult = imageValidator.Validate(formFiles);
                 if (!imageValidatorResult.IsValid)
                 {
                     StringBuilder builder = new StringBuilder();
@@ -115,6 +116,7 @@ namespace Swapy.API.Controllers
                     Price = dto.Price,
                     Title = dto.Title,
                     CityId = dto.CityId,
+                    Files = formFiles,
                     IsSmart = dto.IsSmart,
                     TVTypeId = dto.TvTypeId,
                     TVBrandId = dto.TvBrandId,
@@ -124,7 +126,6 @@ namespace Swapy.API.Controllers
                     SubcategoryId = dto.SubcategoryId,
                     ScreenDiagonalId = dto.ScreenDiagonalId,
                     ScreenResolutionId = dto.ScreenResolutionId,
-                    Files = dto.Files
                 };
 
                 var result = await _mediator.Send(command);
@@ -160,10 +161,11 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateTVAsync([FromQuery] UpdateTVAttributeCommandDTO dto)
+        public async Task<IActionResult> UpdateTVAsync([FromForm] UpdateTVAttributeCommandDTO dto)
         {
             try
             {
+                IFormFileCollection formFiles = HttpContext.Request.Form.Files;
                 var productValidator = new UpdateProductValidator();
                 var productValidatorResult = productValidator.Validate(dto);
 
@@ -197,7 +199,7 @@ namespace Swapy.API.Controllers
 
 
                 var imageValidator = new UpdateImageUploadValidator();
-                var imageValidatorResult = imageValidator.Validate(dto);
+                var imageValidatorResult = imageValidator.Validate(formFiles);
                 if (!imageValidatorResult.IsValid)
                 {
                     StringBuilder builder = new StringBuilder();
@@ -230,7 +232,7 @@ namespace Swapy.API.Controllers
                     ScreenDiagonalId = dto.ScreenDiagonalId,
                     ScreenResolutionId = dto.ScreenResolutionId,
                     OldPaths = dto.OldPaths,
-                    NewFiles = dto.NewFiles
+                    NewFiles = formFiles
                 };
 
                 var result = await _mediator.Send(command);

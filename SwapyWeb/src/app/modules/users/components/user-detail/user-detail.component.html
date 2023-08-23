@@ -1,4 +1,4 @@
-<div class="wrapper">
+<div class="user-detail-wrapper">
 
   <div class="user-banner" *ngIf="userDetail">      
     <h2 class="user-fullname"><span name="user-firstname">{{userDetail.firstName}}</span>&nbsp;<span name="user-lastname">{{userDetail.lastName}}</span></h2>
@@ -88,7 +88,27 @@
       <button class="button-load-more" *ngIf="(currentPage && allPages) && currentPage < allPages" (click)="loadUserProducts()">Load more</button>
     </div>
 
-    <div class="product-section" *ngIf="isNotFoundProducts">
+    <div class="product-section" *ngIf="!isNotFoundDisabledProducts">
+      <div class="product-section-table-of-contents">
+        <p>Disabled products</p>
+        <select class="form-select select-filter" [(ngModel)]="selectedDisabledFilter" (ngModelChange)="onSelectDisabledFilterChange()">
+          <option class="option" value="1">Newest first</option>
+          <option class="option" value="2">Oldest first</option>
+          <option class="option" value="4">Price: High to Low</option>
+          <option class="option" value="3">Price: Low to High</option>
+        </select>
+      </div>
+      <div class="products-container" *ngIf="!isLoadingDisabledProducts">
+        <app-product-card *ngFor="let product of userDisabledProducts; trackBy: trackByProductId" [product]="product"></app-product-card>
+      </div>
+      <div class="products-container" *ngIf="isLoadingDisabledProducts">
+          <app-product-card *ngFor="let product of userDisabledProducts; trackBy: trackByProductId;" [product]="product"></app-product-card>
+          <app-product-loading-card *ngFor="let loadingDisabledProduct of generateRange(!(userDisabledProductsCount && allDisabledPages && currentDisabledPage) || (currentDisabledPage < allDisabledPages) ? pageSize : userDisabledProductsCount - (pageSize * (currentDisabledPage - 1)));"></app-product-loading-card>
+      </div>
+      <button class="button-load-more" *ngIf="(currentDisabledPage && allDisabledPages) && currentDisabledPage < allDisabledPages" (click)="loadUserProducts()">Load more</button>
+  </div>
+
+    <div class="product-section" *ngIf="isNotFoundProducts && isNotFoundDisabledProducts">
       <div class="product-section-table-of-contents">
         <p>Products</p>
       </div>  

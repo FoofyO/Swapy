@@ -112,22 +112,22 @@ namespace Swapy.DAL.Repositories
                                                 .ThenInclude(p => p.Images)
                                                .Include(i => i.Product)
                                                 .ThenInclude(p => p.Currency)
-                                               .Where(x => (title == null || x.Product.Title.Contains(title)) &&
-                                                     (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
-                                                     (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
-                                                     (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
-                                                     (cityId == null || x.Product.CityId.Equals(cityId)) &&
-                                                     (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
-                                                     (isNew == null || x.IsNew == isNew) &&
-                                                     x.Product.IsDisable.Equals(false) &&
-                                                     (itemTypesId == null || itemTypesId.Contains(x.ItemTypeId)))
                                                .AsQueryable();
 
             decimal minPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).FirstOrDefaultAsync();
             decimal maxPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).LastOrDefaultAsync();
 
             query = query.Where(x => (priceMin == null || x.Product.Price >= priceMin) &&
-                    (priceMax == null || x.Product.Price <= priceMax));
+                    (priceMax == null || x.Product.Price <= priceMax) &&
+                    (title == null || x.Product.Title.Contains(title)) &&
+                    (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
+                    (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
+                    (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
+                    (cityId == null || x.Product.CityId.Equals(cityId)) &&
+                    (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
+                    (isNew == null || x.IsNew == isNew) &&
+                    x.Product.IsDisable.Equals(false) &&
+                    (itemTypesId == null || itemTypesId.Contains(x.ItemTypeId)));
 
             var count = await query.CountAsync();
             if (count <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
@@ -156,6 +156,7 @@ namespace Swapy.DAL.Repositories
                 IsDisable = x.Product.IsDisable,
                 Images = x.Product.Images.Select(i => i.Image).ToList(),
                 UserType = x.Product.User.Type,
+                UserId = x.Product.UserId,
                 Type = x.Product.Subcategory.Type
             }).ToListAsync();
 
