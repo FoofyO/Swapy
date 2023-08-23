@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Swapy.Common.DTO.Electronics.Requests.Queries;
 using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
@@ -30,6 +31,13 @@ namespace Swapy.DAL.Repositories
         }
 
         public async Task DeleteByIdAsync(string id) => await DeleteAsync(await GetByIdAsync(id));
+
+        public async Task<string> GetByMemoryAndModelAsync(string memoryId, string modelId)
+        {
+            var item = await _context.MemoriesModels.Where(x => x.MemoryId.Equals(memoryId) && x.ModelId.Equals(modelId)).FirstOrDefaultAsync();
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with memory id: {memoryId} and model id: {modelId} id not found");
+            return item.Id;
+        }
 
         public async Task<MemoryModel> GetByIdAsync(string id)
         {

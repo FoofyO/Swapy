@@ -23,6 +23,10 @@ export class UserDetailComponent implements OnInit {
   allPages: number = 0;
   currentPage: number = 0;
   userProductsCount: number = 0;
+  userDisabledProducts!: Product[];
+  allDisabledPages: number | null = 0;
+  currentDisabledPage: number = 0;
+  userDisabledProductsCount: number | null = 0;
   isMe: boolean;
   isIShop: boolean;
   isLike!: boolean;
@@ -33,6 +37,11 @@ export class UserDetailComponent implements OnInit {
   reverseSort: boolean = true;
   isLoadingProducts: boolean = true;
   isNotFoundProducts: boolean = false;
+  selectedDisabledFilter: string = '1';
+  sortDisabledByPrice: boolean = false;
+  reverseDisabledSort: boolean = true;
+  isLoadingDisabledProducts: boolean = true;
+  isNotFoundDisabledProducts: boolean = false;
 
   constructor(private authFacade : AuthFacadeService , private userApiService : UserApiService,private sharedApiService : SharedApiService, private route: ActivatedRoute, private router: Router) { 
     this.userId = this.route.snapshot.paramMap.get('id');
@@ -67,7 +76,8 @@ export class UserDetailComponent implements OnInit {
         }
       }
     );
-    this.loadUserProducts();
+    this.loadUserProducts(true);
+    this.loadUserDisabledProducts(true);
   }
 
   like(): void{
@@ -133,6 +143,39 @@ export class UserDetailComponent implements OnInit {
     });
   }
 
+  loadUserDisabledProducts(isNewRequest: boolean = false): void {
+    if(!this.isMe)
+    {
+      this.isNotFoundProducts = true;
+      return;
+    }
+    this.isLoadingDisabledProducts = true;
+    if(isNewRequest){
+      this.userDisabledProductsCount = null;
+      this.allDisabledPages = null;
+      this.userDisabledProducts = [];
+      this.currentDisabledPage = 1;
+    }
+    else { this.currentDisabledPage++; }
+    this.sharedApiService.getDisabledProducts(this.currentDisabledPage, this.pageSize, this.sortDisabledByPrice, this.reverseDisabledSort, this.userId).subscribe((response: PageResponse<Product>) => { 
+      console.log(response);
+      response.items.forEach(item => {
+        if (Array.isArray(item.images)) {
+          item.images = item.images.map((image) => `${environment.blobUrl}/product-images/${image}`);
+        }
+      });
+      this.userDisabledProductsCount = response.count;
+      this.allDisabledPages = response.allPages;
+      if(this.userDisabledProducts != null) { this.userDisabledProducts.push(...response.items); }
+      else { this.userDisabledProducts = response.items; }
+      this.isLoadingDisabledProducts = false;
+    },
+    (error) => {
+      this.isLoadingDisabledProducts = false;
+      this.isNotFoundDisabledProducts = true;
+    });
+  }
+
   trackByProductId(index: number, product: Product): string {
     return product.id;
   }
@@ -155,7 +198,7 @@ export class UserDetailComponent implements OnInit {
         break;
       }
       case '4':{
-        this.sortByPrice = false;
+        this.sortByPrice = true;
         this.reverseSort = true;
         break;
       }
@@ -166,6 +209,37 @@ export class UserDetailComponent implements OnInit {
       }
     }
     this.loadUserProducts(true);
+  }
+
+  onSelectDisabledFilterChange(): void{
+    switch(this.selectedDisabledFilter) {
+      case '1':{
+        this.sortDisabledByPrice = false;
+        this.reverseDisabledSort = true;
+        break;
+      }
+      case '2':{
+        this.sortDisabledByPrice = false;
+        this.reverseDisabledSort = false;
+        break;
+      }
+      case '3':{
+        this.sortDisabledByPrice = true;
+        this.reverseDisabledSort = false;
+        break;
+      }
+      case '4':{
+        this.sortDisabledByPrice = true;
+        this.reverseDisabledSort = true;
+        break;
+      }
+      default:{
+        this.sortDisabledByPrice = false;
+        this.reverseDisabledSort = true;
+        break;
+      }
+    }
+    this.loadUserDisabledProducts(true);
   }
 
   copyToClipboard(event: Event) {

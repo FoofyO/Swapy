@@ -12,6 +12,12 @@ namespace Swapy.BLL.Services
         private readonly IKeyVaultService _keyVaultService;
         private readonly IProductImageRepository _productImageRepository;
 
+        public ImageService(IKeyVaultService keyVaultService, IProductImageRepository productImageRepository)
+        {
+            _keyVaultService = keyVaultService;
+            _productImageRepository = productImageRepository;
+        }
+
         public async Task<Unit> UploadImages(IFormFileCollection files, string productId)
         {
             var blob = await _keyVaultService.GetSecretValue("BlobStorage");

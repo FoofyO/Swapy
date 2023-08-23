@@ -21,6 +21,7 @@ export class AxiosInterceptorService {
 
         this.axiosInstance.interceptors.request.use(
             async (config: any) => {
+                config.ContentType = "application/json";
                 config = await this.addAccessToken(config);
                 config = this.addLocalization(config);
                 return config;

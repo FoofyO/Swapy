@@ -1,4 +1,4 @@
-<div class="wrapper">
+<div class="product-detail-wrapper">
     <div class="product-wrapper">
         <p class="sliders-container-loading" *ngIf="!product"></p>
         <div class="sliders-container" *ngIf="product">
@@ -46,9 +46,9 @@
         </div>
         <div class="product-name" *ngIf="product">
             <p>{{product.title}}</p>
-            <div class="favorite-button">
-                <input type="checkbox" class="favorite-checkbox" [id]="'favorite-checkbox-' + product.id" [(ngModel)]="product.isFavorite" (change)="changeFavorite()"/>
-                <label [for]="'favorite-checkbox-' + product.id">
+            <div class="favorite-button" *ngIf="!isMe">
+                <input type="checkbox" class="favorite-checkbox" [id]="'favorite-checkbox-' + product.productId" [checked]="product.isFavorite" (click)="changeFavorite($event)"/>
+                <label [for]="'favorite-checkbox-' + product.productId">
                     <svg id="heart-svg" viewBox="467 392 58 57">
                       <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
                         <path d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" id="heart" fill="#C0C0C0	"/>
@@ -225,15 +225,34 @@
             <div class="price-box" *ngIf="product"><p class="price">{{product.price}} <span class="currency">{{product.currency}}</span></p></div>
             <p class="seller-information-box-loading" *ngIf="!product"></p>
             <div class="seller-information-box" *ngIf="product">
-                <p class="seller-name">{{product.sellerName}}</p>
-                <button class="button">
+                <p class="seller-name">{{product.sellerName}}</p>  
+                <button class="button" (click)="copyToClipboard($event)" *ngIf="!isMe">
                     <i class="fa-solid fa-phone"></i>
-                    {{product.phoneNumber}}
+                    &nbsp;{{product.phoneNumber}}
                 </button>
-                <button class="button">
+                <button class="button" *ngIf="!isMe">
                     <i class="fa-solid fa-message"></i>
-                    Write a message
+                    &nbsp;Write a message
                 </button>
+                <button class="button" (click)="transferToEditPage()" *ngIf="isMe">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                  &nbsp;Edit
+                </button>
+                <button class="button" (click)="removeProduct()" *ngIf="isMe">
+                  <i class="fa-solid fa-trash"></i>
+                  &nbsp;Remove
+                </button>
+                <div class="switch-hide" *ngIf="isMe">
+                  <div class="content">
+                    <input type="checkbox" id="switch-hide-btn" [checked]="!product.isDisable" (click)="onIsDisableChange($event)">
+                    <label for="switch-hide-btn">
+                      <span class="track"></span>
+                      <span class="thumb">
+                        <span class="eye"></span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
             </div>
         </div>
     </div>

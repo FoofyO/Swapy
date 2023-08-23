@@ -142,7 +142,7 @@ namespace Swapy.DAL.Repositories
             return item;
         }
 
-        public async Task<IEnumerable<CategoryTreeResponseDTO>> GetSiblingsQuery(string subcategoryId, Language language)
+        public async Task<IEnumerable<CategoryTreeResponseDTO>> GetSiblings(string subcategoryId, Language language)
         {
             var currentSubcategory = await GetByIdAsync(subcategoryId);
 
@@ -182,7 +182,7 @@ namespace Swapy.DAL.Repositories
             do
             {
                 result.Insert(0, currentSubcategory);
-                currentSubcategory = await _context.Subcategories.Where(s => s.ParentSubcategoryId.Equals(currentSubcategory.Id))
+                currentSubcategory = await _context.Subcategories.Where(s => currentSubcategory.ParentSubcategoryId.Equals(s.Id))
                                                                  .Include(s => s.Names)
                                                                  .FirstOrDefaultAsync();
             } while (currentSubcategory != null);

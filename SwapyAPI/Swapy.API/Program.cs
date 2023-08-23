@@ -75,6 +75,7 @@ using FluentValidation.AspNetCore;
 using Swapy.API.Extensions;
 using Swapy.Common.DTO.Categories.Responses;
 using Swapy.Common.Enums;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Swapy.API
 {
@@ -120,13 +121,20 @@ namespace Swapy.API
                 });
             });
 
+            builder.Services.Configure<FormOptions>(o =>
+            {
+                o.ValueLengthLimit = int.MaxValue;
+                o.MultipartBodyLengthLimit = int.MaxValue;
+                o.MemoryBufferThreshold = int.MaxValue;
+            });
+
 
             /// <summary>
             /// Database Registration
             /// </summary>
             builder.Services.AddDbContext<SwapyDbContext>(option =>
             {
-                option.UseSqlServer(builder.Configuration.GetConnectionString("SamedSQL"));
+                option.UseSqlServer(builder.Configuration.GetConnectionString("OrxanSQL"));
             });
 
 
@@ -272,10 +280,14 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<GetByIdShopQuery, ShopDetailResponseDTO>, GetByIdShopQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetByIdTVAttributeQuery, TVAttributeResponseDTO>, GetByIdTVAttributeQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetByIdUserQuery, UserResponseDTO>, GetByIdUserQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetClothesBrandViewIdQuery, string>, GetClothesBrandViewIdQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetDetailChatQuery, DetailChatResponseDTO>, GetDetailChatQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetModelColorIdQuery, string>, GetModelColorIdQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetMemoryModelIdQuery, string>, GetMemoryModelIdQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetShopDataQuery, ShopDataResponseDTO>, GetShopDataQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetSiblingsQuery, IEnumerable<CategoryTreeResponseDTO>>, GetSiblingsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetSimilarProductsByProductIdQuery, ProductsResponseDTO<ProductResponseDTO>>, GetSimilarProductsByProductIdQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetSubcategoryPathQuery, IEnumerable<SpecificationResponseDTO<string>>>, GetSubcategoryPathQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetUserDataQuery, UserDataResponseDTO>, GetUserDataQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetUserSubscriptionsQuery, IEnumerable<Subscription>>, GetUserSubscriptionsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetProductCategoryTypeQuery, SpecificationResponseDTO<CategoryType>>, GetProductCategoryTypeQueryHandler>();

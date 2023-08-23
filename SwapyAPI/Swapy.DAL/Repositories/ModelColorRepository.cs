@@ -31,6 +31,13 @@ namespace Swapy.DAL.Repositories
 
         public async Task DeleteByIdAsync(string id) => await DeleteAsync(await GetByIdAsync(id));
 
+        public async Task<string> GetByModelAndColorAsync(string modelId, string colorId)
+        {
+            var item = await _context.ModelsColors.Where(x => x.ModelId.Equals(modelId) && x.ColorId.Equals(colorId)).FirstOrDefaultAsync();
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with model id: {modelId} and color id: {colorId} not found");
+            return item.Id;
+        }
+
         public async Task<ModelColor> GetByIdAsync(string id)
         {
             var item = await _context.ModelsColors.FindAsync(id);

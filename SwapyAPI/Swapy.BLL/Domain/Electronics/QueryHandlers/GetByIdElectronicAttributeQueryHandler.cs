@@ -32,7 +32,9 @@ namespace Swapy.BLL.Domain.Electronics.QueryHandlers
             {
                 Id = electronicAttribute.Id,
                 City = electronicAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
+                CityId = electronicAttribute.Product.City.Id,
                 Currency = electronicAttribute.Product.Currency.Name,
+                CurrencyId = electronicAttribute.Product.Currency.Id,
                 CurrencySymbol = electronicAttribute.Product.Currency.Symbol,
                 UserId = electronicAttribute.Product.UserId,
                 FirstName = electronicAttribute.Product.User.FirstName,

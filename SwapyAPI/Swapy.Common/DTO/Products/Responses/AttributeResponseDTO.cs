@@ -7,7 +7,9 @@ namespace Swapy.Common.DTO.Products.Responses
     {
         public string Id { get; set; }
         public string City { get; set; }
+        public string CityId { get; set; }
         public string Currency { get; set; }
+        public string CurrencyId { get; set; }
         public string CurrencySymbol { get; set; }
         public string UserId { get; set; }
         public string FirstName { get; set; }

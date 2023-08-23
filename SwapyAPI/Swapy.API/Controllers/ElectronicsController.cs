@@ -56,10 +56,11 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddElectronicAsync(AddElectronicAttributeCommandDTO dto)
+        public async Task<IActionResult> AddElectronicAsync([FromForm] AddElectronicAttributeCommandDTO dto)
         {
             try
             {
+                IFormFileCollection formFiles = HttpContext.Request.Form.Files;
                 var productValidator = new AddProductValidator();
                 var productValidatorResult = productValidator.Validate(dto);
 
@@ -93,7 +94,7 @@ namespace Swapy.API.Controllers
 
 
                 var imageValidator = new AddImageUploadValidator();
-                var imageValidatorResult = imageValidator.Validate(dto);
+                var imageValidatorResult = imageValidator.Validate(formFiles);
                 if (!imageValidatorResult.IsValid)
                 {
                     StringBuilder builder = new StringBuilder();
@@ -115,13 +116,13 @@ namespace Swapy.API.Controllers
                     Price = dto.Price,
                     Title = dto.Title,
                     CityId = dto.CityId,
+                    Files = formFiles,
                     CategoryId = dto.CategoryId,
                     CurrencyId = dto.CurrencyId,
                     Description = dto.Description,
                     ModelColorId = dto.ModelColorId,
                     MemoryModelId = dto.MemoryModelId,
                     SubcategoryId = dto.SubcategoryId,
-                    Files = dto.Files
                 };
 
                 var result = await _mediator.Send(command);
@@ -158,10 +159,11 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateElectronicAsync([FromQuery] UpdateElectronicAttributeCommandDTO dto)
+        public async Task<IActionResult> UpdateElectronicAsync([FromForm] UpdateElectronicAttributeCommandDTO dto)
         {
             try
             {
+                IFormFileCollection formFiles = HttpContext.Request.Form.Files;
                 var productValidator = new UpdateProductValidator();
                 var productValidatorResult = productValidator.Validate(dto);
 
@@ -195,7 +197,7 @@ namespace Swapy.API.Controllers
 
 
                 var imageValidator = new UpdateImageUploadValidator();
-                var imageValidatorResult = imageValidator.Validate(dto);
+                var imageValidatorResult = imageValidator.Validate(formFiles);
                 if (!imageValidatorResult.IsValid)
                 {
                     StringBuilder builder = new StringBuilder();
@@ -225,7 +227,7 @@ namespace Swapy.API.Controllers
                     MemoryModelId = dto.MemoryModelId,
                     SubcategoryId = dto.SubcategoryId,
                     OldPaths = dto.OldPaths,
-                    NewFiles = dto.NewFiles
+                    NewFiles = formFiles
                 };
 
                 var result = await _mediator.Send(command);
@@ -333,6 +335,57 @@ namespace Swapy.API.Controllers
         /// <summary>
         /// Electronics Attributes
         /// </summary>
+
+        [HttpGet("GetMemoryModelId")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetMemoryModelIdAsync([FromQuery] GetMemoryModelIdQueryDTO dto)
+        {
+            try
+            {
+                var result = await _mediator.Send(new GetMemoryModelIdQuery()
+                {
+                    MemoryId = dto.MemoryId,
+                    ModelId = dto.ModelId
+                });
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpGet("GetModelColorId")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetModelColorIdAsync([FromQuery] GetModelColorIdQueryDTO dto)
+        {
+            try
+            {
+                var result = await _mediator.Send(new GetModelColorIdQuery()
+                {
+                    ColorId = dto.ColorId,
+                    ModelId = dto.ModelId
+                });
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
         [HttpGet("Memories")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

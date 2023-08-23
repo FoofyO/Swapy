@@ -32,7 +32,9 @@ namespace Swapy.BLL.Domain.Autos.QueryHandlers
             {
                 Id = autoAttribute.Id,
                 City = autoAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
+                CityId = autoAttribute.Product.City.Id,
                 Currency = autoAttribute.Product.Currency.Name,
+                CurrencyId = autoAttribute.Product.Currency.Id,
                 CurrencySymbol = autoAttribute.Product.Currency.Symbol,
                 UserId = autoAttribute.Product.UserId,
                 FirstName = autoAttribute.Product.User.FirstName,

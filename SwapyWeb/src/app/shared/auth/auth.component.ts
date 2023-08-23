@@ -3,6 +3,7 @@ import { Component, Renderer2 } from '@angular/core';
 import { AuthFacadeService } from 'src/app/modules/auth/services/auth-facade.service';
 import { CategoryTreeService } from 'src/app/shared/category-tree/category-tree.service';
 import { HeaderService } from '../header/header.service';
+import { UserType } from 'src/app/core/enums/user-type.enum';
 
 @Component({
   selector: 'app-auth',
@@ -24,15 +25,15 @@ export class AuthComponent {
   }
 
   transferToProfile(): void{
-    this.router.navigate([this.authFacade.isAuthenticated() ? ('/' + this.authFacade.getUserType() + '/' + this.authFacade.getUserId()) : '/auth/login']);
+    this.router.navigate([this.authFacade.isAuthenticated() ? ('/' + (this.authFacade.getUserType() === UserType.Shop ? 'shops' : 'users') + '/' + this.authFacade.getUserId()) : '/auth/login']);
   }
 
   transferToFavorites(): void{
-    this.router.navigate([this.authFacade.isAuthenticated() ? '/product/favorites' : '/auth/login']);
+    this.router.navigate([this.authFacade.isAuthenticated() ? '/products/favorites' : '/auth/login']);
   }
   
   transferToAddProduct(): void{
-    this.router.navigate([this.authFacade.isAuthenticated() ? '/product/add-product' : '/auth/login']);
+    this.router.navigate([this.authFacade.isAuthenticated() ? '/products/add' : '/auth/login']);
   }
 
   transferToLogin(): void{

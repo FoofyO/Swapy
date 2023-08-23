@@ -3,11 +3,11 @@ using Swapy.Common.DTO.Products.Requests.Commands;
 
 namespace Swapy.API.Validators
 {
-    public class AddImageUploadValidator : AbstractValidator<AddProductCommandDTO>
+    public class AddImageUploadValidator : AbstractValidator<IFormFileCollection>
     {
         public AddImageUploadValidator()
         {
-            RuleForEach(x => x.Files)
+            RuleForEach(x => x)
             .NotEmpty()
                 .WithMessage("Logo field is required")
             .Must(file => file.Length > 0)

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Shop } from 'src/app/modules/shops/models/shop.model';
 
 @Component({
@@ -10,12 +11,16 @@ export class ShopCardComponent implements OnInit {
 
   @Input() shop!: Shop;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
 
   shopLogoLoadError(event: any) {
     event.srcElement.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC-I_ZtbTLG-gsgJiY2_V5YP53FdUMs1C28w&usqp=CAU";
+  }
+
+  moveToShop(): void {
+    this.router.navigateByUrl(`shops/${this.shop.userId}`);
   }
 }

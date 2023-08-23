@@ -38,6 +38,13 @@ namespace Swapy.DAL.Repositories
             return item;
         }
 
+        public async Task<string> GetIdByBrandAndView(string brandId, string viewId)
+        {
+            var item = await _context.ClothesBrandsViews.Where(x => x.ClothesBrandId.Equals(brandId) && x.ClothesView.Equals(viewId)).FirstOrDefaultAsync();
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with brand id: {brandId} and view id: {viewId} not found");
+            return item.Id;
+        }
+
         public async Task<IEnumerable<ClothesBrandView>> GetAllAsync()
         {
             return await _context.ClothesBrandsViews.ToListAsync();

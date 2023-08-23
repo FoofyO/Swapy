@@ -94,26 +94,26 @@ namespace Swapy.DAL.Repositories
                                                         .ThenInclude(mm => mm.Model)
                                                             .ThenInclude(m => m.ElectronicBrandType)
                                                      .Include(e => e.ModelColor)
-                                                     .Where(x => (title == null || x.Product.Title.Contains(title)) &&
-                                                           (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
-                                                           (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
-                                                           (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
-                                                           (cityId == null || x.Product.CityId.Equals(cityId)) &&
-                                                           (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
-                                                           (isNew == null || x.IsNew == isNew) &&
-                                                           x.Product.IsDisable.Equals(false) &&
-                                                           (memoriesId == null || memoriesId.Contains(x.MemoryModel.MemoryId)) &&
-                                                           (colorsId == null || colorsId.Contains(x.ModelColor.ColorId)) &&
-                                                           (modelsId == null || modelsId.Contains(x.MemoryModel.ModelId)) &&
-                                                           (brandsId == null && modelsId != null || brandsId.Contains(x.MemoryModel.Model.ElectronicBrandType.ElectronicBrandId)) &&
-                                                           (typesId == null && modelsId != null || typesId.Contains(x.MemoryModel.Model.ElectronicBrandType.ElectronicTypeId)))
                                                      .AsQueryable();
 
             decimal minPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).FirstOrDefaultAsync();
             decimal maxPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).LastOrDefaultAsync();
 
             query = query.Where(x => (priceMin == null || x.Product.Price >= priceMin) &&
-                    (priceMax == null || x.Product.Price <= priceMax));
+                    (priceMax == null || x.Product.Price <= priceMax) &&
+                    (title == null || x.Product.Title.Contains(title)) &&
+                    (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
+                    (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
+                    (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
+                    (cityId == null || x.Product.CityId.Equals(cityId)) &&
+                    (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
+                    (isNew == null || x.IsNew == isNew) &&
+                    x.Product.IsDisable.Equals(false) &&
+                    (memoriesId == null || memoriesId.Contains(x.MemoryModel.MemoryId)) &&
+                    (colorsId == null || colorsId.Contains(x.ModelColor.ColorId)) &&
+                    (modelsId == null || modelsId.Contains(x.MemoryModel.ModelId)) &&
+                    (brandsId == null && modelsId != null || brandsId.Contains(x.MemoryModel.Model.ElectronicBrandType.ElectronicBrandId)) &&
+                    (typesId == null && modelsId != null || typesId.Contains(x.MemoryModel.Model.ElectronicBrandType.ElectronicTypeId)));
 
             var count = await query.CountAsync();
             if (count <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
@@ -142,6 +142,7 @@ namespace Swapy.DAL.Repositories
                 IsDisable = x.Product.IsDisable,
                 Images = x.Product.Images.Select(i => i.Image).ToList(),
                 UserType = x.Product.User.Type,
+                UserId = x.Product.UserId,
                 Type = x.Product.Subcategory.Type
             }).ToListAsync();
 

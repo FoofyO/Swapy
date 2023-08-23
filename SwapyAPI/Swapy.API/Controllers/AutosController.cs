@@ -56,10 +56,11 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddAutoAsync(AddAutoAttributeCommandDTO dto)
+        public async Task<IActionResult> AddAutoAsync([FromForm] AddAutoAttributeCommandDTO dto)
         {
             try
             {
+                IFormFileCollection formFiles = HttpContext.Request.Form.Files;
                 var productValidator = new AddProductValidator();
                 var productValidatorResult = productValidator.Validate(dto);
 
@@ -93,7 +94,7 @@ namespace Swapy.API.Controllers
 
 
                 var imageValidator = new AddImageUploadValidator();
-                var imageValidatorResult = imageValidator.Validate(dto);
+                var imageValidatorResult = imageValidator.Validate(formFiles);
                 if (!imageValidatorResult.IsValid)
                 {
                     StringBuilder builder = new StringBuilder();
@@ -118,6 +119,7 @@ namespace Swapy.API.Controllers
                     CategoryId = dto.CategoryId,
                     SubcategoryId = dto.SubcategoryId,
                     CityId = dto.CityId,
+                    Files = formFiles,
                     Miliage = dto.Miliage,
                     EngineCapacity = dto.EngineCapacity,
                     ReleaseYear = dto.ReleaseYear,
@@ -126,7 +128,6 @@ namespace Swapy.API.Controllers
                     AutoColorId = dto.AutoColorId,
                     TransmissionTypeId = dto.TransmissionTypeId,
                     AutoModelId = dto.AutoModelId,
-                    Files = dto.Files
                 };
 
                 var result = await _mediator.Send(command);
@@ -163,10 +164,11 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateAutoAsync([FromQuery] UpdateAutoAttributeCommandDTO dto)
+        public async Task<IActionResult> UpdateAutoAsync([FromForm] UpdateAutoAttributeCommandDTO dto)
         {
             try
             {
+                IFormFileCollection formFiles = HttpContext.Request.Form.Files;
                 var productValidator = new UpdateProductValidator();
                 var productValidatorResult = productValidator.Validate(dto);
 
@@ -200,7 +202,7 @@ namespace Swapy.API.Controllers
 
 
                 var imageValidator = new UpdateImageUploadValidator();
-                var imageValidatorResult = imageValidator.Validate(dto);
+                var imageValidatorResult = imageValidator.Validate(formFiles);
                 if (!imageValidatorResult.IsValid)
                 {
                     StringBuilder builder = new StringBuilder();
@@ -235,7 +237,7 @@ namespace Swapy.API.Controllers
                     TransmissionTypeId = dto.TransmissionTypeId,
                     AutoModelId = dto.AutoModelId,
                     OldPaths = dto.OldPaths,
-                    NewFiles = dto.NewFiles
+                    NewFiles = formFiles
                 };
 
                 var result = await _mediator.Send(command);

@@ -17,7 +17,7 @@ export const environment = {
   shopsApiUrl: "https://localhost:7083/api/v1/Shops",
   tvsApiUrl: "https://localhost:7083/api/v1/Products/TVs",
   usersApiUrl: "https://localhost:7083/api/v1/Users",
-  blobUrl: "https://swapyblob.blob.core.windows.net"
+  blobUrl: "https://swapyblobstorage.blob.core.windows.net"
 };
 
 /*

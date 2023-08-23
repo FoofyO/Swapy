@@ -1,4 +1,4 @@
-<div class="wrapper">
+<div class="product-search-wrapper">
     <div class="filters-container">
         <div class="filter-wrapper">
             <div dataWidget="category-filter" class="filter-title-container filter-title-container-collapse" (click)="filterBlockCollapse($event)">
@@ -209,7 +209,7 @@
             </div>
             <div id="brand-filter" class="filter-container collapse"> 
                 <div *ngFor="let brand of brands;" class="day-group">
-                    <input [id]="'brand-checkbox-' + brand.value.id" [(ngModel)]="brand.selected" (ngModelChange)="loadSuitableProducts(true)" type="checkbox">
+                    <input [id]="'brand-checkbox-' + brand.value.id" [(ngModel)]="brand.selected" (ngModelChange)="onSelectedBrandChange()" type="checkbox">
                     <label [for]="'brand-checkbox-' + brand.value.id">
                       <svg><use xlink:href="#checkmark" /></svg>      
                       {{brand.value.value}}
@@ -262,7 +262,7 @@
                 <span class="filter-icon"><svg fill="#999" viewBox="0 0 444.819 444.819" width="1em" height="1em"><path d="M434.252 114.203l-21.409-21.416c-7.419-7.04-16.084-10.561-25.975-10.561-10.095 0-18.657 3.521-25.7 10.561L222.41 231.549 83.653 92.791c-7.042-7.04-15.606-10.561-25.697-10.561-9.896 0-18.559 3.521-25.979 10.561l-21.128 21.416C3.615 121.436 0 130.099 0 140.188c0 10.277 3.619 18.842 10.848 25.693l185.864 185.865c6.855 7.23 15.416 10.848 25.697 10.848 10.088 0 18.75-3.617 25.977-10.848l185.865-185.865c7.043-7.044 10.567-15.608 10.567-25.693.001-9.901-3.523-18.559-10.566-25.985z"></path></svg></span>
             </div>
             <div id="gender-filter" class="filter-container collapse"> 
-                <select class="form-select select-filter" [(ngModel)]="selectedGenderId" (ngModelChange)="loadSuitableProducts(true)">
+                <select class="form-select select-filter" [(ngModel)]="selectedGenderId" (ngModelChange)="onSelectedGenderChange()">
                     <option class="option" [value]="undefined">All</option>
                     <option *ngFor="let gender of genders;" class="option" [value]="gender.id">{{gender.value}}</option>
                 </select>    
@@ -289,7 +289,7 @@
                 <span class="filter-icon"><svg fill="#999" viewBox="0 0 444.819 444.819" width="1em" height="1em"><path d="M434.252 114.203l-21.409-21.416c-7.419-7.04-16.084-10.561-25.975-10.561-10.095 0-18.657 3.521-25.7 10.561L222.41 231.549 83.653 92.791c-7.042-7.04-15.606-10.561-25.697-10.561-9.896 0-18.559 3.521-25.979 10.561l-21.128 21.416C3.615 121.436 0 130.099 0 140.188c0 10.277 3.619 18.842 10.848 25.693l185.864 185.865c6.855 7.23 15.416 10.848 25.697 10.848 10.088 0 18.75-3.617 25.977-10.848l185.865-185.865c7.043-7.044 10.567-15.608 10.567-25.693.001-9.901-3.523-18.559-10.566-25.985z"></path></svg></span>
             </div>
             <div id="clothes-view-filter" class="filter-container collapse"> 
-                <select class="form-select select-filter" [(ngModel)]="selectedClothesViewId" (ngModelChange)="loadSuitableProducts(true)">
+                <select class="form-select select-filter" [(ngModel)]="selectedClothesViewId" (ngModelChange)="onSelectedClothesViewChange()">
                     <option class="option" [value]="undefined">All</option>
                     <option *ngFor="let clothesView of clothesViews;" class="option" [value]="clothesView.id">{{clothesView.value}}</option>
                 </select>    
@@ -316,7 +316,7 @@
                 <span class="filter-icon"><svg fill="#999" viewBox="0 0 444.819 444.819" width="1em" height="1em"><path d="M434.252 114.203l-21.409-21.416c-7.419-7.04-16.084-10.561-25.975-10.561-10.095 0-18.657 3.521-25.7 10.561L222.41 231.549 83.653 92.791c-7.042-7.04-15.606-10.561-25.697-10.561-9.896 0-18.559 3.521-25.979 10.561l-21.128 21.416C3.615 121.436 0 130.099 0 140.188c0 10.277 3.619 18.842 10.848 25.693l185.864 185.865c6.855 7.23 15.416 10.848 25.697 10.848 10.088 0 18.75-3.617 25.977-10.848l185.865-185.865c7.043-7.044 10.567-15.608 10.567-25.693.001-9.901-3.523-18.559-10.566-25.985z"></path></svg></span>
             </div>
             <div id="model-filter" class="filter-container collapse"> 
-                <select class="form-select select-filter" [(ngModel)]="selectedModelId" (ngModelChange)="loadSuitableProducts(true)">
+                <select class="form-select select-filter" [(ngModel)]="selectedModelId" (ngModelChange)="onSelectedModelChange()">
                     <option class="option" [value]="undefined">All</option>
                     <option *ngFor="let model of models;" class="option" [value]="model.id">{{model.value}}</option>
                 </select> 
@@ -484,7 +484,7 @@
             <div class="product-section-not-found">
                 <i class="fa-solid fa-bag-shopping"></i>
                 <p class="not-found-text">No product found</p>
-                <p class="not-found-description">No similar products found</p>
+                <p class="not-found-description">No suitable products found</p>
             </div>
         </div>
     </div>

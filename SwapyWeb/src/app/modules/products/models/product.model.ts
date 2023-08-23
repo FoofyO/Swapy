@@ -11,6 +11,7 @@ export class Product {
     dateTime: Date = new Date();
     images: string[] = [];
     userType!: UserType;
+    userId!: string;
     type!: CategoryType;
     isFavorite: boolean = false;
     isDisable: boolean = true;

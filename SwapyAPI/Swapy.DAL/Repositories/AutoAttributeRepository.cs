@@ -98,19 +98,6 @@ namespace Swapy.DAL.Repositories
                                                .Include(a => a.Product)
                                                    .ThenInclude(p => p.Currency)
                                                .Include(a => a.AutoModel)
-                                               .Where(x => (title == null || x.Product.Title.Contains(title)) &&
-                                                     (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
-                                                     (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
-                                                     (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
-                                                     (cityId == null || x.Product.CityId.Equals(cityId)) &&
-                                                     (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
-                                                     (isNew == null || x.IsNew == isNew) &&
-                                                     x.Product.IsDisable.Equals(false) &&
-                                                     (fuelTypesId == null || fuelTypesId.Contains(x.FuelTypeId)) &&
-                                                     (autoColorsId == null || autoColorsId.Contains(x.AutoColorId)) &&
-                                                     (transmissionTypesId == null || transmissionTypesId.Contains(x.TransmissionTypeId)) &&
-                                                     (autoBrandsId == null || autoBrandsId.Contains(x.AutoModel.AutoBrandId)) &&
-                                                     (autoTypesId == null || autoTypesId.Contains(x.AutoModel.AutoTypeId)))
                                                .AsQueryable();
 
             decimal minPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).FirstOrDefaultAsync();
@@ -132,7 +119,20 @@ namespace Swapy.DAL.Repositories
                     (engineCapacityMin == null || x.EngineCapacity >= engineCapacityMin) &&
                     (engineCapacityMax == null || x.EngineCapacity <= engineCapacityMax) &&
                     (releaseYearOlder == null || x.ReleaseYear >= releaseYearOlder) &&
-                    (releaseYearNewer == null || x.ReleaseYear <= releaseYearNewer));
+                    (releaseYearNewer == null || x.ReleaseYear <= releaseYearNewer) &&
+                    (title == null || x.Product.Title.Contains(title)) &&
+                    (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
+                    (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
+                    (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
+                    (cityId == null || x.Product.CityId.Equals(cityId)) &&
+                    (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
+                    (isNew == null || x.IsNew == isNew) &&
+                    x.Product.IsDisable.Equals(false) &&
+                    (fuelTypesId == null || fuelTypesId.Contains(x.FuelTypeId)) &&
+                    (autoColorsId == null || autoColorsId.Contains(x.AutoColorId)) &&
+                    (transmissionTypesId == null || transmissionTypesId.Contains(x.TransmissionTypeId)) &&
+                    (autoBrandsId == null || autoBrandsId.Contains(x.AutoModel.AutoBrandId)) &&
+                    (autoTypesId == null || autoTypesId.Contains(x.AutoModel.AutoTypeId)));
 
             var count = await query.CountAsync();
             if (count <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
@@ -161,6 +161,7 @@ namespace Swapy.DAL.Repositories
                 IsDisable = x.Product.IsDisable,
                 Images = x.Product.Images.Select(i => i.Image).ToList(),
                 UserType = x.Product.User.Type,
+                UserId = x.Product.UserId,
                 Type = x.Product.Subcategory.Type
             }).ToListAsync();
 
