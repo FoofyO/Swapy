@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.API.Validators;

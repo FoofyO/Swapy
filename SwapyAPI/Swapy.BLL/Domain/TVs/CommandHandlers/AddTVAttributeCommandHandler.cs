@@ -36,7 +36,7 @@ namespace Swapy.BLL.Domain.TVs.CommandHandlers
             TVAttribute tvAttribute = new TVAttribute(request.IsNew, request.IsSmart, request.TVTypeId, request.TVBrandId, request.ScreenResolutionId, request.ScreenDiagonalId, product.Id);
             await _tvAttributeRepository.CreateAsync(tvAttribute);
 
-            if (request.Files.Count > 0) await _imageService.UploadImages(request.Files, product.Id);
+            if (request.Files.Count > 0) await _imageService.UploadProductImagesAsync(request.Files, product.Id);
 
             var model = new NotificationModel()
             {

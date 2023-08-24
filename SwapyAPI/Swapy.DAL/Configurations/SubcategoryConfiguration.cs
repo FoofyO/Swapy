@@ -24,7 +24,7 @@ namespace Swapy.DAL.Configurations
 
             builder.Property(s => s.SubType)
                    .HasColumnType("INT")
-                   .IsRequired();
+                   .IsRequired(false);
 
             builder.HasMany(a => a.Names)
                    .WithOne()

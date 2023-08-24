@@ -50,24 +50,32 @@ namespace Swapy.DAL.Repositories
                                           .Include(c => c.Product)
                                             .ThenInclude(p => p.Images)
                                           .Include(c => c.Buyer)
-                                          .Include(c => c.Messages.OrderByDescending(m => m.DateTime).FirstOrDefault())
+                                          .Select(c => new Chat
+                                          {
+                                              Id = c.Id,
+                                              Buyer = c.Buyer,
+                                              Product = c.Product,
+                                              Messages = c.Messages.OrderByDescending(m => m.DateTime).Take(1).ToList(),
+                                          })
                                           .ToListAsync();
         }
 
         public async Task<IEnumerable<Chat>> GetAllBuyerChatsAsync(string userId)
         {
-            var items =  await _context.Chats.Where(c => c.BuyerId.Equals(userId))
-                                       .Include(p => p.Product)
-                                            .ThenInclude(p => p.User)
-                                       .Include(p => p.Product)
-                                            .ThenInclude(p => p.Images)
-                                       .Include(c => c.Messages.OrderByDescending(m => m.DateTime).FirstOrDefault())
-                                       .ToListAsync();
-            //foreach (var item in items)
-            //{
-            //    item.Messages = item?.Messages?.OrderByDescending(m => m.DateTime).FirstOrDefault();
-            //}
-            return items;
+            return await _context.Chats.Where(c => c.BuyerId.Equals(userId))
+                                            .Include(c => c.Product)
+                                                .ThenInclude(p => p.User)
+                                            .Include(c => c.Product)
+                                                .ThenInclude(p => p.Images)
+                                            .Include(c => c.Messages)
+                                            .Select(c => new Chat
+                                            {
+                                                Id = c.Id,
+                                                Buyer = c.Buyer,
+                                                Product = c.Product,
+                                                Messages = c.Messages.OrderByDescending(m => m.DateTime).Take(1).ToList(),
+                                            })
+                                            .ToListAsync();
         }
 
         public async Task<Chat> GetByIdDetailAsync(string id)
