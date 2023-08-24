@@ -58,7 +58,6 @@ export class FavoriteProductsComponent implements OnInit {
       //   this.authFacade.logout();
       //   this.router.navigateByUrl('/auth/login'); 
       // }
-      console.log(error);
       this.isLoadingProducts = false;
       this.isNotFoundProducts = true;
     });

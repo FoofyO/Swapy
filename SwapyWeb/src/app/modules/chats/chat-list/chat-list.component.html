@@ -1,55 +1,10 @@
 <div class="chat-list-container">
-    <button class="chat-list-button">Buying</button>
-    <button class="chat-list-button">Selling</button>
     <div class="chat-list-chats-container">
-        <div class="chat-list-chats">
-            <img class="chat-image" src="https://htmlcolorcodes.com/assets/images/colors/steel-gray-color-solid-background-1920x1080.png"/>
-            <p style="margin: auto 1rem">Samad Ramazanov</p> 
-            <p style="margin: auto 1rem">2 mins ago</p>
-            <p style="margin: auto 1rem">Hello there! How are you?</p> 
+        <div class="chat-list-chats" *ngFor="let chat of chatList" (click)="goToChat(chat)">
+            <img class="chat-image" [src]="chat.logo"/>
+            <p>{{chat.title}}</p> 
+            <p>{{chat.lastMessage}}</p> 
+            <p class="time-info">{{chat.lastMessageDateTime | customDateEn}}</p>
         </div>
-        <hr>
-        <div class="chat-list-chats">
-            <img class="chat-image" src="https://htmlcolorcodes.com/assets/images/colors/steel-gray-color-solid-background-1920x1080.png"/>
-            <p style="margin: auto 1rem">Samad Ramazanov</p> 
-            <p style="margin: auto 1rem">2 mins ago</p>
-            <p style="margin: auto 1rem">Hello there! How are you?</p> 
-        </div>
-        <hr>
-        <div class="chat-list-chats">
-            <img class="chat-image" src="https://htmlcolorcodes.com/assets/images/colors/steel-gray-color-solid-background-1920x1080.png"/>
-            <p style="margin: auto 1rem">Samad Ramazanov</p> 
-            <p style="margin: auto 1rem">2 mins ago</p>
-            <p style="margin: auto 1rem">Hello there! How are you?</p> 
-        </div>
-        <hr>
-        <div class="chat-list-chats">
-            <img class="chat-image" src="https://htmlcolorcodes.com/assets/images/colors/steel-gray-color-solid-background-1920x1080.png"/>
-            <p style="margin: auto 1rem">Samad Ramazanov</p> 
-            <p style="margin: auto 1rem">2 mins ago</p>
-            <p style="margin: auto 1rem">Hello there! How are you?</p> 
-        </div>
-        <hr>
-        <div class="chat-list-chats">
-            <img class="chat-image" src="https://htmlcolorcodes.com/assets/images/colors/steel-gray-color-solid-background-1920x1080.png"/>
-            <p style="margin: auto 1rem">Samad Ramazanov</p> 
-            <p style="margin: auto 1rem">2 mins ago</p>
-            <p style="margin: auto 1rem">Hello there! How are you?</p> 
-        </div>
-        <hr>
-        <div class="chat-list-chats">
-            <img class="chat-image" src="https://htmlcolorcodes.com/assets/images/colors/steel-gray-color-solid-background-1920x1080.png"/>
-            <p style="margin: auto 1rem">Samad Ramazanov</p> 
-            <p style="margin: auto 1rem">2 mins ago</p>
-            <p style="margin: auto 1rem">Hello there! How are you?</p> 
-        </div>
-        <hr>
-        <div class="chat-list-chats">
-            <img class="chat-image" src="https://htmlcolorcodes.com/assets/images/colors/steel-gray-color-solid-background-1920x1080.png"/>
-            <p style="margin: auto 1rem">Samad Ramazanov</p> 
-            <p style="margin: auto 1rem">2 mins ago</p>
-            <p style="margin: auto 1rem">Hello there! How are you?</p> 
-        </div>
-        <hr>
     </div>
 </div>

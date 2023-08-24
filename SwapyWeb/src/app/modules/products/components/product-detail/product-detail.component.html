@@ -230,7 +230,7 @@
                     <i class="fa-solid fa-phone"></i>
                     &nbsp;{{product.phoneNumber}}
                 </button>
-                <button class="button" *ngIf="!isMe">
+                <button class="button" *ngIf="!isMe" (click)="goToChat()">
                     <i class="fa-solid fa-message"></i>
                     &nbsp;Write a message
                 </button>
