@@ -14,7 +14,6 @@ namespace Swapy.BLL.Domain.Shops.CommandHandlers
         {
             var shop = await _shopAttributeRepository.GetByUserIdAsync(request.UserId);
 
-            if (!string.IsNullOrEmpty(request.Banner)) shop.Banner = request.Banner;
             if (!string.IsNullOrEmpty(request.Slogan)) shop.Slogan = request.Slogan;
             if (!string.IsNullOrEmpty(request.Location)) shop.Location = request.Location;
             if (!string.IsNullOrEmpty(request.ShopName)) shop.ShopName = request.ShopName;

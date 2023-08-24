@@ -9,7 +9,7 @@ import { AuthFacadeService } from 'src/app/modules/auth/services/auth-facade.ser
 })
 export class DashboardComponent {
   userType: boolean;
-  currentPage: number = 0;
+  currentPage: number = 2;
 
   constructor(private authFacade: AuthFacadeService) {
     this.userType = this.authFacade.getUserType() == UserType.Shop ? true : false;

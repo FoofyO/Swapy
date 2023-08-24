@@ -8,6 +8,7 @@ using Swapy.Common.DTO.Shops.Requests;
 using System.Security.Claims;
 using Swapy.API.Validators;
 using System.Text;
+using FluentValidation;
 
 namespace Swapy.API.Controllers
 {
@@ -189,14 +190,16 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UploadBannerAsync([FromForm] UploadBannerCommandDTO dto)
+        public async Task<IActionResult> UploadBannerAsync()
         {
             try
             {
                 if (User.FindFirstValue(ClaimTypes.Role).Equals("Shop"))
                 {
+                    var file = HttpContext.Request.Form.Files[0];
+
                     var validator = new BannerUploadValidator();
-                    var validatorResult = validator.Validate(dto);
+                    var validatorResult = validator.Validate(file);
                     if (!validatorResult.IsValid)
                     {
                         StringBuilder builder = new StringBuilder();
@@ -214,7 +217,7 @@ namespace Swapy.API.Controllers
                     var result = await _mediator.Send(new UploadBannerCommand()
                     {
                         UserId = userId,
-                        Banner = dto.Banner
+                        Banner = file
                     });
 
                     return Ok();

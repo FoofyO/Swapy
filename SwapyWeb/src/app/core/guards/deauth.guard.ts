@@ -6,15 +6,15 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTr
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+export class DeauthGuard implements CanActivate {
   
   constructor(private authFacade: AuthFacadeService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      if(this.authFacade.isAuthenticated()) return true;
-      else {
-        this.router.navigate(['/auth/login']);
+      if(this.authFacade.isAuthenticated()) {
+        this.router.navigate(['/']);
         return false;
       }
+      else return true;
     }
 }
