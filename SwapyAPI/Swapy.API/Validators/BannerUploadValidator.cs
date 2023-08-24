@@ -3,11 +3,11 @@ using Swapy.Common.DTO.Shops.Requests;
 
 namespace Swapy.API.Validators
 {
-    public class BannerUploadValidator : AbstractValidator<UploadBannerCommandDTO>
+    public class BannerUploadValidator : AbstractValidator<IFormFile>
     {
         public BannerUploadValidator()
         {
-            RuleFor(x => x.Banner)
+            RuleFor(x => x)
             .NotEmpty()
                 .WithMessage("Banner field is required")
             .Must(file => file.Length > 0)

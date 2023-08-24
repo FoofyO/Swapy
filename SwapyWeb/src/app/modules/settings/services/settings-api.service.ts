@@ -6,6 +6,7 @@ import { AxiosInterceptorService } from 'src/app/core/services/axios-interceptor
 import { UserData } from '../models/user-data';
 import { ShopData } from '../models/shop-data';
 import { AuthResponse } from '../../auth/models/auth-credentials';
+import { PasswordData } from '../models/password-data';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +51,35 @@ export class SettingsApiService {
   }
 
   updateUserData(data: UserData) : Observable<any> {
-    return from(this.axiosInterceptorService.put<any>(`${this.usersApiUrl}/Update`, data))
+    return from(this.axiosInterceptorService.put<any>(`${this.usersApiUrl}`, data))
+    .pipe(
+      catchError(error => { throw error; })
+    );
+  }
+
+  updateShopData(data: ShopData) : Observable<any> {
+    return from(this.axiosInterceptorService.put<any>(`${this.shopsApiUrl}`, data))
+    .pipe(
+      catchError(error => { throw error; })
+    );
+  }
+
+  changePassword(data: PasswordData) : Observable<any> {
+    return from(this.axiosInterceptorService.patch<any>(`${this.authApiUrl}/ChangePassword`, data))
+    .pipe(
+      catchError(error => { throw error; })
+    );
+  }
+
+  updateLogo(data: FormData): Observable<any> {
+    return from(this.axiosInterceptorService.post<any>(`${this.usersApiUrl}/UploadLogo`, data))
+    .pipe(
+      catchError(error => { throw error; })
+    );
+  }
+
+  updateBanner(data: FormData): Observable<any> {
+    return from(this.axiosInterceptorService.post<any>(`${this.shopsApiUrl}/UploadBanner`, data))
     .pipe(
       catchError(error => { throw error; })
     );

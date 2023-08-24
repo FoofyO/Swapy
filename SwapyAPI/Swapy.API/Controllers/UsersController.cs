@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.API.Validators;
@@ -66,7 +67,7 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpPut("Update")]
+        [HttpPut]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -94,8 +95,6 @@ namespace Swapy.API.Controllers
                 var command = new UpdateUserCommand
                 {
                     UserId = userId,
-                    Logo = dto.Logo,
-                    Email = dto.Email,
                     LastName = dto.LastName,
                     FirstName = dto.FirstName,
                     PhoneNumber = dto.PhoneNumber,
@@ -280,12 +279,14 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UploadLogoAsync([FromForm] UploadLogoCommandDTO dto)
+        public async Task<IActionResult> UploadLogoAsync()
         {
             try
             {
+                var file = HttpContext.Request.Form.Files[0];
+
                 var validator = new LogoUploadValidator();
-                var validatorResult = validator.Validate(dto);
+                var validatorResult = validator.Validate(file);
                 if (!validatorResult.IsValid)
                 {
                     StringBuilder builder = new StringBuilder();
@@ -303,7 +304,7 @@ namespace Swapy.API.Controllers
                 var result = await _mediator.Send(new UploadLogoCommand()
                 {
                     UserId = userId,
-                    Logo = dto.Logo
+                    Logo = file
                 });
 
                 return Ok();

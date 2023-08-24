@@ -27,7 +27,7 @@
         <p class="description-loading" *ngIf="!shopDetail"></p>
 
         <div class="buttons-container" *ngIf="!(isMe || isIShop)">
-            <button *ngIf="shopDetail" [class.active-button]="isSubscription" (click)="subscribe()">Subscribe</button>
+            <button *ngIf="shopDetail" [class.active-button]="isSubscription" (click)="subscribe()">{{isSubscription ? 'Unsubscribe' : 'Subscribe'}}</button>
             <p *ngIf="!shopDetail" class="button-loading"></p>
             <button *ngIf="shopDetail" [class.active-button]="isLike" (click)="like()">
                 <i class="fa-regular fa-thumbs-up inactive"></i>
@@ -49,7 +49,7 @@
         <p class="information-loading" *ngIf="!shopDetail"></p>
         <div class="information" *ngIf="shopDetail && shopDetail.startWorkTime && shopDetail.endWorkTime">
             <i class="fa-solid fa-clock"></i>
-            <p>{{shopDetail.workDays}} {{shopDetail.startWorkTime}} - {{shopDetail.endWorkTime}}</p>
+            <p>{{shopDetail.startWorkTime | dateToTime}}-{{shopDetail.endWorkTime | dateToTime}} {{shopDetail.workDays}}</p>
         </div>
         <p class="information-loading" *ngIf="!shopDetail"></p>
         <div class="information clickable" (click)="copyToClipboard($event)" *ngIf="shopDetail && shopDetail.phoneNumber">

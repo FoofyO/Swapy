@@ -114,9 +114,7 @@ export class ShopDetailComponent implements OnInit {
   }
 
   transferToSettings(): void{
-    if(this.isMe){
-      this.isMe = false;
-    }
+    if(this.isMe) this.router.navigate(["/settings"]);
   }
 
   shopBannerLoad(imageUrl: string): void {

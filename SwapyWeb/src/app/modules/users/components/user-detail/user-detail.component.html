@@ -17,7 +17,7 @@
     <h2 *ngIf="!userDetail" class="user-description-fullname-loading"></h2>
     
     <div class="buttons-container" *ngIf="!(isMe || isIShop)">
-      <button *ngIf="userDetail" [class.active-button]="isSubscription" (click)="subscribe()">Subscribe</button>
+      <button *ngIf="userDetail" [class.active-button]="isSubscription" (click)="subscribe()">{{isSubscription ? 'Unsubscribe' : 'Subscribe'}}</button>
       <p *ngIf="!userDetail" class="button-loading"></p>
       <button *ngIf="userDetail" [class.active-button]="isLike" (click)="like()">
           <i class="fa-regular fa-thumbs-up inactive"></i>

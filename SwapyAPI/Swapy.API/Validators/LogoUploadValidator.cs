@@ -2,11 +2,11 @@
 
 namespace Swapy.API.Validators
 {
-    public class LogoUploadValidator : AbstractValidator<UploadLogoCommandDTO>
+    public class LogoUploadValidator : AbstractValidator<IFormFile>
     {
         public LogoUploadValidator()
         {
-            RuleFor(x => x.Logo)
+            RuleFor(x => x)
             .NotEmpty()
                 .WithMessage("Logo field is required")
             .Must(file => file.Length > 0)

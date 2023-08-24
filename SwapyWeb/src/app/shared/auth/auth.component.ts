@@ -17,11 +17,11 @@ export class AuthComponent {
   async onLogout(): Promise<void> {
     await this.authFacade.logout();
     this.router.navigate(['/']);
-  }
+    }
 
-  toggleCategoryMenuAnimation(){
-    this.headerService.disableCollapsedMenu();
-    this.categoryTreeService.toggleAnimation();
+    toggleCategoryMenuAnimation(){
+      this.headerService.disableCollapsedMenu();
+      this.categoryTreeService.toggleAnimation();
   }
 
   transferToProfile(): void{
@@ -29,11 +29,11 @@ export class AuthComponent {
   }
 
   transferToFavorites(): void{
-    this.router.navigate([this.authFacade.isAuthenticated() ? '/products/favorites' : '/auth/login']);
+    this.router.navigate(['/products/favorites']);
   }
   
   transferToAddProduct(): void{
-    this.router.navigate([this.authFacade.isAuthenticated() ? '/products/add' : '/auth/login']);
+    this.router.navigate(['/products/add']);
   }
 
   transferToLogin(): void{
@@ -41,7 +41,6 @@ export class AuthComponent {
   }
 
   transferToChats(): void{
-    //this.router.navigate([this.authFacade.isAuthenticated() ? '/chats' : '/auth/login']);
     this.router.navigate(['/chats']);
   }
 }

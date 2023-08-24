@@ -7,6 +7,6 @@ export interface ShopData {
     logo: string;
     banner: string;
     workDays: string;
-    startWorkTime: string;
-    endWorkTime: string;
+    startWorkTime: Date | null | string;
+    endWorkTime: Date | null | string;
 }
