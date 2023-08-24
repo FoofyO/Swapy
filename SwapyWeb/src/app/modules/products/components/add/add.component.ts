@@ -10,14 +10,7 @@ import { Product } from '../../models/product.model';
 import { Specification } from 'src/app/core/models/specification';
 import { CurrencyResponse } from 'src/app/core/models/currency-response.interface';
 import { SubcategoryType } from 'src/app/core/enums/subcategory-type.enum';
-import { AnimalAddRequest } from '../../models/animal-add-request.interface';
-import { AutoAddRequest } from '../../models/auto-add-request.interface';
 import { HttpStatusCode } from 'axios';
-import { ClothesAddRequest } from '../../models/clothes-add-request.interface';
-import { ElectronicsAddRequest } from '../../models/electronics-add-request.interface';
-import { ItemAddRequest } from '../../models/item-add-request.interface';
-import { RealEstateAddRequest } from '../../models/real-estate-add-request.interface';
-import { TvAddRequest } from '../../models/tv-add-request.interface';
 import { AuthFacadeService } from 'src/app/modules/auth/services/auth-facade.service';
 
 @Component({
@@ -309,7 +302,6 @@ export class AddComponent implements OnInit {
   generateRange(count: number): number[] { return Array.from({length: count}, (_, i) => i + 1); }
 
   onSelectCategoryChange(): void {
-    console.log(this.categories);
     this.subcategoriesHierarchy.splice(-this.currentSubcategoryNesting - 1);
     this.selectedSubcategoriesId.splice(-this.currentSubcategoryNesting);
     this.currentSubcategoryNesting = -1;
@@ -324,7 +316,6 @@ export class AddComponent implements OnInit {
     this.sharedApiService.GetSubcategoriesByCategoryAsync(this.selectedCategoryId).subscribe(
       (response: CategoryNode[]) => {
         this.subcategoriesHierarchy[++this.currentSubcategoryNesting] = response;
-        console.log(this.subcategoriesHierarchy);
         this.spinnerService.changeSpinnerState(false);
       }
     );
@@ -347,7 +338,6 @@ export class AddComponent implements OnInit {
     this.spinnerService.changeSpinnerState(true);
     this.sharedApiService.GetSubcategoriesBySubcategoryAsync(this.selectedSubcategoriesId[index]).subscribe(
       (response: CategoryNode[]) => {
-        console.log(response);
         this.subcategoriesHierarchy[++this.currentSubcategoryNesting] = response;     
         this.clotheIsShoe = this.subcategoriesHierarchy[index].find(item => item.id === this.selectedSubcategoriesId[index])?.subType === SubcategoryType.Shoe;
         this.spinnerService.changeSpinnerState(false);
@@ -505,7 +495,7 @@ export class AddComponent implements OnInit {
         formData.append("AnimalBreedId", `${(this.selectedBreedId)}`);  
 
         this.productApiService.createAnimal(formData).subscribe(
-          (result) => {},
+          (result) => {window.history.back();},
           (error) => {
             if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
               this.errorText = "Invalid request, please try again."
@@ -549,7 +539,7 @@ export class AddComponent implements OnInit {
         formData.append("AutoModelId", `${this.selectedModelId}`); 
 
         this.productApiService.createAuto(formData).subscribe(
-          (result) => {},
+          (result) => {window.history.back();},
           (error) => {
             if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
               this.errorText = "Invalid request, please try again."
@@ -590,7 +580,7 @@ export class AddComponent implements OnInit {
             formData.append("ClothesBrandViewId", `${result}`); 
 
             this.productApiService.createClothes(formData).subscribe(
-              (result) => {},
+              (result) => {window.history.back();},
               (error) => {
                 if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
                   this.errorText = "Invalid request, please try again."
@@ -641,7 +631,7 @@ export class AddComponent implements OnInit {
             formData.append("ModelColorId", `${modelColorId}`); 
 
             this.productApiService.createElectronics(formData).subscribe(
-              (result) => {},
+              (result) => {window.history.back();},
               (error) => {
                 if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
                   this.errorText = "Invalid request, please try again."
@@ -677,20 +667,8 @@ export class AddComponent implements OnInit {
         formData.append("IsNew", `${(this.selectedIsNewFilter === 1)}`);  
         formData.append("ItemTypeId", `${this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1]}`);
 
-        let product: ItemAddRequest = {
-          Title: this.selectedTitle,
-          Description: this.selectedDescription,
-          Price: this.price,
-          CurrencyId: this.selectedCurrencyId,
-          CategoryId: this.selectedCategoryId,
-          SubcategoryId: this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1],
-          CityId: this.selectedCityId,
-          Files: imagesToSend,
-          IsNew: this.selectedIsNewFilter === 1,
-          ItemTypeId: this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1]
-        };
         this.productApiService.createItem(formData).subscribe(
-          (result) => {},
+          (result) => {window.history.back();},
           (error) => {
             if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
               this.errorText = "Invalid request, please try again."
@@ -725,7 +703,7 @@ export class AddComponent implements OnInit {
         formData.append("RealEstateTypeId", `${this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1]}`); 
 
         this.productApiService.createRealEstate(formData).subscribe(
-          (result) => {},
+          (result) => {window.history.back();},
           (error) => {
             if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
               this.errorText = "Invalid request, please try again."
@@ -765,7 +743,7 @@ export class AddComponent implements OnInit {
         formData.append("ScreenDiagonalId", `${this.selectedScreenDiagonalId}`);
 
         this.productApiService.createTv(formData).subscribe(
-          (result) => {},
+          (result) => {window.history.back();},
           (error) => {
             if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
               this.errorText = "Invalid request, please try again."

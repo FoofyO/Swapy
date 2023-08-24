@@ -282,6 +282,7 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<GetByIdUserQuery, UserResponseDTO>, GetByIdUserQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetClothesBrandViewIdQuery, string>, GetClothesBrandViewIdQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetDetailChatQuery, DetailChatResponseDTO>, GetDetailChatQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetDetailChatByProductIdQuery, DetailChatResponseDTO>, GetDetailChatByProductIdQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetModelColorIdQuery, string>, GetModelColorIdQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetMemoryModelIdQuery, string>, GetMemoryModelIdQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetShopDataQuery, ShopDataResponseDTO>, GetShopDataQueryHandler>();
@@ -291,6 +292,7 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<GetUserDataQuery, UserDataResponseDTO>, GetUserDataQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetUserSubscriptionsQuery, IEnumerable<Subscription>>, GetUserSubscriptionsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetProductCategoryTypeQuery, SpecificationResponseDTO<CategoryType>>, GetProductCategoryTypeQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetTemporaryChatQuery, DetailChatResponseDTO>, GetTemporaryChatQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<IncrementProductViewsCommand, Unit>, IncrementProductViewsCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<LoginCommand, AuthResponseDTO>, LoginCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<LogoutCommand, Unit>, LogoutCommandHandler>();

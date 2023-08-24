@@ -94,6 +94,45 @@ namespace Swapy.API.Controllers
             }
         }
 
+        [HttpGet("TemporaryChat/{ProductId}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetTemporaryChatAsync([FromRoute] GetTemporaryChatQueryDTO dto)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var command = new GetTemporaryChatQuery()
+                {
+                    UserId = userId,
+                    ProductId = dto.ProductId,
+                };
+
+                var result = await _mediator.Send(command);
+         
+                return Ok(result);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest("Invalid parameters: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
         [HttpPost("Messages")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -200,11 +239,32 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetDetailChatAsync(GetDetailChatQueryDTO dto)
+        public async Task<IActionResult> GetDetailChatAsync([FromRoute] GetDetailChatQueryDTO dto)
         {
             try
             {
-                var result = await _mediator.Send(new GetDetailChatQueryDTO() { ChatId = dto.ChatId});
+                var result = await _mediator.Send(new GetDetailChatQuery() { ChatId = dto.ChatId});
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpGet("ChatByProductId/{ProductId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetDetailChatByProductIdAsync([FromRoute] GetDetailChatByProductIdQueryDTO dto)
+        {
+            try
+            {
+                var result = await _mediator.Send(new GetDetailChatByProductIdQuery() { ProductId = dto.ProductId });
                 return Ok(result);
             }
             catch (NotFoundException ex)

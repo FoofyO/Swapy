@@ -18,7 +18,7 @@ export class AppComponent {
   onShowUI(location: any): void {
     if (location instanceof NavigationEnd) {
       if (location.url === '/') this.isShowUI(true);
-      else if (location.url.includes('/chats')) this.isShowUI(true);
+      else if (location.url.includes('/chats')) this.showUIWithOutFooter();
       else if (location.url.includes('/products/add')) this.isShowUI(false);
       else if (location.url.includes('/products/edit')) this.isShowUI(false);
       else if (location.url.includes('/products')) this.isShowUI(true);

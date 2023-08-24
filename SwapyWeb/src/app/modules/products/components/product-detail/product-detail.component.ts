@@ -395,6 +395,11 @@ export class ProductDetailComponent implements OnInit, AfterViewInit  {
     });
   }
 
+  goToChat(): void {
+    const params = { productId: this.productId };
+    this.router.navigate(['chats'], { queryParams: params });
+  }
+
   trackByProductId(index: number, product: Product): string {
     return product.id;
   }

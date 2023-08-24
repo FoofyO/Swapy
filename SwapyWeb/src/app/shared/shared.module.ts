@@ -21,6 +21,7 @@ import { ShopLoadingCardComponent } from './shop-loading-card/shop-loading-card.
 import { CategoryLoadingCardComponent } from './category-loading-card/category-loading-card.component';
 import { BooleanToYesNoPipe } from '../core/pipes/boolean-to-yes-no.pipe';
 import { ChildOrAdultPipe } from '../core/pipes/child-or-adult.pipe';
+import { TimeSpanToHoursMinutesPipe } from '../core/pipes/timespan-to-time.pipe';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { ChildOrAdultPipe } from '../core/pipes/child-or-adult.pipe';
     SpinnerComponent,
     ProductLoadingCardComponent,
     ShopLoadingCardComponent,
-    CategoryLoadingCardComponent
+    CategoryLoadingCardComponent,
+    TimeSpanToHoursMinutesPipe
   ],
   imports: [
     FormsModule,
@@ -50,7 +52,7 @@ import { ChildOrAdultPipe } from '../core/pipes/child-or-adult.pipe';
     RouterModule,
     ReactiveFormsModule
   ],
-  exports: [HeaderComponent, FooterComponent, ErrorComponent, PaginationComponent, ProductCardComponent, ProductLoadingCardComponent, ShopCardComponent, ShopLoadingCardComponent, CategoryCardComponent, CategoryLoadingCardComponent, ShortNumberPipe, DateOnlyPipe, PhoneNumberPipe, BooleanToYesNoPipe, ChildOrAdultPipe, SpinnerComponent],
+  exports: [HeaderComponent, FooterComponent, ErrorComponent, PaginationComponent, ProductCardComponent, ProductLoadingCardComponent, ShopCardComponent, ShopLoadingCardComponent, CategoryCardComponent, CategoryLoadingCardComponent, ShortNumberPipe, DateOnlyPipe, PhoneNumberPipe, BooleanToYesNoPipe, ChildOrAdultPipe, SpinnerComponent, CustomDatePipeEn, TimeSpanToHoursMinutesPipe],
   providers: [PaginationComponent]
 })
 export class SharedModule { }
