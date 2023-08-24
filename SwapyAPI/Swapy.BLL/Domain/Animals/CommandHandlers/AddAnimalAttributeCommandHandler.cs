@@ -36,7 +36,7 @@ namespace Swapy.BLL.Domain.Animals.CommandHandlers
             AnimalAttribute animalAttribute = new AnimalAttribute(request.AnimalBreedId, product.Id);
             await _animalAttributeRepository.CreateAsync(animalAttribute);
 
-            if (request.Files.Count > 0) await _imageService.UploadImages(request.Files, product.Id);
+            if (request.Files.Count > 0) await _imageService.UploadProductImagesAsync(request.Files, product.Id);
 
             var model = new NotificationModel()
             {

@@ -36,7 +36,7 @@ namespace Swapy.BLL.Domain.Items.CommandHandlers
             ItemAttribute itemAttribute = new ItemAttribute(request.IsNew, request.ItemTypeId, product.Id);
             await _itemAttributeRepository.CreateAsync(itemAttribute);
 
-            if (request.Files.Count > 0) await _imageService.UploadImages(request.Files, product.Id);
+            if (request.Files.Count > 0) await _imageService.UploadProductImagesAsync(request.Files, product.Id);
 
             var model = new NotificationModel()
             {

@@ -43,9 +43,9 @@ namespace Swapy.BLL.Domain.Clothes.CommandHandlers
             if (!string.IsNullOrEmpty(request.ClothesBrandViewId)) clothesAttribute.ClothesBrandViewId = request.ClothesBrandViewId;
             await _clothesAttributeRepository.UpdateAsync(clothesAttribute);
 
-            if (request.OldPaths.Count > 0) await _imageService.RemoveImages(request.OldPaths, request.ProductId);
+            if (request.OldPaths.Count > 0) await _imageService.RemoveProductImagesAsync(request.OldPaths, request.ProductId);
 
-            if (request.NewFiles.Count > 0) await _imageService.UploadImages(request.NewFiles, request.ProductId);
+            if (request.NewFiles.Count > 0) await _imageService.UploadProductImagesAsync(request.NewFiles, request.ProductId);
 
             return Unit.Value;
         }

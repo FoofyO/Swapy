@@ -60,22 +60,23 @@ export class ImagesUpdateComponent implements OnInit {
               const blob = new Blob([arrayBuffer], { type: file.type }); 
               const imageUrl = URL.createObjectURL(blob); 
               this.logoElement.nativeElement.src = imageUrl; 
+              this.settingsApi.updateLogo(data).subscribe(result => { this.spinnerService.changeSpinnerState(false); });
             } 
           }; 
           reader.readAsArrayBuffer(file); 
         }  
         else this.logoElement.nativeElement.src = 'undefined'; 
-
-        this.settingsApi.updateLogo(data).subscribe();
       };
 
       img.onerror = () => {
           URL.revokeObjectURL(img.src);
       };
 
-    } else console.log('Invalid file');
+    } else {
+      console.log('Invalid file');
+      this.spinnerService.changeSpinnerState(false);
+    }
     
-    this.spinnerService.changeSpinnerState(false);
   }
 
   async updateBanner(event: any) {
@@ -101,22 +102,24 @@ export class ImagesUpdateComponent implements OnInit {
               const imageUrl = URL.createObjectURL(blob); 
               this.bannerDiv.nativeElement.style.backgroundImage = `url(${imageUrl})`;
               this.bannerDiv.nativeElement.style.backgroundColor = 'transparent';
+              this.settingsApi.updateBanner(data).subscribe(result => { this.spinnerService.changeSpinnerState(false); });
             } 
           }; 
           reader.readAsArrayBuffer(file); 
         }  
         else this.bannerDiv.nativeElement.style.backgroundColor = 'linear-gradient(to bottom, $secondary, $primary)';
-
-        this.settingsApi.updateBanner(data).subscribe();
       };
 
       img.onerror = () => {
           URL.revokeObjectURL(img.src);
       };
 
-    } else console.log('Invalid file');
+    } else {
+      console.log('Invalid file');
+      this.spinnerService.changeSpinnerState(false);
+    }
     
-    this.spinnerService.changeSpinnerState(false);
+    
   }
 
   imageLoadError(event: any) {

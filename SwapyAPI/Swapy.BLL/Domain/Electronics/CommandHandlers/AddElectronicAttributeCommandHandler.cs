@@ -36,7 +36,7 @@ namespace Swapy.BLL.Domain.Electronics.CommandHandlers
             ElectronicAttribute electronicAttribute = new ElectronicAttribute(request.IsNew, request.MemoryModelId, request.ModelColorId, product.Id);
             await _electronicAttributeRepository.CreateAsync(electronicAttribute);
 
-            if (request.Files.Count > 0) await _imageService.UploadImages(request.Files, product.Id);
+            if (request.Files.Count > 0) await _imageService.UploadProductImagesAsync(request.Files, product.Id);
 
             var model = new NotificationModel()
             {

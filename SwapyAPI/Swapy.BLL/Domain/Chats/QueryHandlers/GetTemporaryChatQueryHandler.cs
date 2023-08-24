@@ -16,17 +16,15 @@ namespace Swapy.BLL.Domain.Chats.QueryHandlers
         {
             var product = await _productRepository.GetDetailByIdAsync(request.ProductId);
 
-            if(request.UserId == product.UserId)
-            {
-                throw new ArgumentException("You cannot create a chat for your product");
-            }
+            if(request.UserId == product.UserId) throw new ArgumentException("You cannot create a chat for your product");
+
 
             return new DetailChatResponseDTO()
             {
                 ChatId = null,
                 Messages = null,
                 Title = product.Title,
-                Image = product.Images.FirstOrDefault().Image
+                Image = product.Images?.FirstOrDefault()?.Image
             };
         }
     }

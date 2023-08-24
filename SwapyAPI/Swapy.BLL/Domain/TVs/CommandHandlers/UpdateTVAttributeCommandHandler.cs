@@ -43,9 +43,9 @@ namespace Swapy.BLL.Domain.TVs.CommandHandlers
             if (!string.IsNullOrEmpty(request.ScreenDiagonalId)) tvAttribute.ScreenDiagonalId = request.ScreenDiagonalId;
             await _tvAttributeRepository.UpdateAsync(tvAttribute);
 
-            if (request.OldPaths.Count > 0) await _imageService.RemoveImages(request.OldPaths, request.ProductId);
+            if (request.OldPaths.Count > 0) await _imageService.RemoveProductImagesAsync(request.OldPaths, request.ProductId);
 
-            if (request.NewFiles.Count > 0) await _imageService.UploadImages(request.NewFiles, request.ProductId);
+            if (request.NewFiles.Count > 0) await _imageService.UploadProductImagesAsync(request.NewFiles, request.ProductId);
 
             return Unit.Value;
         }

@@ -41,9 +41,9 @@ namespace Swapy.BLL.Domain.Items.CommandHandlers
             if (!string.IsNullOrEmpty(request.ItemTypeId)) itemAttribute.ItemTypeId = request.ItemTypeId;
             await _itemAttributeRepository.UpdateAsync(itemAttribute);
 
-            if (request.OldPaths.Count > 0) await _imageService.RemoveImages(request.OldPaths, request.ProductId);
+            if (request.OldPaths.Count > 0) await _imageService.RemoveProductImagesAsync(request.OldPaths, request.ProductId);
 
-            if (request.NewFiles.Count > 0) await _imageService.UploadImages(request.NewFiles, request.ProductId);
+            if (request.NewFiles.Count > 0) await _imageService.UploadProductImagesAsync(request.NewFiles, request.ProductId);
 
             return Unit.Value;
         }

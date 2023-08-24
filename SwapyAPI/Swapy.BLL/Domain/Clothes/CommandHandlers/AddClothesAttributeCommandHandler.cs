@@ -36,7 +36,7 @@ namespace Swapy.BLL.Domain.Clothes.CommandHandlers
             ClothesAttribute clothesAttribute = new ClothesAttribute(request.IsNew, request.ClothesSeasonId, request.ClothesSizeId, request.ClothesBrandViewId, product.Id);
             await _clothesAttributeRepository.CreateAsync(clothesAttribute);
 
-            if (request.Files.Count > 0) await _imageService.UploadImages(request.Files, product.Id);
+            if (request.Files.Count > 0) await _imageService.UploadProductImagesAsync(request.Files, product.Id);
 
             var model = new NotificationModel()
             {

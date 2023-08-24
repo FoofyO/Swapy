@@ -135,14 +135,17 @@ namespace Swapy.API.Controllers
 
         [HttpPost("Messages")]
         [Authorize]
+        [Consumes("multipart/form-data")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> SendMessageAsync(SendMessageCommandDTO dto)
+        public async Task<IActionResult> SendMessageAsync([FromForm] SendMessageCommandDTO dto)
         {
             try
             {
+                var file = HttpContext.Request.Form.Files[0];
+
                 var validator = new MessageValidator();
                 var validatorResult = validator.Validate(dto);
 
@@ -158,12 +161,26 @@ namespace Swapy.API.Controllers
                     return BadRequest(builder.ToString());
                 }
 
+                var imageValidator = new ChatImageValidator();
+                var imageValidatorResult = imageValidator.Validate(file);
+                if (!imageValidatorResult.IsValid)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    foreach (var failure in imageValidatorResult.Errors)
+                    {
+                        builder.Append($"Image upload property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                    }
+
+                    return BadRequest(builder.ToString());
+                }
+
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var command = new SendMessageCommand()
                 {
                     UserId = userId,
                     Text = dto.Text,
-                    Image = dto.Image,
+                    Image = file,
                     ChatId = dto.ChatId
                 };
 

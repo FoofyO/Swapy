@@ -37,7 +37,7 @@ namespace Swapy.BLL.Domain.RealEstates.CommandHandlers
             RealEstateAttribute animalAttribute = new RealEstateAttribute(request.Area, request.Rooms, request.IsRent, request.RealEstateTypeId, product.Id);
             await _realEstateAttributeRepository.CreateAsync(animalAttribute);
 
-            if (request.Files.Count > 0) await _imageService.UploadImages(request.Files, product.Id);
+            if (request.Files.Count > 0) await _imageService.UploadProductImagesAsync(request.Files, product.Id);
             
             var model = new NotificationModel()
             {
