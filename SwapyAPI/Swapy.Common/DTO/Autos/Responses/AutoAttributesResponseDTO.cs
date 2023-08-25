@@ -16,7 +16,7 @@ namespace Swapy.Common.DTO.Autos.Responses
         public int NewerReleaseYear { get; set; }
         public int OlderReleaseYear { get; set; }
 
-        public AutoAttributesResponseDTO(IEnumerable<ProductResponseDTO> items, int count, int allPages, decimal maxPrice, decimal minPrice, int maxMiliage, int minMiliage, int maxEngineCapacity, int minEngineCapacity, int newerReleaseYear, int olderReleaseYear) : base(items, count, allPages, maxPrice, minPrice)
+        public AutoAttributesResponseDTO(IEnumerable<ProductResponseDTO> items, int count, int allPages, decimal? maxPrice, decimal? minPrice, int maxMiliage, int minMiliage, int maxEngineCapacity, int minEngineCapacity, int newerReleaseYear, int olderReleaseYear) : base(items, count, allPages, maxPrice, minPrice)
         {
             MaxMiliage = maxMiliage;
             MinMiliage = minMiliage;

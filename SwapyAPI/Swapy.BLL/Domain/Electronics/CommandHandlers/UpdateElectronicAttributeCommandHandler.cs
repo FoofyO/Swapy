@@ -41,9 +41,9 @@ namespace Swapy.BLL.Domain.Electronics.CommandHandlers
             if (!string.IsNullOrEmpty(request.ModelColorId)) electronicAttribute.ModelColorId = request.ModelColorId;
             await _electronicAttributeRepository.UpdateAsync(electronicAttribute);
 
-            if (request.OldPaths.Count > 0) await _imageService.RemoveProductImagesAsync(request.OldPaths, request.ProductId);
+            if (request.OldPaths?.Count > 0) await _imageService.RemoveProductImagesAsync(request.OldPaths, request.ProductId);
 
-            if (request.NewFiles.Count > 0) await _imageService.UploadProductImagesAsync(request.NewFiles, request.ProductId);
+            if (request.NewFiles?.Count > 0) await _imageService.UploadProductImagesAsync(request.NewFiles, request.ProductId);
 
             return Unit.Value;
         }

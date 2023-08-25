@@ -9,4 +9,8 @@
     @media (max-width: 1600px) { margin: 1rem 3rem; height: calc(100% - 2rem); }
     @media (max-width: 1280px) { margin: 0.5rem 2rem; height: calc(100% - 1rem); }
     @media (max-width: 860px) { display: block; margin: 0; height: 100%;}
+
+    .chat-detail-container{
+        width: 100%;
+    }
 }

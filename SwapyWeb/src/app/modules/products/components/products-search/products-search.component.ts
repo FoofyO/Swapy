@@ -823,6 +823,9 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
       (response: CategoryNode[]) => {
         this.subcategoriesHierarchy[++this.currentSubcategoryNesting] = response;
         this.spinnerService.changeSpinnerState(false);
+      },
+      (error) => {
+        this.spinnerService.changeSpinnerState(false);
       }
     );
   }
@@ -850,6 +853,9 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         this.clotheIsShoe = this.subcategoriesHierarchy[index].find(item => item.id === this.selectedSubcategoriesId[index])?.subType === SubcategoryType.Shoe;
         this.spinnerService.changeSpinnerState(false);
         this.loadSuitableProducts(true);
+      },
+      (error) => {
+        this.spinnerService.changeSpinnerState(false);
       }
     );
   }

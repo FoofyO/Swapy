@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Swapy.BLL.Interfaces;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
@@ -15,11 +16,17 @@ namespace Swapy.DAL.Repositories
 
         private readonly ISubcategoryRepository _subcategoryRepository;
 
-        public TVAttributeRepository(SwapyDbContext context, IFavoriteProductRepository favoriteProductRepository, ISubcategoryRepository subcategoryRepository)
+        private readonly ICurrencyRepository _currencyRepository;
+
+        private readonly ICurrencyConverterService _currencyConverterService;
+
+        public TVAttributeRepository(SwapyDbContext context, IFavoriteProductRepository favoriteProductRepository, ISubcategoryRepository subcategoryRepository, ICurrencyRepository currencyRepository, ICurrencyConverterService currencyConverterService)
         {
             _context = context;
             _favoriteProductRepository = favoriteProductRepository;
             _subcategoryRepository = subcategoryRepository;
+            _currencyRepository = currencyRepository;
+            _currencyConverterService = currencyConverterService;
         }
 
         public async Task CreateAsync(TVAttribute item)
@@ -124,10 +131,9 @@ namespace Swapy.DAL.Repositories
             decimal maxPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).FirstOrDefaultAsync();
             decimal minPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).LastOrDefaultAsync();
 
-            query = query.Where(x => (priceMin == null || x.Product.Price >= priceMin) &&
-                    (priceMax == null || x.Product.Price <= priceMax) &&
+            query = query.Where(x => (priceMin == null || currencyId == null || x.Product.Price >= _currencyConverterService.Convert(x.Product.Currency.Name, _currencyRepository.GetById(currencyId).Name, minPrice)) &&
+                    (priceMax == null || currencyId == null || x.Product.Price <= _currencyConverterService.Convert(x.Product.Currency.Name, _currencyRepository.GetById(currencyId).Name, maxPrice)) &&
                     (title == null || x.Product.Title.Contains(title)) &&
-                    (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
                     (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
                     (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
                     (cityId == null || x.Product.CityId.Equals(cityId)) &&

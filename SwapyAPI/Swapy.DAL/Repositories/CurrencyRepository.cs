@@ -38,6 +38,13 @@ namespace Swapy.DAL.Repositories
             return item;
         }
 
+        public Currency GetById(string id)
+        {
+            var item = _context.Currencies.Find(id);
+            if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
+            return item;
+        }
+
         public async Task<IEnumerable<Currency>> GetAllAsync()
         {
             return await _context.Currencies.OrderBy(x => x.Name).ToListAsync();

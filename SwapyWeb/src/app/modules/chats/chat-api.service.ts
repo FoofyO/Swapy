@@ -20,7 +20,8 @@ export class ChatApiService {
     return from(this.axiosInterceptorService.get(`${this.chatsApiUrl}/Chats/Buyers`)).pipe(
       map((response: AxiosResponse<any>) => {
         let chatListResponseDTO: ChatListResponseDTO = response.data;
-        chatListResponseDTO.items.forEach(i => { i.logo = i.image; });
+        chatListResponseDTO.items = response.data.items.$values;
+        chatListResponseDTO.items.forEach(i => { i.logo = environment.blobUrl + '/product-images/' + i.image; });
         return chatListResponseDTO;
       }),
       catchError((error: AxiosError) => {
@@ -32,7 +33,8 @@ export class ChatApiService {
   getSellersChats(): Observable<ChatListResponseDTO>{
     return from(this.axiosInterceptorService.get(`${this.chatsApiUrl}/Chats/Sellers`)).pipe(
       map((response: AxiosResponse<any>) => {
-        const chatListResponseDTO: ChatListResponseDTO = response.data;
+        let chatListResponseDTO: ChatListResponseDTO = response.data;
+        chatListResponseDTO.items = response.data.items.$values;
         return chatListResponseDTO;
       }),
       catchError((error: AxiosError) => {
@@ -44,7 +46,8 @@ export class ChatApiService {
   getDetailChat(chatId: string): Observable<DetailChatResponseDTO>{
     return from(this.axiosInterceptorService.get(`${this.chatsApiUrl}/Chats/${chatId}`)).pipe(
       map((response: AxiosResponse<any>) => {
-        const detailChatResponseDTO: DetailChatResponseDTO = response.data;
+        let detailChatResponseDTO: DetailChatResponseDTO = response.data;
+        //detailChatResponseDTO.image = environment.blobUrl + '/product-images/' + detailChatResponseDTO.image;
         return detailChatResponseDTO;
       }),
       catchError((error: AxiosError) => {
@@ -56,7 +59,9 @@ export class ChatApiService {
   getDetailChatByProductId(productId: string): Observable<DetailChatResponseDTO>{
     return from(this.axiosInterceptorService.get(`${this.chatsApiUrl}/ChatByProductId/${productId}`)).pipe(
       map((response: AxiosResponse<any>) => {
-        const detailChatResponseDTO: DetailChatResponseDTO = response.data;
+        let detailChatResponseDTO: DetailChatResponseDTO = response.data;
+        detailChatResponseDTO.messages = response.data.messages.$values;
+        detailChatResponseDTO.image = environment.blobUrl + '/product-images/' + detailChatResponseDTO.image;
         return detailChatResponseDTO;
       }),
       catchError((error: AxiosError) => {
@@ -68,7 +73,8 @@ export class ChatApiService {
   getTemporaryChat(productId: string): Observable<DetailChatResponseDTO>{
     return from(this.axiosInterceptorService.get(`${this.chatsApiUrl}/TemporaryChat/${productId}`)).pipe(
       map((response: AxiosResponse<any>) => {
-        const detailChatResponseDTO: DetailChatResponseDTO = response.data;
+        let detailChatResponseDTO: DetailChatResponseDTO = response.data;
+        detailChatResponseDTO.image = environment.blobUrl + '/product-images/' + detailChatResponseDTO.image
         return detailChatResponseDTO;
       }),
       catchError((error: AxiosError) => {
@@ -88,8 +94,8 @@ export class ChatApiService {
     );
   }
 
-  CreateChatAsync(productId: string): Observable<void>{
-    return from(this.axiosInterceptorService.post(`${this.chatsApiUrl}`, productId)).pipe(
+  CreateChatAsync(data: FormData): Observable<string>{
+    return from(this.axiosInterceptorService.post(`${this.chatsApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),

@@ -66,20 +66,27 @@ export class ChatDetailComponent implements OnInit {
 
   sendMessage(): void {
     if(this.productId){
-      this.chatApiService.CreateChatAsync(this.productId).subscribe(
-        (response) => {
-          ///this.chatListService.changeSelectedChat(response); // response.id
+      let formData = new FormData();
+      formData.append("ProductId", this.productId); 
+      this.chatApiService.CreateChatAsync(formData).subscribe(
+        (response: string) => {
+          this.chatListService.changeSelectedChat(response);
         }
       ) 
       this.productId = null; 
     }
     if(this.selectedChat !== null && this.inputTextToSend.trim().length >= 0){
       let formData = new FormData();
-      formData.append("ChatId", this.selectedChat.chatId);
       formData.append("Text", this.inputTextToSend); 
+      formData.append("ChatId", this.selectedChat.chatId);
       if(this.selectedFileToSend) { formData.append("image", this.selectedFileToSend); }
-      this.chatApiService.SendMessageAsync(formData)
-      this.inputTextToSend = '';
+      this.chatApiService.SendMessageAsync(formData).subscribe(
+        (response) => {
+          console.log(response);
+          this.inputTextToSend = '';
+          this.selectedFileToSend = undefined;
+        }
+      )
     }
   }
 

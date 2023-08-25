@@ -22,7 +22,7 @@ namespace Swapy.BLL.Domain.Chats.CommandHandlers
         public async Task<Message> Handle(SendMessageCommand request, CancellationToken cancellationToken)
         {
             await _chatRepository.GetByIdAsync(request.ChatId);
-            var imagePath = string.Empty;
+            string? imagePath = null;
 
             if(request.Image != null) imagePath = await _imageService.UploadChatImagesAsync(request.Image);
             
