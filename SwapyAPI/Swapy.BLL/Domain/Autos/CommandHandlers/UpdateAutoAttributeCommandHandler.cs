@@ -45,9 +45,9 @@ namespace Swapy.BLL.Domain.Autos.CommandHandlers
             if (!string.IsNullOrEmpty(request.AutoModelId)) autoAttribute.AutoModelId = request.AutoModelId;
             await _autoAttributeRepository.UpdateAsync(autoAttribute);
 
-            if (request.OldPaths.Count > 0) await _imageService.RemoveProductImagesAsync(request.OldPaths, request.ProductId);
+            if (request.OldPaths?.Count > 0) await _imageService.RemoveProductImagesAsync(request.OldPaths, request.ProductId);
 
-            if (request.NewFiles.Count > 0) await _imageService.UploadProductImagesAsync(request.NewFiles, request.ProductId);
+            if (request.NewFiles?.Count > 0) await _imageService.UploadProductImagesAsync(request.NewFiles, request.ProductId);
 
             return Unit.Value;
         }

@@ -62,7 +62,7 @@ namespace Swapy.DAL.Repositories
 
         public async Task<IEnumerable<Chat>> GetAllBuyerChatsAsync(string userId)
         {
-            return await _context.Chats.Where(c => c.BuyerId.Equals(userId))
+            var result = await _context.Chats.Where(c => c.BuyerId.Equals(userId))
                                             .Include(c => c.Product)
                                                 .ThenInclude(p => p.User)
                                             .Include(c => c.Product)
@@ -76,6 +76,8 @@ namespace Swapy.DAL.Repositories
                                                 Messages = c.Messages.OrderByDescending(m => m.DateTime).Take(1).ToList(),
                                             })
                                             .ToListAsync();
+
+            return result;
         }
 
         public async Task<Chat> GetByIdDetailAsync(string id)

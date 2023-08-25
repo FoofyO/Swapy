@@ -32,12 +32,12 @@ namespace Swapy.DAL.Configurations
                    .WithMany(c => c.Messages)
                    .HasForeignKey(m => m.ChatId)
                    .OnDelete(DeleteBehavior.Cascade)
-                   .IsRequired(false);
+                   .IsRequired();
 
             builder.HasOne(m => m.Sender)
                    .WithMany(u => u.SentMessages)
                    .HasForeignKey(m => m.SenderId)
-                   .IsRequired(false);
+                   .IsRequired();
         }
     }
 }

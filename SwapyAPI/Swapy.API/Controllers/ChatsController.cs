@@ -46,7 +46,7 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateChatAsync(CreateChatCommandDTO dto)
+        public async Task<IActionResult> CreateChatAsync([FromForm] CreateChatCommandDTO dto)
         {
             try
             {
@@ -135,7 +135,6 @@ namespace Swapy.API.Controllers
 
         [HttpPost("Messages")]
         [Authorize]
-        [Consumes("multipart/form-data")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -144,7 +143,7 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var file = HttpContext.Request.Form.Files[0];
+                var file = HttpContext.Request.Form.Files.FirstOrDefault();
 
                 var validator = new MessageValidator();
                 var validatorResult = validator.Validate(dto);
@@ -161,18 +160,21 @@ namespace Swapy.API.Controllers
                     return BadRequest(builder.ToString());
                 }
 
-                var imageValidator = new ChatImageValidator();
-                var imageValidatorResult = imageValidator.Validate(file);
-                if (!imageValidatorResult.IsValid)
+                if (file != null)
                 {
-                    StringBuilder builder = new StringBuilder();
-
-                    foreach (var failure in imageValidatorResult.Errors)
+                    var imageValidator = new ChatImageValidator();
+                    var imageValidatorResult = imageValidator.Validate(file);
+                    if (!imageValidatorResult.IsValid)
                     {
-                        builder.Append($"Image upload property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
-                    }
+                        StringBuilder builder = new StringBuilder();
 
-                    return BadRequest(builder.ToString());
+                        foreach (var failure in imageValidatorResult.Errors)
+                        {
+                            builder.Append($"Image upload property {failure.PropertyName} failed validation. Error: {failure.ErrorMessage}");
+                        }
+
+                        return BadRequest(builder.ToString());
+                    }
                 }
 
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -260,7 +262,11 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetDetailChatQuery() { ChatId = dto.ChatId});
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var result = await _mediator.Send(new GetDetailChatQuery() {
+                    UserId = userId,
+                    ChatId = dto.ChatId 
+                });
                 return Ok(result);
             }
             catch (NotFoundException ex)

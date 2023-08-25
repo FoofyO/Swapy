@@ -17,6 +17,12 @@ export class ChatListService {
     }
   }
 
+  updateList() {
+    if (this.chatListComponent) {
+      this.chatListComponent.updateList();
+    }
+  }
+
   changeSelectedChat(chatId: string) {
     if (this.chatListComponent) {
       this.chatListComponent.changeSelectedChat(chatId);

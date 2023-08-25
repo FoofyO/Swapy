@@ -14,7 +14,7 @@ namespace Swapy.Common.DTO.RealEstates.Responses
         public int? MaxRooms { get; set; }
         public int? MinRooms { get; set; }
 
-        public RealEstateAttributesResponseDTO(IEnumerable<ProductResponseDTO> items, int count, int allPages, decimal maxPrice, decimal minPrice, int maxArea, int minArea, int? maxRooms, int? minRooms) : base(items, count, allPages, maxPrice, minPrice)
+        public RealEstateAttributesResponseDTO(IEnumerable<ProductResponseDTO> items, int count, int allPages, decimal? maxPrice, decimal? minPrice, int maxArea, int minArea, int? maxRooms, int? minRooms) : base(items, count, allPages, maxPrice, minPrice)
         {
             MaxArea = maxArea;
             MinArea = minArea;

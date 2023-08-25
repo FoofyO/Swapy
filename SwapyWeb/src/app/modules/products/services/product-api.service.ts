@@ -17,21 +17,7 @@ import { CategoryType } from 'src/app/core/enums/category-type.enum';
 import { UserType } from 'src/app/core/enums/user-type.enum';
 import { AutoResponse } from '../models/auto-response.interface';
 import { RealEstateResponse } from '../models/real-estate-response.interface';
-import { AnimalAddRequest } from '../models/animal-add-request.interface';
-import { AutoAddRequest } from '../models/auto-add-request.interface';
-import { ClothesAddRequest } from '../models/clothes-add-request.interface';
-import { ElectronicsAddRequest } from '../models/electronics-add-request.interface';
-import { ItemAddRequest } from '../models/item-add-request.interface';
-import { RealEstateAddRequest } from '../models/real-estate-add-request.interface';
-import { TvAddRequest } from '../models/tv-add-request.interface';
 import { AxiosInterceptorService } from 'src/app/core/services/axios-interceptor.service';
-import { AnimalEditRequest } from '../models/animal-edit-request.interface';
-import { AutoEditRequest } from '../models/auto-edit-request.interface';
-import { ClothesEditRequest } from '../models/clothes-edit-request.interface';
-import { ElectronicsEditRequest } from '../models/electronics-edit-request.interface';
-import { ItemEditRequest } from '../models/item-edit-request.interface';
-import { RealEstateEditRequest } from '../models/real-estate-edit-request.interface';
-import { TvEditRequest } from '../models/tv-edit-request.interface';
 
 @Injectable({
   providedIn: 'root'

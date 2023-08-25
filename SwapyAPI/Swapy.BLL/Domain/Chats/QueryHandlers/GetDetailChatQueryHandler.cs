@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Chats.Queries;
 using Swapy.Common.DTO.Chats.Responses;
+using Swapy.Common.Enums;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Chats.QueryHandlers
@@ -19,7 +20,7 @@ namespace Swapy.BLL.Domain.Chats.QueryHandlers
             {
                 ChatId = chat.Id,
                 Messages = chat.Messages.Select(x => new MessageResponseDTO()
-                { 
+                {
                     Id = x.Id,
                     Text = x.Text,
                     Image = x.Image,
@@ -29,7 +30,8 @@ namespace Swapy.BLL.Domain.Chats.QueryHandlers
                     SenderLogo = x.Sender.Logo
                 }),
                 Title = chat.Product.Title,
-                Image = chat.Product.Images.FirstOrDefault().Image
+                Image = chat.Product.Images.FirstOrDefault().Image,
+                //Type = request.UserId.Equals(chat.BuyerId) ? ChatType.Buyyer : ChatType.Seller;
             };
         }
     }

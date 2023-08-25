@@ -7,6 +7,6 @@
         public string Logo { get; set; }
         public string Image { get; set; }
         public string LastMessage { get; set; }
-        public DateTime LastMessageDateTime { get; set; }
+        public DateTime? LastMessageDateTime { get; set; }
     }
 }

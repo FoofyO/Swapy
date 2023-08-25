@@ -18,9 +18,9 @@ namespace Swapy.BLL.Domain.Chats.QueryHandlers
                 ChatId = x.Id,
                 Logo = x.Product.User.Logo,
                 Title = x.Product.Title,
-                LastMessage = x.Messages.FirstOrDefault().Text,
-                Image = x.Product.Images.FirstOrDefault().Image,
-                LastMessageDateTime = x.Messages.FirstOrDefault().DateTime
+                LastMessage = x.Messages.FirstOrDefault()?.Text,
+                Image = x.Product.Images.FirstOrDefault()?.Image,
+                LastMessageDateTime = x.Messages.FirstOrDefault()?.DateTime
             });
 
             return new ChatsResponseDTO(chats, chats.Count());

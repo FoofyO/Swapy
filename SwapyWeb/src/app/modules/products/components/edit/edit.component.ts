@@ -11,13 +11,6 @@ import { CurrencyResponse } from 'src/app/core/models/currency-response.interfac
 import { AuthFacadeService } from 'src/app/modules/auth/services/auth-facade.service';
 import { environment } from 'src/environments/environment';
 import { HttpStatusCode } from 'axios';
-import { AnimalEditRequest } from '../../models/animal-edit-request.interface';
-import { AutoEditRequest } from '../../models/auto-edit-request.interface';
-import { ClothesEditRequest } from '../../models/clothes-edit-request.interface';
-import { ElectronicsEditRequest } from '../../models/electronics-edit-request.interface';
-import { ItemEditRequest } from '../../models/item-edit-request.interface';
-import { RealEstateEditRequest } from '../../models/real-estate-edit-request.interface';
-import { TvEditRequest } from '../../models/tv-edit-request.interface';
 
 @Component({
   selector: 'app-edit',
@@ -640,9 +633,9 @@ export class EditComponent implements OnInit {
     const regex = /^[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}$/;
 
     this.errorText = this.selectedTitle.trim().length === 0 ? "Title must not be empty" :
-    !regex.test(this.selectedCityId) ? "Wrong city" : 
-    this.price < 0 ? "Price cannot be negative" :
-    !regex.test(this.selectedCurrencyId) ? "Wrong currency" : null;
+    //!regex.test(this.selectedCityId) ? "Wrong city" : 
+    this.price < 0 ? "Price cannot be negative" : null;
+    //!regex.test(this.selectedCurrencyId) ? "Wrong currency" : null;
 
     if(this.errorText != null) { this.spinnerService.changeSpinnerState(false); return; }
 
@@ -678,7 +671,7 @@ export class EditComponent implements OnInit {
         formData.append("AnimalBreedId", this.selectedBreedId);
 
         this.productApiService.updateAnimal(formData).subscribe(
-          (result) => {window.history.back();},
+          (result) => {this.spinnerService.changeSpinnerState(false);window.history.back();},
           (error) => {
             if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
               this.errorText = "Invalid request, please try again."
@@ -722,7 +715,7 @@ export class EditComponent implements OnInit {
         formData.append("AutoModelId", `${this.selectedModelId}`); 
 
         this.productApiService.updateAuto(formData).subscribe(
-          (result) => {window.history.back();},
+          (result) => {this.spinnerService.changeSpinnerState(false);window.history.back();},
           (error) => {
             if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
               this.errorText = "Invalid request, please try again."
@@ -763,7 +756,7 @@ export class EditComponent implements OnInit {
             formData.append("ClothesBrandViewId", `${result}`); 
 
             this.productApiService.updateClothes(formData).subscribe(
-              (result) => {window.history.back();},
+              (result) => {this.spinnerService.changeSpinnerState(false);window.history.back();},
               (error) => {
                 if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
                   this.errorText = "Invalid request, please try again."
@@ -813,7 +806,7 @@ export class EditComponent implements OnInit {
             formData.append("ModelColorId", `${modelColorId}`); 
 
             this.productApiService.updateElectronics(formData).subscribe(
-              (result) => {window.history.back();},
+              (result) => {this.spinnerService.changeSpinnerState(false);window.history.back();},
               (error) => {
                 if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
                   this.errorText = "Invalid request, please try again."
@@ -850,7 +843,7 @@ export class EditComponent implements OnInit {
         formData.append("ItemTypeId", `${this.product.categories[this.product.categories.length - 1].id}`); 
 
         this.productApiService.updateItem(formData).subscribe(
-          (result) => {window.history.back();},
+          (result) => {this.spinnerService.changeSpinnerState(false);window.history.back();},
           (error) => {
             if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
               this.errorText = "Invalid request, please try again."
@@ -885,7 +878,7 @@ export class EditComponent implements OnInit {
         formData.append("RealEstateTypeId", `${this.product.categories[this.product.categories.length - 1].id}`); 
 
         this.productApiService.updateRealEstate(formData).subscribe(
-          (result) => {window.history.back();},
+          (result) => {this.spinnerService.changeSpinnerState(false);window.history.back();},
           (error) => {
             if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
               this.errorText = "Invalid request, please try again."
@@ -925,7 +918,7 @@ export class EditComponent implements OnInit {
         formData.append("ScreenDiagonalId", `${this.selectedScreenDiagonalId}`); 
 
         this.productApiService.updateTv(formData).subscribe(
-          (result) => {window.history.back();},
+          (result) => {this.spinnerService.changeSpinnerState(false);window.history.back();},
           (error) => {
             if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
               this.errorText = "Invalid request, please try again."

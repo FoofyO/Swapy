@@ -25,13 +25,13 @@ export class ChatListComponent implements OnInit  {
   }
 
   ngOnInit(): void {
-    this.spinnerService.changeSpinnerState(true);
     window.addEventListener('resize', this.handleWindowSizeChange.bind(this));
     this.handleWindowSizeChange();
     this.updateList();
   }
 
   updateList(): void {
+    this.spinnerService.changeSpinnerState(true);
     (this.isBuyersChats ? this.chatApiService.getBuyersChats() : this.chatApiService.getSellersChats()).subscribe(
       (response : ChatListResponseDTO) => {
         this.chatList = response.items;

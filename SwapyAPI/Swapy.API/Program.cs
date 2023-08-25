@@ -134,7 +134,7 @@ namespace Swapy.API
             /// </summary>
             builder.Services.AddDbContext<SwapyDbContext>(option =>
             {
-                option.UseSqlServer(builder.Configuration.GetConnectionString("SamedSQL"));
+                option.UseSqlServer(builder.Configuration.GetConnectionString("OrxanSQL"));
             });
 
 
@@ -204,6 +204,7 @@ namespace Swapy.API
             builder.Services.AddScoped<IUserTokenService, UserTokenService>();
             builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
             builder.Services.AddScoped<INotificationService, NotificationService>();
+            builder.Services.AddScoped<ICurrencyConverterService, CurrencyConverterService>();
             builder.Services.AddScoped<IKeyVaultService, KeyVaultService>(provider => new KeyVaultService(builder.Configuration.GetValue<string>("KeyVaultUrl")));
 
 
