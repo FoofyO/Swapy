@@ -8,6 +8,7 @@
     </div>
 
     <div class="category-section" *ngIf="categories">
+      <div class="section-background"></div>
       <div class="category-slider">
           <app-category-card *ngFor="let category of categories" [category]="category"></app-category-card>
           <app-category-loading-card></app-category-loading-card>

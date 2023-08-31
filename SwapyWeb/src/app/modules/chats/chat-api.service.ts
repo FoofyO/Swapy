@@ -6,6 +6,8 @@ import { AxiosInterceptorService } from 'src/app/core/services/axios-interceptor
 import { environment } from 'src/environments/environment';
 import { ChatListResponseDTO } from './models/chat-list-response-dto';
 import { DetailChatResponseDTO } from './models/detail-chat-response-dto';
+import { CategoryType } from 'src/app/core/enums/category-type.enum';
+import { ChatType } from './enums/chat-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +37,7 @@ export class ChatApiService {
       map((response: AxiosResponse<any>) => {
         let chatListResponseDTO: ChatListResponseDTO = response.data;
         chatListResponseDTO.items = response.data.items.$values;
+        chatListResponseDTO.items.forEach(i => i.logo = `${environment.blobUrl}/logos/${i.logo}`);
         return chatListResponseDTO;
       }),
       catchError((error: AxiosError) => {
@@ -47,7 +50,9 @@ export class ChatApiService {
     return from(this.axiosInterceptorService.get(`${this.chatsApiUrl}/Chats/${chatId}`)).pipe(
       map((response: AxiosResponse<any>) => {
         let detailChatResponseDTO: DetailChatResponseDTO = response.data;
-        //detailChatResponseDTO.image = environment.blobUrl + '/product-images/' + detailChatResponseDTO.image;
+        detailChatResponseDTO.messages = response.data.messages.$values;
+        detailChatResponseDTO.messages.forEach(m => m.image = m.image ? `${environment.blobUrl}/messages/${m.image}` : null);
+        detailChatResponseDTO.image = environment.blobUrl + (detailChatResponseDTO.type == ChatType.Buyer ? '/product-images/' : '/logos/') + detailChatResponseDTO.image;
         return detailChatResponseDTO;
       }),
       catchError((error: AxiosError) => {
@@ -61,6 +66,7 @@ export class ChatApiService {
       map((response: AxiosResponse<any>) => {
         let detailChatResponseDTO: DetailChatResponseDTO = response.data;
         detailChatResponseDTO.messages = response.data.messages.$values;
+        detailChatResponseDTO.messages.forEach(m => m.image = m.image ? `${environment.blobUrl}/messages/${m.image}` : null)
         detailChatResponseDTO.image = environment.blobUrl + '/product-images/' + detailChatResponseDTO.image;
         return detailChatResponseDTO;
       }),

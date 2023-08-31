@@ -287,7 +287,11 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetDetailChatByProductIdQuery() { ProductId = dto.ProductId });
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var result = await _mediator.Send(new GetDetailChatByProductIdQuery() {
+                    UserId = userId,
+                    ProductId = dto.ProductId 
+                });
                 return Ok(result);
             }
             catch (NotFoundException ex)

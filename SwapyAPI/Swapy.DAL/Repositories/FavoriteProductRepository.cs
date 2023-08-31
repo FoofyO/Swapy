@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Swapy.BLL.Interfaces;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
@@ -11,7 +12,19 @@ namespace Swapy.DAL.Repositories
     {
         private readonly SwapyDbContext _context;
 
-        public FavoriteProductRepository(SwapyDbContext context) => _context = context;
+        private readonly ISubcategoryRepository _subcategoryRepository;
+
+        private readonly ICurrencyRepository _currencyRepository;
+
+        private readonly ICurrencyConverterService _currencyConverterService;
+
+        public FavoriteProductRepository(SwapyDbContext context, ISubcategoryRepository subcategoryRepository, ICurrencyRepository currencyRepository, ICurrencyConverterService currencyConverterService)
+        {
+            _context = context;
+            _subcategoryRepository = subcategoryRepository;
+            _currencyConverterService = currencyConverterService;
+            _currencyRepository = currencyRepository;
+        }
 
         public async Task CreateAsync(FavoriteProduct item)
         {
@@ -89,40 +102,46 @@ namespace Swapy.DAL.Repositories
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
 
+            List<SpecificationResponseDTO<string>> sequenceOfSubcategories = subcategoryId == null ? new() : (await _subcategoryRepository.GetSequenceOfSubcategories(subcategoryId, language)).ToList();
+
             var query = _context.FavoriteProducts.Include(fp => fp.Product)
-                                                    .ThenInclude(p => p.Images)
-                                                 .Include(fp => fp.Product)
                                                     .ThenInclude(p => p.Currency)
-                                                 .Where(x => (title == null || x.Product.Title.Contains(title)) &&
-                                                       (currencyId == null || x.Product.CurrencyId.Equals(currencyId)) &&
-                                                       (priceMin == null || x.Product.Price >= priceMin) &&
-                                                       (priceMax == null || x.Product.Price <= priceMax) &&
-                                                       (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
-                                                       (subcategoryId == null || x.Product.SubcategoryId.Equals(subcategoryId)) &&
-                                                       (cityId == null || x.Product.CityId.Equals(cityId)) &&
-                                                       (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
-                                                       (productId == null || x.ProductId.Equals(productId)))
-                                                 .AsQueryable();
+                                                  .AsQueryable();
 
-            decimal maxPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).FirstOrDefaultAsync();
-            decimal minPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).LastOrDefaultAsync();
+            decimal? minPrice = currencyId == null ? null : Math.Floor((await query.ToListAsync()).Select(x => _currencyConverterService.Convert(x.Product.Currency.Name, _currencyRepository.GetById(currencyId).Name, x.Product.Price)).OrderBy(p => p).FirstOrDefault());
+            decimal? maxPrice = currencyId == null ? null : Math.Ceiling((await query.ToListAsync()).Select(x => _currencyConverterService.Convert(x.Product.Currency.Name, _currencyRepository.GetById(currencyId).Name, x.Product.Price)).OrderBy(p => p).LastOrDefault());
 
-            var count = await query.CountAsync();
+            var list = await query.Where(x => (title == null || x.Product.Title.Contains(title)) &&
+                         (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
+                         (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
+                         (cityId == null || x.Product.CityId.Equals(cityId)) &&
+                         (otherUserId == null ? x.UserId.Equals(userId) : x.UserId.Equals(otherUserId)) &&
+                         (productId == null || x.ProductId.Equals(productId)))
+                        .Include(p => p.Product)
+                            .ThenInclude(p => p.Images)
+                        .Include(p => p.Product)
+                            .ThenInclude(p => p.Subcategory)
+                        .Include(p => p.Product)
+                            .ThenInclude(p => p.City)
+                                .ThenInclude(c => c.Names)
+                        .Include(p => p.Product)
+                             .ThenInclude(p => p.User)
+                        .ToListAsync();
+
+            list = list.Where(x => (priceMin == null || currencyId == null || priceMin <= _currencyConverterService.Convert(x.Product.Currency.Name, _currencyRepository.GetById(currencyId).Name, x.Product.Price)) &&
+            (priceMax == null || currencyId == null || priceMax >= _currencyConverterService.Convert(x.Product.Currency.Name, _currencyRepository.GetById(currencyId).Name, x.Product.Price))).ToList();
+
+            var count = list.Count;
             if (count <= pageSize * (page - 1)) throw new NotFoundException($"Page {page} not found.");
 
-            if (sortByPrice == true) query.OrderBy(x => x.Product.Price);
-            else query.OrderBy(x => x.Product.DateTime);
-            if (reverseSort == true) query.Reverse();
+            if (sortByPrice == true) list = list.OrderBy(x => _currencyConverterService.Convert(x.Product.Currency.Name, "usd", x.Product.Price)).ToList();
+            else list = list.OrderBy(x => x.Product.DateTime).ToList();
+            if (reverseSort == true) list.Reverse();
 
-            query.Skip(pageSize * (page - 1))
-                 .Take(pageSize)
-                 .Include(a => a.Product)
-                    .ThenInclude(p => p.Subcategory)
-                 .Include(a => a.Product)
-                    .ThenInclude(p => p.City)
-                        .ThenInclude(c => c.Names);
+            list = list.Skip(pageSize * (page - 1))
+                 .Take(pageSize).ToList();
 
-            var result = await query.Select(x => new ProductResponseDTO()
+            var result = list.Select(x => new ProductResponseDTO()
             {
                 Id = x.ProductId,
                 Title = x.Product.Title,
@@ -135,7 +154,7 @@ namespace Swapy.DAL.Repositories
                 Images = x.Product.Images.Select(i => i.Image).ToList(),
                 UserType = x.Product.User.Type,
                 Type = x.Product.Subcategory.Type
-            }).ToListAsync();
+            }).ToList();
 
             foreach (var item in result)
             {

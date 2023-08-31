@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Swapy.BLL.Domain.Animals.Commands;
 using Swapy.BLL.Interfaces;
 using Swapy.BLL.Services;
@@ -15,14 +16,16 @@ namespace Swapy.BLL.Domain.Animals.CommandHandlers
         private readonly INotificationService _notificationService;
         private readonly ISubcategoryRepository _subcategoryRepository;
         private readonly IAnimalAttributeRepository _animalAttributeRepository;
+        private readonly UserManager<User> _userManager;
 
-        public AddAnimalAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IAnimalAttributeRepository animalAttributeRepository)
+        public AddAnimalAttributeCommandHandler(UserManager<User> userManager, IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IAnimalAttributeRepository animalAttributeRepository)
         {
             _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
             _animalAttributeRepository = animalAttributeRepository;
+            _userManager = userManager;
         }
 
         public async Task<AnimalAttribute> Handle(AddAnimalAttributeCommand request, CancellationToken cancellationToken)
@@ -50,6 +53,10 @@ namespace Swapy.BLL.Domain.Animals.CommandHandlers
             };
 
             await _notificationService.Notificate(model);
+
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            user.ProductsCount++;
+            await _userManager.UpdateAsync(user);
 
             return animalAttribute;
         }

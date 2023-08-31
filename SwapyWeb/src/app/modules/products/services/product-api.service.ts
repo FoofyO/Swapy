@@ -649,8 +649,9 @@ export class ProductApiService {
     );
   }
 
-  getAutoBrands(AutoTypesId: string[]): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.autosApiUrl}/Brands/${AutoTypesId.join(',')}`)).pipe(
+  getAutoBrands(AutoTypesId: string[] | null): Observable<Specification<string>[]>{
+    let url = AutoTypesId ? `${this.autosApiUrl}/Brands/${AutoTypesId.join('&')}` : `${this.autosApiUrl}/Brands`;
+    return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;
         return brands;
@@ -661,8 +662,29 @@ export class ProductApiService {
     );
   }
 
-  getClotheBrands(ClothesViewsId: string[]): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.clothesApiUrl}/Brands/${ClothesViewsId.join(',')}`)).pipe(
+  getAutoModels(AutoBrandsId: string[] | null, AutoTypesId: string[] | null): Observable<Specification<string>[]>{
+    let url = `${this.autosApiUrl}/Brands`;
+    if(AutoBrandsId != null && AutoTypesId != null){
+      url += `?AutoBrandsId=${AutoBrandsId}&AutoTypesId=${AutoTypesId}`;
+    }
+    else{
+      url += AutoBrandsId != null ? `?AutoBrandsId=${AutoBrandsId}` : '';
+      url += AutoTypesId != null ? `?AutoTypesId=${AutoTypesId}` : '';
+    }
+    return from(this.axiosInterceptorService.get(url)).pipe(
+      map((response: AxiosResponse<any>) => {
+        const models: Specification<string>[] = response.data.$values;
+        return models;
+      }),
+      catchError((error: AxiosError) => {
+        return EMPTY;
+      })
+    );
+  }
+
+  getClotheBrands(ClothesViewsId: string[] | null): Observable<Specification<string>[]>{
+    let url = ClothesViewsId ? `${this.clothesApiUrl}/Brands/${ClothesViewsId.join('&')}` : `${this.clothesApiUrl}/Brands`;
+    return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;
         return brands;
@@ -735,12 +757,12 @@ export class ProductApiService {
 
   getClothesViews(GenderId: string | null = null, ClothesTypeId: string | null = null): Observable<Specification<string>[]>{
     let url = `${this.clothesApiUrl}/Views`
-    if(GenderId == null || ClothesTypeId == null){
-      url += GenderId != null ? `?GenderId=${GenderId}` : '';
-      url += ClothesTypeId != null ? `?ClothesTypeId=${ClothesTypeId}` : '';
+    if(GenderId != null && ClothesTypeId != null){
+      url += `?GenderId=${GenderId}&ClothesTypeId=${ClothesTypeId}`;
     }
     else{
-      url += `?GenderId=${GenderId}&ClothesTypeId=${ClothesTypeId}`;
+      url += GenderId != null ? `?GenderId=${GenderId}` : '';
+      url += ClothesTypeId != null ? `?ClothesTypeId=${ClothesTypeId}` : '';
     }
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
@@ -779,13 +801,13 @@ export class ProductApiService {
 
   getElectronicModels(ElectronicBrandsId: string[] | null = null, ElectronicTypeId: string | null = null): Observable<Specification<string>[]>{
     let url = `${this.electronicsApiUrl}/Models`;
-    if(ElectronicBrandsId == null || ElectronicTypeId == null){
-      url += ElectronicTypeId != null ? `?ElectronicTypeId=${ElectronicTypeId}` : '';
-      url += ElectronicBrandsId != null ? ElectronicBrandsId.map(value => `?ElectronicBrandsId=${encodeURIComponent(value)}`).join("&") : '';
-    }
-    else{
+    if(ElectronicBrandsId != null && ElectronicTypeId != null){
       url += `?ElectronicTypeId=${ElectronicTypeId}`;
       url += ElectronicBrandsId.map(value => `&ElectronicBrandsId=${encodeURIComponent(value)}`).join("&");
+    }
+    else{
+      url += ElectronicTypeId != null ? `?ElectronicTypeId=${ElectronicTypeId}` : '';
+      url += ElectronicBrandsId != null ? ElectronicBrandsId.map(value => `?ElectronicBrandsId=${encodeURIComponent(value)}`).join("&") : '';
     }
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {

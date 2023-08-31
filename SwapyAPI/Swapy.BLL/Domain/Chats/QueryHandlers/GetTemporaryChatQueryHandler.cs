@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Chats.Queries;
 using Swapy.Common.DTO.Chats.Responses;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 using Swapy.DAL.Repositories;
 
@@ -24,7 +25,7 @@ namespace Swapy.BLL.Domain.Chats.QueryHandlers
                 ChatId = null,
                 Messages = null,
                 Title = product.Title,
-                Image = product.Images?.FirstOrDefault()?.Image
+                Image = product.Images.FirstOrDefault()?.Image == null ? "default-product-image.png" : product.Images.FirstOrDefault()?.Image
             };
         }
     }

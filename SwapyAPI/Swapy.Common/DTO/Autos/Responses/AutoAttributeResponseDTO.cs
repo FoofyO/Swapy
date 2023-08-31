@@ -16,5 +16,7 @@ namespace Swapy.Common.DTO.Autos.Responses
         public string TransmissionType { get; set; }
         public string AutoBrandId { get; set; }
         public string AutoBrand { get; set; }
+        public string AutoModelId { get; set; }
+        public string AutoModel { get; set; }
     }
 }

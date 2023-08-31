@@ -85,7 +85,7 @@ export class FavoriteProductsComponent implements OnInit {
         break;
       }
       case '4':{
-        this.sortByPrice = false;
+        this.sortByPrice = true;
         this.reverseSort = true;
         break;
       }

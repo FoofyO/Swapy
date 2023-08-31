@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChatListService } from './chat-list.service';
 import { SpinnerComponent } from 'src/app/shared/spinner/spinner.component';
@@ -19,7 +19,7 @@ export class ChatListComponent implements OnInit  {
   chatList: ChatResponseDTO[] = [];
   selectedChat: ChatResponseDTO | null = null;
 
-  constructor(private chatListService: ChatListService, private chatDetailService: ChatDetailService, private chatApiService: ChatApiService, private spinnerService: SpinnerService, private elementRef: ElementRef, private renderer: Renderer2, private router: Router) {
+  constructor(private chatListService: ChatListService, private changeDetectorRef: ChangeDetectorRef, private chatDetailService: ChatDetailService, private chatApiService: ChatApiService, private spinnerService: SpinnerService, private elementRef: ElementRef, private renderer: Renderer2, private router: Router) {
     chatListService.setChatListComponent(this);
     this.showElement = false;
   }
@@ -76,9 +76,18 @@ export class ChatListComponent implements OnInit  {
   }
 
   changeSelectedChat(chatId: string){
-    this.updateList();
-    let newSelectedChat = this.chatList.find(x => x.chatId === chatId);
-    this.selectedChat = newSelectedChat ? newSelectedChat : this.selectedChat;
+    this.spinnerService.changeSpinnerState(true);
+    (this.isBuyersChats ? this.chatApiService.getBuyersChats() : this.chatApiService.getSellersChats()).subscribe(
+      (response : ChatListResponseDTO) => {
+        this.chatList = response.items;
+        let newSelectedChat = this.chatList.find(x => x.chatId === chatId);
+        this.selectedChat = newSelectedChat ? newSelectedChat : this.selectedChat;
+        this.spinnerService.changeSpinnerState(false);
+      },
+      (error) => {
+        this.spinnerService.changeSpinnerState(false);
+      }
+    );
   }
 
   toggleAnimation() {

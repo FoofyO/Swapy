@@ -17,9 +17,9 @@ namespace Swapy.BLL.Domain.Chats.QueryHandlers
             {
                 ChatId = x.Id,
                 Logo = x.Buyer.Logo,
-                Title = x.Product.Title,
+                Title = $"{x.Buyer.FirstName} {x.Buyer.LastName}",
                 LastMessage = x.Messages.FirstOrDefault()?.Text,
-                Image = x.Product.Images.FirstOrDefault()?.Image,
+                Image = x.Product.Images.FirstOrDefault()?.Image == null ? "default-product-image.png" : x.Product.Images.FirstOrDefault()?.Image,
                 LastMessageDateTime = x.Messages.FirstOrDefault()?.DateTime
             });
 

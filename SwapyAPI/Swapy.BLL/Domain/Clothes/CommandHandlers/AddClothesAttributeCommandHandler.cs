@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Swapy.BLL.Domain.Clothes.Commands;
 using Swapy.BLL.Interfaces;
 using Swapy.BLL.Services;
@@ -15,14 +16,16 @@ namespace Swapy.BLL.Domain.Clothes.CommandHandlers
         private readonly INotificationService _notificationService;
         private readonly ISubcategoryRepository _subcategoryRepository;
         private readonly IClothesAttributeRepository _clothesAttributeRepository;
+        private readonly UserManager<User> _userManager;
 
-        public AddClothesAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IClothesAttributeRepository clothesAttributeRepository)
+        public AddClothesAttributeCommandHandler(UserManager<User> userManager, IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IClothesAttributeRepository clothesAttributeRepository)
         {
             _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
             _clothesAttributeRepository = clothesAttributeRepository;
+            _userManager = userManager;
         }
 
         public async Task<ClothesAttribute> Handle(AddClothesAttributeCommand request, CancellationToken cancellationToken)
@@ -50,6 +53,10 @@ namespace Swapy.BLL.Domain.Clothes.CommandHandlers
             };
 
             await _notificationService.Notificate(model);
+
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            user.ProductsCount++;
+            await _userManager.UpdateAsync(user);
 
             return clothesAttribute;
         }

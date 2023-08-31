@@ -26,7 +26,7 @@ namespace Swapy.BLL.Domain.Chats.CommandHandlers
 
             if(request.Image != null) imagePath = await _imageService.UploadChatImagesAsync(request.Image);
             
-            var message = new Message(request.Text, imagePath, request.UserId, request.ChatId);
+            var message = new Message(request.Text, imagePath, request.ChatId, request.UserId);
             await _messageRepository.CreateAsync(message); 
             
             return message;

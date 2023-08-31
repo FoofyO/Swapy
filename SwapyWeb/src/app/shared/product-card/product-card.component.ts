@@ -43,6 +43,6 @@ export class ProductCardComponent implements OnInit {
   }
 
   moveToProduct(): void{
-    this.router.navigateByUrl(`products/${this.product.id}`);
+    window.location.replace(`products/${this.product.id}`);
   }
 }

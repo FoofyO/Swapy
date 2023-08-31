@@ -176,9 +176,10 @@
               <th>Memory:</th>
               <td>{{product.memory}}</td>
             </tr>
-            <tr class="information" *ngIf="productCategoryType == 3">
+            <tr class="information" *ngIf="productCategoryType == 1 || productCategoryType == 3">
               <th>Model:</th>
-              <td>{{product.model}}</td>
+              <td *ngIf="productCategoryType == 1">{{product.autoModel}}</td>
+              <td *ngIf="productCategoryType == 3">{{product.model}}</td>
             </tr>
             <tr class="information" *ngIf="productCategoryType == 5">
               <th>Area:</th>

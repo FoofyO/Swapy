@@ -2,7 +2,7 @@
 {
     public class GetAllAutoModelsQueryDTO
     {
-        public List<string> AutoBrandsId { get; set; }
-        public List<string> AutoTypesId { get; set; }
+        public List<string>? AutoBrandsId { get; set; }
+        public List<string>? AutoTypesId { get; set; }
     }
 }

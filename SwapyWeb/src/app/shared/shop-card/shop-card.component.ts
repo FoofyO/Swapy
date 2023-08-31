@@ -21,6 +21,6 @@ export class ShopCardComponent implements OnInit {
   }
 
   moveToShop(): void {
-    this.router.navigateByUrl(`shops/${this.shop.userId}`);
+    window.location.replace(`shops/${this.shop.userId}`);
   }
 }

@@ -315,6 +315,23 @@
         .filter-wrapper:last-child {
             border-bottom: none;
         }
+
+        .filters-button {
+            width: 100%;
+            font-weight: 600;
+            font-size: 1.3rem;
+            text-align: center;
+            padding: 0.5rem;
+            outline: none;
+            border: 0;
+            background-color: $primary;
+            color: $white;
+        }
+
+        .filters-button-disabled {
+            background-color: $additional;
+            color: $scroll-black;
+        }
     }
 
     .product-section-container{

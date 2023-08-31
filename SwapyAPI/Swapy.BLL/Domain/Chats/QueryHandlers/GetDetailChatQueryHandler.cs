@@ -29,9 +29,9 @@ namespace Swapy.BLL.Domain.Chats.QueryHandlers
                     SenderId = x.SenderId,
                     SenderLogo = x.Sender.Logo
                 }),
-                Title = chat.Product.Title,
-                Image = chat.Product.Images.FirstOrDefault().Image,
-                //Type = request.UserId.Equals(chat.BuyerId) ? ChatType.Buyyer : ChatType.Seller;
+                Title = request.UserId.Equals(chat.BuyerId) ? chat.Product.Title : $"{chat.Buyer.FirstName} {chat.Buyer.LastName}",
+                Image = request.UserId.Equals(chat.BuyerId) ? (chat.Product.Images.FirstOrDefault()?.Image == null ? "default-product-image.png" : chat.Product.Images.FirstOrDefault()?.Image) : chat.Buyer.Logo,
+                Type = request.UserId.Equals(chat.BuyerId) ? ChatType.Buyyer : ChatType.Seller
             };
         }
     }

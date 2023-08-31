@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Swapy.BLL.Domain.Autos.Commands;
 using Swapy.BLL.Interfaces;
 using Swapy.BLL.Services;
@@ -15,14 +16,16 @@ namespace Swapy.BLL.Domain.Autos.CommandHandlers
         private readonly INotificationService _notificationService;
         private readonly ISubcategoryRepository _subcategoryRepository;
         private readonly IAutoAttributeRepository _autoAttributeRepository;
+        private readonly UserManager<User> _userManager;
 
-        public AddAutoAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IAutoAttributeRepository autoAttributeRepository)
+        public AddAutoAttributeCommandHandler(UserManager<User> userManager, IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IAutoAttributeRepository autoAttributeRepository)
         {
             _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
             _autoAttributeRepository = autoAttributeRepository;
+            _userManager = userManager;
         }
 
         public async Task<AutoAttribute> Handle(AddAutoAttributeCommand request, CancellationToken cancellationToken)
@@ -50,6 +53,10 @@ namespace Swapy.BLL.Domain.Autos.CommandHandlers
             };
 
             await _notificationService.Notificate(model);
+
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            user.ProductsCount++;
+            await _userManager.UpdateAsync(user);
 
             return autoAttribute;
         }

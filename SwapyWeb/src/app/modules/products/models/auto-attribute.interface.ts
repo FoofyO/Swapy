@@ -13,4 +13,6 @@ export interface AutoAttribute extends ProductAttribute {
     transmissionType: string;
     autoBrandId: string;
     autoBrand: string;
+    autoModelId: string;
+    autoModel: string;
 }

@@ -8,6 +8,6 @@ namespace Swapy.DAL.Interfaces
         Task<IEnumerable<Chat>> GetAllBuyerChatsAsync(string userId);
         Task<Chat> GetByIdDetailAsync(string id);
         Task<Chat> CheckChatExists(string userId, string productId);
-        Task<Chat> GetByIdDetailByProductIdAsync(string productId);
+        Task<Chat> GetByIdDetailByProductIdAsync(string productId, string userId);
     }
 }

@@ -21,9 +21,11 @@ export class SharedApiService {
 
     constructor(private axiosInterceptorService: AxiosInterceptorService) {}
 
-    getBreeds(animalTypeId : string) : Observable<Specification<string>[]> {
-      return from(this.axiosInterceptorService.get(`${this.animalsApiUrl}/Breeds/${animalTypeId}`)).pipe(
+    getBreeds(animalTypeId : string | null) : Observable<Specification<string>[]> {
+      let url = animalTypeId ? `${this.animalsApiUrl}/Breeds?AnimalTypesId=${animalTypeId}` : `${this.animalsApiUrl}/Breeds`;
+      return from(this.axiosInterceptorService.get(url)).pipe(
         map((response: AxiosResponse<any>) => {
+          console.log(`${this.animalsApiUrl}/Breeds/${animalTypeId}`);
           const breeds: Specification<string>[] = response.data.$values;
           return breeds;
         }),

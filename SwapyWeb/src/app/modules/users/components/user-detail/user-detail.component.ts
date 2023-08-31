@@ -40,7 +40,7 @@ export class UserDetailComponent implements OnInit {
   selectedDisabledFilter: string = '1';
   sortDisabledByPrice: boolean = false;
   reverseDisabledSort: boolean = true;
-  isLoadingDisabledProducts: boolean = true;
+  isLoadingDisabledProducts: boolean = false;
   isNotFoundDisabledProducts: boolean = false;
 
   constructor(private authFacade : AuthFacadeService , private userApiService : UserApiService,private sharedApiService : SharedApiService, private route: ActivatedRoute, private router: Router) { 
@@ -109,9 +109,7 @@ export class UserDetailComponent implements OnInit {
   }
 
   transferToSettings(): void{
-    if(this.isMe){
-      this.isMe = false;
-    }
+    if(this.isMe){ this.router.navigateByUrl('settings'); }
   }
 
   userImageLoadError(event: any) {
@@ -146,7 +144,7 @@ export class UserDetailComponent implements OnInit {
   loadUserDisabledProducts(isNewRequest: boolean = false): void {
     if(!this.isMe)
     {
-      this.isNotFoundProducts = true;
+      this.isNotFoundDisabledProducts = true;
       return;
     }
     this.isLoadingDisabledProducts = true;
@@ -158,7 +156,6 @@ export class UserDetailComponent implements OnInit {
     }
     else { this.currentDisabledPage++; }
     this.sharedApiService.getDisabledProducts(this.currentDisabledPage, this.pageSize, this.sortDisabledByPrice, this.reverseDisabledSort, this.userId).subscribe((response: PageResponse<Product>) => { 
-      console.log(response);
       response.items.forEach(item => {
         if (Array.isArray(item.images)) {
           item.images = item.images.map((image) => `${environment.blobUrl}/product-images/${image}`);
@@ -169,6 +166,7 @@ export class UserDetailComponent implements OnInit {
       if(this.userDisabledProducts != null) { this.userDisabledProducts.push(...response.items); }
       else { this.userDisabledProducts = response.items; }
       this.isLoadingDisabledProducts = false;
+      this.isNotFoundDisabledProducts = false;
     },
     (error) => {
       this.isLoadingDisabledProducts = false;

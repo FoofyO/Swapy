@@ -6,8 +6,8 @@
     </div>
     <div class="messages-wrapper">
         <div class="message-info-container" *ngFor="let message of selectedChat.messages; let index = index;">
-            <div class="messages-date" *ngIf="index <= 0 || (!selectedChat.messages[index - 1]) || message.dateTime.getDate() !== selectedChat.messages[index - 1].dateTime.getDate()">
-                <p>{{message.dateTime | customDateEn}}</p>
+            <div class="messages-date" *ngIf="index <= 0 || (!selectedChat.messages[index - 1]) || (!equalsDatesWithoutTime(message.dateTime, selectedChat.messages[index - 1].dateTime))">
+                <p>{{message.dateTime | chatDateEn}}</p>
             </div>
             <div class="message-container">
                 <div class="message" [ngClass]="message.senderId === myId ? 'my-message' : 'other-message'">
@@ -21,13 +21,14 @@
         </div>
     </div>
     <div class="chat-input-container">
+        <i *ngIf="selectedFileToSend" class="fa-solid fa-circle-xmark close-image" (click)="closeFile()"></i>
         <img #imageElement *ngIf="selectedFileToSend" class="image-preview">
         <div class="chat-input">
             <label for="send-file-input">
                 <i class="fa-solid fa-note-sticky"></i>
             </label>
-            <input id="send-file-input" class="collapse" type="file" (change)="selectFile($event)" [accept]="'image/png, image/jpg, image/jpeg'">
-            <input type="text" placeholder="Message" [(ngModel)]="inputTextToSend"/>
+            <input id="send-file-input" class="collapse" type="file" [(ngModel)]="fileInputValue" (change)="selectFile($event)" [accept]="'image/png, image/jpg, image/jpeg'">
+            <input type="text" placeholder="Message" [(ngModel)]="inputTextToSend" (keyup.enter)="sendMessage()"/>
             <i class="fa-solid fa-paper-plane" (click)="sendMessage()"></i>
         </div>
     </div>

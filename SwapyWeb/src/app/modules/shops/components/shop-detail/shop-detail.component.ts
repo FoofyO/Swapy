@@ -42,7 +42,7 @@ export class ShopDetailComponent implements OnInit {
   selectedDisabledFilter: string = '1';
   sortDisabledByPrice: boolean = false;
   reverseDisabledSort: boolean = true;
-  isLoadingDisabledProducts: boolean = true;
+  isLoadingDisabledProducts: boolean = false;
   isNotFoundDisabledProducts: boolean = false;
 
   @ViewChild('shopBannerDiv') shopBannerDiv!: ElementRef<HTMLDivElement>;
@@ -83,6 +83,7 @@ export class ShopDetailComponent implements OnInit {
       }
     );
     this.loadShopProducts();
+    this.loadShopDisabledProducts();
   }
 
   like(): void{
@@ -114,7 +115,7 @@ export class ShopDetailComponent implements OnInit {
   }
 
   transferToSettings(): void{
-    if(this.isMe) this.router.navigate(["/settings"]);
+    if(this.isMe){ this.router.navigateByUrl('settings'); }
   }
 
   shopBannerLoad(imageUrl: string): void {
@@ -164,7 +165,7 @@ export class ShopDetailComponent implements OnInit {
   loadShopDisabledProducts(isNewRequest: boolean = false): void {
     if(!this.isMe)
     {
-      this.isNotFoundProducts = true;
+      this.isNotFoundDisabledProducts = true;
       return;
     }
     this.isLoadingDisabledProducts = true;
@@ -186,6 +187,7 @@ export class ShopDetailComponent implements OnInit {
       if(this.shopDisabledProducts != null) { this.shopDisabledProducts.push(...response.items); }
       else { this.shopDisabledProducts = response.items; }
       this.isLoadingDisabledProducts = false;
+      this.isNotFoundDisabledProducts = false;
     },
     (error) => {
       this.isLoadingDisabledProducts = false;

@@ -143,7 +143,7 @@ namespace Swapy.BLL.Services
         {
             foreach (var item in paths)
             {
-                var tmpProductImage = await _productImageRepository.GetByPath(item, productId);
+                var tmpProductImage = await _productImageRepository.GetByPath(item.Split('/').Last(), productId);
                 if (tmpProductImage != null) await _productImageRepository.DeleteAsync(tmpProductImage);
             }
 
