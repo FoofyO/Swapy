@@ -400,10 +400,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("Brands{ClothesViewsId}")]
+        [HttpGet("Brands")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllClothesBrandsAsync([FromRoute] GetAllClothesBrandsQueryDTO dto)
+        public async Task<IActionResult> GetAllClothesBrandsAsync([FromQuery] GetAllClothesBrandsQueryDTO dto)
         {
             try
             {

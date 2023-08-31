@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Swapy.BLL.Domain.RealEstates.Commands;
 using Swapy.BLL.Interfaces;
 using Swapy.BLL.Services;
@@ -16,14 +17,16 @@ namespace Swapy.BLL.Domain.RealEstates.CommandHandlers
         private readonly INotificationService _notificationService;
         private readonly ISubcategoryRepository _subcategoryRepository;
         private readonly IRealEstateAttributeRepository _realEstateAttributeRepository;
+        private readonly UserManager<User> _userManager;
 
-        public AddRealEstateAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IRealEstateAttributeRepository realEstateAttributeRepository)
+        public AddRealEstateAttributeCommandHandler(UserManager<User> userManager, IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IRealEstateAttributeRepository realEstateAttributeRepository)
         {
             _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
             _realEstateAttributeRepository = realEstateAttributeRepository;
+            _userManager = userManager;
         }
 
         public async Task<RealEstateAttribute> Handle(AddRealEstateAttributeCommand request, CancellationToken cancellationToken)
@@ -51,6 +54,10 @@ namespace Swapy.BLL.Domain.RealEstates.CommandHandlers
             };
 
             await _notificationService.Notificate(model);
+
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            user.ProductsCount++;
+            await _userManager.UpdateAsync(user);
 
             return animalAttribute;
         }

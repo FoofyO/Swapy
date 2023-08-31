@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Chats.Queries;
 using Swapy.Common.DTO.Chats.Responses;
+using Swapy.Common.Enums;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Chats.QueryHandlers
@@ -13,9 +14,9 @@ namespace Swapy.BLL.Domain.Chats.QueryHandlers
 
         public async Task<DetailChatResponseDTO> Handle(GetDetailChatByProductIdQuery request, CancellationToken cancellationToken)
         {
-            var chat = await _chatRepository.GetByIdDetailByProductIdAsync(request.ProductId);
+            var chat = await _chatRepository.GetByIdDetailByProductIdAsync(request.ProductId, request.UserId);
 
-            return new DetailChatResponseDTO()
+            return chat != null ? new DetailChatResponseDTO()
             {
                 ChatId = chat.Id,
                 Messages = chat.Messages.Select(x => new MessageResponseDTO()
@@ -28,9 +29,10 @@ namespace Swapy.BLL.Domain.Chats.QueryHandlers
                     SenderId = x.SenderId,
                     SenderLogo = x.Sender.Logo
                 }),
-                Title = chat.Product.Title,
-                Image = chat.Product.Images.FirstOrDefault().Image
-            };
+                Title = request.UserId.Equals(chat.BuyerId) ? chat.Product.Title : $"{chat.Buyer.FirstName} {chat.Buyer.LastName}",
+                Image = request.UserId.Equals(chat.BuyerId) ? (chat.Product.Images.FirstOrDefault()?.Image == null ? "default-product-image.png" : chat.Product.Images.FirstOrDefault()?.Image) : chat.Buyer.Logo,
+                Type = request.UserId.Equals(chat.BuyerId) ? ChatType.Buyyer : ChatType.Seller
+            } : null;
         }
     }
 }

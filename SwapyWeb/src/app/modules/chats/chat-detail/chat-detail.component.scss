@@ -50,10 +50,21 @@
         flex-direction: column;
         background-color: $secondary;
         border-radius: 0.6rem;
+        position: relative;
+
+        .close-image{
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 2rem;
+            color: $primary;
+            z-index: 3;
+            cursor: pointer;
+        }
         
         .image-preview{
             object-fit: contain;
-            margin: 1rem;
+            margin: 1rem 4rem;
             max-height: 10rem;
         }
         .chat-input{
@@ -128,6 +139,7 @@
             height: auto;
             display: inline-block;
             min-width: 4rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
             .message-image{
                 border-radius: 10px 10px 0 0;
@@ -140,10 +152,12 @@
                 margin: 0.3rem 0.8rem;
                 p{
                     margin-bottom: 0;
+                    font-size: 1.15rem;
                 }
                 .message-time{
                     font-size: 0.8rem;
                     text-align: end;
+                    margin-top: 0.15rem;
                 }
             }
         }

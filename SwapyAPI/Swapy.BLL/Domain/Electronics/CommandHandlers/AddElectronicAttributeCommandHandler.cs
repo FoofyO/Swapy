@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Swapy.BLL.Domain.Electronics.Commands;
 using Swapy.BLL.Interfaces;
 using Swapy.BLL.Services;
@@ -15,14 +16,16 @@ namespace Swapy.BLL.Domain.Electronics.CommandHandlers
         private readonly INotificationService _notificationService;
         private readonly ISubcategoryRepository _subcategoryRepository;
         private readonly IElectronicAttributeRepository _electronicAttributeRepository;
+        private readonly UserManager<User> _userManager;
 
-        public AddElectronicAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IElectronicAttributeRepository electronicAttributeRepository)
+        public AddElectronicAttributeCommandHandler(UserManager<User> userManager, IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IElectronicAttributeRepository electronicAttributeRepository)
         {
             _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
             _electronicAttributeRepository = electronicAttributeRepository;
+            _userManager = userManager;
         }
 
         public async Task<ElectronicAttribute> Handle(AddElectronicAttributeCommand request, CancellationToken cancellationToken)
@@ -50,6 +53,10 @@ namespace Swapy.BLL.Domain.Electronics.CommandHandlers
             };
 
             await _notificationService.Notificate(model);
+
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            user.ProductsCount++;
+            await _userManager.UpdateAsync(user);
 
             return electronicAttribute;
         }

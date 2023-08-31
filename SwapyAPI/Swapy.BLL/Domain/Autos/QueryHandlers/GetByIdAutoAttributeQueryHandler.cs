@@ -64,7 +64,9 @@ namespace Swapy.BLL.Domain.Autos.QueryHandlers
                 TransmissionTypeId = autoAttribute.TransmissionTypeId,
                 TransmissionType = autoAttribute.TransmissionType.Names.FirstOrDefault(l => l.Language == request.Language).Value,
                 AutoBrandId = autoAttribute.AutoModel.AutoBrandId,
-                AutoBrand = autoAttribute.AutoModel.AutoBrand.Name
+                AutoBrand = autoAttribute.AutoModel.AutoBrand.Name,
+                AutoModelId = autoAttribute.AutoModelId,
+                AutoModel = autoAttribute.AutoModel.Name
             };
             return result;
         }

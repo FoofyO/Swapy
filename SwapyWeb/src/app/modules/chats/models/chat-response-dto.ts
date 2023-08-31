@@ -4,5 +4,5 @@ export interface ChatResponseDTO {
     logo: string;
     image: string;
     lastMessage: string;
-    lastMessageDateTime: Date;
+    lastMessageDateTime: Date | null;
 }

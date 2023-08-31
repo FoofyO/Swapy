@@ -1,4 +1,4 @@
-<div class="product-add-wrapper">
+<div class="product-add-wrapper" *ngIf="!isAddedSuccessful">
     <div class="product-add-box">
 
         <div class="product-add-box-wrappers-container">
@@ -9,14 +9,14 @@
                         Title:
                     </p>
                     <label class="input-label">
-                        <input id="price-input" type="text" [(ngModel)]="selectedTitle">
+                        <input minlength="3" maxlength="128" id="price-input" type="text" [(ngModel)]="selectedTitle">
                     </label>
 
                     <p class="information-title">
                         Description:
                     </p>
                     <label class="textarea-label">
-                        <textarea [(ngModel)]="selectedDescription" placeholder="Enter description..."></textarea>
+                        <textarea maxlength="500" [(ngModel)]="selectedDescription" placeholder="Enter description..."></textarea>
                     </label>
 
 
@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            <div class="product-add-box-wrappers-container-section">
+            <div class="product-add-box-wrappers-container-section" *ngIf="selectedCategoryType != undefined">
                 <div class="product-add-box-wrapper">
                     <p class="information-title" *ngIf="selectedCategoryType == 0">
                         Breed:
@@ -227,7 +227,7 @@
                         </select>   
                     </div>
         
-                    <p class="information-title" *ngIf="(selectedCategoryType == 3 && selectedBrandId !== undefined)">
+                    <p class="information-title" *ngIf="((selectedCategoryType == 1 || selectedCategoryType == 3) && selectedBrandId !== undefined)">
                         Model:
                     </p>
                     <div class="select-container" *ngIf="(selectedCategoryType == 3 && selectedBrandId !== undefined)">
@@ -321,6 +321,19 @@
                 <button (click)="back()">Back</button>
                 <button (click)="createProduct()">Create</button>
             </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="success-notification-window" *ngIf="isAddedSuccessful">
+    <div class="card custom-card">
+        <div class="card-body custom-card-body">
+            <h3 class="custom-card-title">Product added successful <i class="fa-solid fa-circle-check"></i></h3>
+            <p class="custom-card-subtitle">Congratulations, your product has been successfully added!</p>
+            <p class="custom-card-subtitle">We are pleased to inform you that your new product has been successfully added to our website.</p>
+            <p class="custom-card-subtitle">Your item is now available to millions of users, and you can start receiving inquiries and orders.</p>
+            <button class="custom-card-button" type="submit" (click)="back()">Back</button>
         </div>
     </div>
 </div>

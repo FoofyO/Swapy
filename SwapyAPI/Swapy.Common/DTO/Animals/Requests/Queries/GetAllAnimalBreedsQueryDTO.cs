@@ -2,6 +2,6 @@
 {
     public class GetAllAnimalBreedsQueryDTO
     {
-        public string AnimalTypesId { get; set; }
+        public string? AnimalTypesId { get; set; }
     }
 }

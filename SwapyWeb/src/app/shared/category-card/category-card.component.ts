@@ -17,6 +17,6 @@ export class CategoryCardComponent implements OnInit {
   }
 
   moveToCategory(): void{
-    this.router.navigateByUrl(`products/search?category=${this.category.id}`);
+    window.location.replace(`products/search?category=${this.category.id}`);
   }
 }

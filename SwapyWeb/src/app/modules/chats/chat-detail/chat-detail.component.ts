@@ -6,6 +6,8 @@ import { ChatDetailService } from './chat-detail.service';
 import { AuthFacadeService } from '../../auth/services/auth-facade.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpStatusCode } from 'axios';
+import { SpinnerService } from 'src/app/shared/spinner/spinner.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-chat-detail',
@@ -17,10 +19,11 @@ export class ChatDetailComponent implements OnInit {
   selectedChat: DetailChatResponseDTO | null = null;
   inputTextToSend: string = '';
   productId: string | null = null;
+  fileInputValue: File | undefined = undefined;
   selectedFileToSend: File | undefined = undefined;
   @ViewChild('imageElement') previewImageElement!: ElementRef;
 
-  constructor(private route: ActivatedRoute, private chatDetailService: ChatDetailService, private chatListService: ChatListService, private chatApiService: ChatApiService, private authFacadeService: AuthFacadeService, private router: Router) {
+  constructor(private route: ActivatedRoute, private chatDetailService: ChatDetailService, private chatListService: ChatListService, private chatApiService: ChatApiService, private authFacadeService: AuthFacadeService, private spinnerService: SpinnerService, private router: Router) {
     chatDetailService.setChatDetailComponent(this);
     let userId = authFacadeService.getUserId()
     if(userId === null){ this.router.navigateByUrl('/404', { skipLocationChange: true }); return; }
@@ -30,11 +33,12 @@ export class ChatDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.productId = params['productId'];
+      this.productId = params['productId'] ? params['productId'] : null;
     });
     if(this.productId !== null) {
       this.chatApiService.getDetailChatByProductId(this.productId).subscribe(
         (response: DetailChatResponseDTO) => {
+          this.chatListService.changeSelectedChat(response.chatId);
           this.selectedChat = response;
         },
         (error) => {
@@ -66,26 +70,50 @@ export class ChatDetailComponent implements OnInit {
 
   sendMessage(): void {
     if(this.productId){
+      this.spinnerService.changeSpinnerState(true);
       let formData = new FormData();
       formData.append("ProductId", this.productId); 
       this.chatApiService.CreateChatAsync(formData).subscribe(
         (response: string) => {
           this.chatListService.changeSelectedChat(response);
-        }
+          this.chatApiService.getDetailChat(response).subscribe(
+            (response: DetailChatResponseDTO) => { 
+              this.selectedChat = response;
+              if(this.selectedChat !== null && this.inputTextToSend.trim().length >= 0){
+                let formData = new FormData();
+                formData.append("Text", this.inputTextToSend); 
+                formData.append("ChatId", this.selectedChat.chatId);
+                if(this.selectedFileToSend) { formData.append("image", this.selectedFileToSend); }
+                this.chatApiService.SendMessageAsync(formData).subscribe(
+                  (response) => {
+                    this.inputTextToSend = '';
+                    this.selectedFileToSend = undefined;
+                    this.spinnerService.changeSpinnerState(false);
+                  },
+                  (error) => { this.spinnerService.changeSpinnerState(false); }
+                )
+              }
+            },
+            (error) => { this.spinnerService.changeSpinnerState(false); }
+          );
+        },
+        (error) => { this.spinnerService.changeSpinnerState(false); }
       ) 
       this.productId = null; 
     }
-    if(this.selectedChat !== null && this.inputTextToSend.trim().length >= 0){
+    else if(this.selectedChat !== null && this.inputTextToSend.trim().length >= 0){
+      this.spinnerService.changeSpinnerState(true);
       let formData = new FormData();
       formData.append("Text", this.inputTextToSend); 
       formData.append("ChatId", this.selectedChat.chatId);
       if(this.selectedFileToSend) { formData.append("image", this.selectedFileToSend); }
       this.chatApiService.SendMessageAsync(formData).subscribe(
         (response) => {
-          console.log(response);
           this.inputTextToSend = '';
           this.selectedFileToSend = undefined;
-        }
+          this.spinnerService.changeSpinnerState(false);
+        },
+        (error) => { this.spinnerService.changeSpinnerState(false); }
       )
     }
   }
@@ -107,6 +135,17 @@ export class ChatDetailComponent implements OnInit {
     else {
       this.previewImageElement.nativeElement.src = 'undefined';
     }
+  }
+
+  closeFile(): void {
+    this.fileInputValue = undefined;
+    this.selectedFileToSend = undefined;
+  }
+
+  equalsDatesWithoutTime(date1: Date, date2: Date): boolean {
+    const dateObject1 = new Date(date1);
+    const dateObject2 = new Date(date2);
+    return dateObject1.getDate() == dateObject2.getDate()
   }
 
   backToList(): void {

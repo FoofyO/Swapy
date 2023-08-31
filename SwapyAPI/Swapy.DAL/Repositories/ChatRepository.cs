@@ -55,7 +55,7 @@ namespace Swapy.DAL.Repositories
                                               Id = c.Id,
                                               Buyer = c.Buyer,
                                               Product = c.Product,
-                                              Messages = c.Messages.OrderByDescending(m => m.DateTime).Take(1).ToList(),
+                                              Messages = c.Messages.OrderBy(m => m.DateTime).Take(1).ToList(),
                                           })
                                           .ToListAsync();
         }
@@ -73,7 +73,7 @@ namespace Swapy.DAL.Repositories
                                                 Id = c.Id,
                                                 Buyer = c.Buyer,
                                                 Product = c.Product,
-                                                Messages = c.Messages.OrderByDescending(m => m.DateTime).Take(1).ToList(),
+                                                Messages = c.Messages.OrderBy(m => m.DateTime).Take(1).ToList(),
                                             })
                                             .ToListAsync();
 
@@ -84,6 +84,7 @@ namespace Swapy.DAL.Repositories
         {
             var item = await _context.Chats.Include(c => c.Product)
                                                 .ThenInclude(p => p.User)
+                                           .Include(c => c.Buyer)
                                            .Include(c => c.Product)
                                                 .ThenInclude(p => p.Images)
                                            .Include(c => c.Messages)
@@ -92,22 +93,24 @@ namespace Swapy.DAL.Repositories
 
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
-            item.Messages = item?.Messages?.OrderByDescending(m => m.DateTime).ToList();
+            item.Messages = item?.Messages?.OrderBy(m => m.DateTime).ToList();
             return item;
         }
 
-        public async Task<Chat> GetByIdDetailByProductIdAsync(string productId)
+        public async Task<Chat> GetByIdDetailByProductIdAsync(string productId, string userId)
         {
             var item = await _context.Chats.Include(c => c.Product)
                                                 .ThenInclude(p => p.User)
+                                           .Include(c => c.Buyer)
                                            .Include(c => c.Product)
                                                 .ThenInclude(p => p.Images)
                                            .Include(c => c.Messages)
                                                 .ThenInclude(m => m.Sender)
+                                           .Where(c => c.BuyerId.Equals(userId))
                                            .FirstOrDefaultAsync(c => c.ProductId.Equals(productId));
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with product with {productId} id not found");
-            item.Messages = item?.Messages?.OrderByDescending(m => m.DateTime).ToList();
+            item.Messages = item?.Messages?.OrderBy(m => m.DateTime).ToList();
             return item;
         }
 

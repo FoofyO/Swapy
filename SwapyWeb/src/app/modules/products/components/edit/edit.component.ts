@@ -52,8 +52,8 @@ export class EditComponent implements OnInit {
   maxMiliage!: number;
   miliage!: number;
 
-  minEngineCapacity!: number;
-  maxEngineCapacity!: number;
+  minEngineCapacity: number = 0;
+  maxEngineCapacity: number = 18200;
   engineCapacity!: number;
 
   olderReleaseYear!: number;
@@ -134,10 +134,9 @@ export class EditComponent implements OnInit {
     this.clearSelectionsInAdditionalFilters();
     switch(value){
       case CategoryType.AnimalsType: {
-        this.sharedApiService.getBreeds(this.product.categories[this.product.categories.length - 1].id).subscribe((response : Specification<string>[]) => {
+        this.sharedApiService.getBreeds(this.product.categories[this.product.categories.length - 1].id ? this.product.categories[this.product.categories.length - 1].id : null).subscribe((response : Specification<string>[]) => {
           this.breeds = response;
           this._selectedCategoryType = value;
-          this.loadProductDetailByCategory();
           this.spinnerService.changeSpinnerState(false);
           return;
         })
@@ -148,22 +147,22 @@ export class EditComponent implements OnInit {
           this.productApiService.getFuelTypes(),
           this.productApiService.getColors(),
           this.productApiService.getTransmissionTypes(),
-          this.productApiService.getAutoBrands([this.product.categories[this.product.categories.length - 1].id])
+          this.productApiService.getAutoBrands(this.product.categories[this.product.categories.length - 1].id ? [this.product.categories[this.product.categories.length - 1].id] : null),
+          this.productApiService.getAutoModels(this.selectedBrandId !== 'undefined' ? [this.selectedBrandId] : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? [this.product.categories[this.product.categories.length - 1].id] : null)
         ]).subscribe(
-          ([fuelTypes, colors, transmissionTypes, brands]: [Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[]]) => {
+          ([fuelTypes, colors, transmissionTypes, brands, models]: [Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[]]) => {
             this.fuelTypes = fuelTypes;
             this.colors = colors;
             this.transmissionTypes = transmissionTypes;
             this.brands = brands;
+            this.models = models;
             this._selectedCategoryType = value;
-            this.loadProductDetailByCategory();
             this.spinnerService.changeSpinnerState(false);
             return;
           },
           error => {
             console.error('Error fetching data:', error);
             this._selectedCategoryType = value;
-            this.loadProductDetailByCategory();
             this.spinnerService.changeSpinnerState(false);
             return;
           }
@@ -172,11 +171,11 @@ export class EditComponent implements OnInit {
       }
       case CategoryType.ClothesType: {
         forkJoin([
-          this.productApiService.getClotheBrands([this.selectedClothesViewId]),
+          this.productApiService.getClotheBrands(this.selectedClothesViewId !== 'undefined' ? [this.selectedClothesViewId] : null),
           this.productApiService.getClothesSizes(this.selectedClothesTypeFilter == -1, this.clotheIsShoe),
           this.productApiService.getGenders(),
           this.productApiService.getClothesSeasons(),
-          this.productApiService.getClothesViews(this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.product.categories[this.product.categories.length - 1].id)
+          this.productApiService.getClothesViews(this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? this.product.categories[this.product.categories.length - 1].id : null)
         ]).subscribe(
           ([brands, clothesSizes, genders, clothesSeasons, clothesViews]: [Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[]]) => {
             this.brands = brands;
@@ -185,7 +184,6 @@ export class EditComponent implements OnInit {
             this.clothesSeasons = clothesSeasons;
             this.clothesViews = clothesViews;
             this._selectedCategoryType = value;
-            this.loadProductDetailByCategory();
             this.spinnerService.changeSpinnerState(false);
             return;
           },
@@ -203,7 +201,7 @@ export class EditComponent implements OnInit {
           this.productApiService.getElectronicColors(this.selectedModelId !== undefined ? this.selectedModelId : null),
           this.productApiService.getElectronicBrands(this.product.categories[this.product.categories.length - 1].id),
           this.productApiService.getElectronicMemories(this.selectedModelId !== undefined ? this.selectedModelId : null),
-          this.productApiService.getElectronicModels(this.selectedBrandId !== undefined ? [this.selectedBrandId] : null, this.product.categories[this.product.categories.length - 1].id)
+          this.productApiService.getElectronicModels(this.selectedBrandId !== 'undefined' ? [this.selectedBrandId] : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? this.product.categories[this.product.categories.length - 1].id : null)
         ]).subscribe(
           ([colors, brands, memories, models]: [Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[]]) => {
             this.colors = colors;
@@ -211,7 +209,6 @@ export class EditComponent implements OnInit {
             this.memories = memories;
             this.models = models;
             this._selectedCategoryType = value;
-            this.loadProductDetailByCategory();
             this.spinnerService.changeSpinnerState(false);
             return;
           },
@@ -226,7 +223,6 @@ export class EditComponent implements OnInit {
       }
       case CategoryType.ItemsType: {
         this._selectedCategoryType = value;
-        this.loadProductDetailByCategory();
         this.spinnerService.changeSpinnerState(false);
         return;
         break;
@@ -250,7 +246,6 @@ export class EditComponent implements OnInit {
             this.screenResolutions = screenResolutions;
             this.screenDiagonals = screenDiagonals;
             this._selectedCategoryType = value;
-            this.loadProductDetailByCategory();
             this.spinnerService.changeSpinnerState(false);
             return;
           },
@@ -276,6 +271,8 @@ export class EditComponent implements OnInit {
   product!: any;
 
   errorText: string | null = null;
+
+  isUpdatedSuccessful: boolean = false;
 
   constructor(private router: Router, private authFacade : AuthFacadeService, private productApiService: ProductApiService, private sharedApiService : SharedApiService, private spinnerService: SpinnerService, private changeDetectorRef : ChangeDetectorRef, private route: ActivatedRoute) {
     if(!authFacade.isAuthenticated()){
@@ -522,57 +519,86 @@ export class EditComponent implements OnInit {
 
   onSelectedModelChange(): void {
     this.spinnerService.changeSpinnerState(true);
-    forkJoin([
-      this.productApiService.getElectronicColors(this.selectedModelId !== undefined ? this.selectedModelId : null),
-      this.productApiService.getElectronicMemories(this.selectedModelId !== undefined ? this.selectedModelId : null)
-    ]).subscribe(
-      ([colors, memories]: [Specification<string>[], Specification<string>[]]) => {
-        this.colors = colors;
-        this.selectedColorId = this.colors.map(i => i.id).indexOf(this.selectedColorId ) !== -1 ? this.selectedColorId : 'undefined';
-        this.memories = memories;
-        this.selectedMemoryId = this.memories.map(i => i.id).indexOf(this.selectedMemoryId ) !== -1 ? this.selectedMemoryId : 'undefined';
-        this.spinnerService.changeSpinnerState(false);
-        return;
-      },
-      error => {
-        console.error('Error fetching data:', error);
-        this.spinnerService.changeSpinnerState(false);
-        return;
+    switch (this.selectedCategoryType) {
+      case CategoryType.ElectronicsType: {
+        forkJoin([
+          this.productApiService.getElectronicColors(this.selectedModelId !== undefined ? this.selectedModelId : null),
+          this.productApiService.getElectronicMemories(this.selectedModelId !== undefined ? this.selectedModelId : null)
+        ]).subscribe(
+          ([colors, memories]: [Specification<string>[], Specification<string>[]]) => {
+            this.colors = colors;
+            this.selectedColorId = this.colors.map(i => i.id).indexOf(this.selectedColorId) !== -1 ? this.selectedColorId : 'undefined';
+            this.memories = memories;
+            this.selectedMemoryId = this.memories.map(i => i.id).indexOf(this.selectedMemoryId) !== -1 ? this.selectedMemoryId : 'undefined';
+            this.spinnerService.changeSpinnerState(false);
+            return;
+          },
+          error => {
+            console.error('Error fetching data:', error);
+            this.spinnerService.changeSpinnerState(false);
+            return;
+          }
+        );
+        break;
       }
-    );
+    }
   }
 
   onSelectedBrandChange(): void {
-    if(this.selectedCategoryType === CategoryType.ElectronicsType)
-    {
-      this.spinnerService.changeSpinnerState(true);
-      forkJoin([
-        this.productApiService.getElectronicModels(this.selectedBrandId !== undefined ? [this.selectedBrandId] : null, this.product.categories[this.product.categories.length - 1].id)
-      ]).subscribe(
-        ([models]: [Specification<string>[]]) => {
-          this.models = models;
-          this.selectedModelId = this.models.map(i => i.id).indexOf(this.selectedModelId) !== -1 ? this.selectedModelId : 'undefined';
-          this.spinnerService.changeSpinnerState(false);
-          return;
-        },
-        error => {
-          console.error('Error fetching data:', error);
-          this.spinnerService.changeSpinnerState(false);
-          return;
-        }
-      );
+    this.spinnerService.changeSpinnerState(true);
+    switch (this.selectedCategoryType) {
+      case CategoryType.AutosType: {
+        forkJoin([
+          this.productApiService.getAutoModels(this.selectedBrandId !== 'undefined' ? [this.selectedBrandId] : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? [this.product.categories[this.product.categories.length - 1].id] : null)
+        ]).subscribe(
+          ([models]: [Specification<string>[]]) => {
+            this.models = models;
+            this.selectedModelId = this.models.map(i => i.id).indexOf(this.selectedModelId) !== -1 ? this.selectedModelId : 'undefined';
+            this.spinnerService.changeSpinnerState(false);
+          },
+          (error) => {
+            console.error('Error fetching data:', error);
+            this.spinnerService.changeSpinnerState(false);
+            return;
+          }
+        );
+        break;
+      }
+      case CategoryType.ElectronicsType: {
+        forkJoin([
+          this.productApiService.getElectronicModels(this.selectedBrandId !== 'undefined' ? [this.selectedBrandId] : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? this.product.categories[this.product.categories.length - 1].id : null)
+        ]).subscribe(
+          ([models]: [Specification<string>[]]) => {
+            this.models = models;
+            this.selectedModelId = this.models.map(i => i.id).indexOf(this.selectedModelId) !== -1 ? this.selectedModelId : 'undefined';
+            this.spinnerService.changeSpinnerState(false);
+            this.onSelectedModelChange();
+            return;
+          },
+          error => {
+            console.error('Error fetching data:', error);
+            this.spinnerService.changeSpinnerState(false);
+            return;
+          }
+        );
+        break;
+      }
+      default: {
+        this.spinnerService.changeSpinnerState(false);
+      }
     }
   }
 
   onSelectedGenderChange(): void {
     this.spinnerService.changeSpinnerState(true);
     forkJoin([
-      this.productApiService.getClothesViews(this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.product.categories[this.product.categories.length - 1].id)
+      this.productApiService.getClothesViews(this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? this.product.categories[this.product.categories.length - 1].id : null)
     ]).subscribe(
       ([clothesViews]: [Specification<string>[]]) => {
         this.clothesViews = clothesViews;
         this.selectedClothesViewId = this.clothesViews.map(i => i.id).indexOf(this.selectedClothesViewId) !== -1 ? this.selectedClothesViewId : 'undefined';
         this.spinnerService.changeSpinnerState(false);
+        this.onSelectedClothesViewChange();
         return;
       },
       error => {
@@ -586,7 +612,7 @@ export class EditComponent implements OnInit {
   onSelectedClothesViewChange(): void {
     this.spinnerService.changeSpinnerState(true);
     forkJoin([
-      this.productApiService.getClotheBrands([this.selectedClothesViewId]),
+      this.productApiService.getClotheBrands(this.selectedClothesViewId !== 'undefined' ? [this.selectedClothesViewId] : null),
     ]).subscribe(
       ([brands]: [Specification<string>[]]) => {
         this.brands = brands;
@@ -631,11 +657,15 @@ export class EditComponent implements OnInit {
     this.spinnerService.changeSpinnerState(true);
 
     const regex = /^[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}$/;
+    const titleRegex = /^[A-ZА-ЯƏÜÖĞİŞÇ][A-ZА-ЯƏÜÖĞİŞÇa-zа-яəüöğışç0-9\s'""':;,.\(\)\*\-_]{2,127}$/;
 
     this.errorText = this.selectedTitle.trim().length === 0 ? "Title must not be empty" :
-    //!regex.test(this.selectedCityId) ? "Wrong city" : 
-    this.price < 0 ? "Price cannot be negative" : null;
-    //!regex.test(this.selectedCurrencyId) ? "Wrong currency" : null;
+    this.selectedTitle.length > 128 || this.selectedTitle.length < 3 ? "Title must be at least 3 characters and no more than 128" :
+    !titleRegex.test(this.selectedTitle) ? "Invalid title" :
+    this.selectedDescription.length > 500 ? "Description must be no more than 500 characters" :
+    !regex.test(this.selectedCityId) ? "Wrong city" : 
+    this.price < 0 ? "Price cannot be negative" : 
+    !regex.test(this.selectedCurrencyId) ? "Wrong currency" : null;
 
     if(this.errorText != null) { this.spinnerService.changeSpinnerState(false); return; }
 
@@ -671,7 +701,7 @@ export class EditComponent implements OnInit {
         formData.append("AnimalBreedId", this.selectedBreedId);
 
         this.productApiService.updateAnimal(formData).subscribe(
-          (result) => {this.spinnerService.changeSpinnerState(false);window.history.back();},
+          (result) => {this.spinnerService.changeSpinnerState(false);this.isUpdatedSuccessful = true;},
           (error) => {
             if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
               this.errorText = "Invalid request, please try again."
@@ -697,6 +727,7 @@ export class EditComponent implements OnInit {
         this.errorText = this.selectedIsNewFilter === 0 ? "Is new field is required" :
         this.miliage < 0 ? "Miliage cannot be negative" :
         this.engineCapacity < 0 ? "Engine capacity cannot be negative" :
+        this.engineCapacity > 18200 ? "Engine capacity cannot be more than 18200" :
         this.releaseYear < 0 ? "Release year cannot be negative" :
         !regex.test(this.selectedFuelTypeId) ? "Fuel type field is required" : 
         !regex.test(this.selectedColorId) ? "Color field is required" : 
@@ -715,7 +746,7 @@ export class EditComponent implements OnInit {
         formData.append("AutoModelId", `${this.selectedModelId}`); 
 
         this.productApiService.updateAuto(formData).subscribe(
-          (result) => {this.spinnerService.changeSpinnerState(false);window.history.back();},
+          (result) => {this.spinnerService.changeSpinnerState(false);this.isUpdatedSuccessful = true;},
           (error) => {
             if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
               this.errorText = "Invalid request, please try again."
@@ -756,7 +787,7 @@ export class EditComponent implements OnInit {
             formData.append("ClothesBrandViewId", `${result}`); 
 
             this.productApiService.updateClothes(formData).subscribe(
-              (result) => {this.spinnerService.changeSpinnerState(false);window.history.back();},
+              (result) => {this.spinnerService.changeSpinnerState(false);this.isUpdatedSuccessful = true;},
               (error) => {
                 if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
                   this.errorText = "Invalid request, please try again."
@@ -806,7 +837,7 @@ export class EditComponent implements OnInit {
             formData.append("ModelColorId", `${modelColorId}`); 
 
             this.productApiService.updateElectronics(formData).subscribe(
-              (result) => {this.spinnerService.changeSpinnerState(false);window.history.back();},
+              (result) => {this.spinnerService.changeSpinnerState(false);this.isUpdatedSuccessful = true;},
               (error) => {
                 if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
                   this.errorText = "Invalid request, please try again."
@@ -843,7 +874,7 @@ export class EditComponent implements OnInit {
         formData.append("ItemTypeId", `${this.product.categories[this.product.categories.length - 1].id}`); 
 
         this.productApiService.updateItem(formData).subscribe(
-          (result) => {this.spinnerService.changeSpinnerState(false);window.history.back();},
+          (result) => {this.spinnerService.changeSpinnerState(false);this.isUpdatedSuccessful = true;},
           (error) => {
             if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
               this.errorText = "Invalid request, please try again."
@@ -878,7 +909,7 @@ export class EditComponent implements OnInit {
         formData.append("RealEstateTypeId", `${this.product.categories[this.product.categories.length - 1].id}`); 
 
         this.productApiService.updateRealEstate(formData).subscribe(
-          (result) => {this.spinnerService.changeSpinnerState(false);window.history.back();},
+          (result) => {this.spinnerService.changeSpinnerState(false);this.isUpdatedSuccessful = true;},
           (error) => {
             if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
               this.errorText = "Invalid request, please try again."
@@ -918,7 +949,7 @@ export class EditComponent implements OnInit {
         formData.append("ScreenDiagonalId", `${this.selectedScreenDiagonalId}`); 
 
         this.productApiService.updateTv(formData).subscribe(
-          (result) => {this.spinnerService.changeSpinnerState(false);window.history.back();},
+          (result) => {this.spinnerService.changeSpinnerState(false);this.isUpdatedSuccessful = true;},
           (error) => {
             if(error.response.status === HttpStatusCode.BadRequest || error.response.status === HttpStatusCode.NotFound){
               this.errorText = "Invalid request, please try again."

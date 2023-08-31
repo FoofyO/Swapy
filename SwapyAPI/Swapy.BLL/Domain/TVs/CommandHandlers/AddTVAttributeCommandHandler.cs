@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Swapy.BLL.Domain.TVs.Commands;
 using Swapy.BLL.Interfaces;
 using Swapy.BLL.Services;
@@ -15,14 +16,16 @@ namespace Swapy.BLL.Domain.TVs.CommandHandlers
         private readonly INotificationService _notificationService;
         private readonly ITVAttributeRepository _tvAttributeRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
+        private readonly UserManager<User> _userManager;
 
-        public AddTVAttributeCommandHandler(IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ITVAttributeRepository tvAttributeRepository, ISubcategoryRepository subcategoryRepository)
+        public AddTVAttributeCommandHandler(UserManager<User> userManager, IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ITVAttributeRepository tvAttributeRepository, ISubcategoryRepository subcategoryRepository)
         {
             _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _tvAttributeRepository = tvAttributeRepository;
             _subcategoryRepository = subcategoryRepository;
+            _userManager = userManager;
         }
 
         public async Task<TVAttribute> Handle(AddTVAttributeCommand request, CancellationToken cancellationToken)
@@ -50,6 +53,10 @@ namespace Swapy.BLL.Domain.TVs.CommandHandlers
             };
 
             await _notificationService.Notificate(model);
+
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            user.ProductsCount++;
+            await _userManager.UpdateAsync(user);
 
             return tvAttribute;
         }

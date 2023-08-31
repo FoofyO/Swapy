@@ -5,9 +5,9 @@
     <div class="chat-list-chats-container" *ngIf="chatList.length > 0">
         <div class="chat-list-chats" [ngClass]="{'chat-list-chats-selected': chat.chatId === selectedChat?.chatId}" *ngFor="let chat of chatList" (click)="goToChat(chat)">
             <img class="chat-image" [src]="chat.logo"/>
-            <p>{{chat.title}}</p> 
-            <p>{{chat.lastMessage}}</p> 
-            <p class="time-info">{{chat.lastMessageDateTime | customDateEn}}</p>
+            <p class="chat-title">{{chat.title}}</p> 
+            <p *ngIf="chat.lastMessage && chat.lastMessageDateTime">{{chat.lastMessage}}</p> 
+            <p class="time-info" *ngIf="chat.lastMessage && chat.lastMessageDateTime">{{chat.lastMessageDateTime | customDateEn}}</p>
         </div>
     </div>
     <div class="no-chats-message-container" *ngIf="chatList.length <= 0">

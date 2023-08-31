@@ -150,7 +150,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
     this.clearSelectionsInAdditionalFilters();
     switch(value){
       case CategoryType.AnimalsType: {
-        this.sharedApiService.getBreeds(this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1]).subscribe((response : Specification<string>[]) => {
+        this.sharedApiService.getBreeds(this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null).subscribe((response : Specification<string>[]) => {
           this.breeds = response.map(breed => new CheckboxItem<Specification<string>>(breed));
           this._selectedCategoryType = value;
           this.spinnerService.changeSpinnerState(false);
@@ -163,13 +163,15 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           this.productApiService.getFuelTypes(),
           this.productApiService.getColors(),
           this.productApiService.getTransmissionTypes(),
-          this.productApiService.getAutoBrands([this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1]])
+          this.productApiService.getAutoBrands(this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] ? [this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1]] : null),
+          this.productApiService.getAutoModels(this.brands.filter(brand => brand.selected).map(brand => brand.value.id).length > 0 ? this.brands.filter(brand => brand.selected).map(brand => brand.value.id) : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? [this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1]] : null)
         ]).subscribe(
-          ([fuelTypes, colors, transmissionTypes, brands]: [Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[]]) => {
+          ([fuelTypes, colors, transmissionTypes, brands, models]: [Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[]]) => {
             this.fuelTypes = fuelTypes.map(item => new CheckboxItem<Specification<string>>(item));
             this.colors = colors.map(item => new CheckboxItem<Specification<string>>(item));
             this.transmissionTypes = transmissionTypes.map(item => new CheckboxItem<Specification<string>>(item));
             this.brands = brands.map(item => new CheckboxItem<Specification<string>>(item));
+            this.models = models;
             this._selectedCategoryType = value;
             this.spinnerService.changeSpinnerState(false);
             return;
@@ -185,7 +187,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
       }
       case CategoryType.ClothesType: {
         forkJoin([
-          this.productApiService.getClotheBrands([this.selectedClothesViewId]),
+          this.productApiService.getClotheBrands(this.selectedClothesViewId !== 'undefined' ? [this.selectedClothesViewId] : null),
           this.productApiService.getClothesSizes(this.selectedClothesTypeFilter == -1, this.clotheIsShoe),
           this.productApiService.getGenders(),
           this.productApiService.getClothesSeasons(),
@@ -281,11 +283,11 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
     }
   }
 
-  constructor(private productsSearchService: ProductsSearchService, private productApiService: ProductApiService, private sharedApiService : SharedApiService, private spinnerService: SpinnerService, private changeDetectorRef : ChangeDetectorRef, private route: ActivatedRoute) {
-    productsSearchService.setCategoryTreeComponent(this);
-    this.route.queryParams.subscribe(params => {
-      this.selectedTitle = params['title'];
-    });
+  isUpdateProductsButtonDisabled: boolean = true;
+
+  constructor(private productsSearchService: ProductsSearchService, private productApiService: ProductApiService, private sharedApiService : SharedApiService, private spinnerService: SpinnerService, private route: ActivatedRoute) {
+    this.productsSearchService.setCategoryTreeComponent(this);
+    this.spinnerService.changeSpinnerState(true);
   }
 
   ngOnInit(): void {
@@ -314,6 +316,17 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         this.selectedCurrencyId = currencies[0].id;
         this.selectedCurrencySymbol = currencies[0].symbol;
         this.cities = cities;
+
+        this.route.queryParams.subscribe(params => {
+          this.selectedTitle = params['title'];
+          this.selectedFilter = params['sort'] ? params['sort'] : this.selectedFilter;
+          this.onSelectSortChange(false);
+          this.selectedCurrencyId = params['currency'] ? params['currency'] : this.selectedCurrencyId;
+          this.onSelectCurrencyChange(false);
+          this.minPrice = params['minPrice'] ? params['minPrice'] : this.minPrice;
+          this.maxPrice = params['maxPrice'] ? params['maxPrice'] : this.maxPrice;
+          this.selectedCityId = params['city'] ? params['city'] : this.selectedCityId;
+        });
 
         let sentCategory : string | undefined;
         this.route.queryParams.subscribe(params => {
@@ -375,7 +388,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
                         this.clotheIsShoe = this.subcategoriesHierarchy[index].find(item => item.id === this.selectedSubcategoriesId[index])?.subType === SubcategoryType.Shoe;
                       });
                       this.spinnerService.changeSpinnerState(false);
-                      this.loadSuitableProducts(true);
+                      this.onChangeSubcategory(true)
                       return;
                     },
                     error => {
@@ -383,7 +396,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
                       this.selectedSubcategoriesId.splice(-this.currentSubcategoryNesting);
                       this.currentSubcategoryNesting = 0;
                       this.spinnerService.changeSpinnerState(false);
-                      this.loadSuitableProducts(true);
+                      this.onChangeSubcategory(true)
                       return;
                     }
                   );
@@ -426,10 +439,41 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
       }
     );
   }
-
+    
   ngAfterViewInit(): void {}
 
-  onSelectSortChange(): void{
+  changeUrlByFilterParams(): void {
+    const currentURL = new URL(window.location.href);
+    const searchParams = new URLSearchParams(currentURL.search);
+  
+    if(this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== 'undefined') {
+      searchParams.delete('category');
+      searchParams.set('subcategory', this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1])
+    }
+    else if(this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== 'undefined') {
+      searchParams.delete('subcategory');
+      searchParams.set('category', this.selectedCategoryId)
+    }
+    else {
+      searchParams.delete('category');
+      searchParams.delete('subcategory');
+    }
+    this.selectedTitle ? searchParams.set('title', this.selectedTitle) : searchParams.delete('title');
+    this.selectedFilter ? searchParams.set('sort', this.selectedFilter) : searchParams.delete('sort');
+    this.selectedCurrencyId ? searchParams.set('currency', this.selectedCurrencyId) : searchParams.delete('currency');
+    this.minPrice ? searchParams.set('minPrice', this.minPrice.toString()) : searchParams.delete('minPrice');
+    this.maxPrice ? searchParams.set('maxPrice', this.maxPrice.toString()) : searchParams.delete('maxPrice');
+    this.selectedCityId && this.selectedCityId != 'undefined' ? searchParams.set('city', this.selectedCityId.toString()) : searchParams.delete('city');
+
+    currentURL.search = searchParams.toString();
+    window.history.replaceState({}, '', currentURL.toString());
+  }
+
+  onChangeFilter(): void {
+    this.isUpdateProductsButtonDisabled = false;
+  }
+
+  onSelectSortChange(loadProducts: boolean = true): void{
     switch(this.selectedFilter) {
       case '1':{
         this.sortByPrice = false;
@@ -457,12 +501,14 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         break;
       }
     }
-    this.loadSuitableProducts(true);
+    if(loadProducts){ this.onChangeFilter(); } 
   }
 
   loadSuitableProducts(isNewRequest: boolean = false): void {
+    this.spinnerService.changeSpinnerState(true);
+    this.isUpdateProductsButtonDisabled = true;
     this.isLoadingProducts = true;
-  
+    this.changeUrlByFilterParams();
     if(isNewRequest){
       this.suitableProductsCount = null;
       this.allPages = null;
@@ -485,7 +531,19 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         this.minRooms = this.roomsSliderOptions.floor;
         this.maxRooms = this.roomsSliderOptions.ceil;
 
-        this.productApiService.getFilteredAnimals(this.currentPage, this.pageSize, this.sortByPrice, this.reverseSort, this.selectedTitle !== undefined ? this.selectedTitle : null, this.selectedCurrencyId !== undefined ? this.selectedCurrencyId : null, !Number.isNaN(this.minPrice) ? this.minPrice : null, !Number.isNaN(this.maxPrice) ? this.maxPrice : null, this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== undefined ? this.selectedCategoryId : null, this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, this.selectedCityId !== undefined ? this.selectedCityId : null, this.breeds.filter(breed => breed.selected).map(breed => breed.value.id)).subscribe((response: PageResponse<Product>) => { 
+        this.productApiService.getFilteredAnimals(
+          this.currentPage,
+          this.pageSize,
+          this.sortByPrice,
+          this.reverseSort,
+          this.selectedTitle ? this.selectedTitle : null,
+          this.selectedCurrencyId !== 'undefined' ? this.selectedCurrencyId : null,
+          !Number.isNaN(this.minPrice) ? this.minPrice : null,
+          !Number.isNaN(this.maxPrice) ? this.maxPrice : null, 
+          this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== 'undefined' ? this.selectedCategoryId : null, 
+          this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== 'undefined' ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, 
+          this.selectedCityId !== 'undefined' ? this.selectedCityId : null, 
+          this.breeds.filter(breed => breed.selected).length > 0 ? this.breeds.filter(breed => breed.selected).map(breed => breed.value.id) : null).subscribe((response: PageResponse<Product>) => { 
           response.items.forEach(item => {
             if (Array.isArray(item.images)) {
               item.images = item.images.map((image) => `${environment.blobUrl}/product-images/${image}`);
@@ -498,15 +556,19 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             ceil: response.maxPrice, 
             step: 1
           };
-          this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : this.priceSliderOptions.floor;
-          this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : this.priceSliderOptions.ceil;
+          this.route.queryParams.subscribe(params => {
+            this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : params['minPrice'] ? params['minPrice'] : this.priceSliderOptions.floor;
+            this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : params['maxPrice'] ? params['maxPrice'] : this.priceSliderOptions.ceil;
+          });
           if(this.suitableProducts != null) { this.suitableProducts.push(...response.items); }
           else { this.suitableProducts = response.items; }
           this.isLoadingProducts = false;
+          this.spinnerService.changeSpinnerState(false);
         },
         (error) => {
           this.isLoadingProducts = false;
           this.isNotFoundProducts = true;
+          this.spinnerService.changeSpinnerState(false);
         });
         break;
       }
@@ -516,7 +578,29 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         this.minRooms = this.roomsSliderOptions.floor;
         this.maxRooms = this.roomsSliderOptions.ceil;
 
-        this.productApiService.getFilteredAutos(this.currentPage, this.pageSize, this.sortByPrice, this.reverseSort, this.selectedTitle !== undefined ? this.selectedTitle : null, this.selectedCurrencyId !== undefined ? this.selectedCurrencyId : null, !Number.isNaN(this.minPrice) ? this.minPrice : null, !Number.isNaN(this.maxPrice) ? this.maxPrice : null, this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== undefined ? this.selectedCategoryId : null, this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, this.selectedCityId !== undefined ? this.selectedCityId : null, this.selectedIsNewFilter !== 0 ? this.selectedIsNewFilter === 1 : null, !Number.isNaN(this.minMiliage) ? this.minMiliage : null, !Number.isNaN(this.maxMiliage) ? this.maxMiliage : null, !Number.isNaN(this.minEngineCapacity) ? this.minEngineCapacity : null, !Number.isNaN(this.maxEngineCapacity) ? this.maxEngineCapacity : null, !Number.isNaN(this.olderReleaseYear) ? new Date(this.olderReleaseYear, 0, 1) : null, !Number.isNaN(this.newerReleaseYear) ? new Date(this.newerReleaseYear, 12, 0) : null, this.fuelTypes.filter(fuelType => fuelType.selected).map(fuelType => fuelType.value.id), this.colors.filter(color => color.selected).map(color => color.value.id), this.transmissionTypes.filter(transmissionType => transmissionType.selected).map(transmissionType => transmissionType.value.id), this.brands.filter(brand => brand.selected).map(brand => brand.value.id)).subscribe((response: AutoResponse) => { 
+        this.productApiService.getFilteredAutos(
+          this.currentPage, 
+          this.pageSize, 
+          this.sortByPrice, 
+          this.reverseSort, 
+          this.selectedTitle ? this.selectedTitle : null, 
+          this.selectedCurrencyId !== 'undefined' ? this.selectedCurrencyId : null, 
+          !Number.isNaN(this.minPrice) ? this.minPrice : null, 
+          !Number.isNaN(this.maxPrice) ? this.maxPrice : null, 
+          this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== 'undefined' ? this.selectedCategoryId : null, 
+          this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== 'undefined' ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, 
+          this.selectedCityId !== 'undefined' ? this.selectedCityId : null, 
+          this.selectedIsNewFilter !== 0 ? this.selectedIsNewFilter === 1 : null, 
+          !Number.isNaN(this.minMiliage) ? this.minMiliage : null, 
+          !Number.isNaN(this.maxMiliage) ? this.maxMiliage : null, 
+          !Number.isNaN(this.minEngineCapacity) ? this.minEngineCapacity : null, 
+          !Number.isNaN(this.maxEngineCapacity) ? this.maxEngineCapacity : null, 
+          !Number.isNaN(this.olderReleaseYear) ? new Date(this.olderReleaseYear, 0, 1) : null, 
+          !Number.isNaN(this.newerReleaseYear) ? new Date(this.newerReleaseYear, 12, 0) : null, 
+          this.fuelTypes.filter(fuelType => fuelType.selected).length > 0 ? this.fuelTypes.filter(fuelType => fuelType.selected).map(fuelType => fuelType.value.id) : null, 
+          this.colors.filter(color => color.selected).length > 0 ? this.colors.filter(color => color.selected).map(color => color.value.id) : null, 
+          this.transmissionTypes.filter(transmissionType => transmissionType.selected).length > 0 ? this.transmissionTypes.filter(transmissionType => transmissionType.selected).map(transmissionType => transmissionType.value.id) : null, 
+          this.brands.filter(brand => brand.selected).length > 0 ? this.brands.filter(brand => brand.selected).map(brand => brand.value.id) : null).subscribe((response: AutoResponse) => { 
           response.items.forEach(item => {
             if (Array.isArray(item.images)) {
               item.images = item.images.map((image) => `${environment.blobUrl}/product-images/${image}`);
@@ -529,8 +613,10 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             ceil: response.maxPrice, 
             step: 1
           };
-          this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : this.priceSliderOptions.floor;
-          this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : this.priceSliderOptions.ceil;
+          this.route.queryParams.subscribe(params => {
+            this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : params['minPrice'] ? params['minPrice'] : this.priceSliderOptions.floor;
+            this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : params['maxPrice'] ? params['maxPrice'] : this.priceSliderOptions.ceil;
+          });
           this.miliageSliderOptions = {
             floor: response.minMiliage, 
             ceil: response.maxMiliage, 
@@ -555,10 +641,12 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           if(this.suitableProducts != null) { this.suitableProducts.push(...response.items); }
           else { this.suitableProducts = response.items; }
           this.isLoadingProducts = false;
+          this.spinnerService.changeSpinnerState(false);
         },
         (error) => {
           this.isLoadingProducts = false;
           this.isNotFoundProducts = true;
+          this.spinnerService.changeSpinnerState(false);
         });
         break;
       }
@@ -574,7 +662,25 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         this.minRooms = this.roomsSliderOptions.floor;
         this.maxRooms = this.roomsSliderOptions.ceil;
 
-        this.productApiService.getFilteredClothes(this.currentPage, this.pageSize, this.sortByPrice, this.reverseSort, this.selectedTitle !== undefined ? this.selectedTitle : null, this.selectedCurrencyId !== undefined ? this.selectedCurrencyId : null, !Number.isNaN(this.minPrice) ? this.minPrice : null, !Number.isNaN(this.maxPrice) ? this.maxPrice : null, this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== undefined ? this.selectedCategoryId : null, this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, this.selectedCityId !== undefined ? this.selectedCityId : null, this.selectedIsNewFilter !== 0 ? this.selectedIsNewFilter === 1 : null, this.clothesSeasons.filter(clothesSeason => clothesSeason.selected).map(clothesSeason => clothesSeason.value.id), this.clothesSizes.filter(clothesSize => clothesSize.selected).map(clothesSize => clothesSize.value.id), this.brands.filter(brand => brand.selected).map(brand => brand.value.id), [this.selectedClothesViewId], null, [this.selectedGenderId]).subscribe((response: PageResponse<Product>) => { 
+        this.productApiService.getFilteredClothes(
+          this.currentPage,
+          this.pageSize, 
+          this.sortByPrice, 
+          this.reverseSort, 
+          this.selectedTitle ? this.selectedTitle : null, 
+          this.selectedCurrencyId !== 'undefined' ? this.selectedCurrencyId : null, 
+          !Number.isNaN(this.minPrice) ? this.minPrice : null, 
+          !Number.isNaN(this.maxPrice) ? this.maxPrice : null, 
+          this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== 'undefined' ? this.selectedCategoryId : null, 
+          this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== 'undefined' ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, 
+          this.selectedCityId !== 'undefined' ? this.selectedCityId : null, 
+          this.selectedIsNewFilter !== 0 ? this.selectedIsNewFilter === 1 : null, 
+          this.clothesSeasons.filter(clothesSeason => clothesSeason.selected).length > 0 ? this.clothesSeasons.filter(clothesSeason => clothesSeason.selected).map(clothesSeason => clothesSeason.value.id) : null, 
+          this.clothesSizes.filter(clothesSize => clothesSize.selected).length > 0 ? this.clothesSizes.filter(clothesSize => clothesSize.selected).map(clothesSize => clothesSize.value.id) : null,
+          this.brands.filter(brand => brand.selected).length > 0 ? this.brands.filter(brand => brand.selected).map(brand => brand.value.id) : null,
+          this.selectedClothesViewId !== 'undefined' ? [this.selectedClothesViewId] : null, 
+          null, 
+          this.selectedGenderId !== 'undefined' ? [this.selectedGenderId] : null).subscribe((response: PageResponse<Product>) => { 
           response.items.forEach(item => {
             if (Array.isArray(item.images)) {
               item.images = item.images.map((image) => `${environment.blobUrl}/product-images/${image}`);
@@ -587,15 +693,19 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             ceil: response.maxPrice, 
             step: 1
           };
-          this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : this.priceSliderOptions.floor;
-          this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : this.priceSliderOptions.ceil;
+          this.route.queryParams.subscribe(params => {
+            this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : params['minPrice'] ? params['minPrice'] : this.priceSliderOptions.floor;
+            this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : params['maxPrice'] ? params['maxPrice'] : this.priceSliderOptions.ceil;
+          });
           if(this.suitableProducts != null) { this.suitableProducts.push(...response.items); }
           else { this.suitableProducts = response.items; }
           this.isLoadingProducts = false;
+          this.spinnerService.changeSpinnerState(false);
         },
         (error) => {
           this.isLoadingProducts = false;
           this.isNotFoundProducts = true;
+          this.spinnerService.changeSpinnerState(false);
         });
         break;
       }
@@ -611,7 +721,23 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         this.minRooms = this.roomsSliderOptions.floor;
         this.maxRooms = this.roomsSliderOptions.ceil;
 
-        this.productApiService.getFilteredElectronics(this.currentPage, this.pageSize, this.sortByPrice, this.reverseSort, this.selectedTitle !== undefined ? this.selectedTitle : null, this.selectedCurrencyId !== undefined ? this.selectedCurrencyId : null, !Number.isNaN(this.minPrice) ? this.minPrice : null, !Number.isNaN(this.maxPrice) ? this.maxPrice : null, this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== undefined ? this.selectedCategoryId : null, this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, this.selectedCityId !== undefined ? this.selectedCityId : null, this.selectedIsNewFilter !== 0 ? this.selectedIsNewFilter === 1 : null, this.memories.filter(memory => memory.selected).map(memory => memory.value.id), this.colors.filter(color => color.selected).map(color => color.value.id), [this.selectedModelId], this.brands.filter(brand => brand.selected).map(brand => brand.value.id)).subscribe((response: PageResponse<Product>) => { 
+        this.productApiService.getFilteredElectronics(
+          this.currentPage, 
+          this.pageSize, 
+          this.sortByPrice, 
+          this.reverseSort, 
+          this.selectedTitle ? this.selectedTitle : null, 
+          this.selectedCurrencyId !== 'undefined' ? this.selectedCurrencyId : null, 
+          !Number.isNaN(this.minPrice) ? this.minPrice : null, 
+          !Number.isNaN(this.maxPrice) ? this.maxPrice : null, 
+          this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== 'undefined' ? this.selectedCategoryId : null, 
+          this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== 'undefined' ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, 
+          this.selectedCityId !== 'undefined' ? this.selectedCityId : null, 
+          this.selectedIsNewFilter !== 0 ? this.selectedIsNewFilter === 1 : null, 
+          this.memories.filter(memory => memory.selected).length > 0 ? this.memories.filter(memory => memory.selected).map(memory => memory.value.id) : null, 
+          this.colors.filter(color => color.selected).length > 0 ? this.colors.filter(color => color.selected).map(color => color.value.id) : null, 
+          this.selectedModelId !== 'undefined' ? [this.selectedModelId] : null, 
+          this.brands.filter(brand => brand.selected).length > 0 ? this.brands.filter(brand => brand.selected).map(brand => brand.value.id) : null).subscribe((response: PageResponse<Product>) => { 
           response.items.forEach(item => {
             if (Array.isArray(item.images)) {
               item.images = item.images.map((image) => `${environment.blobUrl}/product-images/${image}`);
@@ -624,15 +750,19 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             ceil: response.maxPrice, 
             step: 1
           };
-          this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : this.priceSliderOptions.floor;
-          this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : this.priceSliderOptions.ceil;
+          this.route.queryParams.subscribe(params => {
+            this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : params['minPrice'] ? params['minPrice'] : this.priceSliderOptions.floor;
+            this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : params['maxPrice'] ? params['maxPrice'] : this.priceSliderOptions.ceil;
+          });
           if(this.suitableProducts != null) { this.suitableProducts.push(...response.items); }
           else { this.suitableProducts = response.items; }
           this.isLoadingProducts = false;
+          this.spinnerService.changeSpinnerState(false);
         },
         (error) => {
           this.isLoadingProducts = false;
           this.isNotFoundProducts = true;
+          this.spinnerService.changeSpinnerState(false);
         });
         break;
       }
@@ -647,7 +777,19 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         this.maxArea = this.areaSliderOptions.ceil;
         this.minRooms = this.roomsSliderOptions.floor;
         this.maxRooms = this.roomsSliderOptions.ceil;
-        this.productApiService.getFilteredItems(this.currentPage, this.pageSize, this.sortByPrice, this.reverseSort, this.selectedTitle !== undefined ? this.selectedTitle : null, this.selectedCurrencyId !== undefined ? this.selectedCurrencyId : null, !Number.isNaN(this.minPrice) ? this.minPrice : null, !Number.isNaN(this.maxPrice) ? this.maxPrice : null, this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== undefined ? this.selectedCategoryId : null, this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, this.selectedCityId !== undefined ? this.selectedCityId : null, this.selectedIsNewFilter !== 0 ? this.selectedIsNewFilter === 1 : null).subscribe((response: PageResponse<Product>) => { 
+        this.productApiService.getFilteredItems(
+          this.currentPage, 
+          this.pageSize, 
+          this.sortByPrice, 
+          this.reverseSort, 
+          this.selectedTitle ? this.selectedTitle : null, 
+          this.selectedCurrencyId !== 'undefined' ? this.selectedCurrencyId : null, 
+          !Number.isNaN(this.minPrice) ? this.minPrice : null, 
+          !Number.isNaN(this.maxPrice) ? this.maxPrice : null, 
+          this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== 'undefined' ? this.selectedCategoryId : null, 
+          this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== 'undefined' ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, 
+          this.selectedCityId !== 'undefined' ? this.selectedCityId : null, 
+          this.selectedIsNewFilter !== 0 ? this.selectedIsNewFilter === 1 : null).subscribe((response: PageResponse<Product>) => { 
           response.items.forEach(item => {
             if (Array.isArray(item.images)) {
               item.images = item.images.map((image) => `${environment.blobUrl}/product-images/${image}`);
@@ -660,15 +802,19 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             ceil: response.maxPrice, 
             step: 1
           };
-          this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : this.priceSliderOptions.floor;
-          this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : this.priceSliderOptions.ceil;
+          this.route.queryParams.subscribe(params => {
+            this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : params['minPrice'] ? params['minPrice'] : this.priceSliderOptions.floor;
+            this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : params['maxPrice'] ? params['maxPrice'] : this.priceSliderOptions.ceil;
+          });
           if(this.suitableProducts != null) { this.suitableProducts.push(...response.items); }
           else { this.suitableProducts = response.items; }
           this.isLoadingProducts = false;
+          this.spinnerService.changeSpinnerState(false);
         },
         (error) => {
           this.isLoadingProducts = false;
           this.isNotFoundProducts = true;
+          this.spinnerService.changeSpinnerState(false);
         });
         break;
       }
@@ -680,7 +826,23 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         this.olderReleaseYear = this.releaseYearSliderOptions.floor;
         this.newerReleaseYear = this.releaseYearSliderOptions.ceil;
 
-        this.productApiService.getFilteredRealEstates(this.currentPage, this.pageSize, this.sortByPrice, this.reverseSort, this.selectedTitle !== undefined ? this.selectedTitle : null, this.selectedCurrencyId !== undefined ? this.selectedCurrencyId : null, !Number.isNaN(this.minPrice) ? this.minPrice : null, !Number.isNaN(this.maxPrice) ? this.maxPrice : null, this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== undefined ? this.selectedCategoryId : null, this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, this.selectedCityId !== undefined ? this.selectedCityId : null, this.selectedIsRentFilter !== 0 ? this.selectedIsRentFilter === 1 : null, !Number.isNaN(this.maxArea) ? this.maxArea : null, !Number.isNaN(this.minArea) ? this.minArea : null, !Number.isNaN(this.minRooms) ? this.minRooms : null, !Number.isNaN(this.maxRooms) ? this.maxRooms : null).subscribe((response: RealEstateResponse) => { 
+        this.productApiService.getFilteredRealEstates(
+          this.currentPage,
+          this.pageSize, 
+          this.sortByPrice, 
+          this.reverseSort, 
+          this.selectedTitle ? this.selectedTitle : null, 
+          this.selectedCurrencyId !== 'undefined' ? this.selectedCurrencyId : null, 
+          !Number.isNaN(this.minPrice) ? this.minPrice : null, 
+          !Number.isNaN(this.maxPrice) ? this.maxPrice : null, 
+          this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== 'undefined' ? this.selectedCategoryId : null, 
+          this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== 'undefined' ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, 
+          this.selectedCityId !== 'undefined' ? this.selectedCityId : null, 
+          this.selectedIsRentFilter !== 0 ? this.selectedIsRentFilter === 1 : null, 
+          !Number.isNaN(this.maxArea) ? this.maxArea : null,
+          !Number.isNaN(this.minArea) ? this.minArea : null,
+          !Number.isNaN(this.minRooms) ? this.minRooms : null,
+          !Number.isNaN(this.maxRooms) ? this.maxRooms : null).subscribe((response: RealEstateResponse) => { 
           response.items.forEach(item => {
             if (Array.isArray(item.images)) {
               item.images = item.images.map((image) => `${environment.blobUrl}/product-images/${image}`);
@@ -693,8 +855,10 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             ceil: response.maxPrice, 
             step: 1
           };
-          this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : this.priceSliderOptions.floor;
-          this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : this.priceSliderOptions.ceil;
+          this.route.queryParams.subscribe(params => {
+            this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : params['minPrice'] ? params['minPrice'] : this.priceSliderOptions.floor;
+            this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : params['maxPrice'] ? params['maxPrice'] : this.priceSliderOptions.ceil;
+          });
           this.areaSliderOptions = {
             floor: response.minArea, 
             ceil: response.maxArea, 
@@ -712,10 +876,12 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           if(this.suitableProducts != null) { this.suitableProducts.push(...response.items); }
           else { this.suitableProducts = response.items; }
           this.isLoadingProducts = false;
+          this.spinnerService.changeSpinnerState(false);
         },
         (error) => {
           this.isLoadingProducts = false;
           this.isNotFoundProducts = true;
+          this.spinnerService.changeSpinnerState(false);
         });
         break;
       }
@@ -731,7 +897,24 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         this.minRooms = this.roomsSliderOptions.floor;
         this.maxRooms = this.roomsSliderOptions.ceil;
 
-        this.productApiService.getFilteredTVs(this.currentPage, this.pageSize, this.sortByPrice, this.reverseSort, this.selectedTitle !== undefined ? this.selectedTitle : null, this.selectedCurrencyId !== undefined ? this.selectedCurrencyId : null, !Number.isNaN(this.minPrice) ? this.minPrice : null, !Number.isNaN(this.maxPrice) ? this.maxPrice : null, this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== undefined ? this.selectedCategoryId : null, this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, this.selectedCityId !== undefined ? this.selectedCityId : null, this.selectedIsNewFilter !== 0 ? this.selectedIsNewFilter === 1 : null, this.selectedIsSmartFilter !== 0 ? this.selectedIsSmartFilter === 1 : null, this.tvTypes.filter(tvType => tvType.selected).map(tvType => tvType.value.id), this.brands.filter(brand => brand.selected).map(brand => brand.value.id), this.screenResolutions.filter(screenResolution => screenResolution.selected).map(screenResolution => screenResolution.value.id), this.screenDiagonals.filter(screenDiagonal => screenDiagonal.selected).map(screenDiagonal => screenDiagonal.value.id)).subscribe((response: PageResponse<Product>) => { 
+        this.productApiService.getFilteredTVs(
+          this.currentPage, 
+          this.pageSize, 
+          this.sortByPrice, 
+          this.reverseSort, 
+          this.selectedTitle ? this.selectedTitle : null, 
+          this.selectedCurrencyId !== 'undefined' ? this.selectedCurrencyId : null, 
+          !Number.isNaN(this.minPrice) ? this.minPrice : null, 
+          !Number.isNaN(this.maxPrice) ? this.maxPrice : null, 
+          this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== 'undefined' ? this.selectedCategoryId : null, 
+          this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== 'undefined' ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, 
+          this.selectedCityId !== 'undefined' ? this.selectedCityId : null, 
+          this.selectedIsNewFilter !== 0 ? this.selectedIsNewFilter === 1 : null, 
+          this.selectedIsSmartFilter !== 0 ? this.selectedIsSmartFilter === 1 : null, 
+          this.tvTypes.filter(tvType => tvType.selected).length > 0 ? this.tvTypes.filter(tvType => tvType.selected).map(tvType => tvType.value.id) : null, 
+          this.brands.filter(brand => brand.selected).length > 0 ? this.brands.filter(brand => brand.selected).map(brand => brand.value.id) : null, 
+          this.screenResolutions.filter(screenResolution => screenResolution.selected).length > 0 ? this.screenResolutions.filter(screenResolution => screenResolution.selected).map(screenResolution => screenResolution.value.id) : null, 
+          this.screenDiagonals.filter(screenDiagonal => screenDiagonal.selected).length > 0 ? this.screenDiagonals.filter(screenDiagonal => screenDiagonal.selected).map(screenDiagonal => screenDiagonal.value.id) : null).subscribe((response: PageResponse<Product>) => { 
           response.items.forEach(item => {
             if (Array.isArray(item.images)) {
               item.images = item.images.map((image) => `${environment.blobUrl}/product-images/${image}`);
@@ -744,20 +927,35 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             ceil: response.maxPrice, 
             step: 1
           };
-          this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : this.priceSliderOptions.floor;
-          this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : this.priceSliderOptions.ceil;
+          this.route.queryParams.subscribe(params => {
+            this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : params['minPrice'] ? params['minPrice'] : this.priceSliderOptions.floor;
+            this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : params['maxPrice'] ? params['maxPrice'] : this.priceSliderOptions.ceil;
+          });
           if(this.suitableProducts != null) { this.suitableProducts.push(...response.items); }
           else { this.suitableProducts = response.items; }
           this.isLoadingProducts = false;
+          this.spinnerService.changeSpinnerState(false);
         },
         (error) => {
           this.isLoadingProducts = false;
           this.isNotFoundProducts = true;
+          this.spinnerService.changeSpinnerState(false);
         });
         break;
       }
       default: {
-        this.productApiService.getFilteredProducts(this.currentPage, this.pageSize, this.sortByPrice, this.reverseSort, this.selectedTitle !== undefined ? this.selectedTitle : null, this.selectedCurrencyId !== undefined ? this.selectedCurrencyId : null, !Number.isNaN(this.minPrice) ? this.minPrice : null, !Number.isNaN(this.maxPrice) ? this.maxPrice : null, this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== undefined ? this.selectedCategoryId : null, this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, this.selectedCityId !== undefined ? this.selectedCityId : null).subscribe((response: PageResponse<Product>) => { 
+        this.productApiService.getFilteredProducts(
+          this.currentPage, 
+          this.pageSize, 
+          this.sortByPrice, 
+          this.reverseSort, 
+          this.selectedTitle ? this.selectedTitle : null, 
+          this.selectedCurrencyId !== 'undefined' ? this.selectedCurrencyId : null, 
+          !Number.isNaN(this.minPrice) ? this.minPrice : null, 
+          !Number.isNaN(this.maxPrice) ? this.maxPrice : null, 
+          this.currentSubcategoryNesting >= 0 && this.selectedCategoryId !== 'undefined' ? this.selectedCategoryId : null, 
+          this.currentSubcategoryNesting > 0 && this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== 'undefined' ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null, 
+          this.selectedCityId !== 'undefined' ? this.selectedCityId : null).subscribe((response: PageResponse<Product>) => { 
           response.items.forEach(item => {
             if (Array.isArray(item.images)) {
               item.images = item.images.map((image) => `${environment.blobUrl}/product-images/${image}`);
@@ -770,15 +968,19 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             ceil: response.maxPrice, 
             step: 1
           };
-          this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : this.priceSliderOptions.floor;
-          this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : this.priceSliderOptions.ceil;
+          this.route.queryParams.subscribe(params => {
+            this.minPrice = !Number.isNaN(this.minPrice) ? this.minPrice : params['minPrice'] ? params['minPrice'] : this.priceSliderOptions.floor;
+            this.maxPrice = !Number.isNaN(this.maxPrice) ? this.maxPrice : params['maxPrice'] ? params['maxPrice'] : this.priceSliderOptions.ceil;
+          });
           if(this.suitableProducts != null) { this.suitableProducts.push(...response.items); }
           else { this.suitableProducts = response.items; }
           this.isLoadingProducts = false;
+          this.spinnerService.changeSpinnerState(false);
         },
         (error) => {
           this.isLoadingProducts = false;
           this.isNotFoundProducts = true;
+          this.spinnerService.changeSpinnerState(false);
         });
         break;
       }
@@ -811,12 +1013,12 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
     this.currentSubcategoryNesting = -1;
     if(this.selectedCategoryId == 'undefined'){
       this.selectedCategoryType = undefined;
-      this.loadSuitableProducts(true);
+      this.onChangeFilter();
       return;
     }
     else{
       this.selectedCategoryType = this.categories.find(c => c.id.toLowerCase() === this.selectedCategoryId.toLowerCase())?.type;
-      this.loadSuitableProducts(true);
+      this.onChangeFilter();
     }
     this.spinnerService.changeSpinnerState(true);
     this.sharedApiService.GetSubcategoriesByCategoryAsync(this.selectedCategoryId).subscribe(
@@ -837,13 +1039,13 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
       this.currentSubcategoryNesting = index;
     }
     if(this.selectedSubcategoriesId[index] == undefined || this.selectedSubcategoriesId[index] == 'undefined'){
-      this.loadSuitableProducts(true);
+      this.onChangeSubcategory();
       return;
     }
 
     if(this.subcategoriesHierarchy[index].find(item => item.id === this.selectedSubcategoriesId[index])?.isFinal){
       ++this.currentSubcategoryNesting;
-      this.loadSuitableProducts(true);
+      this.onChangeSubcategory();
       return;
     }
     this.spinnerService.changeSpinnerState(true);
@@ -851,75 +1053,201 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
       (response: CategoryNode[]) => {
         this.subcategoriesHierarchy[++this.currentSubcategoryNesting] = response;     
         this.clotheIsShoe = this.subcategoriesHierarchy[index].find(item => item.id === this.selectedSubcategoriesId[index])?.subType === SubcategoryType.Shoe;
+        this.onChangeSubcategory();
         this.spinnerService.changeSpinnerState(false);
-        this.loadSuitableProducts(true);
       },
       (error) => {
         this.spinnerService.changeSpinnerState(false);
+        this.onChangeFilter();
       }
     );
   }
 
-  onSelectCurrencyChange(): void {
-    this.selectedCurrencySymbol = this.currencies.find(currency => currency.id == this.selectedCurrencyId)?.symbol as string;
-    this.loadSuitableProducts(true);
-  }
-
-  onSelectedModelChange(): void {
+  onChangeSubcategory(loadProducts: boolean = false): void {
     this.spinnerService.changeSpinnerState(true);
-    forkJoin([
-      this.productApiService.getElectronicColors(this.selectedModelId !== undefined ? this.selectedModelId : null),
-      this.productApiService.getElectronicMemories(this.selectedModelId !== undefined ? this.selectedModelId : null)
-    ]).subscribe(
-      ([colors, memories]: [Specification<string>[], Specification<string>[]]) => {
-        let newColors = colors.map(item => new CheckboxItem<Specification<string>>(item));
-        this.colors = newColors.map(newItem => ({
-          ...newItem,
-          selected: this.colors.find(oldItem => oldItem.value.id === newItem.value.id)?.selected || newItem.selected
-        }));
-        let newMemories = memories.map(item => new CheckboxItem<Specification<string>>(item));
-        this.memories = newMemories.map(newItem => ({
-          ...newItem,
-          selected: this.memories.find(oldItem => oldItem.value.id === newItem.value.id)?.selected || newItem.selected
-        }));
-        this.spinnerService.changeSpinnerState(false);
-        this.loadSuitableProducts(true);
-        return;
-      },
-      error => {
-        console.error('Error fetching data:', error);
-        this.spinnerService.changeSpinnerState(false);
-        this.loadSuitableProducts(true);
-        return;
-      }
-    );
-  }
-
-  onSelectedBrandChange(): void {
-    if(this.selectedCategoryType === CategoryType.ElectronicsType)
-    {
-      this.spinnerService.changeSpinnerState(true);
-      forkJoin([
-        this.productApiService.getElectronicModels(this.brands.filter(brand => brand.selected).map(brand => brand.value.id).length > 0 ? this.brands.filter(brand => brand.selected).map(brand => brand.value.id) : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
-      ]).subscribe(
-        ([models]: [Specification<string>[]]) => {
-          this.models = models;
-          this.selectedModelId = this.models.map(i => i.id).indexOf(this.selectedModelId) !== -1 ? this.selectedModelId : 'undefined';
+    switch(this.selectedCategoryType){
+      case CategoryType.AnimalsType: {
+        this.sharedApiService.getBreeds(this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null).subscribe((response : Specification<string>[]) => {
+          let newBreeds = response.map(item => new CheckboxItem<Specification<string>>(item));
+          this.breeds = newBreeds.map(newItem => ({
+            ...newItem,
+            selected: this.breeds.find(oldItem => oldItem.value.id === newItem.value.id)?.selected || newItem.selected
+          }));
           this.spinnerService.changeSpinnerState(false);
-          this.loadSuitableProducts(true);
-          return;
+          loadProducts ? this.loadSuitableProducts(true) : this.onChangeFilter();
         },
-        error => {
-          console.error('Error fetching data:', error);
+        (error) => {
           this.spinnerService.changeSpinnerState(false);
-          this.loadSuitableProducts(true);
-          return;
-        }
-      );
+          loadProducts ? this.loadSuitableProducts(true) : this.onChangeFilter();
+        })
+        break;
+      }
+      case CategoryType.AutosType: {
+        forkJoin([
+          this.productApiService.getAutoBrands(this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] ? [this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1]] : null),
+        ]).subscribe(
+          ([brands]: [Specification<string>[]]) => {
+            let newBrands = brands.map(item => new CheckboxItem<Specification<string>>(item));
+            this.brands = newBrands.map(newItem => ({
+              ...newItem,
+              selected: this.brands.find(oldItem => oldItem.value.id === newItem.value.id)?.selected || newItem.selected
+            }));
+            this.spinnerService.changeSpinnerState(false);
+            this.onSelectedBrandChange(loadProducts);
+          },
+          (error) => {
+            this.spinnerService.changeSpinnerState(false);
+            loadProducts ? this.loadSuitableProducts(true) : this.onChangeFilter();
+          }
+        );
+        break;
+      }
+      case CategoryType.ClothesType: {
+        forkJoin([
+          this.productApiService.getClothesViews(this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null),
+        ]).subscribe(
+          ([clothesViews]: [Specification<string>[]]) => {
+            this.clothesViews = clothesViews;
+            this.selectedClothesViewId = this.clothesViews.map(i => i.id).indexOf(this.selectedClothesViewId) !== -1 ? this.selectedClothesViewId : 'undefined';
+            this.spinnerService.changeSpinnerState(false);
+            this.onSelectedClothesViewChange(loadProducts);
+          },
+          error => {
+            this.spinnerService.changeSpinnerState(false);
+            loadProducts ? this.loadSuitableProducts(true) : this.onChangeFilter();
+          }
+        );
+        break;
+      }
+      case CategoryType.ElectronicsType: {
+        forkJoin([
+          this.productApiService.getElectronicBrands(this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1])
+        ]).subscribe(
+          ([brands]: [Specification<string>[]]) => {
+            let newBrands = brands.map(item => new CheckboxItem<Specification<string>>(item));
+            this.brands = newBrands.map(newItem => ({
+              ...newItem,
+              selected: this.brands.find(oldItem => oldItem.value.id === newItem.value.id)?.selected || newItem.selected
+            }));
+            this.spinnerService.changeSpinnerState(false);
+            this.onSelectedBrandChange(loadProducts);
+          },
+          error => {
+            this.spinnerService.changeSpinnerState(false);
+            loadProducts ? this.loadSuitableProducts(true) : this.onChangeFilter();
+          }
+        );
+        break;
+      }
+      default: {
+        this.spinnerService.changeSpinnerState(false);
+        loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
+      }
     }
   }
 
-  onSelectedGenderChange(): void {
+  onSelectCurrencyChange(loadProducts: boolean = true): void {
+    const currentURL = new URL(window.location.href);
+    const searchParams = new URLSearchParams(currentURL.search);
+    searchParams.delete('minPrice');
+    searchParams.delete('maxPrice');
+    currentURL.search = searchParams.toString();
+    window.history.replaceState({}, '', currentURL.toString());
+    this.selectedCurrencySymbol = this.currencies.find(currency => currency.id == this.selectedCurrencyId)?.symbol as string;
+    this.minPrice = NaN;
+    this.maxPrice = NaN;
+    if(loadProducts){ this.loadSuitableProducts(true); } 
+  }
+
+  onSelectedModelChange(loadProducts: boolean = false): void {
+    this.spinnerService.changeSpinnerState(true);
+    switch (this.selectedCategoryType) {
+      case CategoryType.ElectronicsType: {
+        forkJoin([
+          this.productApiService.getElectronicColors(this.selectedModelId !== undefined ? this.selectedModelId : null),
+          this.productApiService.getElectronicMemories(this.selectedModelId !== undefined ? this.selectedModelId : null)
+        ]).subscribe(
+          ([colors, memories]: [Specification<string>[], Specification<string>[]]) => {
+            let newColors = colors.map(item => new CheckboxItem<Specification<string>>(item));
+            this.colors = newColors.map(newItem => ({
+              ...newItem,
+              selected: this.colors.find(oldItem => oldItem.value.id === newItem.value.id)?.selected || newItem.selected
+            }));
+            let newMemories = memories.map(item => new CheckboxItem<Specification<string>>(item));
+            this.memories = newMemories.map(newItem => ({
+              ...newItem,
+              selected: this.memories.find(oldItem => oldItem.value.id === newItem.value.id)?.selected || newItem.selected
+            }));
+            this.spinnerService.changeSpinnerState(false);
+            loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
+            return;
+          },
+          error => {
+            console.error('Error fetching data:', error);
+            this.spinnerService.changeSpinnerState(false);
+            loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
+            return;
+          }
+        );
+        break;
+      }
+      default: {
+        loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
+        break;
+      }
+    }
+  }
+
+  onSelectedBrandChange(loadProducts: boolean = false): void {
+    this.spinnerService.changeSpinnerState(true);
+    switch (this.selectedCategoryType) {
+      case CategoryType.AutosType: {
+        forkJoin([
+          this.productApiService.getAutoModels(this.brands.filter(brand => brand.selected).length > 0 ? this.brands.filter(brand => brand.selected).map(brand => brand.value.id) : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? [this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1]] : null)
+        ]).subscribe(
+          ([models]: [Specification<string>[]]) => {
+            this.models = models;
+            this.selectedModelId = this.models.map(i => i.id).indexOf(this.selectedModelId) !== -1 ? this.selectedModelId : 'undefined';
+            this.spinnerService.changeSpinnerState(false);
+            loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
+          },
+          (error) => {
+            console.error('Error fetching data:', error);
+            this.spinnerService.changeSpinnerState(false);
+            loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
+            return;
+          }
+        );
+        break;
+      }
+      case CategoryType.ElectronicsType: {
+        forkJoin([
+          this.productApiService.getElectronicModels(this.brands.filter(brand => brand.selected).length > 0 ? this.brands.filter(brand => brand.selected).map(brand => brand.value.id) : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
+        ]).subscribe(
+          ([models]: [Specification<string>[]]) => {
+            this.models = models;
+            this.selectedModelId = this.models.map(i => i.id).indexOf(this.selectedModelId) !== -1 ? this.selectedModelId : 'undefined';
+            this.spinnerService.changeSpinnerState(false);
+            this.onSelectedModelChange(loadProducts);
+            return;
+          },
+          error => {
+            console.error('Error fetching data:', error);
+            this.spinnerService.changeSpinnerState(false);
+            loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
+            return;
+          }
+        );
+        break;
+      }
+      default: {
+        this.spinnerService.changeSpinnerState(false);
+        loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
+      }
+    }
+  }
+
+  onSelectedGenderChange(loadProducts: boolean = false): void {
     this.spinnerService.changeSpinnerState(true);
     forkJoin([
       this.productApiService.getClothesViews(this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
@@ -928,22 +1256,22 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         this.clothesViews = clothesViews;
         this.selectedClothesViewId = this.clothesViews.map(i => i.id).indexOf(this.selectedClothesViewId) !== -1 ? this.selectedClothesViewId : 'undefined';
         this.spinnerService.changeSpinnerState(false);
-        this.loadSuitableProducts(true);
+        this.onSelectedClothesViewChange(loadProducts);
         return;
       },
       error => {
         console.error('Error fetching data:', error);
         this.spinnerService.changeSpinnerState(false);
-        this.loadSuitableProducts(true);
+        loadProducts ? this.loadSuitableProducts(true) : this.onChangeFilter();
         return;
       }
     );
   }
 
-  onSelectedClothesViewChange(): void {
+  onSelectedClothesViewChange(loadProducts: boolean = false): void {
     this.spinnerService.changeSpinnerState(true);
     forkJoin([
-      this.productApiService.getClotheBrands([this.selectedClothesViewId]),
+      this.productApiService.getClotheBrands(this.selectedClothesViewId !== 'undefined' ? [this.selectedClothesViewId] : null),
     ]).subscribe(
       ([brands]: [Specification<string>[]]) => {
         let newBrands = brands.map(item => new CheckboxItem<Specification<string>>(item));
@@ -952,13 +1280,13 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           selected: this.brands.find(oldItem => oldItem.value.id === newItem.value.id)?.selected || newItem.selected
         }));
         this.spinnerService.changeSpinnerState(false);
-        this.loadSuitableProducts(true);
+        loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
         return;
       },
       error => {
         console.error('Error fetching data:', error);
         this.spinnerService.changeSpinnerState(false);
-        this.loadSuitableProducts(true);
+        loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
         return;
       }
     );
@@ -972,10 +1300,10 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
   clearSelectionsInAdditionalFilters(): void {
     this.breeds?.forEach(obj => { obj.selected = false; });
     this.selectedIsNewFilter = 0;
-    this.minMiliage = this.miliageSliderOptions.floor;
-    this.maxMiliage = this.miliageSliderOptions.ceil;
-    this.minEngineCapacity = this.engineCapacitySliderOptions.floor;
-    this.maxEngineCapacity = this.engineCapacitySliderOptions.ceil;
+    this.minMiliage = NaN;
+    this.maxMiliage = NaN;
+    this.minEngineCapacity = NaN;
+    this.maxEngineCapacity = NaN;
     this.fuelTypes?.forEach(obj => { obj.selected = false; });
     this.colors?.forEach(obj => { obj.selected = false; });
     this.transmissionTypes?.forEach(obj => { obj.selected = false; });
@@ -987,10 +1315,10 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
     this.selectedClothesViewId = 'undefined';
     this.memories?.forEach(obj => { obj.selected = false; });
     this.selectedModelId = 'undefined';
-    this.minArea = this.areaSliderOptions.floor;
-    this.maxArea = this.areaSliderOptions.ceil;
-    this.minRooms = this.roomsSliderOptions.floor;
-    this.maxRooms = this.roomsSliderOptions.ceil;
+    this.minArea = NaN;
+    this.maxArea = NaN;
+    this.minRooms = NaN;
+    this.maxRooms = NaN;
     this.selectedIsRentFilter = 0;
     this.tvTypes?.forEach(obj => { obj.selected = false; });
     this.selectedIsSmartFilter = 0;
@@ -1027,7 +1355,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
   isRangeSliderMouseUpEvent(): void {
     if(this.isRangeSliderMouseDown){
       this.isRangeSliderMouseDown = false;
-      this.loadSuitableProducts(true);
+      this.onChangeFilter();
     }
   }
 }

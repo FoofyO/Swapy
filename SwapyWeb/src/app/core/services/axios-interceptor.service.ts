@@ -125,6 +125,7 @@ export class AxiosInterceptorService {
     
         if (token != null) {
             if (this.isTokenExpired(token)) {
+                alert();
                 return this.refreshToken(token).pipe(
                     catchError((error) => {
                         if (error.response?.status === HttpStatusCode.Unauthorized) this.logout();
