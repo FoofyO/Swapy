@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Chats.Queries;
 using Swapy.Common.DTO.Chats.Responses;
+using Swapy.Common.Enums;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Chats.QueryHandlers
@@ -17,7 +18,7 @@ namespace Swapy.BLL.Domain.Chats.QueryHandlers
             {
                 ChatId = x.Id,
                 Logo = x.Buyer.Logo,
-                Title = $"{x.Buyer.FirstName} {x.Buyer.LastName}",
+                Title = x.Buyer.Type == UserType.Seller ? $"{x.Buyer.FirstName} {x.Buyer.LastName}" : x.Buyer.ShopAttribute.ShopName,
                 LastMessage = x.Messages.FirstOrDefault()?.Text == null ? "📎 Photo" : x.Messages.FirstOrDefault()?.Text,
                 Image = x.Product.Images.FirstOrDefault()?.Image == null ? "default-product-image.png" : x.Product.Images.FirstOrDefault()?.Image,
                 LastMessageDateTime = x.Messages.FirstOrDefault()?.DateTime,
