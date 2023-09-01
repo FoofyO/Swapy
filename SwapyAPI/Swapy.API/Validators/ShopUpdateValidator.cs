@@ -15,7 +15,7 @@ namespace Swapy.API.Validators
             .MaximumLength(64)
                 .WithMessage("ShopName field exceeds maximum length of 64 characters")
             .Matches(@"^([A-ZА-ЯƏÜÖĞİŞÇ]|[0-9])[A-Za-zА-Яа-яƏəÜüÖöĞğİıŞşÇç0-9\s']{2,31}$")
-                .WithMessage("FirstName field has invalid format")
+                .WithMessage("ShopName field has invalid format")
             .WithErrorCode("InvalidShopNameFormat");
 
             RuleFor(shop => shop.Description)

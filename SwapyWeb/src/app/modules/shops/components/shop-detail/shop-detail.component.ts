@@ -121,7 +121,6 @@ export class ShopDetailComponent implements OnInit {
   shopBannerLoad(imageUrl: string): void {
     const image = new Image();
     image.src = imageUrl;
-    console.log(imageUrl);
     image.onload = () => {
       this.shopBannerDiv.nativeElement.style.backgroundImage = `url(${imageUrl})`;
       this.shopBannerDiv.nativeElement.style.backgroundColor = 'transparent';

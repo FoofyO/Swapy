@@ -12,7 +12,8 @@ namespace Swapy.BLL.Domain.Users.CommandHandlers
 
         public async Task<Unit> Handle(UploadLogoCommand request, CancellationToken cancellationToken)
         {
-            return await _imageService.UploadLogoAsync(request.Logo, request.UserId);
+            await _imageService.UploadLogoAsync(request.Logo, request.UserId);
+            return Unit.Value;
         }
     }
 }

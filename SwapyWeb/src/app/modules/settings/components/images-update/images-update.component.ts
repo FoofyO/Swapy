@@ -131,12 +131,11 @@ export class ImagesUpdateComponent implements OnInit {
     image.src = imageUrl;
     
     image.onload = () => {
-      this.logoElement.nativeElement.style.backgroundImage = `url(${imageUrl})`;
-      this.logoElement.nativeElement.style.backgroundColor = 'transparent';
+      this.logoElement.nativeElement.src = `${imageUrl}`;
     };
     
     image.onerror = () => {
-      this.logoElement.nativeElement.src = "https://mtek3d.com/wp-content/uploads/2018/01/image-placeholder-500x500.jpg";
+      this.logoElement.nativeElement.src = `${environment.blobUrl}/logos/${this.isShop == true ? "default-shop-logo.png" : "default-user-logo.png"}`;
     };
   }
 

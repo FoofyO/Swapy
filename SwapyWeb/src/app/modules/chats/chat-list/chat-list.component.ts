@@ -7,6 +7,8 @@ import { ChatApiService } from '../chat-api.service';
 import { ChatListResponseDTO } from '../models/chat-list-response-dto';
 import { ChatResponseDTO } from '../models/chat-response-dto';
 import { ChatDetailService } from '../chat-detail/chat-detail.service';
+import { ChatMessageModel } from '../models/chat-message.model';
+import { MessageResponseDTO } from '../models/message-response-dto';
 
 @Component({
   selector: 'app-chat-list',
@@ -68,6 +70,7 @@ export class ChatListComponent implements OnInit  {
   goToChat(newSelectedChat: ChatResponseDTO) {
     this.selectedChat = newSelectedChat;
     this.chatDetailService.changeSelectedChat(this.selectedChat.chatId);
+    this.handleWindowSizeChange();
   }
 
   switchChatList(isBuyersChats: boolean) {
@@ -111,6 +114,15 @@ export class ChatListComponent implements OnInit  {
         this.renderer.removeClass(chatList, 'slide-out-animation');
         this.renderer.setStyle(chatList, 'display', 'none');
       });
+    }
+  }
+
+  receiveMessage(data: ChatMessageModel): void {
+    var chatIndex = this.chatList.map(c => c.chatId).indexOf(data.chatId)
+    if(chatIndex !== -1) {
+      if((data.message === null || data.message === "") && data.image != null) this.chatList[chatIndex].lastMessage = "📎 Photo";
+      else this.chatList[chatIndex].lastMessage = data.message;
+      this.chatList[chatIndex].lastMessageDateTime = data.dateTime;
     }
   }
 }

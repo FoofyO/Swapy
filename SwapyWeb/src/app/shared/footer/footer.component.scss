@@ -10,10 +10,6 @@
         width: 100%;
         background-color: $secondary;
 
-        // .footer-big-section {
-
-        // }
-
         .footer-small-section {
             display: flex;
             flex-direction: column;
@@ -153,7 +149,7 @@
             align-items: start;
             justify-items:center;
             align-content: space-around;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             
             .footer-small-section {
                 

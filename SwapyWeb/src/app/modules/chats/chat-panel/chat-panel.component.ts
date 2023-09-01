@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ChatHubService } from 'src/app/core/services/chat-hub.service';
 
 @Component({
   selector: 'app-chat-panel',
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChatPanelComponent implements OnInit {
 
-  constructor() { }
+  constructor(private chatHub: ChatHubService) { }
 
   ngOnInit(): void {
-  }
+    this.chatHub.startConnection();
 
+    this.chatHub.receiveMessages();
+  }
 }

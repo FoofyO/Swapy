@@ -76,6 +76,7 @@ using Swapy.API.Extensions;
 using Swapy.Common.DTO.Categories.Responses;
 using Swapy.Common.Enums;
 using Microsoft.AspNetCore.Http.Features;
+using Swapy.BLL.Hubs;
 
 namespace Swapy.API
 {
@@ -121,6 +122,8 @@ namespace Swapy.API
                 });
             });
 
+
+            //Form Data Registration
             builder.Services.Configure<FormOptions>(o =>
             {
                 o.ValueLengthLimit = int.MaxValue;
@@ -129,12 +132,16 @@ namespace Swapy.API
             });
 
 
+            //SignalR Registration
+            builder.Services.AddSignalR();
+
+
             /// <summary>
             /// Database Registration
             /// </summary>
             builder.Services.AddDbContext<SwapyDbContext>(option =>
             {
-                option.UseSqlServer(builder.Configuration.GetConnectionString("OrxanSQL"));
+                option.UseSqlServer(builder.Configuration.GetConnectionString("SamedSQL"));
             });
 
 
@@ -330,7 +337,7 @@ namespace Swapy.API
             /// </summary>
             builder.Services.AddHttpContextAccessor();
 
-            builder.Services.AddScoped(provider =>
+            builder.Services.AddScoped(provider => 
             {
                 var httpContextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
                 return httpContextAccessor.HttpContext?.User;
@@ -348,7 +355,6 @@ namespace Swapy.API
                     policy.AllowAnyMethod();
                     policy.AllowAnyHeader();
                 });
-
             });
 
 
@@ -415,6 +421,8 @@ namespace Swapy.API
             {
                 endpoints.MapControllers();
             });
+
+            app.MapHub<ChatHub>("/chatHub");
 
             app.Run();
         }

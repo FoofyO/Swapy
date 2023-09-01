@@ -5,6 +5,7 @@ import { SharedApiService } from 'src/app/modules/main/services/shared-api.servi
 import { Router } from '@angular/router';
 import { PageResponse } from 'src/app/core/models/page-response.interface';
 import { HttpStatusCode } from 'axios';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-favorite-products',
@@ -47,6 +48,7 @@ export class FavoriteProductsComponent implements OnInit {
     }
     else { this.currentPage++; }
     this.sharedApiService.getFavoriteProducts(this.currentPage, this.pageSize, this.sortByPrice, this.reverseSort).subscribe((response: PageResponse<Product>) => { 
+      response.items.forEach(f => f.images[0] = `${environment.blobUrl}/product-images/${f.images[0]}`);
       this.favoriteProductsCount = response.count;
       this.allPages = response.allPages;
       if(this.favoriteProducts != null) { this.favoriteProducts.push(...response.items); }
@@ -54,10 +56,6 @@ export class FavoriteProductsComponent implements OnInit {
       this.isLoadingProducts = false;
     },
     (error) => {
-      // if(error.response.status === HttpStatusCode.Unauthorized){  ?????
-      //   this.authFacade.logout();
-      //   this.router.navigateByUrl('/auth/login'); 
-      // }
       this.isLoadingProducts = false;
       this.isNotFoundProducts = true;
     });

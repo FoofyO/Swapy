@@ -9,5 +9,6 @@ namespace Swapy.DAL.Interfaces
         Task<Chat> GetByIdDetailAsync(string id);
         Task<Chat> CheckChatExists(string userId, string productId);
         Task<Chat> GetByIdDetailByProductIdAsync(string productId, string userId);
+        Task<string> GetChatRecepientIdAsync(string chatId, string senderId);
     }
 }

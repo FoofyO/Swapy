@@ -4,7 +4,7 @@
         <img class="chat-image" [src]="selectedChat.image">
         <p class="chat-name">{{selectedChat.title}}</p>
     </div>
-    <div class="messages-wrapper">
+    <div #chatScrollContainer class="messages-wrapper">
         <div class="message-info-container" *ngFor="let message of selectedChat.messages; let index = index;">
             <div class="messages-date" *ngIf="index <= 0 || (!selectedChat.messages[index - 1]) || (!equalsDatesWithoutTime(message.dateTime, selectedChat.messages[index - 1].dateTime))">
                 <p>{{message.dateTime | chatDateEn}}</p>

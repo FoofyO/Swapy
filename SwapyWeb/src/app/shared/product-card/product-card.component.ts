@@ -8,6 +8,7 @@ import { HttpStatusCode } from 'axios';
 import { SharedApiService } from 'src/app/modules/main/services/shared-api.service';
 import { Product } from 'src/app/modules/products/models/product.model';
 import { AuthFacadeService } from 'src/app/modules/auth/services/auth-facade.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-product-card',
@@ -39,7 +40,7 @@ export class ProductCardComponent implements OnInit {
   }
 
   productImageLoadError(event: any) {
-    event.srcElement.src = "https://mtek3d.com/wp-content/uploads/2018/01/image-placeholder-500x500.jpg";
+    event.srcElement.src = `${environment.blobUrl}/product-images/default-product-image.png`;
   }
 
   moveToProduct(): void{

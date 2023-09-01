@@ -35,6 +35,7 @@
             -khtml-user-drag: none; /* Konqueror HTML */
             -moz-user-drag: none; /* Firefox */
             -o-user-drag: none; /* Opera */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
         .chat-name {
             font-size: 1.2rem;
@@ -64,9 +65,26 @@
         
         .image-preview{
             object-fit: contain;
-            margin: 1rem 4rem;
+            margin: 1rem auto;
             max-height: 10rem;
+
+            @media (max-width:1200px) {
+                max-width: 40rem;
+            }
+
+            @media (max-width:1100px) {
+                max-width: 30rem;
+            }
+
+            @media (max-width:1000px) {
+                max-width: 20rem;
+            }
+
+            @media (max-width:500px) {
+                max-width: 10rem;
+            }
         }
+
         .chat-input{
             height: 5rem;
             background-color: $primary;
@@ -94,22 +112,9 @@
         }
     }
 
-
     .messages-wrapper{
         height: 100%;
         overflow: auto;
-
-        &::-webkit-scrollbar {
-            width: 0; 
-        }
-          
-        &::-webkit-scrollbar-thumb {
-            background-color: transparent; 
-        }
-          
-        &::-webkit-scrollbar-track {
-            background-color: transparent; 
-        }
 
         .message-info-container{
             display: flex;
@@ -146,6 +151,21 @@
                 max-width: 22.5rem;
                 max-height: 15rem;
                 object-fit: contain;
+
+                @media(max-width: 480px) {
+                    max-width: 20rem;
+                    max-height: 12.5rem;
+                }
+
+                @media(max-width: 410px) {
+                    max-width: 15rem;
+                    max-height: 10rem;
+                }
+
+                @media(max-width: 340px) {
+                    max-width: 12rem;
+                    max-height: 10rem;
+                }
             }
 
             .message-text{

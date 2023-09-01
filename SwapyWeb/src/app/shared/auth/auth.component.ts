@@ -16,12 +16,12 @@ export class AuthComponent {
 
   async onLogout(): Promise<void> {
     await this.authFacade.logout();
-    this.router.navigate(['/']);
-    }
+    window.location.replace("/");
+  }
 
-    toggleCategoryMenuAnimation(){
-      this.headerService.disableCollapsedMenu();
-      this.categoryTreeService.toggleAnimation();
+  toggleCategoryMenuAnimation(){
+    this.headerService.disableCollapsedMenu();
+    this.categoryTreeService.toggleAnimation();
   }
 
   transferToProfile(): void{

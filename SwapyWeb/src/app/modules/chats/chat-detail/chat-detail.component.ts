@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ChatListService } from '../chat-list/chat-list.service';
 import { DetailChatResponseDTO } from '../models/detail-chat-response-dto';
 import { ChatApiService } from '../chat-api.service';
@@ -6,7 +6,10 @@ import { ChatDetailService } from './chat-detail.service';
 import { AuthFacadeService } from '../../auth/services/auth-facade.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpStatusCode } from 'axios';
-import { SpinnerService } from 'src/app/shared/spinner/spinner.service';
+import { SpinnerService } from 'src/app/shared/spinner/spinner.service';  
+import { ChatHubService } from 'src/app/core/services/chat-hub.service';
+import { ChatMessageModel } from '../models/chat-message.model';
+import { MessageResponseDTO } from '../models/message-response-dto';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -23,14 +26,14 @@ export class ChatDetailComponent implements OnInit {
   selectedFileToSend: File | undefined = undefined;
   @ViewChild('imageElement') previewImageElement!: ElementRef;
 
-  constructor(private route: ActivatedRoute, private chatDetailService: ChatDetailService, private chatListService: ChatListService, private chatApiService: ChatApiService, private authFacadeService: AuthFacadeService, private spinnerService: SpinnerService, private router: Router) {
+  constructor(private route: ActivatedRoute, private chatDetailService: ChatDetailService, private chatListService: ChatListService, private chatApiService: ChatApiService, private authFacadeService: AuthFacadeService, private spinnerService: SpinnerService, private router: Router, private chatHub: ChatHubService) {
     chatDetailService.setChatDetailComponent(this);
     let userId = authFacadeService.getUserId()
     if(userId === null){ this.router.navigateByUrl('/404', { skipLocationChange: true }); return; }
     this.myId = userId;
-
+    
   }
-
+  
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.productId = params['productId'] ? params['productId'] : null;
@@ -59,7 +62,7 @@ export class ChatDetailComponent implements OnInit {
     }
   }
 
-  changeSelectedChat(chatId: string): void {
+  changeSelectedChat(chatId: string): void {  
     this.chatApiService.getDetailChat(chatId).subscribe(
       (response: DetailChatResponseDTO) => { 
         this.selectedChat = response;
@@ -74,12 +77,12 @@ export class ChatDetailComponent implements OnInit {
       let formData = new FormData();
       formData.append("ProductId", this.productId); 
       this.chatApiService.CreateChatAsync(formData).subscribe(
-        (response: string) => {
+        (response: string) => { 
           this.chatListService.changeSelectedChat(response);
           this.chatApiService.getDetailChat(response).subscribe(
             (response: DetailChatResponseDTO) => { 
               this.selectedChat = response;
-              if(this.selectedChat !== null && this.inputTextToSend.trim().length >= 0){
+              if(this.selectedChat !== null && (this.inputTextToSend.trim().length > 0 || this.selectedFileToSend !== undefined)){
                 let formData = new FormData();
                 formData.append("Text", this.inputTextToSend); 
                 formData.append("ChatId", this.selectedChat.chatId);
@@ -101,7 +104,7 @@ export class ChatDetailComponent implements OnInit {
       ) 
       this.productId = null; 
     }
-    else if(this.selectedChat !== null && this.inputTextToSend.trim().length >= 0){
+    else if(this.selectedChat !== null && (this.inputTextToSend.trim().length > 0 || this.selectedFileToSend !== undefined)){
       this.spinnerService.changeSpinnerState(true);
       let formData = new FormData();
       formData.append("Text", this.inputTextToSend); 
@@ -150,5 +153,21 @@ export class ChatDetailComponent implements OnInit {
 
   backToList(): void {
     this.chatListService.toggleAnimation();
+  }
+
+  receiveMessage(data: ChatMessageModel): void {
+    if(this.selectedChat?.chatId === data.chatId) {
+      var newMessage: MessageResponseDTO = {
+        id: "",
+        text: data.message,
+        image: data.image == null ? null : `${environment.blobUrl}/messages/${data.image}`,
+        chatId: data.chatId,
+        senderId: data.senderId,
+        senderLogo: "",
+        dateTime: data.dateTime 
+      }
+      
+      this.selectedChat?.messages.push(newMessage);
+    }
   }
 }
