@@ -50,6 +50,7 @@ namespace Swapy.DAL.Repositories
                                           .Include(c => c.Product)
                                             .ThenInclude(p => p.Images)
                                           .Include(c => c.Buyer)
+                                            .ThenInclude(b => b.ShopAttribute)
                                           .Select(c => new Chat
                                           {
                                               Id = c.Id,
