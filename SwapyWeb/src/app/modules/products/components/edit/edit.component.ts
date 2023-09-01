@@ -291,7 +291,7 @@ export class EditComponent implements OnInit {
     this.spinnerService.changeSpinnerState(true);
 
     const regex = /^[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}$/;
-    if (!((this.productId) )) { //&& regex.test(this.productId)
+    if (!((this.productId) && regex.test(this.productId))) {
       this.spinnerService.changeSpinnerState(false);
       this.router.navigateByUrl('/404', { skipLocationChange: true });
       return; 

@@ -55,7 +55,7 @@ namespace Swapy.DAL.Repositories
                                               Id = c.Id,
                                               Buyer = c.Buyer,
                                               Product = c.Product,
-                                              Messages = c.Messages.OrderBy(m => m.DateTime).Take(1).ToList(),
+                                              Messages = c.Messages.OrderByDescending(m => m.DateTime).Take(1).ToList(),
                                           })
                                           .ToListAsync();
         }
@@ -73,7 +73,7 @@ namespace Swapy.DAL.Repositories
                                                 Id = c.Id,
                                                 Buyer = c.Buyer,
                                                 Product = c.Product,
-                                                Messages = c.Messages.OrderBy(m => m.DateTime).Take(1).ToList(),
+                                                Messages = c.Messages.OrderByDescending(m => m.DateTime).Take(1).ToList(),
                                             })
                                             .ToListAsync();
 
@@ -117,6 +117,15 @@ namespace Swapy.DAL.Repositories
         public async Task<Chat> CheckChatExists(string userId, string productId)
         {
             return await _context.Chats.Where(c => c.ProductId.Equals(productId) && c.BuyerId.Equals(userId)).FirstOrDefaultAsync();
+        }
+
+        public async Task<string> GetChatRecepientIdAsync(string chatId, string senderId)
+        {
+            var chat = await _context.Chats.Where(c => c.Id.Equals(chatId))
+                                           .Include(c => c.Product)
+                                           .FirstOrDefaultAsync();
+
+            return chat.BuyerId == senderId ? chat.Product.UserId : chat.BuyerId;
         }
     }
 }

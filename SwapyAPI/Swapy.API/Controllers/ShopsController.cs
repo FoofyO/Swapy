@@ -8,7 +8,6 @@ using Swapy.Common.DTO.Shops.Requests;
 using System.Security.Claims;
 using Swapy.API.Validators;
 using System.Text;
-using FluentValidation;
 
 namespace Swapy.API.Controllers
 {
@@ -93,7 +92,7 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateAsync(UpdateShopCommandDTO dto)
+        public async Task<IActionResult> UpdateAsync([FromForm] UpdateShopCommandDTO dto)
         {
             try
             {

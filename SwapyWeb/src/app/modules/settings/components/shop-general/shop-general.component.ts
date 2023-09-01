@@ -103,13 +103,12 @@ export class ShopGeneralComponent implements OnInit {
         wed: false,
         thu: false, 
         fri: false,
-        sat: false, 
+        sat: false,
         sun: false,
       });
 
       this.prevData = result;
-      
-      if(result.workDays !== '') this.parseAndCheckDays(result.workDays);
+      if(result.workDays && result.workDays !== '') this.parseAndCheckDays(result.workDays);
 
       this.spinnerService.changeSpinnerState(false);
 
@@ -122,7 +121,20 @@ export class ShopGeneralComponent implements OnInit {
         if(!this.equalData()) {
           this.changeValidityToDefault();
           this.spinnerService.changeSpinnerState(true);
-          await this.settingsApi.updateShopData(this.sendData).toPromise();
+
+          var data = new FormData();
+          data.append("Logo", this.sendData.logo);
+          data.append("Banner", this.sendData.banner);
+          data.append("Slogan", this.sendData.slogan);
+          data.append("Location", this.sendData.location);
+          data.append("ShopName", this.sendData.shopName);
+          data.append("WorkDays", this.sendData.workDays);
+          data.append("Description", this.sendData.description);
+          data.append("PhoneNumber", this.sendData.phoneNumber);
+          if(this.sendData.endWorkTime) data.append("EndWorkTime", this.sendData?.endWorkTime?.toString());
+          if(this.sendData.startWorkTime) data.append("StartWorkTime", this.sendData?.startWorkTime?.toString());
+
+          await this.settingsApi.updateShopData(data).toPromise();
           this.spinnerService.changeSpinnerState(false);
         } 
       }
@@ -194,9 +206,10 @@ export class ShopGeneralComponent implements OnInit {
     this.sendData.slogan = this.tagline?.value;
     this.sendData.location = this.location?.value;
     this.sendData.workDays = this.convertToDaysString();
-    
-    this.sendData.startWorkTime = `${this.startWorkTime?.value}:00`;
-    this.sendData.endWorkTime = `${this.endWorkTime?.value}:00`; 
+    this.sendData.logo = this.prevData.logo;
+    this.sendData.banner = this.prevData.banner;
+    this.sendData.startWorkTime = this.sendData.startWorkTime == null ? this.startWorkTime?.value : `${this.startWorkTime?.value}:00`; 
+    this.sendData.endWorkTime = this.sendData.endWorkTime == null ? this.endWorkTime?.value : `${this.endWorkTime?.value}:00`; 
 
     this.prevData = this.sendData;
   }

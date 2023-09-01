@@ -12,7 +12,8 @@ namespace Swapy.BLL.Domain.Shops.CommandHandlers
 
         public async Task<Unit> Handle(UploadBannerCommand request, CancellationToken cancellationToken)
         {
-            return await _imageService.UploadBannerAsync(request.Banner, request.UserId);
+            await _imageService.UploadBannerAsync(request.Banner, request.UserId);
+            return Unit.Value;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 
             if (!changePasswordResult.Succeeded) throw new InvalidOperationException("An error occurred while changing the password");
 
-            //await _emailService.SendPasswordChangedSuccessfullyAsync(user.Email);
+            await _emailService.SendPasswordChangedSuccessfullyAsync(user.Email);
 
             return Unit.Value;
         }

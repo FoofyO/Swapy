@@ -16,7 +16,7 @@ namespace Swapy.DAL.Configurations
             builder.Property(m => m.Text)
                    .HasColumnType("NVARCHAR(300)")
                    .HasMaxLength(300)
-                   .IsRequired();
+                   .IsRequired(false);
 
             builder.Property(m => m.Image)
                    .HasColumnType("NVARCHAR(128)")

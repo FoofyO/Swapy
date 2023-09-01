@@ -8,8 +8,6 @@ namespace Swapy.API.Validators
         public MessageValidator()
         {
             RuleFor(message => message.Text)
-            .NotEmpty()
-                .WithMessage("Text field is required")
             .MinimumLength(1)
                 .WithMessage("Text field should have a minimum length of 1 characters")
             .MaximumLength(300)

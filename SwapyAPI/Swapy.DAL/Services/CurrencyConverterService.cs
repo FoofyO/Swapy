@@ -10,8 +10,6 @@ namespace Swapy.BLL.Services
     {
         private readonly string api = "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/";
 
-        //https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/eur/jpy.json
-
         public decimal Convert(string fromCode, string toCode, decimal value)
         {
             var client = new RestClient($"{api}{fromCode.ToLower()}/{toCode.ToLower()}.min.json");

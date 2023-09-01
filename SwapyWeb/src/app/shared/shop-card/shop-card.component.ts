@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Shop } from 'src/app/modules/shops/models/shop.model';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-shop-card',
@@ -17,7 +18,7 @@ export class ShopCardComponent implements OnInit {
   }
 
   shopLogoLoadError(event: any) {
-    event.srcElement.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC-I_ZtbTLG-gsgJiY2_V5YP53FdUMs1C28w&usqp=CAU";
+    event.srcElement.src = `${environment.blobUrl}/logos/default-shop-logo.png`;
   }
 
   moveToShop(): void {

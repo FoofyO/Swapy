@@ -11,7 +11,6 @@
       <div class="section-background"></div>
       <div class="category-slider">
           <app-category-card *ngFor="let category of categories" [category]="category"></app-category-card>
-          <app-category-loading-card></app-category-loading-card>
         </div>
       <div class="category-slider-controls">
         <button class="button prev">
@@ -30,7 +29,6 @@
       </div>
       <div class="shop-slider">
         <app-shop-card *ngFor="let shop of popularShops.items" [shop]="shop"></app-shop-card>
-        <app-shop-loading-card></app-shop-loading-card>
       </div>
       <div class="shop-slider-controls">
         <button class="button prev">

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ChatListComponent } from './chat-list.component';
+import { ChatMessageModel } from '../models/chat-message.model';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,12 @@ export class ChatListService {
   toggleAnimation() {
     if (this.chatListComponent) {
       this.chatListComponent.toggleAnimation();
+    }
+  }
+
+  receiveMessage(message: ChatMessageModel): void {
+    if (this.chatListComponent) {
+      this.chatListComponent.receiveMessage(message);
     }
   }
 }

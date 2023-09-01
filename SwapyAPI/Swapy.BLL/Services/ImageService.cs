@@ -1,6 +1,5 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Swapy.BLL.Interfaces;
@@ -24,7 +23,7 @@ namespace Swapy.BLL.Services
             _shopAttributeRepository = shopAttributeRepository;
         }
 
-        public async Task<Unit> UploadLogoAsync(IFormFile file, string userId)
+        public async Task UploadLogoAsync(IFormFile file, string userId)
         {
             var blobUrl = await _keyVaultService.GetSecretValue("BlobStorage");
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
@@ -47,13 +46,12 @@ namespace Swapy.BLL.Services
             await blobClient.SetHttpHeadersAsync(blobHttpHeaders);
 
             var user = await _userManager.FindByIdAsync(userId);
+            if(!user.Logo.Equals("default-user-logo.png") || !user.Logo.Equals("default-shop-logo.png")) await RemoveImageFromBlob(user.Logo, "logos");
             user.Logo = fileName;
             await _userManager.UpdateAsync(user);
-
-            return Unit.Value;
         }
 
-        public async Task<Unit> UploadBannerAsync(IFormFile file, string userId)
+        public async Task UploadBannerAsync(IFormFile file, string userId)
         {
             var blobUrl = await _keyVaultService.GetSecretValue("BlobStorage");
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
@@ -64,7 +62,7 @@ namespace Swapy.BLL.Services
             fileExtension = fileExtension.Substring(1);
 
             await containerClient.UploadBlobAsync(fileName, file.OpenReadStream());
-            
+
             var blobClient = containerClient.GetBlobClient(fileName);
 
             var blobHttpHeaders = new BlobHttpHeaders
@@ -76,10 +74,9 @@ namespace Swapy.BLL.Services
             await blobClient.SetHttpHeadersAsync(blobHttpHeaders);
 
             var shop = await _shopAttributeRepository.GetByUserIdAsync(userId);
+            if (!string.IsNullOrEmpty(shop.Banner)) await RemoveImageFromBlob(shop.Banner, "banners");
             shop.Banner = fileName;
             await _shopAttributeRepository.UpdateAsync(shop);
-
-            return Unit.Value;
         }
 
         public async Task<string> UploadChatImagesAsync(IFormFile file)
@@ -107,7 +104,7 @@ namespace Swapy.BLL.Services
             return fileName;
         }
 
-        public async Task<Unit> UploadProductImagesAsync(IFormFileCollection files, string productId)
+        public async Task UploadProductImagesAsync(IFormFileCollection files, string productId)
         {
             var blob = await _keyVaultService.GetSecretValue("BlobStorage");
 
@@ -135,19 +132,30 @@ namespace Swapy.BLL.Services
                 var productImage = new ProductImage(imageName, productId);
                 await _productImageRepository.CreateAsync(productImage);
             }
-            
-            return Unit.Value;
         }
 
-        public async Task<Unit> RemoveProductImagesAsync(List<string> paths, string productId)
+        public async Task RemoveProductImagesAsync(List<string> paths, string productId)
         {
             foreach (var item in paths)
             {
-                var tmpProductImage = await _productImageRepository.GetByPath(item.Split('/').Last(), productId);
-                if (tmpProductImage != null) await _productImageRepository.DeleteAsync(tmpProductImage);
+                var tmpProductImage = await _productImageRepository.GetByPath(item, productId);
+                if (tmpProductImage != null)
+                {
+                    await RemoveImageFromBlob(tmpProductImage.Image, "product-images");
+                    await _productImageRepository.DeleteAsync(tmpProductImage);
+                }
             }
+        }
 
-            return Unit.Value;
+        public async Task RemoveImageFromBlob(string path, string key)
+        {
+            var blobUrl = await _keyVaultService.GetSecretValue("BlobStorage");
+            var blobServiceClient = new BlobServiceClient(blobUrl);
+            var containerClient = blobServiceClient.GetBlobContainerClient(key);
+
+            var blobClient = containerClient.GetBlobClient(path);
+
+            await blobClient.DeleteIfExistsAsync();
         }
     }
 }

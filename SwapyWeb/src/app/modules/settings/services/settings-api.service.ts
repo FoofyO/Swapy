@@ -57,7 +57,7 @@ export class SettingsApiService {
     );
   }
 
-  updateShopData(data: ShopData) : Observable<any> {
+  updateShopData(data: FormData) : Observable<any> {
     return from(this.axiosInterceptorService.put<any>(`${this.shopsApiUrl}`, data))
     .pipe(
       catchError(error => { throw error; })

@@ -26,8 +26,13 @@ html, body { min-height: 100dvh; }
 
 main { 
     padding-top: 4.5rem;
-    height: 100dvh;
-    overflow: auto;
+    min-height: 100dvh;
+    overflow: hidden;
+    display: grid;
+}
+
+.router{
+    display: none;
 }
 
 app-login {

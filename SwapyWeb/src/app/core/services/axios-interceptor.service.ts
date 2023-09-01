@@ -50,7 +50,7 @@ export class AxiosInterceptorService {
         return config;
     }
 
-    private getAccessToken(): string | null {
+    public getAccessToken(): string | null {
         var accessToken: string | null;
         
         if(this.localStorage.rememberMe) {
