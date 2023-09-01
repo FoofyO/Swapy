@@ -1,4 +1,4 @@
 <div class="category-card" (click)="moveToCategory()">
-  <img src="https://www.firstbenefits.org/wp-content/uploads/2017/10/placeholder.png" class="category-card-image"/>
+  <img [src]="categoryImage" class="card category-card-image"/>
   <p class="category-card-title">{{category.value}}</p>
 </div>

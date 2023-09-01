@@ -141,7 +141,7 @@ namespace Swapy.API
             /// </summary>
             builder.Services.AddDbContext<SwapyDbContext>(option =>
             {
-                option.UseSqlServer(builder.Configuration.GetConnectionString("SamedSQL"));
+                option.UseSqlServer(builder.Configuration.GetConnectionString("OrxanSQL"));
             });
 
 
