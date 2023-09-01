@@ -13,6 +13,7 @@ import { Specification } from 'src/app/core/models/specification';
 import { Shop } from 'src/app/modules/shops/models/shop.model';
 import { ChangeDetectorRef } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { CategoryNode } from 'src/app/core/models/category-node.interface';
 
 
 @Component({
@@ -21,7 +22,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  categories!: Specification<string>[];
+  categories!: CategoryNode[];
   popularShops!: PageResponse<Shop>;
   latestProducts!: Product[];
   allPages: number = 0;

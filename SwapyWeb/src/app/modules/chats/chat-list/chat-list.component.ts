@@ -124,5 +124,23 @@ export class ChatListComponent implements OnInit  {
       else this.chatList[chatIndex].lastMessage = data.message;
       this.chatList[chatIndex].lastMessageDateTime = data.dateTime;
     }
+    else {
+      this.spinnerService.changeSpinnerState(true);
+      (this.isBuyersChats ? this.chatApiService.getBuyersChats() : this.chatApiService.getSellersChats()).subscribe(
+        (response : ChatListResponseDTO) => {
+          this.chatList = response.items;
+          var chatIndex = this.chatList.map(c => c.chatId).indexOf(data.chatId)
+          if(chatIndex !== -1) {
+            if((data.message === null || data.message === "") && data.image != null) this.chatList[chatIndex].lastMessage = "📎 Photo";
+            else this.chatList[chatIndex].lastMessage = data.message;
+            this.chatList[chatIndex].lastMessageDateTime = data.dateTime;
+          }
+          this.spinnerService.changeSpinnerState(false);
+        },
+        (error) => {
+          this.spinnerService.changeSpinnerState(false);
+        }
+      );
+    }
   }
 }

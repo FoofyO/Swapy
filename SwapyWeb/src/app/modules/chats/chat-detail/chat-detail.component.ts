@@ -87,6 +87,8 @@ export class ChatDetailComponent implements OnInit {
                 formData.append("Text", this.inputTextToSend); 
                 formData.append("ChatId", this.selectedChat.chatId);
                 if(this.selectedFileToSend) { formData.append("image", this.selectedFileToSend); }
+                this.inputTextToSend = '';
+                this.selectedFileToSend = undefined;
                 this.chatApiService.SendMessageAsync(formData).subscribe(
                   (response) => {
                     this.inputTextToSend = '';
@@ -110,6 +112,8 @@ export class ChatDetailComponent implements OnInit {
       formData.append("Text", this.inputTextToSend); 
       formData.append("ChatId", this.selectedChat.chatId);
       if(this.selectedFileToSend) { formData.append("image", this.selectedFileToSend); }
+      this.inputTextToSend = '';
+      this.selectedFileToSend = undefined;
       this.chatApiService.SendMessageAsync(formData).subscribe(
         (response) => {
           this.inputTextToSend = '';
