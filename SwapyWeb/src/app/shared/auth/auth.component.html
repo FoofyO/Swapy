@@ -1,9 +1,9 @@
 <div class="header-account">
-    <button title="Chats" class="header-link" (click)="transferToChats()">
-        <i class="fa-solid fa-message"></i>
+    <button *ngIf="authFacade.isAuthenticated()" title="Chats" class="header-link" (click)="transferToChats()">
+        <i class="fa-solid fa-message"><div class="new-message-icon"></div></i>
     </button>
 
-    <button title="Favorites" class="header-link" (click)="transferToFavorites()">
+    <button *ngIf="authFacade.isAuthenticated()" title="Favorites" class="header-link" (click)="transferToFavorites()">
         <i class="fa-solid fa-heart"></i>
     </button>
 
@@ -31,11 +31,11 @@
 <!-- ////////////////////////////////////////////////////////////// -->
 
 <div class="header-account-minimized">
-    <button title="Chats" class="header-link" (click)="transferToChats()">
-        <i class="fa-solid fa-message"></i>
+    <button *ngIf="authFacade.isAuthenticated()" title="Chats" class="header-link" (click)="transferToChats()">
+        <i class="fa-solid fa-message"><div class="new-message-icon"></div></i>
     </button>
 
-    <button title="Favorites" class="header-link" (click)="transferToFavorites()">
+    <button *ngIf="authFacade.isAuthenticated()" title="Favorites" class="header-link" (click)="transferToFavorites()">
         <i class="fa-solid fa-heart"></i>
     </button>
 
@@ -85,14 +85,14 @@
             </button>
         </li>
         <li>
-            <button class="header-link" (click)="transferToProfile()">
+            <button *ngIf="authFacade.isAuthenticated()" class="header-link" (click)="transferToFavorites()">
                 <i class="fa-solid fa-heart"></i>
                 <span>Favorites</span>
             </button>
         </li>
         <li>
-            <button class="header-link" (click)="transferToChats()">
-                <i class="fa-solid fa-message"></i>
+            <button *ngIf="authFacade.isAuthenticated()" class="header-link" (click)="transferToChats()">
+                <i class="fa-solid fa-message"><div class="new-message-icon"></div></i>
                 <span>Chats</span>
             </button>
         </li>

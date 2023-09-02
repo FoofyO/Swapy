@@ -43,6 +43,10 @@ export class ProductCardComponent implements OnInit {
     event.srcElement.src = `${environment.blobUrl}/product-images/default-product-image.png`;
   }
 
+  getDefaultProductImage(): string {
+    return `${environment.blobUrl}/product-images/default-product-image.png`;
+  }
+
   moveToProduct(): void{
     window.location.replace(`products/${this.product.id}`);
   }

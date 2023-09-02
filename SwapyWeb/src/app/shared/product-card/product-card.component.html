@@ -1,6 +1,6 @@
 <div class="card product-card">
     <img *ngIf="product.images && product.images.length > 0" [src]="product.images[0]" (error)="productImageLoadError($event)"class="product-card-image slider-item"/>  
-    <img *ngIf="!(product.images && product.images.length > 0)" src="https://mtek3d.com/wp-content/uploads/2018/01/image-placeholder-500x500.jpg" class="product-card-image"/>
+    <img *ngIf="!(product.images && product.images.length > 0)" [src]="getDefaultProductImage()" class="product-card-image"/>
     <div class="product-card-information" (click)="moveToProduct()">        
         <p class="product-card-price">{{ product.price }} {{ product.currency }}</p>
         <p class="product-card-title">{{ product.title }}</p> 

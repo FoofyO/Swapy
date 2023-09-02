@@ -34,6 +34,20 @@
         }
 
         span { margin-left: 0.4rem; }
+
+        i {
+            position: relative;
+            .new-message-icon{
+                background-color: $notification-red;
+                border-radius: 50%;
+                width: 0.5rem;
+                height: 0.5rem;
+                margin: auto;
+                position: absolute;
+                right: -4px;
+                top: -4px;
+            }
+        }
     }
 
     @media (max-width: 1180px) { display: none; }
@@ -73,6 +87,20 @@
         }
 
         span { margin-left: 0.4rem; }
+
+        i {
+            position: relative;
+            .new-message-icon{
+                background-color: $notification-red;
+                border-radius: 50%;
+                width: 0.5rem;
+                height: 0.5rem;
+                margin: auto;
+                position: absolute;
+                right: -4px;
+                top: -4px;
+            }
+        }
     }
 
     @media (max-width: 1180px) { display: flex; }
@@ -120,9 +148,22 @@
                 padding: 0.9rem 0.9rem;
                 transition: all 0.3s ease;
 
-                i { margin-right: 1rem };
-
                 &:focus { outline: none; }
+
+                i {
+                    margin-right: 1rem;
+                    position: relative;
+                    .new-message-icon{
+                        background-color: $notification-red;
+                        border-radius: 50%;
+                        width: 0.5rem;
+                        height: 0.5rem;
+                        margin: auto;
+                        position: absolute;
+                        right: -4px;
+                        top: -4px;
+                    }
+                }
             }
         }
     }

@@ -47,6 +47,8 @@ export class ShopDetailComponent implements OnInit {
 
   @ViewChild('shopBannerDiv') shopBannerDiv!: ElementRef<HTMLDivElement>;
 
+  @ViewChild('dialogElement') dialogElementRef!: ElementRef;
+
   constructor(private authFacade : AuthFacadeService , private shopApiService : ShopApiService, private userApiService : UserApiService,private sharedApiService : SharedApiService, private route: ActivatedRoute, private router: Router) { 
     this.userId = this.route.snapshot.paramMap.get('id');
     this.isMe = this.authFacade.getUserId() ===  this.userId;
@@ -75,6 +77,11 @@ export class ShopDetailComponent implements OnInit {
         result.banner = `${environment.blobUrl}/banners/${result.banner}`;
         result.logo = `${environment.blobUrl}/logos/${result.logo}`
         this.shopBannerLoad(result.banner);
+        if(this.isMe){
+          setTimeout(() => {
+            this.dialogElementRef.nativeElement.showModal();
+          }, Math.floor(Math.random() * (60000 - 5000 + 1) + 5000));  
+        }
       },
       (error) => {
         if(error.response.status === HttpStatusCode.NotFound){
