@@ -1,3 +1,5 @@
+@import "/src/colors.scss";
+
 .product-card {
     position: relative;
     display: flex;
@@ -37,21 +39,36 @@
         cursor: pointer;
 
         .product-card-price {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: bold;
+            width: fit-content;
+            border-radius: 10px;
+            padding: 2px 8px;
+            background-color: $valid-green;
+            color: $white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            margin-top: 0.5rem;
         }
         .product-card-title {
             font-size: 1.1rem;
             font-weight: 500;
             overflow-wrap: break-word;
-            -webkit-line-clamp: 2; 
+            -webkit-line-clamp: 1; 
             display: -webkit-box; 
             -webkit-box-orient: vertical; 
             overflow: hidden; 
+            padding: 0 8px;
         }
         .product-card-additionalInformation {
             font-size: 1rem;
             font-weight: 400;
+            color: $scroll-gray;
+            overflow-wrap: break-word;
+            -webkit-line-clamp: 1; 
+            display: -webkit-box; 
+            -webkit-box-orient: vertical; 
+            overflow: hidden; 
+            padding: 0 8px;
         }
     }
     .favorite-button {

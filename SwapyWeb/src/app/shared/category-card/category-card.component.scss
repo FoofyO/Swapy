@@ -16,5 +16,8 @@
         -moz-user-drag: none; /* Firefox */
         -o-user-drag: none; /* Opera */        
     }
-    .category-card-title { margin: auto; }
+    .category-card-title { 
+        margin: auto;
+        text-align: center;
+    }
 }

@@ -28,6 +28,10 @@
     <div class="buttons-container" *ngIf="isMe">
       <button *ngIf="userDetail" class="active-button" (click)="transferToSettings()">Settings</button>
       <p *ngIf="!userDetail" class="button-loading"></p>
+      <button *ngIf="userDetail" class="active-button" (click)="dialogElementRef.nativeElement.showModal();">
+        <i class="fa-solid fa-angles-up"></i>
+      </button>
+      <p *ngIf="!userDetail" class="button-loading"></p>
     </div>
 
   </div>
@@ -123,3 +127,16 @@
     
 </div>
 
+<dialog #dialogElement class="custom-modal" role="dialog" *ngIf="isMe">
+  <div class="custom-modal-header">
+      <h4 class="custom-modal-header-title">Increase your sales !</h4>
+      <button class="custom-modal-header-close" aria-label="close" (click)="dialogElementRef.nativeElement.close();">❌</button>
+  </div>
+  <div class="custom-modal-body">
+      <p>You can improve your account so that your products come across in the recommendations of other users, thereby increasing the number of your sales.</p>
+      <div class="body-buttons-container">
+        <a class="custom-modal-link" (click)="dialogElementRef.nativeElement.close();">Later</a>
+        <a class="custom-modal-link">Upgrade</a>
+      </div>
+  </div>
+</dialog>

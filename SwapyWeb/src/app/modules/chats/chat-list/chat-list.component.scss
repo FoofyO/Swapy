@@ -152,6 +152,18 @@
                 font-weight: 500;
             }
 
+            .last-message-container{
+                display: grid;
+                grid-template-columns: 1fr auto;
+                .new-message-icon{
+                    background-color: $primary;
+                    border-radius: 50%;
+                    width: 1rem;
+                    height: 1rem;
+                    margin: auto;
+                }
+            }
+
             .chat-image {
                 width: 3.6rem;
                 height: 3.6rem;
