@@ -23,6 +23,10 @@ namespace Swapy.DAL.Configurations
                    .HasForeignKey(c => c.BuyerId)
                    .IsRequired();
 
+            builder.Property(c => c.IsReaded)
+                   .IsRequired()
+                   .HasColumnType("BIT");
+
             builder.HasMany(c => c.Messages)
                    .WithOne(m => m.Chat)
                    .HasForeignKey(m => m.ChatId)

@@ -2,10 +2,7 @@
 using Swapy.BLL.Domain.Electronics.Queries;
 using Swapy.Common.DTO.Electronics.Responses;
 using Swapy.Common.DTO.Products.Responses;
-using Swapy.Common.Entities;
-using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
-using Swapy.DAL.Repositories;
 
 namespace Swapy.BLL.Domain.Electronics.QueryHandlers
 {
@@ -25,13 +22,13 @@ namespace Swapy.BLL.Domain.Electronics.QueryHandlers
         public async Task<ElectronicAttributeResponseDTO> Handle(GetByIdElectronicAttributeQuery request, CancellationToken cancellationToken)
         {
             var electronicAttribute = await _electronicAttributeRepository.GetDetailByIdAsync(request.ProductId);
-            List<SpecificationResponseDTO<string>> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(electronicAttribute.Product.SubcategoryId, request.Language)).ToList();
-            categories.Insert(0, new SpecificationResponseDTO<string>(electronicAttribute.Product.CategoryId, electronicAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
+            List<SpecificationResponseDTO<string>> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(electronicAttribute.Product.SubcategoryId)).ToList();
+            categories.Insert(0, new SpecificationResponseDTO<string>(electronicAttribute.Product.CategoryId, electronicAttribute.Product.Category.Name));
 
             ElectronicAttributeResponseDTO result = new ElectronicAttributeResponseDTO()
             {
                 Id = electronicAttribute.Id,
-                City = electronicAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
+                City = electronicAttribute.Product.City.Name,
                 CityId = electronicAttribute.Product.City.Id,
                 Currency = electronicAttribute.Product.Currency.Name,
                 CurrencyId = electronicAttribute.Product.Currency.Id,
@@ -55,7 +52,7 @@ namespace Swapy.BLL.Domain.Electronics.QueryHandlers
                 IsNew = electronicAttribute.IsNew,
                 IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(electronicAttribute.Product.Id, request.UserId),
                 ColorId = electronicAttribute.ModelColor.ColorId,
-                Color = electronicAttribute.ModelColor.Color.Names.FirstOrDefault(l => l.Language == request.Language).Value,
+                Color = electronicAttribute.ModelColor.Color.Name,
                 MemoryId = electronicAttribute.MemoryModel.MemoryId,
                 Memory = electronicAttribute.MemoryModel.Memory.Name,
                 ModelId = electronicAttribute.ModelColor.ModelId,

@@ -50,7 +50,6 @@ namespace Swapy.DAL
             builder.ApplyConfiguration(new GenderConfiguration());
             builder.ApplyConfiguration(new ItemAttributeConfiguration());
             builder.ApplyConfiguration(new LikeConfiguration());
-            builder.ApplyConfiguration(new LocalizationValueConfiguration());
             builder.ApplyConfiguration(new MemoryConfiguration());
             builder.ApplyConfiguration(new MemoryModelConfiguration());
             builder.ApplyConfiguration(new MessageConfiguration());

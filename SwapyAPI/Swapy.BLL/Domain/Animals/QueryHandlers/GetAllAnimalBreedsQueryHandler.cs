@@ -13,7 +13,7 @@ namespace Swapy.BLL.Domain.Animals.QueryHandlers
 
         public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllAnimalBreedsQuery request, CancellationToken cancellationToken)
         {
-            return await _animalBreedRepository.GetByAnimalTypeAsync(request.AnimalTypesId, request.Language);
+            return await _animalBreedRepository.GetByAnimalTypeAsync(request.AnimalTypesId);
         }
     }
 }

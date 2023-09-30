@@ -9,17 +9,18 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<FuelType> builder)
         {
             builder.ToTable("FuelTypes");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(f => f.Id);
 
-            builder.Property(x => x.Id).IsRequired();
+            builder.Property(f => f.Id).IsRequired();
 
-            builder.HasMany(a => a.Names)
-                   .WithOne()
-                   .IsRequired(false);
+            builder.Property(f => f.Name)
+                   .HasColumnType("NVARCHAR(128)")
+                   .HasMaxLength(128)
+                   .IsRequired();
 
-            builder.HasMany(x => x.AutoAttributes)
-                   .WithOne(x => x.FuelType)
-                   .HasForeignKey(x => x.FuelTypeId)
+            builder.HasMany(f => f.AutoAttributes)
+                   .WithOne(f => f.FuelType)
+                   .HasForeignKey(f => f.FuelTypeId)
                    .IsRequired(false);
         }
     }

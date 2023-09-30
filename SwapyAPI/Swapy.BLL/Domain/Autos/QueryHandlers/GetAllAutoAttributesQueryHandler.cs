@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Autos.Queries;
 using Swapy.Common.DTO.Autos.Responses;
-using Swapy.Common.DTO.Products.Responses;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Autos.QueryHandlers
@@ -38,8 +37,7 @@ namespace Swapy.BLL.Domain.Autos.QueryHandlers
                                                                       request.AutoBrandsId,
                                                                       request.AutoTypesId,
                                                                       request.SortByPrice,
-                                                                      request.ReverseSort,
-                                                                      request.Language);
+                                                                      request.ReverseSort);
         }
     }
 }

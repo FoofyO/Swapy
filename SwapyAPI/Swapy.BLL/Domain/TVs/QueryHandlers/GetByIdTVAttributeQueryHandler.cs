@@ -25,13 +25,13 @@ namespace Swapy.BLL.Domain.TVs.QueryHandlers
         public async Task<TVAttributeResponseDTO> Handle(GetByIdTVAttributeQuery request, CancellationToken cancellationToken)
         {
             var tvAttribute = await _tvAttributeRepository.GetDetailByIdAsync(request.ProductId);
-            List<SpecificationResponseDTO<string>> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(tvAttribute.Product.SubcategoryId, request.Language)).ToList();
-            categories.Insert(0, new SpecificationResponseDTO<string>(tvAttribute.Product.CategoryId, tvAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
+            List<SpecificationResponseDTO<string>> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(tvAttribute.Product.SubcategoryId)).ToList();
+            categories.Insert(0, new SpecificationResponseDTO<string>(tvAttribute.Product.CategoryId, tvAttribute.Product.Category.Name));
 
             TVAttributeResponseDTO result = new TVAttributeResponseDTO()
             {
                 Id = tvAttribute.Id,
-                City = tvAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
+                City = tvAttribute.Product.City.Name,
                 CityId = tvAttribute.Product.City.Id,
                 Currency = tvAttribute.Product.Currency.Name,
                 CurrencyId = tvAttribute.Product.Currency.Id,
@@ -58,7 +58,7 @@ namespace Swapy.BLL.Domain.TVs.QueryHandlers
                 TVBrandId = tvAttribute.TVBrandId,
                 TVBrand = tvAttribute.TVBrand.Name,
                 TVTypeId = tvAttribute.TVTypeId,
-                TVType = tvAttribute.TVType.Names.FirstOrDefault(l => l.Language == request.Language).Value,
+                TVType = tvAttribute.TVType.Name,
                 ScreenDiagonalId = tvAttribute.ScreenDiagonalId,
                 ScreenDiagonal = tvAttribute.ScreenDiagonal.Diagonal,
                 ScreenResolutionId = tvAttribute.ScreenResolutionId,

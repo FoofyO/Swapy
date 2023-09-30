@@ -7,6 +7,7 @@
         public User Buyer { get; set; }
         public string ProductId { get; set; }
         public Product Product { get; set; }
+        public bool IsReaded { get; set; }
         public ICollection<Message> Messages { get; set; } = new List<Message>();
 
         public Chat() => Id = Guid.NewGuid().ToString();
@@ -15,6 +16,7 @@
         {
             ProductId = productId;
             BuyerId = buyerId;
+            IsReaded = true;
         }
     }
 }

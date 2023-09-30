@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Swapy.Common.DTO.Products.Responses;
-using Swapy.Common.Enums;
 
 namespace Swapy.BLL.Domain.Clothes.Queries
 {
@@ -8,6 +7,5 @@ namespace Swapy.BLL.Domain.Clothes.Queries
     {
         public string GenderId { get; set; }
         public string ClothesTypeId { get; set; }
-        public Language Language { get; set; }
     }
 }

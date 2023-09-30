@@ -1,18 +1,25 @@
-import { Component } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ChatHubService } from './core/services/chat-hub.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title: string = 'SwapyWeb';
   IsShowHeader: boolean = true;
   IsShowFooter: boolean = true;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private chatHub: ChatHubService) {
     this.router.events.subscribe(event => this.onShowUI(event));
+  }
+
+  ngOnInit(): void {
+    if(this.chatHub.startConnection()) {
+      this.chatHub.receiveMessages();
+    }
   }
 
   onShowUI(location: any): void {

@@ -3,10 +3,12 @@
     public class Gender
     {
         public string Id { get; set; }
+        public string Name { get; set; }
         public ICollection<ClothesView> ClothesViews { get; set; } = new List<ClothesView>();
-        public ICollection<LocalizationValue> Names { get; set; } = new List<LocalizationValue>();
 
         public Gender() => Id = Guid.NewGuid().ToString();
+
+        public Gender(string name) : this() => Name = name;
     }
 }
  

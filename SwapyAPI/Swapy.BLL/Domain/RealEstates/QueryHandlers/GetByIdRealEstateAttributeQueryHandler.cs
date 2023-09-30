@@ -2,10 +2,7 @@
 using Swapy.BLL.Domain.RealEstates.Queries;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.DTO.RealEstates.Responses;
-using Swapy.Common.Entities;
-using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
-using Swapy.DAL.Repositories;
 
 namespace Swapy.BLL.Domain.RealEstates.QueryHandlers
 {
@@ -24,13 +21,13 @@ namespace Swapy.BLL.Domain.RealEstates.QueryHandlers
         public async Task<RealEstateAttributeResponseDTO> Handle(GetByIdRealEstateAttributeQuery request, CancellationToken cancellationToken)
         {
             var realEstateAttribute = await _realEstateAttributeRepository.GetDetailByIdAsync(request.ProductId);
-            List<SpecificationResponseDTO<string>> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(realEstateAttribute.Product.SubcategoryId, request.Language)).ToList();
-            categories.Insert(0, new SpecificationResponseDTO<string>(realEstateAttribute.Product.CategoryId, realEstateAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
+            List<SpecificationResponseDTO<string>> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(realEstateAttribute.Product.SubcategoryId)).ToList();
+            categories.Insert(0, new SpecificationResponseDTO<string>(realEstateAttribute.Product.CategoryId, realEstateAttribute.Product.Category.Name));
 
             RealEstateAttributeResponseDTO result = new RealEstateAttributeResponseDTO()
             {
                 Id = realEstateAttribute.Id,
-                City = realEstateAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
+                City = realEstateAttribute.Product.City.Name,
                 CityId = realEstateAttribute.Product.City.Id,
                 Currency = realEstateAttribute.Product.Currency.Name,
                 CurrencyId = realEstateAttribute.Product.Currency.Id,

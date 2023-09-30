@@ -1,15 +1,12 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swapy.API.Validators;
 using Swapy.BLL.Domain.Items.Commands;
 using Swapy.BLL.Domain.Items.Queries;
-using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Items.Requests.Commands;
 using Swapy.Common.DTO.Items.Requests.Queries;
 using Swapy.Common.DTO.Products.Requests.Queries;
-using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using System.Security.Claims;
 using System.Text;
@@ -254,7 +251,6 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet]
-        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -280,7 +276,6 @@ namespace Swapy.API.Controllers
                     ReverseSort = dto.ReverseSort,
                     ItemTypesId = dto.ItemTypesId,
                     SubcategoryId = dto.SubcategoryId,
-                    Language = (Language)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -297,7 +292,6 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("{ProductId}")]
-        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -308,7 +302,6 @@ namespace Swapy.API.Controllers
                 var result = await _mediator.Send(new GetByIdItemAttributeQuery() {
                     UserId = (string)HttpContext.Items["Check"],
                     ProductId = dto.ProductId,
-                    Language = (Language)HttpContext.Items["Language"]
                 });
                 return Ok(result);
             }
@@ -327,14 +320,13 @@ namespace Swapy.API.Controllers
         /// Items Attributes
         /// </summary>
         [HttpGet("Sections")]
-        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllItemSectionsAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllItemSectionsQuery() { Language = (Language)HttpContext.Items["Language"] });
+                var result = await _mediator.Send(new GetAllItemSectionsQuery());
                 return Ok(result);
             }
             catch (Exception ex)
@@ -344,18 +336,13 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("Types/{ParentSubcategoryId}")]
-        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllItemTypesAsync([FromRoute] GetAllItemTypesQueryDTO dto)
         {
             try
             {
-                var result = await _mediator.Send(new GetAllItemTypesQuery()
-                {
-                    ParentSubcategoryId = dto.ParentSubcategoryId,
-                    Language = (Language)HttpContext.Items["Language"]
-                });
+                var result = await _mediator.Send(new GetAllItemTypesQuery() { ParentSubcategoryId = dto.ParentSubcategoryId });
                 return Ok(result);
             }
             catch (Exception ex)

@@ -14,6 +14,7 @@ import { AxiosInterceptorService } from 'src/app/core/services/axios-interceptor
   providedIn: 'root'
 })
 export class SharedApiService {
+    private readonly apiUrl : string = environment.apiUrl; 
     private readonly animalsApiUrl : string = environment.animalsApiUrl; 
     private readonly productsApiUrl : string = environment.productsApiUrl; 
     private readonly categoriesApiUrl : string = environment.categoriesApiUrl; 
@@ -22,10 +23,10 @@ export class SharedApiService {
     constructor(private axiosInterceptorService: AxiosInterceptorService) {}
 
     getBreeds(animalTypeId : string | null) : Observable<Specification<string>[]> {
-      let url = animalTypeId ? `${this.animalsApiUrl}/Breeds?AnimalTypesId=${animalTypeId}` : `${this.animalsApiUrl}/Breeds`;
+      let url = animalTypeId ? `${this.apiUrl}/${this.animalsApiUrl}/Breeds?AnimalTypesId=${animalTypeId}` : `${this.apiUrl}/${this.animalsApiUrl}/Breeds`;
       return from(this.axiosInterceptorService.get(url)).pipe(
         map((response: AxiosResponse<any>) => {
-          console.log(`${this.animalsApiUrl}/Breeds/${animalTypeId}`);
+          console.log(`${this.apiUrl}/${this.animalsApiUrl}/Breeds/${animalTypeId}`);
           const breeds: Specification<string>[] = response.data.$values;
           return breeds;
         }),
@@ -36,7 +37,7 @@ export class SharedApiService {
     }
 
     GetCities(): Observable<Specification<string>[]>{
-      return from(this.axiosInterceptorService.get(`${this.productsApiUrl}/Cities`)).pipe(
+      return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.productsApiUrl}/Cities`)).pipe(
         map((response: AxiosResponse<any>) => {
           const cities: Specification<string>[] = response.data.$values;
           return cities;
@@ -48,7 +49,7 @@ export class SharedApiService {
     }
 
     getCurrencies() : Observable<CurrencyResponse[]> {
-      return from(this.axiosInterceptorService.get(`${this.productsApiUrl}/Currencies`)).pipe(
+      return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.productsApiUrl}/Currencies`)).pipe(
         map((response: AxiosResponse<any>) => {
           const currencies: CurrencyResponse[] = response.data.$values;
           return currencies;
@@ -60,7 +61,7 @@ export class SharedApiService {
     }
 
     getSubcategoryPath(subcategoryId: string): Observable<Specification<string>[]> {
-      return from(this.axiosInterceptorService.get(`${this.categoriesApiUrl}/Subcategories/SubcategoryPath/${subcategoryId}`)).pipe(
+      return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.categoriesApiUrl}/Subcategories/SubcategoryPath/${subcategoryId}`)).pipe(
         map((response: AxiosResponse<any>) => {
           const categories: Specification<string>[] = response.data.$values;
           return categories;
@@ -72,7 +73,7 @@ export class SharedApiService {
     }
 
     getCategories(): Observable<CategoryNode[]> {
-        return from(this.axiosInterceptorService.get(`${this.categoriesApiUrl}`)).pipe(
+        return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.categoriesApiUrl}`)).pipe(
           map((response: AxiosResponse<any>) => {
             const categories: CategoryNode[] = response.data.$values;
             return categories;
@@ -84,7 +85,7 @@ export class SharedApiService {
     }
 
     GetSiblingsByCategoryAsync(categoryId : string): Observable<CategoryNode[]> {
-      return from(this.axiosInterceptorService.get(`${this.categoriesApiUrl}/Subcategories/Siblings/${categoryId}`)).pipe(
+      return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.categoriesApiUrl}/Subcategories/Siblings/${categoryId}`)).pipe(
         map((response: AxiosResponse<any>) => {
           const subcategories: CategoryNode[] = response.data.$values;
           return subcategories;
@@ -96,7 +97,7 @@ export class SharedApiService {
     }
 
     GetSubcategoriesByCategoryAsync(categoryId : string): Observable<CategoryNode[]> {
-      return from(this.axiosInterceptorService.get(`${this.categoriesApiUrl}/Subcategories/Category/${categoryId}`)).pipe(
+      return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.categoriesApiUrl}/Subcategories/Category/${categoryId}`)).pipe(
         map((response: AxiosResponse<any>) => {
           const subcategories: CategoryNode[] = response.data.$values;
           return subcategories;
@@ -108,7 +109,7 @@ export class SharedApiService {
     }
 
     GetSubcategoriesBySubcategoryAsync(subcategoryId : string): Observable<CategoryNode[]> {
-      return from(this.axiosInterceptorService.get(`${this.categoriesApiUrl}/Subcategories/Subcategory/${subcategoryId}`)).pipe(
+      return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.categoriesApiUrl}/Subcategories/Subcategory/${subcategoryId}`)).pipe(
         map((response: AxiosResponse<any>) => {
           const subcategories: CategoryNode[] = response.data.$values;
           return subcategories;
@@ -121,7 +122,7 @@ export class SharedApiService {
 
     getShops(page: number, pageSize: number, sortByViews : boolean, reverseSort : boolean): Observable<PageResponse<Shop>> {
       return from(
-        this.axiosInterceptorService.get(`${this.shopsApiUrl}?Page=${page}&PageSize=${pageSize}&SortByViews=${sortByViews}&ReverseSort=${reverseSort}`)
+        this.axiosInterceptorService.get(`${this.apiUrl}/${this.shopsApiUrl}?Page=${page}&PageSize=${pageSize}&SortByViews=${sortByViews}&ReverseSort=${reverseSort}`)
       ).pipe(
         map((response: AxiosResponse<any>) => ({
           items: response.data.items.$values,
@@ -137,7 +138,7 @@ export class SharedApiService {
     }
 
     getProducts(page: number, pageSize: number, sortByPrice : boolean, reverseSort : boolean, userId : string | null = null): Observable<PageResponse<Product>> {
-        let url = `${this.productsApiUrl}?Page=${page}&PageSize=${pageSize}&SortByPrice=${sortByPrice}&ReverseSort=${reverseSort}`
+        let url = `${this.apiUrl}/${this.productsApiUrl}?Page=${page}&PageSize=${pageSize}&SortByPrice=${sortByPrice}&ReverseSort=${reverseSort}`
         url += userId != null ? `&OtherUserId=${userId}` : '';
 
         return from(
@@ -160,7 +161,7 @@ export class SharedApiService {
     }
 
     getDisabledProducts(page: number, pageSize: number, sortByPrice : boolean, reverseSort : boolean, userId : string | null = null): Observable<PageResponse<Product>> {
-      let url = `${this.productsApiUrl}?Page=${page}&PageSize=${pageSize}&SortByPrice=${sortByPrice}&ReverseSort=${reverseSort}&IsDisable=true`
+      let url = `${this.apiUrl}/${this.productsApiUrl}?Page=${page}&PageSize=${pageSize}&SortByPrice=${sortByPrice}&ReverseSort=${reverseSort}&IsDisable=true`
       url += userId != null ? `&OtherUserId=${userId}` : '';
 
       return from(
@@ -184,7 +185,7 @@ export class SharedApiService {
 
     addToFavorites(productId: string){
         return from(
-            this.axiosInterceptorService.post(`${this.productsApiUrl}/FavoriteProducts/${productId}`)
+            this.axiosInterceptorService.post(`${this.apiUrl}/${this.productsApiUrl}/FavoriteProducts/${productId}`)
           ).pipe(
             map(response => ({
                 response: response,
@@ -197,7 +198,7 @@ export class SharedApiService {
 
     removeFavorites(productId: string){
       return from(
-          this.axiosInterceptorService.delete(`${this.productsApiUrl}/FavoriteProducts/${productId}`)
+          this.axiosInterceptorService.delete(`${this.apiUrl}/${this.productsApiUrl}/FavoriteProducts/${productId}`)
         ).pipe(
           map(response => ({
               response: response,
@@ -209,7 +210,7 @@ export class SharedApiService {
     }
 
     getFavoriteProducts(page: number, pageSize: number, sortByPrice : boolean, reverseSort : boolean): Observable<PageResponse<Product>> {
-      let url = `${this.productsApiUrl}/FavoriteProducts?Page=${page}&PageSize=${pageSize}&SortByPrice=${sortByPrice}&ReverseSort=${reverseSort}`
+      let url = `${this.apiUrl}/${this.productsApiUrl}/FavoriteProducts?Page=${page}&PageSize=${pageSize}&SortByPrice=${sortByPrice}&ReverseSort=${reverseSort}`
       return from(
         this.axiosInterceptorService.get(url)
       ).pipe(

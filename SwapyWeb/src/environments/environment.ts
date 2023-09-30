@@ -4,20 +4,21 @@
 
 export const environment = {
   production: false,
-  animalsApiUrl: "https://localhost:7083/api/v1/Products/Animals",
-  authApiUrl: "https://localhost:7083/api/v1/Auth",
-  autosApiUrl: "https://localhost:7083/api/v1/Products/Autos",
-  categoriesApiUrl: "https://localhost:7083/api/v1/Categories",
-  chatsApiUrl: "https://localhost:7083/api/v1/Chats",
-  clothesApiUrl: "https://localhost:7083/api/v1/Products/Clothes",
-  electronicsApiUrl: "https://localhost:7083/api/v1/Products/Electronics",
-  itemsApiUrl: "https://localhost:7083/api/v1/Products/Items",
-  productsApiUrl: "https://localhost:7083/api/v1/Products",
-  realEstatesApiUrl: "https://localhost:7083/api/v1/Products/RealEstates",
-  shopsApiUrl: "https://localhost:7083/api/v1/Shops",
-  tvsApiUrl: "https://localhost:7083/api/v1/Products/TVs",
-  usersApiUrl: "https://localhost:7083/api/v1/Users",
-  blobUrl: "https://swapyblobstorage.blob.core.windows.net"
+  apiUrl: "https://localhost:7083",
+  animalsApiUrl: "api/v1/Products/Animals",
+  authApiUrl: "api/v1/Auth",
+  autosApiUrl: "api/v1/Products/Autos",
+  categoriesApiUrl: "api/v1/Categories",
+  chatsApiUrl: "api/v1/Chats",
+  clothesApiUrl: "api/v1/Products/Clothes",
+  electronicsApiUrl: "api/v1/Products/Electronics",
+  itemsApiUrl: "api/v1/Products/Items",
+  productsApiUrl: "api/v1/Products",
+  realEstatesApiUrl: "api/v1/Products/RealEstates",
+  shopsApiUrl: "api/v1/Shops",
+  tvsApiUrl: "api/v1/Products/TVs",
+  usersApiUrl: "api/v1/Users",
+  blobUrl: "https://swapyblob.blob.core.windows.net"
 };
 
 /*

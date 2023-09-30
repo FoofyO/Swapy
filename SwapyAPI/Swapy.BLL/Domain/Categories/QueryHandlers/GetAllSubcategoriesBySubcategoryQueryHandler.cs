@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Categories.Queries;
 using Swapy.Common.DTO.Categories.Responses;
-using Swapy.Common.DTO.Products.Responses;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Categories.QueryHandlers
@@ -14,7 +13,7 @@ namespace Swapy.BLL.Domain.Categories.QueryHandlers
 
         public async Task<IEnumerable<CategoryTreeResponseDTO>> Handle(GetAllSubcategoriesBySubcategoryQuery request, CancellationToken cancellationToken)
         {
-            return await _subcategoryRepository.GetBySubcategoryAsync(request.SubcategoryId, request.Language);
+            return await _subcategoryRepository.GetBySubcategoryAsync(request.SubcategoryId);
         }
     }
 }

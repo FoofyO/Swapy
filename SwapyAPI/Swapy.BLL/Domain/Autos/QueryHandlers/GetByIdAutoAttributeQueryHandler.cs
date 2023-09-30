@@ -2,10 +2,7 @@
 using Swapy.BLL.Domain.Autos.Queries;
 using Swapy.Common.DTO.Autos.Responses;
 using Swapy.Common.DTO.Products.Responses;
-using Swapy.Common.Entities;
-using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
-using Swapy.DAL.Repositories;
 
 namespace Swapy.BLL.Domain.Autos.QueryHandlers
 {
@@ -25,13 +22,13 @@ namespace Swapy.BLL.Domain.Autos.QueryHandlers
         public async Task<AutoAttributeResponseDTO> Handle(GetByIdAutoAttributeQuery request, CancellationToken cancellationToken)
         {
             var autoAttribute = await _autoAttributeRepository.GetDetailByIdAsync(request.ProductId);
-            List<SpecificationResponseDTO<string>> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(autoAttribute.Product.SubcategoryId, request.Language)).ToList();
-            categories.Insert(0, new SpecificationResponseDTO<string>(autoAttribute.Product.CategoryId, autoAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
+            List<SpecificationResponseDTO<string>> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(autoAttribute.Product.SubcategoryId)).ToList();
+            categories.Insert(0, new SpecificationResponseDTO<string>(autoAttribute.Product.CategoryId, autoAttribute.Product.Category.Name));
 
             AutoAttributeResponseDTO result = new AutoAttributeResponseDTO()
             {
                 Id = autoAttribute.Id,
-                City = autoAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
+                City = autoAttribute.Product.City.Name,
                 CityId = autoAttribute.Product.City.Id,
                 Currency = autoAttribute.Product.Currency.Name,
                 CurrencyId = autoAttribute.Product.Currency.Id,
@@ -58,11 +55,11 @@ namespace Swapy.BLL.Domain.Autos.QueryHandlers
                 EngineCapacity = autoAttribute.EngineCapacity,
                 ReleaseYear = autoAttribute.ReleaseYear,
                 FuelTypeId = autoAttribute.FuelTypeId,
-                FuelType = autoAttribute.FuelType.Names.FirstOrDefault(l => l.Language == request.Language).Value,
+                FuelType = autoAttribute.FuelType.Name,
                 ColorId = autoAttribute.AutoColorId,
-                Color = autoAttribute.AutoColor.Names.FirstOrDefault(l => l.Language == request.Language).Value,
+                Color = autoAttribute.AutoColor.Name,
                 TransmissionTypeId = autoAttribute.TransmissionTypeId,
-                TransmissionType = autoAttribute.TransmissionType.Names.FirstOrDefault(l => l.Language == request.Language).Value,
+                TransmissionType = autoAttribute.TransmissionType.Name,
                 AutoBrandId = autoAttribute.AutoModel.AutoBrandId,
                 AutoBrand = autoAttribute.AutoModel.AutoBrand.Name,
                 AutoModelId = autoAttribute.AutoModelId,

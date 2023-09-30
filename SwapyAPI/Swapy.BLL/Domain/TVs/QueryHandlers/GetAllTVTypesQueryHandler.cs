@@ -13,7 +13,7 @@ namespace Swapy.BLL.Domain.TVs.QueryHandlers
 
         public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllTVTypesQuery request, CancellationToken cancellationToken)
         {
-            return await _tvTypeRepository.GetAllAsync(request.Language);
+            return await _tvTypeRepository.GetAllSpecificationAsync();
         }
     }
 }

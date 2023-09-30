@@ -15,6 +15,8 @@ namespace Swapy.BLL.Domain.Chats.QueryHandlers
         public async Task<DetailChatResponseDTO> Handle(GetDetailChatQuery request, CancellationToken cancellationToken)
         {
             var chat = await _chatRepository.GetByIdDetailAsync(request.ChatId);
+            
+            if(await _chatRepository.TryReadMessage(request.UserId, request.ChatId)) await _chatRepository.UpdateChatState(chat.Id, true);
 
             return new DetailChatResponseDTO()
             {
@@ -29,7 +31,8 @@ namespace Swapy.BLL.Domain.Chats.QueryHandlers
                     SenderId = x.SenderId,
                     SenderLogo = x.Sender.Logo
                 }),
-                Title = request.UserId.Equals(chat.BuyerId) ? chat.Product.Title : $"{chat.Buyer.FirstName} {chat.Buyer.LastName}",
+
+                Title = request.UserId.Equals(chat.BuyerId) ? chat.Product.Title : chat.Buyer.Type == UserType.Seller ? $"{chat.Buyer.FirstName} {chat.Buyer.LastName}" : chat.Buyer.ShopAttribute.ShopName,
                 Image = request.UserId.Equals(chat.BuyerId) ? (chat.Product.Images.FirstOrDefault()?.Image == null ? "default-product-image.png" : chat.Product.Images.FirstOrDefault()?.Image) : chat.Buyer.Logo,
                 Type = request.UserId.Equals(chat.BuyerId) ? ChatType.Buyyer : ChatType.Seller
             };

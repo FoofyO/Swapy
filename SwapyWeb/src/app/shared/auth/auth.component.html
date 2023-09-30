@@ -1,6 +1,8 @@
 <div class="header-account">
     <button *ngIf="authFacade.isAuthenticated()" title="Chats" class="header-link" (click)="transferToChats()">
-        <i class="fa-solid fa-message"><div class="new-message-icon"></div></i>
+        <i class="fa-solid fa-message">
+            <div class="new-message-icon"></div>
+        </i>
     </button>
 
     <button *ngIf="authFacade.isAuthenticated()" title="Favorites" class="header-link" (click)="transferToFavorites()">
@@ -32,7 +34,9 @@
 
 <div class="header-account-minimized">
     <button *ngIf="authFacade.isAuthenticated()" title="Chats" class="header-link" (click)="transferToChats()">
-        <i class="fa-solid fa-message"><div class="new-message-icon"></div></i>
+        <i class="fa-solid fa-message">
+            <div class="new-message-icon" *ngIf="hasUnreadMessages"></div>
+        </i>
     </button>
 
     <button *ngIf="authFacade.isAuthenticated()" title="Favorites" class="header-link" (click)="transferToFavorites()">
@@ -92,7 +96,9 @@
         </li>
         <li>
             <button *ngIf="authFacade.isAuthenticated()" class="header-link" (click)="transferToChats()">
-                <i class="fa-solid fa-message"><div class="new-message-icon"></div></i>
+                <i class="fa-solid fa-message">
+                    <div class="new-message-icon" *ngIf="hasUnreadMessages"></div>
+                </i>
                 <span>Chats</span>
             </button>
         </li>

@@ -24,39 +24,63 @@ import { ChildOrAdultPipe } from '../core/pipes/child-or-adult.pipe';
 import { TimeSpanToHoursMinutesPipe } from '../core/pipes/timespan-to-time.pipe';
 import { DateToTimePipe } from '../core/pipes/date-to-time.pipe';
 import { ChatDatePipeEn } from '../core/pipes/chat-date-en.pipe';
+import { MessageToastComponent } from './message-toast/message-toast.component';
 
 @NgModule({
   declarations: [
     AuthComponent,
+    BooleanToYesNoPipe,
+    CategoryCardComponent,
+    CategoryLoadingCardComponent,
+    CategoryTreeComponent,
+    ChatDatePipeEn,
+    ChildOrAdultPipe,
+    CustomDatePipeEn,
+    DateOnlyPipe,
+    DateToTimePipe,
+    ErrorComponent,
     FooterComponent,
     HeaderComponent,
-    ErrorComponent,
-    CategoryTreeComponent,
+    MessageToastComponent,
     PaginationComponent,
-    ProductCardComponent,
-    CustomDatePipeEn,
-    ShortNumberPipe,
-    ShopCardComponent,
-    CategoryCardComponent,
-    DateOnlyPipe,
     PhoneNumberPipe,
-    BooleanToYesNoPipe,
-    ChildOrAdultPipe,
-    SpinnerComponent,
+    ProductCardComponent,
     ProductLoadingCardComponent,
+    ShopCardComponent,
     ShopLoadingCardComponent,
-    CategoryLoadingCardComponent,
-    TimeSpanToHoursMinutesPipe,
-    DateToTimePipe,
-    ChatDatePipeEn
+    ShortNumberPipe,
+    SpinnerComponent,
+    TimeSpanToHoursMinutesPipe
   ],
   imports: [
-    FormsModule,
     CommonModule,
-    RouterModule,
+    FormsModule,
     ReactiveFormsModule,
+    RouterModule
   ],
-  exports: [HeaderComponent, FooterComponent, ErrorComponent, PaginationComponent, ProductCardComponent, ProductLoadingCardComponent, ShopCardComponent, ShopLoadingCardComponent, CategoryCardComponent, CategoryLoadingCardComponent, ShortNumberPipe, DateOnlyPipe, PhoneNumberPipe, BooleanToYesNoPipe, ChildOrAdultPipe, SpinnerComponent, CustomDatePipeEn, TimeSpanToHoursMinutesPipe, DateToTimePipe, ChatDatePipeEn],
+  exports: [
+    BooleanToYesNoPipe,
+    CategoryCardComponent,
+    CategoryLoadingCardComponent,
+    ChatDatePipeEn,
+    ChildOrAdultPipe,
+    CustomDatePipeEn,
+    DateOnlyPipe,
+    DateToTimePipe,
+    ErrorComponent,
+    FooterComponent,
+    HeaderComponent,
+    MessageToastComponent,
+    PaginationComponent,
+    PhoneNumberPipe,
+    ProductCardComponent,
+    ProductLoadingCardComponent,
+    ShopCardComponent,
+    ShopLoadingCardComponent,
+    ShortNumberPipe,
+    SpinnerComponent,
+    TimeSpanToHoursMinutesPipe
+  ],
   providers: [PaginationComponent]
 })
 export class SharedModule { }

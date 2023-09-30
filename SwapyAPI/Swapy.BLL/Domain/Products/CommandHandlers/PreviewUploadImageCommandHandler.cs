@@ -16,7 +16,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
         public async Task<ImageResponseDTO> Handle(PreviewUploadImageCommand request, CancellationToken cancellationToken)
         {
             var imagePaths = new List<string>();
-            var blob = await _keyVaultService.GetSecretValue("BlobStorage");
+            var blob = await _keyVaultService.GetSecretValue("Blob-Storage");
             
             foreach (var image in request.Images)
             {

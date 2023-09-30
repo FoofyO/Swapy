@@ -11,8 +11,5 @@ export class ChatPanelComponent implements OnInit {
   constructor(private chatHub: ChatHubService) { }
 
   ngOnInit(): void {
-    this.chatHub.startConnection();
-
-    this.chatHub.receiveMessages();
   }
 }

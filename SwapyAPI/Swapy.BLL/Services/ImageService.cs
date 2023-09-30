@@ -25,7 +25,7 @@ namespace Swapy.BLL.Services
 
         public async Task UploadLogoAsync(IFormFile file, string userId)
         {
-            var blobUrl = await _keyVaultService.GetSecretValue("BlobStorage");
+            var blobUrl = await _keyVaultService.GetSecretValue("Blob-Storage");
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
             var blobServiceClient = new BlobServiceClient(blobUrl);
             var containerClient = blobServiceClient.GetBlobContainerClient("logos");
@@ -53,7 +53,7 @@ namespace Swapy.BLL.Services
 
         public async Task UploadBannerAsync(IFormFile file, string userId)
         {
-            var blobUrl = await _keyVaultService.GetSecretValue("BlobStorage");
+            var blobUrl = await _keyVaultService.GetSecretValue("Blob-Storage");
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
             var blobServiceClient = new BlobServiceClient(blobUrl);
             var containerClient = blobServiceClient.GetBlobContainerClient("banners");
@@ -81,7 +81,7 @@ namespace Swapy.BLL.Services
 
         public async Task<string> UploadChatImagesAsync(IFormFile file)
         {
-            var blobUrl = await _keyVaultService.GetSecretValue("BlobStorage");
+            var blobUrl = await _keyVaultService.GetSecretValue("Blob-Storage");
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
             var blobServiceClient = new BlobServiceClient(blobUrl);
             var containerClient = blobServiceClient.GetBlobContainerClient("messages");
@@ -106,7 +106,7 @@ namespace Swapy.BLL.Services
 
         public async Task UploadProductImagesAsync(IFormFileCollection files, string productId)
         {
-            var blob = await _keyVaultService.GetSecretValue("BlobStorage");
+            var blob = await _keyVaultService.GetSecretValue("Blob-Storage");
 
             foreach (var image in files)
             {
@@ -149,7 +149,7 @@ namespace Swapy.BLL.Services
 
         public async Task RemoveImageFromBlob(string path, string key)
         {
-            var blobUrl = await _keyVaultService.GetSecretValue("BlobStorage");
+            var blobUrl = await _keyVaultService.GetSecretValue("Blob-Storage");
             var blobServiceClient = new BlobServiceClient(blobUrl);
             var containerClient = blobServiceClient.GetBlobContainerClient(key);
 

@@ -10,18 +10,20 @@ import { AxiosInterceptorService } from 'src/app/core/services/axios-interceptor
 })
 export class AuthApiService {
 
-  private readonly apiUrl: string = environment.authApiUrl;
+  private readonly apiUrl: string = environment.apiUrl;
+  private readonly authApiUrl: string = environment.authApiUrl;
 
   constructor(private axiosInterceptorService: AxiosInterceptorService) {}
 
   login(credential: LoginCredential): Observable<AuthResponse> {
-    return from(this.axiosInterceptorService.post<AuthResponse>(`${this.apiUrl}/Login`, credential))
+    return from(this.axiosInterceptorService.post<AuthResponse>(`${this.apiUrl}/${this.authApiUrl}/Login`, credential))
            .pipe(
               map((response: AxiosResponse<AuthResponse>) => ({
                 type: response.data.type,
                 userId: response.data.userId,
                 accessToken: response.data.accessToken,
-                refreshToken: response.data.refreshToken
+                refreshToken: response.data.refreshToken,
+                hasUnreadMessages: response.data.hasUnreadMessages
               })),
               catchError(error => { throw error; }));
   }

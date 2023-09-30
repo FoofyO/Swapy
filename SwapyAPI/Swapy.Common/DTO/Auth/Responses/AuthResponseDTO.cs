@@ -8,5 +8,6 @@ namespace Swapy.Common.DTO.Auth.Responses
         public string UserId { get; set; }
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
+        public bool HasUnreadMessages { get; set; }
     }
 }

@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Language } from '../enums/language.enum';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -50,20 +48,6 @@ export class LocalStorageService {
 
   ////////////////////////////////////////////////////////////
 
-  public get localization() : Language {
-    return localStorage.getItem('localization') as Language;
-  }
-
-  public set localization(type : Language) {
-    localStorage.setItem('localization', type);
-  }
-
-  public removeLocalization() : void {
-    localStorage.removeItem('localization');
-  }
-
-////////////////////////////////////////////////////////////
-
   public get rememberMe() : string {
     return localStorage.getItem('rememberMe') as string;
   }
@@ -74,5 +58,19 @@ export class LocalStorageService {
 
   public removeRememberMe() : void {
     localStorage.removeItem('rememberMe');
+  }
+
+  ////////////////////////////////////////////////////////////
+
+  public get hasUnreadMessage() : string {
+    return localStorage.getItem('hasUnreadMessage') as string;
+  }
+
+  public set hasUnreadMessage(type : string) {
+    localStorage.setItem('hasUnreadMessage', type);
+  }
+
+  public removeHasUnreadMessage() : void {
+    localStorage.removeItem('hasUnreadMessage');
   }
 }

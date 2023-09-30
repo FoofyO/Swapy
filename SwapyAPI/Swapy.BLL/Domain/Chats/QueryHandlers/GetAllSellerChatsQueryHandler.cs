@@ -18,6 +18,7 @@ namespace Swapy.BLL.Domain.Chats.QueryHandlers
             {
                 ChatId = x.Id,
                 Logo = x.Buyer.Logo,
+                IsReaded = x.Messages.FirstOrDefault().SenderId.Equals(request.UserId) ? true : x.IsReaded,
                 Title = x.Buyer.Type == UserType.Seller ? $"{x.Buyer.FirstName} {x.Buyer.LastName}" : x.Buyer.ShopAttribute.ShopName,
                 LastMessage = x.Messages.FirstOrDefault()?.Text == null ? "📎 Photo" : x.Messages.FirstOrDefault()?.Text,
                 Image = x.Product.Images.FirstOrDefault()?.Image == null ? "default-product-image.png" : x.Product.Images.FirstOrDefault()?.Image,

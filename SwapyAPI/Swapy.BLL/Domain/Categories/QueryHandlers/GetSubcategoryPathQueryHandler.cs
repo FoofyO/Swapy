@@ -1,10 +1,7 @@
 ﻿using MediatR;
 using Swapy.BLL.Domain.Categories.Queries;
-using Swapy.Common.DTO.Categories.Responses;
 using Swapy.Common.DTO.Products.Responses;
-using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
-using Swapy.DAL.Repositories;
 
 namespace Swapy.BLL.Domain.Categories.QueryHandlers
 {
@@ -21,8 +18,8 @@ namespace Swapy.BLL.Domain.Categories.QueryHandlers
 
         public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetSubcategoryPathQuery request, CancellationToken cancellationToken)
         {
-            List<SpecificationResponseDTO<string>> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(request.SubcategoryId, request.Language)).ToList();
-            categories.Insert(0, await _categoryRepository.GetBySubcategoryIdAsync(categories[0]?.Id, request.Language));
+            List<SpecificationResponseDTO<string>> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(request.SubcategoryId)).ToList();
+            categories.Insert(0, await _categoryRepository.GetBySubcategoryIdAsync(categories[0]?.Id));
             return categories;
         }
     }

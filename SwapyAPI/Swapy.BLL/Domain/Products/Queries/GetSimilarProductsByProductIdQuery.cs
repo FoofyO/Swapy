@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Swapy.Common.DTO.Products.Responses;
-using Swapy.Common.Enums;
 
 namespace Swapy.BLL.Domain.Products.Queries
 {
@@ -17,6 +16,5 @@ namespace Swapy.BLL.Domain.Products.Queries
         public string? CategoryId { get; set; }
         public string? SubcategoryId { get; set; }
         public string? CityId { get; set; }
-        public Language Language { get; set; }
     }
 }

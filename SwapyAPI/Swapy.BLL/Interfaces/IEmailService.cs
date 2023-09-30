@@ -1,4 +1,6 @@
-﻿namespace Swapy.BLL.Interfaces
+﻿using Swapy.Common.Enums;
+
+namespace Swapy.BLL.Interfaces
 {
     public interface IEmailService
     {
@@ -10,5 +12,6 @@
         Task SendTryRemoveUserAsync(string email, string callbackUrl);
         Task SendRemovedAsync(string email);
         Task SendNewProductNotificationAsync(string email, string sellerName, string title, string description, string city, decimal price, string currency, string productId);
+        Task SendUnreadMessageAsync(string email, string senderName, ChatType type);
     }
 }

@@ -21,10 +21,12 @@ export class AuthFacadeService {
             this.localStorage.userId = result.userId;
             this.localStorage.userType = result.type.toString();
             this.localStorage.accessToken = result.accessToken;
+            this.localStorage.hasUnreadMessage = result.hasUnreadMessages.toString();
           } else {
             this.sessionStorage.userId = result.userId;
             this.sessionStorage.userType = result.type.toString();
             this.sessionStorage.accessToken = result.accessToken;
+            this.sessionStorage.hasUnreadMessage = result.hasUnreadMessages.toString();
           }
         }
       }
@@ -90,10 +92,12 @@ export class AuthFacadeService {
           this.localStorage.removeToken();
           this.localStorage.removeUserId();
           this.localStorage.removeUserType();
+          this.localStorage.removeHasUnreadMessage();
         } else {
           this.sessionStorage.removeToken();
           this.sessionStorage.removeUserId();
           this.sessionStorage.removeUserType();
+          this.sessionStorage.removeHasUnreadMessage();
         }
         this.localStorage.removeRememberMe();
       }
@@ -147,6 +151,27 @@ export class AuthFacadeService {
   }
 
   setRememberMe(value: string): void { this.localStorage.rememberMe = value; }
+
+  getUnreadMesageState() : boolean {
+    if(this.localStorage.rememberMe) {
+      if(this.localStorage.rememberMe === 'true') {
+        return (this.localStorage.hasUnreadMessage === 'true');
+      } else {
+        return (this.sessionStorage.hasUnreadMessage === 'true');
+      }
+    }
+    return false;
+  }
+
+  setUnreadMesageState(value: string) : void {
+    if(this.localStorage.rememberMe) {
+      if(this.localStorage.rememberMe === 'true') {
+        this.localStorage.hasUnreadMessage = value;
+      } else {
+        this.sessionStorage.hasUnreadMessage = value;
+      }
+    }
+  }
 }
 
 function convertToNumber(value: string): number | null { 

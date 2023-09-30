@@ -13,7 +13,7 @@ namespace Swapy.BLL.Domain.Autos.QueryHandlers
 
         public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllFuelTypesQuery request, CancellationToken cancellationToken)
         {
-            return await _fuelTypeRepository.GetAllAsync(request.Language);
+            return await _fuelTypeRepository.GetAllSpecificationAsync();
         }
     }
 }

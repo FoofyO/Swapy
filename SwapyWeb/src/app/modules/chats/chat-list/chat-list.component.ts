@@ -9,6 +9,8 @@ import { ChatResponseDTO } from '../models/chat-response-dto';
 import { ChatDetailService } from '../chat-detail/chat-detail.service';
 import { ChatMessageModel } from '../models/chat-message.model';
 import { MessageResponseDTO } from '../models/message-response-dto';
+import { ThisReceiver } from '@angular/compiler';
+import { AuthService } from 'src/app/shared/auth/auth.service';
 
 @Component({
   selector: 'app-chat-list',
@@ -21,7 +23,7 @@ export class ChatListComponent implements OnInit  {
   chatList: ChatResponseDTO[] = [];
   selectedChat: ChatResponseDTO | null = null;
 
-  constructor(private chatListService: ChatListService, private changeDetectorRef: ChangeDetectorRef, private chatDetailService: ChatDetailService, private chatApiService: ChatApiService, private spinnerService: SpinnerService, private elementRef: ElementRef, private renderer: Renderer2, private router: Router) {
+  constructor(private chatListService: ChatListService, private changeDetectorRef: ChangeDetectorRef, private chatDetailService: ChatDetailService, private chatApiService: ChatApiService, private spinnerService: SpinnerService, private elementRef: ElementRef, private renderer: Renderer2, private router: Router, private authService: AuthService) {
     chatListService.setChatListComponent(this);
     this.showElement = false;
   }
@@ -69,6 +71,13 @@ export class ChatListComponent implements OnInit  {
 
   goToChat(newSelectedChat: ChatResponseDTO) {
     this.selectedChat = newSelectedChat;
+    var chatIndex = this.chatList.map(c => c.chatId).indexOf(newSelectedChat.chatId)
+    this.chatList[chatIndex].isReaded = true;
+    
+    this.chatApiService.readChatAsync(this.chatList[chatIndex].chatId).subscribe((result: boolean) => {
+      this.authService.changeMessagesState(result);
+    });
+
     this.chatDetailService.changeSelectedChat(this.selectedChat.chatId);
     this.handleWindowSizeChange();
   }
@@ -122,6 +131,15 @@ export class ChatListComponent implements OnInit  {
     if(chatIndex !== -1) {
       if((data.message === null || data.message === "") && data.image != null) this.chatList[chatIndex].lastMessage = "📎 Photo";
       else this.chatList[chatIndex].lastMessage = data.message;
+      
+      if(this.selectedChat?.chatId === data.chatId) {
+        this.chatList[chatIndex].isReaded = true;
+        this.chatApiService.readChatAsync(data.chatId).subscribe((result: boolean) => {
+          this.authService.changeMessagesState(result);
+        });
+      } 
+      else this.chatList[chatIndex].isReaded = false;
+      
       this.chatList[chatIndex].lastMessageDateTime = data.dateTime;
     }
     else {
