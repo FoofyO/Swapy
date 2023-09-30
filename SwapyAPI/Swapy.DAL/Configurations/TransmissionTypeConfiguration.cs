@@ -9,17 +9,18 @@ namespace Swapy.DAL.Configurations
         public void Configure(EntityTypeBuilder<TransmissionType> builder)
         {
             builder.ToTable("TransmissionTypes");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(tt => tt.Id);
 
-            builder.Property(x => x.Id).IsRequired();
+            builder.Property(tt => tt.Id).IsRequired();
 
-            builder.HasMany(a => a.Names)
-                   .WithOne()
-                   .IsRequired(false);
+            builder.Property(tt => tt.Name)
+                   .HasColumnType("NVARCHAR(128)")
+                   .HasMaxLength(128)
+                   .IsRequired();
 
-            builder.HasMany(x => x.AutoAttributes)
-                   .WithOne(x => x.TransmissionType)
-                   .HasForeignKey(x => x.TransmissionTypeId)
+            builder.HasMany(tt => tt.AutoAttributes)
+                   .WithOne(tt => tt.TransmissionType)
+                   .HasForeignKey(tt => tt.TransmissionTypeId)
                    .IsRequired(false);
         }
     }

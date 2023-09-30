@@ -48,8 +48,8 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 
             user.UserTokenId = refreshToken;
             await _userTokenRepository.CreateAsync(new UserToken(accessToken, refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
-
-            return new AuthResponseDTO { Type = user.Type, UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken };
+            await Console.Out.WriteLineAsync(user.HasUnreadMessages.ToString());
+            return new AuthResponseDTO { Type = user.Type, UserId = user.Id, AccessToken = accessToken, RefreshToken = refreshToken, HasUnreadMessages = user.HasUnreadMessages };
         }
     }
 }

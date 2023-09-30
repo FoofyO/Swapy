@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Language } from '../enums/language.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -50,15 +49,15 @@ export class SessionStorageService {
 
   ////////////////////////////////////////////////////////////
 
-  public get localization(): Language {
-    return sessionStorage.getItem('localization') as Language;
+  public get hasUnreadMessage() : string {
+    return sessionStorage.getItem('hasUnreadMessage') as string;
   }
 
-  public set localization(type: Language) {
-    sessionStorage.setItem('localization', type);
+  public set hasUnreadMessage(type : string) {
+    sessionStorage.setItem('hasUnreadMessage', type);
   }
 
-  public removeLocalization() {
-    sessionStorage.removeItem('localization');
+  public removeHasUnreadMessage() : void {
+    sessionStorage.removeItem('hasUnreadMessage');
   }
 }

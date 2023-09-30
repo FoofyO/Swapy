@@ -4,11 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Swapy.API.Validators;
 using Swapy.BLL.Domain.RealEstates.Commands;
 using Swapy.BLL.Domain.RealEstates.Queries;
-using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Products.Requests.Queries;
 using Swapy.Common.DTO.RealEstates.Requests.Commands;
 using Swapy.Common.DTO.RealEstates.Requests.Queries;
-using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using System.Security.Claims;
 using System.Text;
@@ -256,7 +254,6 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet]
-        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -286,7 +283,6 @@ namespace Swapy.API.Controllers
                     SortByPrice = dto.SortByPrice,
                     SubcategoryId = dto.SubcategoryId,
                     RealEstateTypesId = dto.RealEstateTypesId,
-                    Language = (Language)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -303,7 +299,6 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("{ProductId}")]
-        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -314,7 +309,6 @@ namespace Swapy.API.Controllers
                 var result = await _mediator.Send(new GetByIdRealEstateAttributeQuery() {
                     UserId = (string)HttpContext.Items["Check"],
                     ProductId = dto.ProductId,
-                    Language = (Language)HttpContext.Items["Language"]
                 });
                 return Ok(result);
             }
@@ -333,14 +327,13 @@ namespace Swapy.API.Controllers
         /// Real Estates
         /// </summary>
         [HttpGet("Types")]
-        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllRealEstateTypesAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllRealEstateTypesQuery() { Language = (Language)HttpContext.Items["Language"] });
+                var result = await _mediator.Send(new GetAllRealEstateTypesQuery());
                 return Ok(result);
             }
             catch (Exception ex)

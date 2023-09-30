@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Swapy.BLL.Interfaces;
+using Swapy.Common.Enums;
 using System.Net;
 using System.Net.Mail;
 
@@ -49,7 +50,7 @@ namespace Swapy.BLL.Services
             string message = @$"<div style='display:block; font-size:1.2rem; color:black;'>
                                     <div style='display:flex;'>
                                         <h1 style='color:#3a5a3d;'>Swapy</h1>
-                                        <img style='height:3.5rem; margin:auto 0' src='https://i.ibb.co/bv9QzN4/Swapy-Logo-Part-Reverse.png'>
+                                        <img style='height:3.5rem; margin:auto 0' src='{_configuration["LogoUrl"]}'>
                                     </div>
                                     <p style='font-weight:bold; font-size:1.4rem;'>Thank you for joining Swapy!</p>
                                     <p style='margin-bottom:2rem;'>Click the button below to confirm email address:</p>
@@ -70,7 +71,7 @@ namespace Swapy.BLL.Services
             string message = @$"<div style='display:block; font-size:1.2rem; color:black;'>
                                     <div style='display:flex;'>
                                         <h1 style='color:#3a5a3d;'>Swapy</h1>
-                                        <img style='height:3.5rem; margin:auto 0' src='https://i.ibb.co/bv9QzN4/Swapy-Logo-Part-Reverse.png'>
+                                        <img style='height:3.5rem; margin:auto 0' src='{_configuration["LogoUrl"]}'>
                                     </div>
                                     <p style='font-weight:bold; font-size:1.4rem;'>Your password has been successfully changed.</p>
                                     <p>If you have not completed this action, please contact us immediately.</p>
@@ -90,7 +91,7 @@ namespace Swapy.BLL.Services
             string message = @$"<div style='display:block; font-size:1.2rem; color:black;'>
                                     <div style='display:flex;'>
                                         <h1 style='color:#3a5a3d;'>Swapy</h1>
-                                        <img style='height:3.5rem; margin:auto 0' src='https://i.ibb.co/bv9QzN4/Swapy-Logo-Part-Reverse.png'>
+                                        <img style='height:3.5rem; margin:auto 0' src='{_configuration["LogoUrl"]}'>
                                     </div>
                                     <p style='font-weight:bold; font-size:1.4rem;'>You have requested a password reset for your account.</p>
                                     <p style='margin-bottom:2rem;'>To complete the password reset process, please visit the following link:</p>
@@ -112,7 +113,7 @@ namespace Swapy.BLL.Services
             string message = @$"<div style='display:block; font-size:1.2rem; color:black;'>
                                     <div style='display:flex;'>
                                         <h1 style='color:#3a5a3d;'>Swapy</h1>
-                                        <img style='height:3.5rem; margin:auto 0' src='https://i.ibb.co/bv9QzN4/Swapy-Logo-Part-Reverse.png'>
+                                        <img style='height:3.5rem; margin:auto 0' src='{_configuration["LogoUrl"]}'>
                                     </div>
                                     <p style='font-weight:bold; font-size:1.4rem;'>Your password has been successfully reset.</p>
                                     <p>If you have not completed this action, please contact us immediately.</p>
@@ -132,7 +133,7 @@ namespace Swapy.BLL.Services
             string message = @$"<div style='display:block; font-size:1.2rem; color:black;'>
                                     <div style='display:flex;'>
                                         <h1 style='color:#3a5a3d;'>Swapy</h1>
-                                        <img style='height:3.5rem; margin:auto 0' src='https://i.ibb.co/bv9QzN4/Swapy-Logo-Part-Reverse.png'>
+                                        <img style='height:3.5rem; margin:auto 0' src='{_configuration["LogoUrl"]}'>
                                     </div>
                                     <p style='font-weight:bold; font-size:1.4rem;'>We have received a request to delete your account. If you have not initiated this request, please ignore this email. Otherwise, read further instructions below.</p>
                                     <p style='font-weight:bold; font-size:1.4rem;'>We want to warn you that deleting your account will result in the permanent loss of all your data and access to our service. Please note that after deleting your account, you will no longer be able to log in with your current credentials.</p>
@@ -155,10 +156,30 @@ namespace Swapy.BLL.Services
             string message = @$"<div style='display:block; font-size:1.2rem; color:black;'>
                                     <div style='display:flex;'>
                                         <h1 style='color:#3a5a3d;'>Swapy</h1>
-                                        <img style='height:3.5rem; margin:auto 0' src='https://i.ibb.co/bv9QzN4/Swapy-Logo-Part-Reverse.png'>
+                                        <img style='height:3.5rem; margin:auto 0' src='{_configuration["LogoUrl"]}'>
                                     </div>
                                     <p style='font-weight:bold; font-size:1.4rem;'>We wanted to inform you that your account has been deleted. All your data and related information has been permanently deleted from our system.</p>
                                     <p>If you have not initiated account deletion, please contact our support team for more information.</p>
+                                    <div>                                    
+                                        <p style='margin:0;'>Best wishes,</p>
+                                        <p style='margin:0;'>The Swapy Team</p>
+                                        <small>© 2023 Swapy</small>
+                                    </div>                                    
+                                </div>";
+
+            await SendEmailAsync(email, subject, message);
+        }
+
+        public async Task SendUnreadMessageAsync(string email, string senderName, ChatType type)
+        {
+            string subject = $"Unread Message from {senderName} in {type} Chat";
+            string message = @$"<div style='display:block; font-size:1.2rem; color:black;'>
+                                    <div style='display:flex;'>
+                                        <h1 style='color:#3a5a3d;'>Swapy</h1>
+                                        <img style='height:3.5rem; margin:auto 0' src='{_configuration["LogoUrl"]}'>
+                                    </div>
+                                    <p style='font-weight:bold; font-size:1.4rem;'>We wanted to inform you that you have an unread message in your chat.</p>
+                                    <p>Please log in to your account to read the message and respond if necessary.</p>
                                     <div>                                    
                                         <p style='margin:0;'>Best wishes,</p>
                                         <p style='margin:0;'>The Swapy Team</p>
@@ -175,7 +196,7 @@ namespace Swapy.BLL.Services
             string message = @$"<div style='display:block; font-size:1.2rem; color:black;'>
                                     <div style='display:flex;'>
                                         <h1 style='color:#3a5a3d;'>Swapy</h1>
-                                        <img style='height:3.5rem; margin:auto 0' src='https://i.ibb.co/bv9QzN4/Swapy-Logo-Part-Reverse.png'>
+                                        <img style='height:3.5rem; margin:auto 0' src='{_configuration["LogoUrl"]}'>
                                     </div>
                                     <p style='font-weight:bold; font-size:1.4rem;'>{sellerName} published a new product.</p>
                                     <div style='margin-bottom:2rem;'>

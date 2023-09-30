@@ -326,6 +326,44 @@ namespace Swapy.API.Controllers
             }
         }
 
+        [HttpPatch("UpdateMessagesStatus")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateMessagesStatusAsync(UpdateMessagesStatusCommandDTO dto)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                var result = await _mediator.Send(new UpdateMessagesStatusCommand() 
+                { 
+                    UserId = userId,
+                    Value = dto.Value
+                });
+
+                return Ok(result);
+            }
+            catch (NoAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (UnconfirmedEmailException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
 
         /// <summary>
         /// Likes 
@@ -585,7 +623,7 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> OptionsAsync()
         {
-            return Ok("x5 GET, x3 POST, PUT, x3 DELETE, HEAD, OPTIONS");
+            return Ok("x5 GET, x3 POST, PATCH, PUT, x3 DELETE, HEAD, OPTIONS");
         }
     }
 }

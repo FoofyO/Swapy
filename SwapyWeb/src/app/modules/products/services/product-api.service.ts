@@ -24,6 +24,7 @@ import { AxiosInterceptorService } from 'src/app/core/services/axios-interceptor
 })
 export class ProductApiService {
 
+  private readonly apiUrl: string = environment.apiUrl;
   private readonly productsApiUrl: string = environment.productsApiUrl;
   private readonly animalsApiUrl: string = environment.animalsApiUrl;
   private readonly autosApiUrl: string = environment.autosApiUrl;
@@ -36,7 +37,7 @@ export class ProductApiService {
   constructor(private axiosInterceptorService: AxiosInterceptorService) {}
 
   GetAnimalDetail(productId : string): Observable<AnimalAttribute> {
-    let url = `${this.animalsApiUrl}/${productId}`
+    let url = `${this.apiUrl}/${this.animalsApiUrl}/${productId}`
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const product: AnimalAttribute = response.data;
@@ -52,7 +53,7 @@ export class ProductApiService {
   }
   
   GetAutoDetail(productId : string): Observable<AutoAttribute> {
-    let url = `${this.autosApiUrl}/${productId}`
+    let url = `${this.apiUrl}/${this.autosApiUrl}/${productId}`
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const product: AutoAttribute = response.data;
@@ -68,7 +69,7 @@ export class ProductApiService {
   }
 
   GetClothesDetail(productId : string): Observable<ClothesAttribute> {
-    let url = `${this.clothesApiUrl}/${productId}`
+    let url = `${this.apiUrl}/${this.clothesApiUrl}/${productId}`
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const product: ClothesAttribute = response.data;
@@ -84,7 +85,7 @@ export class ProductApiService {
   }
   
   GetElectronicDetail(productId : string): Observable<ElectronicAttribute> {
-    let url = `${this.electronicsApiUrl}/${productId}`
+    let url = `${this.apiUrl}/${this.electronicsApiUrl}/${productId}`
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const product: ElectronicAttribute = response.data;
@@ -100,7 +101,7 @@ export class ProductApiService {
   }
   
   GetItemDetail(productId : string): Observable<ItemAttribute> {
-    let url = `${this.itemsApiUrl}/${productId}`
+    let url = `${this.apiUrl}/${this.itemsApiUrl}/${productId}`
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const product: ItemAttribute = response.data;
@@ -116,7 +117,7 @@ export class ProductApiService {
   }
   
   GetRealEstateDetail(productId : string): Observable<RealEstateAttribute> {
-    let url = `${this.realEstatesApiUrl}/${productId}`
+    let url = `${this.apiUrl}/${this.realEstatesApiUrl}/${productId}`
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const product: RealEstateAttribute = response.data;
@@ -132,7 +133,7 @@ export class ProductApiService {
   }
   
   GetTVDetail(productId : string): Observable<TVAttribute> {
-    let url = `${this.tvsApiUrl}/${productId}`
+    let url = `${this.apiUrl}/${this.tvsApiUrl}/${productId}`
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const product: TVAttribute = response.data;
@@ -148,7 +149,7 @@ export class ProductApiService {
   }
 
   GetProductCategoryType(productId : string): Observable<Specification<CategoryType>>{
-    let url = `${this.productsApiUrl}/GetCategoryType/${productId}`
+    let url = `${this.apiUrl}/${this.productsApiUrl}/GetCategoryType/${productId}`
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const category: Specification<CategoryType> = response.data;
@@ -161,7 +162,7 @@ export class ProductApiService {
   }
 
   getSimilarProducts(page: number, pageSize: number, productId : string): Observable<PageResponse<Product>> {
-    let url = `${this.productsApiUrl}/GetSimilarProductsByProductId?Page=${page}&PageSize=${pageSize}&ProductId=${productId}`
+    let url = `${this.apiUrl}/${this.productsApiUrl}/GetSimilarProductsByProductId?Page=${page}&PageSize=${pageSize}&ProductId=${productId}`
     return from(
       this.axiosInterceptorService.get(url)
     ).pipe(
@@ -194,7 +195,7 @@ export class ProductApiService {
                       subcategoryId: string | null = null, 
                       cityId: string | null = null): Observable<PageResponse<Product>> 
   {
-    let url = `${this.productsApiUrl}?Page=${page}&PageSize=${pageSize}`
+    let url = `${this.apiUrl}/${this.productsApiUrl}?Page=${page}&PageSize=${pageSize}`
     url += sortByPrice != null ? `&SortByPrice=${sortByPrice}` : '';
     url += reverseSort != null ? `&ReverseSort=${reverseSort}` : '';
     url += title != null ? `&Title=${title}` : '';
@@ -238,7 +239,7 @@ export class ProductApiService {
     animalBreedsId: string[] | null = null,
     animalTypesId: string[] | null = null): Observable<PageResponse<Product>> 
   {
-    let url = `${this.animalsApiUrl}?Page=${page}&PageSize=${pageSize}`
+    let url = `${this.apiUrl}/${this.animalsApiUrl}?Page=${page}&PageSize=${pageSize}`
     url += sortByPrice != null ? `&SortByPrice=${sortByPrice}` : '';
     url += reverseSort != null ? `&ReverseSort=${reverseSort}` : '';
     url += title != null ? `&Title=${title}` : '';
@@ -294,7 +295,7 @@ export class ProductApiService {
     autoBrandsId: string[] | null = null,
     autoTypesId: string[] | null = null,): Observable<AutoResponse> 
   {
-    let url = `${this.autosApiUrl}?Page=${page}&PageSize=${pageSize}`
+    let url = `${this.apiUrl}/${this.autosApiUrl}?Page=${page}&PageSize=${pageSize}`
     url += sortByPrice != null ? `&SortByPrice=${sortByPrice}` : '';
     url += reverseSort != null ? `&ReverseSort=${reverseSort}` : '';
     url += title != null ? `&Title=${title}` : '';
@@ -362,7 +363,7 @@ export class ProductApiService {
     clothesTypesId: string[] | null = null,
     clothesGendersId: string[] | null = null): Observable<PageResponse<Product>> 
   {
-    let url = `${this.clothesApiUrl}?Page=${page}&PageSize=${pageSize}`
+    let url = `${this.apiUrl}/${this.clothesApiUrl}?Page=${page}&PageSize=${pageSize}`
     url += sortByPrice != null ? `&SortByPrice=${sortByPrice}` : '';
     url += reverseSort != null ? `&ReverseSort=${reverseSort}` : '';
     url += title != null ? `&Title=${title}` : '';
@@ -418,7 +419,7 @@ export class ProductApiService {
     brandsId: string[] | null = null,
     typesId: string[] | null = null): Observable<PageResponse<Product>> 
   {
-    let url = `${this.electronicsApiUrl}?Page=${page}&PageSize=${pageSize}`
+    let url = `${this.apiUrl}/${this.electronicsApiUrl}?Page=${page}&PageSize=${pageSize}`
     url += sortByPrice != null ? `&SortByPrice=${sortByPrice}` : '';
     url += reverseSort != null ? `&ReverseSort=${reverseSort}` : '';
     url += title != null ? `&Title=${title}` : '';
@@ -468,7 +469,7 @@ export class ProductApiService {
     isNew: boolean | null = null,
     itemTypesId: string[] | null = null): Observable<PageResponse<Product>> 
   {
-    let url = `${this.itemsApiUrl}?Page=${page}&PageSize=${pageSize}`
+    let url = `${this.apiUrl}/${this.itemsApiUrl}?Page=${page}&PageSize=${pageSize}`
     url += sortByPrice != null ? `&SortByPrice=${sortByPrice}` : '';
     url += reverseSort != null ? `&ReverseSort=${reverseSort}` : '';
     url += title != null ? `&Title=${title}` : '';
@@ -518,7 +519,7 @@ export class ProductApiService {
     roomsMax: number | null = null,
     realEstateTypesId: string[] | null = null): Observable<RealEstateResponse> 
   {
-    let url = `${this.realEstatesApiUrl}?Page=${page}&PageSize=${pageSize}`
+    let url = `${this.apiUrl}/${this.realEstatesApiUrl}?Page=${page}&PageSize=${pageSize}`
     url += sortByPrice != null ? `&SortByPrice=${sortByPrice}` : '';
     url += reverseSort != null ? `&ReverseSort=${reverseSort}` : '';
     url += title != null ? `&Title=${title}` : '';
@@ -577,7 +578,7 @@ export class ProductApiService {
     screenResolutionsId: string[] | null = null,
     screenDiagonalsId: string[] | null = null): Observable<PageResponse<Product>> 
   {
-    let url = `${this.tvsApiUrl}?Page=${page}&PageSize=${pageSize}`
+    let url = `${this.apiUrl}/${this.tvsApiUrl}?Page=${page}&PageSize=${pageSize}`
     url += sortByPrice != null ? `&SortByPrice=${sortByPrice}` : '';
     url += reverseSort != null ? `&ReverseSort=${reverseSort}` : '';
     url += title != null ? `&Title=${title}` : '';
@@ -614,7 +615,7 @@ export class ProductApiService {
   }
 
   getFuelTypes(): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.autosApiUrl}/FuelTypes`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.autosApiUrl}/FuelTypes`)).pipe(
       map((response: AxiosResponse<any>) => {
         const fuelTypes: Specification<string>[] = response.data.$values;
         return fuelTypes;
@@ -626,7 +627,7 @@ export class ProductApiService {
   }
 
   getColors(): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.productsApiUrl}/Colors`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.productsApiUrl}/Colors`)).pipe(
       map((response: AxiosResponse<any>) => {
         const colors: Specification<string>[] = response.data.$values;
         return colors;
@@ -638,7 +639,7 @@ export class ProductApiService {
   }
 
   getTransmissionTypes(): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.autosApiUrl}/TransmissionTypes`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.autosApiUrl}/TransmissionTypes`)).pipe(
       map((response: AxiosResponse<any>) => {
         const transmissionTypes: Specification<string>[] = response.data.$values;
         return transmissionTypes;
@@ -650,7 +651,7 @@ export class ProductApiService {
   }
 
   getAutoBrands(AutoTypesId: string[] | null): Observable<Specification<string>[]>{
-    let url = AutoTypesId ? `${this.autosApiUrl}/Brands/${AutoTypesId.join('&')}` : `${this.autosApiUrl}/Brands`;
+    let url = AutoTypesId ? `${this.apiUrl}/${this.autosApiUrl}/Brands/${AutoTypesId.join('&')}` : `${this.apiUrl}/${this.autosApiUrl}/Brands`;
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;
@@ -663,7 +664,7 @@ export class ProductApiService {
   }
 
   getAutoModels(AutoBrandsId: string[] | null, AutoTypesId: string[] | null): Observable<Specification<string>[]>{
-    let url = `${this.autosApiUrl}/Brands`;
+    let url = `${this.apiUrl}/${this.autosApiUrl}/Brands`;
     if(AutoBrandsId != null && AutoTypesId != null){
       url += `?AutoBrandsId=${AutoBrandsId}&AutoTypesId=${AutoTypesId}`;
     }
@@ -683,7 +684,7 @@ export class ProductApiService {
   }
 
   getClotheBrands(ClothesViewsId: string[] | null): Observable<Specification<string>[]>{
-    let url = ClothesViewsId ? `${this.clothesApiUrl}/Brands/${ClothesViewsId.join('&')}` : `${this.clothesApiUrl}/Brands`;
+    let url = ClothesViewsId ? `${this.apiUrl}/${this.clothesApiUrl}/Brands/${ClothesViewsId.join('&')}` : `${this.apiUrl}/${this.clothesApiUrl}/Brands`;
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;
@@ -696,7 +697,7 @@ export class ProductApiService {
   }
 
   getElectronicBrands(ElectronicTypeId: string): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.electronicsApiUrl}/Brands/${ElectronicTypeId}`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.electronicsApiUrl}/Brands/${ElectronicTypeId}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;
         return brands;
@@ -708,7 +709,7 @@ export class ProductApiService {
   }
 
   getTVBrands(): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.tvsApiUrl}/Brands`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.tvsApiUrl}/Brands`)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;
         return brands;
@@ -720,7 +721,7 @@ export class ProductApiService {
   }
 
   getClothesSizes(IsChild: boolean, IsShoe: boolean): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.clothesApiUrl}/Sizes?IsChild=${IsChild}&IsShoe=${IsShoe}`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.clothesApiUrl}/Sizes?IsChild=${IsChild}&IsShoe=${IsShoe}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;
         return brands;
@@ -732,7 +733,7 @@ export class ProductApiService {
   }
 
   getGenders(): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.clothesApiUrl}/Genders`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.clothesApiUrl}/Genders`)).pipe(
       map((response: AxiosResponse<any>) => {
         const genders: Specification<string>[] = response.data.$values;
         return genders;
@@ -744,7 +745,7 @@ export class ProductApiService {
   }
 
   getClothesSeasons(): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.clothesApiUrl}/Seasons`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.clothesApiUrl}/Seasons`)).pipe(
       map((response: AxiosResponse<any>) => {
         const clothesSeasons: Specification<string>[] = response.data.$values;
         return clothesSeasons;
@@ -756,7 +757,7 @@ export class ProductApiService {
   }
 
   getClothesViews(GenderId: string | null = null, ClothesTypeId: string | null = null): Observable<Specification<string>[]>{
-    let url = `${this.clothesApiUrl}/Views`
+    let url = `${this.apiUrl}/${this.clothesApiUrl}/Views`
     if(GenderId != null && ClothesTypeId != null){
       url += `?GenderId=${GenderId}&ClothesTypeId=${ClothesTypeId}`;
     }
@@ -776,7 +777,7 @@ export class ProductApiService {
   }
 
   getElectronicMemories(ModelId: string | null = null): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.electronicsApiUrl}/Memories/${ModelId}`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.electronicsApiUrl}/Memories/${ModelId}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const electronicMemories: Specification<string>[] = response.data.$values;
         return electronicMemories;
@@ -788,7 +789,7 @@ export class ProductApiService {
   }
 
   getElectronicColors(ModelId: string | null = null): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.electronicsApiUrl}/Colors/${ModelId}`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.electronicsApiUrl}/Colors/${ModelId}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const electronicColors: Specification<string>[] = response.data.$values;
         return electronicColors;
@@ -800,7 +801,7 @@ export class ProductApiService {
   }
 
   getElectronicModels(ElectronicBrandsId: string[] | null = null, ElectronicTypeId: string | null = null): Observable<Specification<string>[]>{
-    let url = `${this.electronicsApiUrl}/Models`;
+    let url = `${this.apiUrl}/${this.electronicsApiUrl}/Models`;
     if(ElectronicBrandsId != null && ElectronicTypeId != null){
       url += `?ElectronicTypeId=${ElectronicTypeId}`;
       url += ElectronicBrandsId.map(value => `&ElectronicBrandsId=${encodeURIComponent(value)}`).join("&");
@@ -821,7 +822,7 @@ export class ProductApiService {
   }
 
   getTVTypes(): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.tvsApiUrl}/Types`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.tvsApiUrl}/Types`)).pipe(
       map((response: AxiosResponse<any>) => {
         const tvTypes: Specification<string>[] = response.data.$values;
         return tvTypes;
@@ -833,7 +834,7 @@ export class ProductApiService {
   }
 
   getTVScreenResolutions(): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.tvsApiUrl}/ScreenResolutions`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.tvsApiUrl}/ScreenResolutions`)).pipe(
       map((response: AxiosResponse<any>) => {
         const screenResolutions: Specification<string>[] = response.data.$values;
         return screenResolutions;
@@ -845,7 +846,7 @@ export class ProductApiService {
   }
 
   getTVScreenDiagonals(): Observable<Specification<number>[]>{
-    return from(this.axiosInterceptorService.get(`${this.tvsApiUrl}/ScreenDiagonals`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.tvsApiUrl}/ScreenDiagonals`)).pipe(
       map((response: AxiosResponse<any>) => {
         const screenDiagonals: Specification<number>[] = response.data.$values;
         return screenDiagonals;
@@ -857,7 +858,7 @@ export class ProductApiService {
   }
 
   getClothesBrandViewId(brandId: string, clothesViewId: string): Observable<string>{
-    return from(this.axiosInterceptorService.get(`${this.clothesApiUrl}/GetClothesBrandViewId?BrandId=${brandId}&ClothesViewId=${clothesViewId}`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.clothesApiUrl}/GetClothesBrandViewId?BrandId=${brandId}&ClothesViewId=${clothesViewId}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const clothesBrandViewId: string = response.data;
         return clothesBrandViewId;
@@ -869,7 +870,7 @@ export class ProductApiService {
   }
 
   getMemoryModelId(memoryId: string, modelId: string): Observable<string>{
-    return from(this.axiosInterceptorService.get(`${this.clothesApiUrl}/GetClothesBrandViewId?MemoryId=${memoryId}&ModelId=${modelId}`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.clothesApiUrl}/GetClothesBrandViewId?MemoryId=${memoryId}&ModelId=${modelId}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const memoryModelId: string = response.data;
         return memoryModelId;
@@ -881,7 +882,7 @@ export class ProductApiService {
   }
 
   getModelColorId(colorId: string, modelId: string): Observable<string>{
-    return from(this.axiosInterceptorService.get(`${this.clothesApiUrl}/GetClothesBrandViewId?ColorId=${colorId}&ModelId=${modelId}`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.clothesApiUrl}/GetClothesBrandViewId?ColorId=${colorId}&ModelId=${modelId}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const modelColorId: string = response.data;
         return modelColorId;
@@ -893,7 +894,7 @@ export class ProductApiService {
   }
 
   createAnimal(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.post(`${this.animalsApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.post(`${this.apiUrl}/${this.animalsApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -904,7 +905,7 @@ export class ProductApiService {
   }
 
   createAuto(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.post(`${this.autosApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.post(`${this.apiUrl}/${this.autosApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -915,7 +916,7 @@ export class ProductApiService {
   }
 
   createClothes(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.post(`${this.clothesApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.post(`${this.apiUrl}/${this.clothesApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -926,7 +927,7 @@ export class ProductApiService {
   }
 
   createElectronics(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.post(`${this.electronicsApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.post(`${this.apiUrl}/${this.electronicsApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -937,7 +938,7 @@ export class ProductApiService {
   }
 
   createItem(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.post(`${this.itemsApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.post(`${this.apiUrl}/${this.itemsApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -948,7 +949,7 @@ export class ProductApiService {
   }
 
   createRealEstate(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.post(`${this.itemsApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.post(`${this.apiUrl}/${this.itemsApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -959,7 +960,7 @@ export class ProductApiService {
   }
 
   createTv(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.post(`${this.itemsApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.post(`${this.apiUrl}/${this.itemsApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -970,7 +971,7 @@ export class ProductApiService {
   }
 
   updateAnimal(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.put(`${this.animalsApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.put(`${this.apiUrl}/${this.animalsApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -981,7 +982,7 @@ export class ProductApiService {
   }
 
   updateAuto(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.put(`${this.autosApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.put(`${this.apiUrl}/${this.autosApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -992,7 +993,7 @@ export class ProductApiService {
   }
 
   updateClothes(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.put(`${this.clothesApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.put(`${this.apiUrl}/${this.clothesApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -1003,7 +1004,7 @@ export class ProductApiService {
   }
 
   updateElectronics(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.put(`${this.electronicsApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.put(`${this.apiUrl}/${this.electronicsApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -1014,7 +1015,7 @@ export class ProductApiService {
   }
 
   updateItem(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.put(`${this.itemsApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.put(`${this.apiUrl}/${this.itemsApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -1025,7 +1026,7 @@ export class ProductApiService {
   }
 
   updateRealEstate(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.put(`${this.itemsApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.put(`${this.apiUrl}/${this.itemsApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -1036,7 +1037,7 @@ export class ProductApiService {
   }
 
   updateTv(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.put(`${this.itemsApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.put(`${this.apiUrl}/${this.itemsApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -1047,7 +1048,7 @@ export class ProductApiService {
   }
 
   switchProductEnabling(productId: string): Observable<any>{
-    return from(this.axiosInterceptorService.patch<any>(`${this.productsApiUrl}/Enabling/${productId}`)).pipe(
+    return from(this.axiosInterceptorService.patch<any>(`${this.apiUrl}/${this.productsApiUrl}/Enabling/${productId}`)).pipe(
       catchError((error: AxiosError) => {
         throw error;
       })
@@ -1055,7 +1056,7 @@ export class ProductApiService {
   }
 
   removeProduct(productId: string): Observable<any>{
-    return from(this.axiosInterceptorService.delete<any>(`${this.productsApiUrl}/${productId}`)).pipe(
+    return from(this.axiosInterceptorService.delete<any>(`${this.apiUrl}/${this.productsApiUrl}/${productId}`)).pipe(
       catchError((error: AxiosError) => {
         throw error;
       })
@@ -1063,7 +1064,7 @@ export class ProductApiService {
   }
 
   incrementViewsAsync(productId: string): Observable<any>{
-    return from(this.axiosInterceptorService.patch<any>(`${this.productsApiUrl}/Views/${productId}`)).pipe(
+    return from(this.axiosInterceptorService.patch<any>(`${this.apiUrl}/${this.productsApiUrl}/Views/${productId}`)).pipe(
       catchError((error: AxiosError) => {
         throw error;
       })

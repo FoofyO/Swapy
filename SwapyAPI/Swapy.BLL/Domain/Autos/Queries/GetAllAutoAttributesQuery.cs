@@ -1,8 +1,5 @@
 ﻿using MediatR;
-using Swapy.BLL.Domain.Products.Queries;
 using Swapy.Common.DTO.Autos.Responses;
-using Swapy.Common.DTO.Products.Responses;
-using Swapy.Common.Enums;
 
 namespace Swapy.BLL.Domain.Autos.Queries
 {
@@ -22,7 +19,6 @@ namespace Swapy.BLL.Domain.Autos.Queries
         public bool? IsDisable { get; set; }
         public bool? SortByPrice { get; set; }
         public bool? ReverseSort { get; set; }
-        public Language Language { get; set; }
         public int? MiliageMin { get; set; }
         public int? MiliageMax { get; set; }
         public int? EngineCapacityMin { get; set; }

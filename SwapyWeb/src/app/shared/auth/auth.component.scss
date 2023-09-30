@@ -90,15 +90,16 @@
 
         i {
             position: relative;
-            .new-message-icon{
-                background-color: $notification-red;
-                border-radius: 50%;
+            
+            .new-message-icon {
+                top: -4px;
+                right: -4px;
+                margin: auto;
                 width: 0.5rem;
                 height: 0.5rem;
-                margin: auto;
+                border-radius: 50%;
                 position: absolute;
-                right: -4px;
-                top: -4px;
+                background-color: $notification-red;
             }
         }
     }

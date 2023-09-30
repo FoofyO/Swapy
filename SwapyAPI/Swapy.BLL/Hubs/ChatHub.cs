@@ -25,10 +25,8 @@ namespace Swapy.BLL.Hubs
         public override Task OnDisconnectedAsync(Exception exception)
         {
             var client = _connectedClients.FirstOrDefault(c => c.ConnectionId == Context.ConnectionId);
-            if (client != null)
-            {
-                _connectedClients.Remove(client);
-            }
+            
+            if (client != null) _connectedClients.Remove(client);
 
             return base.OnDisconnectedAsync(exception);
         }
@@ -41,11 +39,6 @@ namespace Swapy.BLL.Hubs
         public List<ConnectedClient> GetConnectedClientsForUser(string userId)
         {
             return _connectedClients.Where(c => c.UserId == userId).ToList();
-        }
-
-        public async Task SendMessage(string dto)
-        {
-            await Clients.All.SendAsync("ReceiveMessage", dto);
         }
     }
 }

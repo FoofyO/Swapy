@@ -1,9 +1,5 @@
 ﻿using MediatR;
-using Swapy.BLL.Domain.Products.Queries;
-using Swapy.Common.DTO.Autos.Responses;
-using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.DTO.RealEstates.Responses;
-using Swapy.Common.Enums;
 
 namespace Swapy.BLL.Domain.RealEstates.Queries
 {
@@ -23,7 +19,6 @@ namespace Swapy.BLL.Domain.RealEstates.Queries
         public bool? IsDisable { get; set; }
         public bool? SortByPrice { get; set; }
         public bool? ReverseSort { get; set; }
-        public Language Language { get; set; }
         public int? AreaMin { get; set; }
         public int? AreaMax { get; set; }
         public int? RoomsMin { get; set; }

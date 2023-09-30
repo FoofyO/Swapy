@@ -1,5 +1,4 @@
-﻿
-using MediatR;
+﻿using MediatR;
 using Swapy.BLL.Domain.Products.Queries;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.DAL.Interfaces;
@@ -10,7 +9,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
     {
         private readonly IProductRepository _productRepository;
 
-        public GetSimilarProductsByProductIdQueryHandler(IProductRepository productRepository, IFavoriteProductRepository favoriteProductRepository) => _productRepository = productRepository;
+        public GetSimilarProductsByProductIdQueryHandler(IProductRepository productRepository) => _productRepository = productRepository;
 
         public async Task<ProductsResponseDTO<ProductResponseDTO>> Handle(GetSimilarProductsByProductIdQuery request, CancellationToken cancellationToken)
         {
@@ -24,8 +23,7 @@ namespace Swapy.BLL.Domain.Products.QueryHandlers
                                                                 request.PriceMax,
                                                                 request.CategoryId,
                                                                 request.SubcategoryId,
-                                                                request.CityId,
-                                                                request.Language);
+                                                                request.CityId);
         }
     }
 }

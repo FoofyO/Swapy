@@ -1,7 +1,5 @@
 import { Component, OnInit, HostListener, Renderer2, ElementRef } from '@angular/core';
-import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { CategoryTreeService } from 'src/app/shared/category-tree/category-tree.service';
-import { Language } from 'src/app/core/enums/language.enum';
 import { HeaderService } from './header.service';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -23,7 +21,6 @@ export class HeaderComponent implements OnInit {
   constructor(
     private renderer: Renderer2,
     private elementRef: ElementRef,
-    private localStorage: LocalStorageService,
     private headerService: HeaderService,
     private categoryTreeService: CategoryTreeService,
     private route: ActivatedRoute,
@@ -66,28 +63,6 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.headerService.setHeaderComponent(this);
-    switch (this.localStorage.localization) {
-      case Language.English:
-        this.buttonText = `EN`;
-        break;
-      case Language.Russian:
-        this.buttonText = "RU";
-        break;
-      case Language.Azerbaijani:
-        this.buttonText = "AZ";
-        break;
-      default:
-        this.buttonText = "EN";
-        break;
-    }
-  }
-
-  selectLanguage(language: string): void {
-    const selectedLanguage = Language[language as keyof typeof Language];
-    if (selectedLanguage !== this.localStorage.localization) {
-      this.localStorage.localization = Language[language as keyof typeof Language];
-      window.location.reload();
-    }
   }
 
   disableCollapsedMenuAnimation() {

@@ -16,8 +16,9 @@ namespace Swapy.BLL.Domain.Chats.QueryHandlers
             var chats = (await _chatRepository.GetAllBuyerChatsAsync(request.UserId)).Select(x => new ChatResponseDTO()
             {
                 ChatId = x.Id,
-                Logo = x.Product.User.Logo,
                 Title = x.Product.Title,
+                Logo = x.Product.User.Logo,
+                IsReaded = x.Messages.FirstOrDefault().SenderId.Equals(request.UserId) ? true : x.IsReaded,
                 LastMessage = x.Messages.FirstOrDefault()?.Text == null ? "📎 Photo" : x.Messages.FirstOrDefault()?.Text,
                 Image = x.Product.Images.FirstOrDefault()?.Image == null ? "default-product-image.png" : x.Product.Images.FirstOrDefault()?.Image,
                 LastMessageDateTime = x.Messages.FirstOrDefault()?.DateTime,

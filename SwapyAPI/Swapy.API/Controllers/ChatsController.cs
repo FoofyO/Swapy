@@ -69,7 +69,7 @@ namespace Swapy.API.Controllers
                 var command = new CreateChatCommand()
                 {
                     UserId = userId,
-                    ProductId= dto.ProductId,
+                    ProductId = dto.ProductId,
                 };
 
                 var result = await _mediator.Send(command);
@@ -112,7 +112,7 @@ namespace Swapy.API.Controllers
                 };
 
                 var result = await _mediator.Send(command);
-         
+
                 return Ok(result);
             }
             catch (UnauthorizedAccessException ex)
@@ -255,6 +255,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("Chats/{ChatId}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -263,9 +264,10 @@ namespace Swapy.API.Controllers
             try
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var result = await _mediator.Send(new GetDetailChatQuery() {
+                var result = await _mediator.Send(new GetDetailChatQuery() 
+                {
                     UserId = userId,
-                    ChatId = dto.ChatId 
+                    ChatId = dto.ChatId
                 });
                 return Ok(result);
             }
@@ -280,6 +282,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("ChatByProductId/{ProductId}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -290,13 +293,45 @@ namespace Swapy.API.Controllers
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var result = await _mediator.Send(new GetDetailChatByProductIdQuery() {
                     UserId = userId,
-                    ProductId = dto.ProductId 
+                    ProductId = dto.ProductId
                 });
                 return Ok(result);
             }
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
+
+        [HttpPatch]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ReadChatAsync([FromQuery] ReadChatCommandDTO dto)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var result = await _mediator.Send(new ReadChatCommand()
+                {
+                    UserId = userId,
+                    ChatId = dto.ChatId
+                });
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (NoAccessException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
@@ -315,7 +350,7 @@ namespace Swapy.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> OptionsAsync()
         {
-            return Ok("x4 GET, x2 POST, HEAD, OPTIONS");
+            return Ok("x4 GET, x2 POST, PATCH, HEAD, OPTIONS");
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Swapy.BLL.Services
             }
             else sellerName = user.FirstName + " " + user.LastName;
 
-            var city = await _cityRepository.GetLocalizeByIdAsync(model.CityId, Language.English);
+            var city = await _cityRepository.GetLocalizeByIdAsync(model.CityId);
             var currency = await _currencyRepository.GetByIdAsync(model.CurrencyId);
 
             var subscribers = await _userSubscriptionRepository.GetUserSubscriptionsAsync(model.UserId);

@@ -15,12 +15,13 @@ export class SettingsApiService {
 
   private readonly usersApiUrl: string = environment.usersApiUrl;
   private readonly shopsApiUrl: string = environment.shopsApiUrl;
+  private readonly apiUrl: string = environment.apiUrl;
   private readonly authApiUrl: string = environment.authApiUrl;
 
   constructor(private axiosInterceptorService: AxiosInterceptorService) {}
 
   getUserData(): Observable<UserData> {
-    return from(this.axiosInterceptorService.get<UserData>(`${this.usersApiUrl}/UserData`))
+    return from(this.axiosInterceptorService.get<UserData>(`${this.apiUrl}/${this.usersApiUrl}/UserData`))
            .pipe(
               map((response: AxiosResponse<UserData>) => ({
                 firstName: response.data.firstName,
@@ -33,7 +34,7 @@ export class SettingsApiService {
   }
   
   getShopData(): Observable<ShopData> {
-    return from(this.axiosInterceptorService.get<ShopData>(`${this.shopsApiUrl}/ShopData`))
+    return from(this.axiosInterceptorService.get<ShopData>(`${this.apiUrl}/${this.shopsApiUrl}/ShopData`))
            .pipe(
               map((response: AxiosResponse<ShopData>) => ({
                  shopName: response.data.shopName,
@@ -51,35 +52,35 @@ export class SettingsApiService {
   }
 
   updateUserData(data: UserData) : Observable<any> {
-    return from(this.axiosInterceptorService.put<any>(`${this.usersApiUrl}`, data))
+    return from(this.axiosInterceptorService.put<any>(`${this.apiUrl}/${this.usersApiUrl}`, data))
     .pipe(
       catchError(error => { throw error; })
     );
   }
 
   updateShopData(data: FormData) : Observable<any> {
-    return from(this.axiosInterceptorService.put<any>(`${this.shopsApiUrl}`, data))
+    return from(this.axiosInterceptorService.put<any>(`${this.apiUrl}/${this.shopsApiUrl}`, data))
     .pipe(
       catchError(error => { throw error; })
     );
   }
 
   changePassword(data: PasswordData) : Observable<any> {
-    return from(this.axiosInterceptorService.patch<any>(`${this.authApiUrl}/ChangePassword`, data))
+    return from(this.axiosInterceptorService.patch<any>(`${this.apiUrl}/${this.authApiUrl}/ChangePassword`, data))
     .pipe(
       catchError(error => { throw error; })
     );
   }
 
   updateLogo(data: FormData): Observable<any> {
-    return from(this.axiosInterceptorService.post<any>(`${this.usersApiUrl}/UploadLogo`, data))
+    return from(this.axiosInterceptorService.post<any>(`${this.apiUrl}/${this.usersApiUrl}/UploadLogo`, data))
     .pipe(
       catchError(error => { throw error; })
     );
   }
 
   updateBanner(data: FormData): Observable<any> {
-    return from(this.axiosInterceptorService.post<any>(`${this.shopsApiUrl}/UploadBanner`, data))
+    return from(this.axiosInterceptorService.post<any>(`${this.apiUrl}/${this.shopsApiUrl}/UploadBanner`, data))
     .pipe(
       catchError(error => { throw error; })
     );

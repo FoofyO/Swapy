@@ -2,10 +2,7 @@
 using Swapy.BLL.Domain.Items.Queries;
 using Swapy.Common.DTO.Items.Responses;
 using Swapy.Common.DTO.Products.Responses;
-using Swapy.Common.Entities;
-using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
-using Swapy.DAL.Repositories;
 
 namespace Swapy.BLL.Domain.Items.QueryHandlers
 {
@@ -25,13 +22,13 @@ namespace Swapy.BLL.Domain.Items.QueryHandlers
         public async Task<ItemAttributeResponseDTO> Handle(GetByIdItemAttributeQuery request, CancellationToken cancellationToken)
         {
             var itemAttribute = await _itemAttributeRepository.GetDetailByIdAsync(request.ProductId);
-            List<SpecificationResponseDTO<string>> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(itemAttribute.Product.SubcategoryId, request.Language)).ToList();
-            categories.Insert(0, new SpecificationResponseDTO<string>(itemAttribute.Product.CategoryId, itemAttribute.Product.Category.Names.FirstOrDefault(l => l.Language == request.Language).Value));
+            List<SpecificationResponseDTO<string>> categories = (await _subcategoryRepository.GetSequenceOfSubcategories(itemAttribute.Product.SubcategoryId)).ToList();
+            categories.Insert(0, new SpecificationResponseDTO<string>(itemAttribute.Product.CategoryId, itemAttribute.Product.Category.Name));
 
             ItemAttributeResponseDTO result = new ItemAttributeResponseDTO()
             {
                 Id = itemAttribute.Id,
-                City = itemAttribute.Product.City.Names.FirstOrDefault(l => l.Language == request.Language).Value,
+                City = itemAttribute.Product.City.Name,
                 CityId = itemAttribute.Product.City.Id,
                 Currency = itemAttribute.Product.Currency.Name,
                 CurrencyId = itemAttribute.Product.Currency.Id,

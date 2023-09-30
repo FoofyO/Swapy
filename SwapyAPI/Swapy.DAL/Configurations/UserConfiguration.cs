@@ -41,7 +41,6 @@ namespace Swapy.DAL.Configurations
                    .HasDefaultValue(0)
                    .IsRequired();
 
-
             builder.Property(u => u.RegistrationDate)
                    .HasColumnType("DATE")
                    .HasDefaultValueSql("GETDATE()")
@@ -53,6 +52,9 @@ namespace Swapy.DAL.Configurations
                    .IsRequired();
 
             builder.Property(u => u.IsSubscribed)
+                   .HasColumnType("BIT");
+
+            builder.Property(u => u.HasUnreadMessages)
                    .HasColumnType("BIT");
 
             builder.HasOne(u => u.UserToken)

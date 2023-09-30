@@ -44,6 +44,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
                 PhoneNumber = request.PhoneNumber,
                 Type = UserType.Seller,
                 IsSubscribed = true,
+                HasUnreadMessages = false,
                 Logo = "default-user-logo.png"
             };
             

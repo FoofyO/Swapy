@@ -16,7 +16,7 @@ namespace Swapy.BLL.Services
 
         public async Task<string> GenerateJwtToken(string userId, string email, string firstName, string lastname)
         {
-            var guid = await _keyVaultService.GetSecretValue("JWTKey");
+            var guid = await _keyVaultService.GetSecretValue("JWT-Key");
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(guid));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

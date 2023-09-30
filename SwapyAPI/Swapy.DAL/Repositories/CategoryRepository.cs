@@ -2,7 +2,6 @@
 using Swapy.Common.DTO.Categories.Responses;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
-using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -41,11 +40,11 @@ namespace Swapy.DAL.Repositories
             return item;
         }
 
-        public async Task<SpecificationResponseDTO<string>> GetBySubcategoryIdAsync(string subcategoryId, Language language)
+        public async Task<SpecificationResponseDTO<string>> GetBySubcategoryIdAsync(string subcategoryId)
         {
             var result = await _context.Categories.Include(c => c.Subcategories)
                 .Where(c => (c.Subcategories.Select(sc => sc.Id)).Contains(subcategoryId))
-                .Include(c => c.Names).Select(c => new SpecificationResponseDTO<string>(c.Id, c.Names.FirstOrDefault(l => l.Language == language).Value)).FirstOrDefaultAsync();
+                .Select(c => new SpecificationResponseDTO<string>(c.Id, c.Name)).FirstOrDefaultAsync();
 
             if (result == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with subcategory by {subcategoryId} id not found");
 
@@ -57,11 +56,10 @@ namespace Swapy.DAL.Repositories
             return await _context.Categories.ToListAsync();
         }
 
-        public async Task<IEnumerable<CategoryTreeResponseDTO>> GetAllAsync(Language language)
+        public async Task<IEnumerable<CategoryTreeResponseDTO>> GetAllCategoryTreesAsync()
         {
-            return _context.Categories.Include(s => s.Names)
-                                      .AsEnumerable()
-                                      .Select(s => new CategoryTreeResponseDTO(s.Id, s.Type, null, s.Names.FirstOrDefault(l => l.Language == language).Value, false, null, null))
+            return _context.Categories.AsEnumerable()
+                                      .Select(s => new CategoryTreeResponseDTO(s.Id, s.Type, null, s.Name, false, null, null))
                                       .OrderBy(s => s.Value)
                                       .ToList();
         }

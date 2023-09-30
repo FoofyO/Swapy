@@ -13,7 +13,7 @@ namespace Swapy.BLL.Domain.Clothes.QueryHandlers
 
         public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllGendersQuery request, CancellationToken cancellationToken)
         {
-            return await _genderRepository.GetAllAsync(request.Language);
+            return await _genderRepository.GetAllSpecificationAsync();
         }
     }
 }

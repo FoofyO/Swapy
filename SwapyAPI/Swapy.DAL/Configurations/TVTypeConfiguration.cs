@@ -13,9 +13,10 @@ namespace Swapy.DAL.Configurations
 
             builder.Property(t => t.Id).IsRequired();
 
-            builder.HasMany(a => a.Names)
-                   .WithOne()
-                   .IsRequired(false);
+            builder.Property(t => t.Name)
+                   .HasColumnType("NVARCHAR(128)")
+                   .HasMaxLength(128)
+                   .IsRequired();
 
             builder.HasMany(t => t.TVAttributes)
                    .WithOne(t => t.TVType)

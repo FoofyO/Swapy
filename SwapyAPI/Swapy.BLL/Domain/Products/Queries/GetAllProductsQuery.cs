@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Swapy.Common.DTO.Products.Responses;
-using Swapy.Common.Enums;
 
 namespace Swapy.BLL.Domain.Products.Queries
 {
@@ -24,6 +23,5 @@ namespace Swapy.BLL.Domain.Products.Queries
         public bool? IsDisable { get; set; }
         public bool? SortByPrice { get; set; }
         public bool? ReverseSort { get; set; }
-        public Language Language { get; set; }
     }
 }

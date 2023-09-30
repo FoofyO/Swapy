@@ -13,7 +13,7 @@ namespace Swapy.BLL.Domain.Categories.QueryHandlers
 
         public async Task<IEnumerable<CategoryTreeResponseDTO>> Handle(GetAllSubcategoriesByCategoryQuery request, CancellationToken cancellationToken)
         {
-            return await _subcategoryRepository.GetByCategoryAsync(request.CategoryId, request.Language);
+            return await _subcategoryRepository.GetByCategoryAsync(request.CategoryId);
         }
     }
 }

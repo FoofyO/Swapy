@@ -13,7 +13,7 @@ namespace Swapy.BLL.Domain.Items.QueryHandlers
 
         public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllItemTypesQuery request, CancellationToken cancellationToken)
         {
-            return await _subcategoryRepository.GetAllItemTypesAsync(request.ParentSubcategoryId, request.Language);
+            return await _subcategoryRepository.GetAllItemTypesAsync(request.ParentSubcategoryId);
         }
     }
 }

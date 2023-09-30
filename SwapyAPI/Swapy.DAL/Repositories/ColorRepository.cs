@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
-using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -44,21 +43,20 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.Colors.ToListAsync();
         }
-        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllAsync(Language language)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllSpecificationAsync()
         {
-            return _context.Colors.Include(s => s.Names)
-                                  .AsEnumerable()
-                                  .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
+            return _context.Colors.AsEnumerable()
+                                  .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Name))
                                   .OrderBy(s => s.Value)
                                   .ToList();
         }
 
-        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetByModelAsync(string modelId, Language language)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetByModelAsync(string modelId)
         {
             return _context.Colors.Include(x => x.ModelsColors)
                                   .Where(x => modelId == null || x.ModelsColors.Select(x => x.ModelId).Contains(modelId))
                                   .AsEnumerable()
-                                  .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
+                                  .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Name))
                                   .OrderBy(s => s.Value)
                                   .ToList();
         }

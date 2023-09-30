@@ -32,8 +32,7 @@ namespace Swapy.BLL.Domain.Clothes.QueryHandlers
                                                                          request.ClothesTypesId,
                                                                          request.ClothesGendersId,
                                                                          request.SortByPrice,
-                                                                         request.ReverseSort,
-                                                                         request.Language);
+                                                                         request.ReverseSort);
         }
     }
 }

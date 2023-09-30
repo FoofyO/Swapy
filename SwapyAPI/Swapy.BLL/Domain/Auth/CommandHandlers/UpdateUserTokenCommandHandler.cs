@@ -34,8 +34,7 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             
             await _userTokenRepository.UpdateAsync(userToken);
 
-            var authDTO = new AuthResponseDTO { UserId = user.Id, Type = user.Type, AccessToken = userToken.AccessToken, RefreshToken = userToken.RefreshToken };
-            return authDTO;
+            return new AuthResponseDTO { UserId = user.Id, Type = user.Type, AccessToken = userToken.AccessToken, RefreshToken = userToken.RefreshToken, HasUnreadMessages = user.HasUnreadMessages };
         }
     }
 }

@@ -3,7 +3,6 @@ using Swapy.BLL.Interfaces;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.DTO.RealEstates.Responses;
 using Swapy.Common.Entities;
-using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
 
@@ -77,7 +76,6 @@ namespace Swapy.DAL.Repositories
                                                             .ThenInclude(x => x.Category)
                                                           .Include(re => re.Product)
                                                             .ThenInclude(p => p.City)
-                                                                .ThenInclude(c => c.Names)
                                                           .Include(re => re.Product)
                                                             .ThenInclude(p => p.Currency)
                                                           .Include(re => re.Product)
@@ -110,12 +108,11 @@ namespace Swapy.DAL.Repositories
                                                                                        int? roomsMax,
                                                                                        List<string> realEstateTypesId,
                                                                                        bool? sortByPrice,
-                                                                                       bool? reverseSort,
-                                                                                       Language language)
+                                                                                       bool? reverseSort)
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
 
-            List<SpecificationResponseDTO<string>> sequenceOfSubcategories = subcategoryId == null ? new() : (await _subcategoryRepository.GetSequenceOfSubcategories(subcategoryId, language)).ToList();
+            List<SpecificationResponseDTO<string>> sequenceOfSubcategories = subcategoryId == null ? new() : (await _subcategoryRepository.GetSequenceOfSubcategories(subcategoryId)).ToList();
 
             var query = _context.RealEstateAttributes.Include(re => re.Product)
                                                         .ThenInclude(p => p.Currency)
@@ -148,7 +145,6 @@ namespace Swapy.DAL.Repositories
                     .ThenInclude(p => p.Subcategory)
                  .Include(a => a.Product)
                     .ThenInclude(p => p.City)
-                        .ThenInclude(c => c.Names)
                  .Include(a => a.Product)
                         .ThenInclude(p => p.User)
                 .ToListAsync();
@@ -172,7 +168,7 @@ namespace Swapy.DAL.Repositories
                 Id = x.ProductId,
                 Title = x.Product.Title,
                 Price = x.Product.Price,
-                City = x.Product.City.Names.FirstOrDefault(l => l.Language == language).Value,
+                City = x.Product.City.Name,
                 Currency = x.Product.Currency.Name,
                 CurrencySymbol = x.Product.Currency.Symbol,
                 DateTime = x.Product.DateTime,

@@ -1,14 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Interfaces;
-using Swapy.BLL.Services;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
-using System.Collections.Generic;
-using System.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Swapy.DAL.Repositories
 {
@@ -75,7 +71,6 @@ namespace Swapy.DAL.Repositories
             var item = await _context.Products.Where(a => a.Id.Equals(id))
                                               .Include(p => p.Images)
                                               .Include(p => p.City)
-                                                .ThenInclude(c => c.Names)
                                               .Include(p => p.Currency)
                                               .Include(p => p.Subcategory)
                                               .FirstOrDefaultAsync();
@@ -88,7 +83,6 @@ namespace Swapy.DAL.Repositories
         {
             var item = await _context.Products.Where(a => a.Id.Equals(id))
                                     .Include(p => p.Subcategory)
-                                        .ThenInclude(c => c.Names)
                                     .Select(p => new SpecificationResponseDTO<CategoryType>(p.CategoryId, p.Subcategory.Type))
                                     .FirstOrDefaultAsync();
 
@@ -121,8 +115,7 @@ namespace Swapy.DAL.Repositories
                                                                                        string otherUserId,
                                                                                        bool? isDisable,
                                                                                        bool? sortByPrice,
-                                                                                       bool? reverseSort,
-                                                                                       Language language)
+                                                                                       bool? reverseSort)
         {
             if (page < 1 || pageSize < 1) throw new InvalidPageNumberException($"Page and page size parameters must be greater than one.");
 
@@ -130,7 +123,7 @@ namespace Swapy.DAL.Repositories
 
             if (isDisableResult && (string.IsNullOrEmpty(userId) && string.IsNullOrEmpty(otherUserId))) throw new NoAccessException("No access to get disabled products");
 
-            List<SpecificationResponseDTO<string>> sequenceOfSubcategories = subcategoryId == null ? new() :(await _subcategoryRepository.GetSequenceOfSubcategories(subcategoryId, language)).ToList();
+            List<SpecificationResponseDTO<string>> sequenceOfSubcategories = subcategoryId == null ? new() :(await _subcategoryRepository.GetSequenceOfSubcategories(subcategoryId)).ToList();
 
             var query = _context.Products.Include(p => p.Currency)
                                          .AsQueryable();
@@ -147,7 +140,6 @@ namespace Swapy.DAL.Repositories
                                     .Include(p => p.Images)
                                     .Include(p => p.Subcategory)
                                     .Include(p => p.City)
-                                        .ThenInclude(c => c.Names)
                                     .Include(p => p.User)
                                     .ToListAsync();
 
@@ -169,7 +161,7 @@ namespace Swapy.DAL.Repositories
                 Id = x.Id,
                 Title = x.Title,
                 Price = x.Price,
-                City = x.City.Names.FirstOrDefault(l => l.Language == language).Value,
+                City = x.City.Name,
                 Currency = x.Currency.Name,
                 CurrencySymbol = x.Currency.Symbol,
                 DateTime = x.DateTime,
@@ -199,8 +191,7 @@ namespace Swapy.DAL.Repositories
                                                                                decimal? priceMax,
                                                                                string categoryId,
                                                                                string subcategoryId,
-                                                                               string cityId,
-                                                                               Language language)
+                                                                               string cityId)
         {
             if (page < 1 || pageSize < 1) throw new InvalidPageNumberException($"Page and page size parameters must be greater than one.");
 
@@ -224,7 +215,6 @@ namespace Swapy.DAL.Repositories
                                          .Include(p => p.Images)
                                          .Include(p => p.Subcategory)
                                          .Include(p => p.City)
-                                            .ThenInclude(c => c.Names)
                                          .Include(p => p.User)
                                          .ToListAsync();
 
@@ -243,7 +233,7 @@ namespace Swapy.DAL.Repositories
                                          Id = x.Id,
                                          Title = x.Title,
                                          Price = x.Price,
-                                         City = x.City.Names.FirstOrDefault(l => l.Language == language).Value,
+                                         City = x.City.Name,
                                          Currency = x.Currency.Name,
                                          CurrencySymbol = x.Currency.Symbol,
                                          DateTime = x.DateTime,

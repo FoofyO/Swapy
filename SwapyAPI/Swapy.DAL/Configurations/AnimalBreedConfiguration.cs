@@ -12,15 +12,16 @@ namespace Swapy.DAL.Configurations
             builder.HasKey(a => a.Id);
 
             builder.Property(a => a.Id).IsRequired();
-             
+
+            builder.Property(a => a.Name)
+                   .HasColumnType("NVARCHAR(128)")
+                   .HasMaxLength(128)
+                   .IsRequired();
+
             builder.HasOne(a => a.AnimalType)
                    .WithMany(s => s.AnimalBreeds)
                    .HasForeignKey(a => a.AnimalTypeId)
                    .IsRequired();
-
-            builder.HasMany(a => a.Names)
-                   .WithOne()
-                   .IsRequired(false);
 
             builder.HasMany(a => a.AnimalAttributes)
                    .WithOne(a => a.AnimalBreed)

@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Swapy.Common.Enums;
 
 namespace Swapy.BLL.Domain.Products.Queries
 {
@@ -7,6 +6,5 @@ namespace Swapy.BLL.Domain.Products.Queries
     {
         public string UserId { get; set; }
         public string ProductId { get; set; }
-        public Language Language { get; set; }
     }
 }

@@ -8,10 +8,11 @@ import { ShopDetail } from '../models/shop-detail.interface';
   providedIn: 'root'
 })
 export class ShopApiService {
+  private readonly apiUrl : string = environment.apiUrl;
   private readonly shopsApiUrl : string = environment.shopsApiUrl;
 
   getShopById(id: string): Observable<ShopDetail> {
-    return from(axios.get(`${this.shopsApiUrl}/${id}`)).pipe(
+    return from(axios.get(`${this.apiUrl}/${this.shopsApiUrl}/${id}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const shopDetail: ShopDetail = response.data;
         return shopDetail;

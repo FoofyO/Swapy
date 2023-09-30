@@ -56,6 +56,7 @@ namespace Swapy.DAL.Repositories
                                               Id = c.Id,
                                               Buyer = c.Buyer,
                                               Product = c.Product,
+                                              IsReaded = c.IsReaded,
                                               Messages = c.Messages.OrderByDescending(m => m.DateTime).Take(1).ToList(),
                                           })
                                           .ToListAsync();
@@ -73,6 +74,7 @@ namespace Swapy.DAL.Repositories
                                                 Id = c.Id,
                                                 Buyer = c.Buyer,
                                                 Product = c.Product,
+                                                IsReaded = c.IsReaded,
                                                 Messages = c.Messages.OrderByDescending(m => m.DateTime).Take(1).ToList(),
                                             })
                                             .ToListAsync();
@@ -82,14 +84,16 @@ namespace Swapy.DAL.Repositories
 
         public async Task<Chat> GetByIdDetailAsync(string id)
         {
-            var item = await _context.Chats.Include(c => c.Product)
+            var item = await _context.Chats.Where(c => c.Id.Equals(id))
+                                           .Include(c => c.Product)
                                                 .ThenInclude(p => p.User)
                                            .Include(c => c.Buyer)
+                                            .ThenInclude(b => b.ShopAttribute)
                                            .Include(c => c.Product)
                                                 .ThenInclude(p => p.Images)
                                            .Include(c => c.Messages)
                                                 .ThenInclude(m => m.Sender)
-                                           .FirstOrDefaultAsync(c => c.Id.Equals(id));
+                                           .FirstOrDefaultAsync();
 
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
@@ -119,13 +123,65 @@ namespace Swapy.DAL.Repositories
             return await _context.Chats.Where(c => c.ProductId.Equals(productId) && c.BuyerId.Equals(userId)).FirstOrDefaultAsync();
         }
 
-        public async Task<string> GetChatRecepientIdAsync(string chatId, string senderId)
+        public async Task<User> GetChatRecepientIdAsync(string chatId, string senderId)
+        {
+            var chat = await _context.Chats.Where(c => c.Id.Equals(chatId))
+                                           .Include(c => c.Buyer)
+                                           .Include(c => c.Product)
+                                            .ThenInclude(p => p.User)
+                                                .ThenInclude(u => u.ShopAttribute)
+                                           .FirstOrDefaultAsync();
+
+            return chat.BuyerId == senderId ? chat.Product.User : chat.Buyer;
+        }
+
+        public async Task<bool> TryReadMessage(string userId, string chatId)
         {
             var chat = await _context.Chats.Where(c => c.Id.Equals(chatId))
                                            .Include(c => c.Product)
+                                           .Select(c => new Chat
+                                           {
+                                               Id = c.Id,
+                                               BuyerId = c.BuyerId,
+                                               Product = c.Product,
+                                               Messages = c.Messages.OrderByDescending(m => m.DateTime).Take(1).ToList(),
+                                           })
                                            .FirstOrDefaultAsync();
 
-            return chat.BuyerId == senderId ? chat.Product.UserId : chat.BuyerId;
+            if(chat == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {chatId} id not found");
+
+            if(!chat.BuyerId.Equals(userId) && !chat.Product.UserId.Equals(userId)) throw new NoAccessException($"Invalid UserId");
+
+            return !chat.Messages.FirstOrDefault().SenderId.Equals(userId);
+        }
+
+        public async Task UpdateChatState(string chatId, bool value)
+        {
+            var chat = await GetByIdAsync(chatId);
+            chat.IsReaded = value;
+            await UpdateAsync(chat);
+        }
+
+        public async Task<IEnumerable<Chat>> GetAllChatsAsync(string userId)
+        {
+            var chats = await _context.Products.Where(p => p.UserId.Equals(userId))
+                                          .SelectMany(p => p.Chats)
+                                          .Select(c => new Chat
+                                          {
+                                              Id = c.Id,
+                                              IsReaded = c.IsReaded,
+                                          })
+                                          .ToListAsync();
+
+            chats.AddRange(await _context.Chats.Where(c => c.BuyerId.Equals(userId))
+                                            .Select(c => new Chat
+                                            {
+                                                Id = c.Id,
+                                                IsReaded = c.IsReaded,
+                                            })
+                                            .ToListAsync());
+
+            return chats;
         }
     }
 }

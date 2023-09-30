@@ -72,7 +72,6 @@ using Swapy.BLL.Domain.TVs.Queries;
 using Swapy.BLL.Domain.TVs.QueryHandlers;
 using Swapy.BLL.Domain.Electronics.QueryHandlers;
 using FluentValidation.AspNetCore;
-using Swapy.API.Extensions;
 using Swapy.Common.DTO.Categories.Responses;
 using Swapy.Common.Enums;
 using Microsoft.AspNetCore.Http.Features;
@@ -98,7 +97,6 @@ namespace Swapy.API
             builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Swapy Api", Description = "'Swapy' REST Api", Version = "v1" });
-                options.OperationFilter<AddHeaderOperationFilter>();
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -141,7 +139,7 @@ namespace Swapy.API
             /// </summary>
             builder.Services.AddDbContext<SwapyDbContext>(option =>
             {
-                option.UseSqlServer(builder.Configuration.GetConnectionString("OrxanSQL"));
+                option.UseSqlServer(builder.Configuration.GetConnectionString("AzureSQL"));
             });
 
 
@@ -305,6 +303,7 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<LoginCommand, AuthResponseDTO>, LoginCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<LogoutCommand, Unit>, LogoutCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<PreviewUploadImageCommand, ImageResponseDTO>, PreviewUploadImageCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<ReadChatCommand, bool>, ReadChatCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<RemoveFavoriteProductCommand, Unit>, RemoveFavoriteProductCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<RemoveLikeCommand, Unit>, RemoveLikeCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<RemoveProductCommand, Unit>, RemoveProductCommandHandler>();
@@ -325,6 +324,7 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<UpdateShopCommand, Unit>, UpdateShopCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UpdateTVAttributeCommand, Unit>, UpdateTVAttributeCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UpdateUserCommand, Unit>, UpdateUserCommandHandler>();
+            builder.Services.AddTransient<IRequestHandler<UpdateMessagesStatusCommand, Unit>, UpdateMessagesStatusCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UpdateUserTokenCommand, AuthResponseDTO>, UpdateUserTokenCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UploadBannerCommand, Unit>, UploadBannerCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<UploadImageCommand, Unit>, UploadImageCommandHandler>();
@@ -374,12 +374,6 @@ namespace Swapy.API
 
 
             /// <summary>
-            /// Register Localization Middleware
-            /// </summary>
-            builder.Services.AddTransient<LocalizationMiddleware>();
-
-
-            /// <summary>
             /// Configurations for JWToken
             /// </summary>
             builder.Services.AddAuthentication(options =>
@@ -414,8 +408,6 @@ namespace Swapy.API
             
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseLocalization();
 
             app.UseEndpoints(endpoints =>
             {

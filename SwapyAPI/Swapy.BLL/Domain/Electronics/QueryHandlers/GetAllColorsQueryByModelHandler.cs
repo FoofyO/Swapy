@@ -13,7 +13,7 @@ namespace Swapy.BLL.Domain.Electronics.QueryHandlers
 
         public async Task<IEnumerable<SpecificationResponseDTO<string>>> Handle(GetAllColorsByModelQuery request, CancellationToken cancellationToken)
         { 
-            return await _colorRepository.GetByModelAsync(request.ModelId, request.Language);
+            return await _colorRepository.GetByModelAsync(request.ModelId);
         }
     }
 }

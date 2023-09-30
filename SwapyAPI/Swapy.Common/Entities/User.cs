@@ -18,6 +18,7 @@ namespace Swapy.Common.Entities
         public int ProductsCount { get; set; }
         public int SubscriptionsCount { get; set; }
         public bool IsSubscribed { get; set; }
+        public bool HasUnreadMessages { get; set; }
 
         public ICollection<Like> Likes { get; set; } = new List<Like>();
         public ICollection<Chat> ChatsAsBuyer { get; set; } = new List<Chat>();

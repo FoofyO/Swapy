@@ -45,12 +45,11 @@ namespace Swapy.DAL.Repositories
             return await _context.AnimalBreeds.ToListAsync();
         }
 
-        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetByAnimalTypeAsync(string animalType, Language language)
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetByAnimalTypeAsync(string animalType)
         {
             return _context.AnimalBreeds.Where(x => animalType == null || x.AnimalTypeId.Equals(animalType))
-                                        .Include(s => s.Names)
                                         .AsEnumerable()
-                                        .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Names.FirstOrDefault(l => l.Language == language).Value))
+                                        .Select(s => new SpecificationResponseDTO<string>(s.Id, s.Name))
                                         .OrderBy(s => s.Value)
                                         .ToList();
         }

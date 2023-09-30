@@ -23,8 +23,7 @@ namespace Swapy.DAL.Interfaces
                                                                           string otherUserId,
                                                                           bool? isDisable,
                                                                           bool? sortByPrice,
-                                                                          bool? reverseSort,
-                                                                          Language language);
+                                                                          bool? reverseSort);
         Task<ProductsResponseDTO<ProductResponseDTO>> GetSimilarProductsById(int page,
                                                                                int pageSize,
                                                                                string productId,
@@ -35,7 +34,6 @@ namespace Swapy.DAL.Interfaces
                                                                                decimal? priceMax,
                                                                                string categoryId,
                                                                                string subcategoryId,
-                                                                               string cityId,
-                                                                               Language language);
+                                                                               string cityId);
     }
 }

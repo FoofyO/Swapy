@@ -1,16 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Swapy.API.Validators;
 using Swapy.BLL.Domain.Products.Commands;
 using Swapy.BLL.Domain.Products.Queries;
-using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Products.Requests.Commands;
 using Swapy.Common.DTO.Products.Requests.Queries;
-using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using System.Security.Claims;
-using System.Text;
 
 namespace Swapy.API.Controllers
 {
@@ -47,7 +43,6 @@ namespace Swapy.API.Controllers
         /// Products
         /// </summary>
         [HttpGet]
-        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
@@ -73,7 +68,6 @@ namespace Swapy.API.Controllers
                     OtherUserId = dto.OtherUserId,
                     SortByPrice = dto.SortByPrice,
                     ReverseSort = dto.ReverseSort,
-                    Language = (Language)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -102,7 +96,6 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("GetSimilarProductsByProductId")]
-        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -126,7 +119,6 @@ namespace Swapy.API.Controllers
                     CategoryId = dto.CategoryId,
                     SubcategoryId = dto.SubcategoryId,
                     CityId = dto.CityId,
-                    Language = (Language)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -374,7 +366,6 @@ namespace Swapy.API.Controllers
 
         [HttpGet("FavoriteProducts")]
         [Authorize]
-        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -400,7 +391,6 @@ namespace Swapy.API.Controllers
                     SortByPrice = dto.SortByPrice,
                     ReverseSort = dto.ReverseSort,
                     ProductId = dto.ProductId,
-                    Language = (Language)HttpContext.Items["Language"]
                 };
 
                 var result = await _mediator.Send(query);
@@ -429,14 +419,13 @@ namespace Swapy.API.Controllers
         /// Product Attributes
         /// </summary>
         [HttpGet("Cities")]
-        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllCitiesAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllCitiesQuery() { Language = (Language)HttpContext.Items["Language"] });
+                var result = await _mediator.Send(new GetAllCitiesQuery());
                 return Ok(result);
             }
             catch (Exception ex)
@@ -462,14 +451,13 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("Colors")]
-        [Localize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllColorsAsync()
         {
             try
             {
-                var result = await _mediator.Send(new GetAllColorsQuery() { Language = (Language)HttpContext.Items["Language"] });
+                var result = await _mediator.Send(new GetAllColorsQuery());
                 return Ok(result);
             }
             catch (Exception ex)

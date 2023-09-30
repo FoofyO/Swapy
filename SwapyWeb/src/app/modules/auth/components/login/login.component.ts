@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpStatusCode } from '@angular/common/http';
 import { SpinnerService } from 'src/app/shared/spinner/spinner.service';
+import { ChatHubService } from 'src/app/core/services/chat-hub.service';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +26,7 @@ export class LoginComponent {
   get password() { return this.loginForm.get('password'); }
   get rememberMe() { return this.loginForm.get('rememberMe'); }
   
-  constructor(private authFacade: AuthFacadeService, private router: Router, private spinnerService: SpinnerService) {
+  constructor(private chatHub: ChatHubService, private authFacade: AuthFacadeService, private router: Router, private spinnerService: SpinnerService) {
     this.loginForm = new FormGroup({
       emailOrPhone: new FormControl(null, [Validators.required, Validators.pattern('^([\\w\\-\\.]+@[\\w-]+\\.[a-z]{2,4})|(\\+\\d{1,3}\\d{1,3}\\d{7})$')]),
       password: new FormControl(null, [Validators.required, Validators.pattern('^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\\w\\d\\s:])([^\\s]){8,32}$')]),
@@ -42,6 +43,8 @@ export class LoginComponent {
         await this.authFacade.login(this.loginForm.value);
         this.router.navigate(["/"]);
         
+        if(!this.chatHub.isConnected()) this.chatHub.configureHubConnection();
+
         this.spinnerService.changeSpinnerState(false);
       }
     } catch(error : any) {

@@ -1,7 +1,5 @@
-﻿using Swapy.Common.DTO.Products.Responses;
-using Swapy.Common.DTO.RealEstates.Responses;
+﻿using Swapy.Common.DTO.RealEstates.Responses;
 using Swapy.Common.Entities;
-using Swapy.Common.Enums;
 
 namespace Swapy.DAL.Interfaces
 {
@@ -26,7 +24,6 @@ namespace Swapy.DAL.Interfaces
                                                                           int? roomsMax,
                                                                           List<string> realEstateTypesId,
                                                                           bool? sortByPrice,
-                                                                          bool? reverseSort,
-                                                                          Language language);
+                                                                          bool? reverseSort);
     }
 }

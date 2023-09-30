@@ -14,7 +14,8 @@ import { UserType } from '../enums/user-type.enum';
 })
 export class AxiosInterceptorService {
     private axiosInstance: AxiosInstance;
-    private readonly apiUrl: string = environment.authApiUrl;
+    private readonly apiUrl: string = environment.apiUrl;
+    private readonly authpiUrl: string = environment.authApiUrl;
 
     constructor(private localStorage: LocalStorageService, private sessionStorage: SessionStorageService, public router: Router) {
         this.axiosInstance = axios.create();
@@ -23,7 +24,6 @@ export class AxiosInterceptorService {
             async (config: any) => {
                 config.ContentType = "application/json";
                 config = await this.addAccessToken(config);
-                config = this.addLocalization(config);
                 return config;
             },
             (error) => { return Promise.reject(error); }
@@ -39,14 +39,6 @@ export class AxiosInterceptorService {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
 
-        return config;
-    }
-
-    private addLocalization(config: AxiosRequestConfig): AxiosRequestConfig {
-        if (this.localStorage && this.localStorage.localization) {
-            if (!config.headers) config.headers = {};
-            config.headers['Localization'] = this.localStorage.localization;
-        }
         return config;
     }
 
@@ -107,7 +99,8 @@ export class AxiosInterceptorService {
                     type: response.data.type,
                     userId: response.data.userId,
                     accessToken: response.data.accessToken,
-                    refreshToken: response.data.refreshToken
+                    refreshToken: response.data.refreshToken,
+                    hasUnreadMessages: response.data.hasUnreadMessages
                 })),
                 catchError((error) => {
                     if (error.response?.status === HttpStatusCode.Unauthorized) this.logout();
@@ -135,7 +128,7 @@ export class AxiosInterceptorService {
             }
         }
         
-        const emptyResponse: AuthResponse = { type: UserType.Empty, userId: "", accessToken: "", refreshToken: "" };
+        const emptyResponse: AuthResponse = { type: UserType.Empty, userId: "", accessToken: "", refreshToken: "", hasUnreadMessages: false };
         return of(emptyResponse);
     }
 
