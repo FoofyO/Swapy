@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AxiosError, AxiosResponse } from 'axios';
 import { Observable, catchError, from, map } from 'rxjs';
-import { Specification } from 'src/app/core/models/specification';
 import { AxiosInterceptorService } from 'src/app/core/services/axios-interceptor.service';
 import { environment } from 'src/environments/environment';
 import { ChatListResponseDTO } from './models/chat-list-response-dto';
 import { DetailChatResponseDTO } from './models/detail-chat-response-dto';
-import { CategoryType } from 'src/app/core/enums/category-type.enum';
 import { ChatType } from './enums/chat-type.enum';
 
 @Injectable({

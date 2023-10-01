@@ -3,7 +3,6 @@
     public class ClothesBrandView
     {
         public string Id { get; set; }
-        public string Name { get; set; }
         public string ClothesBrandId { get; set; }
         public ClothesBrand ClothesBrand { get; set; }
         public string ClothesViewId { get; set; }
@@ -13,9 +12,8 @@
 
         public ClothesBrandView() => Id = Guid.NewGuid().ToString();
 
-        public ClothesBrandView(string name, string clothesBrandId, string clothesViewId) : this()
+        public ClothesBrandView(string clothesBrandId, string clothesViewId) : this()
         {  
-            Name = name; 
             ClothesBrandId = clothesBrandId;
             ClothesViewId = clothesViewId;
         } 
