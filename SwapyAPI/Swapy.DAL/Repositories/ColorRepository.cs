@@ -43,6 +43,7 @@ namespace Swapy.DAL.Repositories
         {
             return await _context.Colors.ToListAsync();
         }
+
         public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllSpecificationAsync()
         {
             return _context.Colors.AsEnumerable()

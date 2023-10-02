@@ -2,6 +2,7 @@
 using Swapy.BLL.Domain.Items.Queries;
 using Swapy.Common.DTO.Items.Responses;
 using Swapy.Common.DTO.Products.Responses;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Items.QueryHandlers
@@ -29,9 +30,9 @@ namespace Swapy.BLL.Domain.Items.QueryHandlers
             {
                 Id = itemAttribute.Id,
                 City = itemAttribute.Product.City.Name,
-                CityId = itemAttribute.Product.City.Id,
+                CityId = itemAttribute.Product.CityId,
                 Currency = itemAttribute.Product.Currency.Name,
-                CurrencyId = itemAttribute.Product.Currency.Id,
+                CurrencyId = itemAttribute.Product.CurrencyId,
                 CurrencySymbol = itemAttribute.Product.Currency.Symbol,
                 UserId = itemAttribute.Product.UserId,
                 FirstName = itemAttribute.Product.User.FirstName,
@@ -40,17 +41,17 @@ namespace Swapy.BLL.Domain.Items.QueryHandlers
                 ShopId = itemAttribute.Product.User.ShopAttributeId ?? string.Empty,
                 Shop = itemAttribute.Product.User.ShopAttribute?.ShopName ?? string.Empty,
                 UserType = itemAttribute.Product.User.Type,
-                ProductId = itemAttribute.Product.Id,
+                ProductId = itemAttribute.ProductId,
                 IsDisable = itemAttribute.Product.IsDisable,
                 Title = itemAttribute.Product.Title,
                 Views = itemAttribute.Product.Views,
                 Price = itemAttribute.Product.Price,
-                Description = itemAttribute.Product.Description,
+                Description = itemAttribute.Product?.Description,
                 DateTime = itemAttribute.Product.DateTime,
                 Categories = categories,
                 Images = itemAttribute.Product.Images.Select(i => i.Image).ToList(),
                 IsNew = itemAttribute.IsNew,
-                IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(itemAttribute.Product.Id, request.UserId)
+                IsFavorite = request.UserId == null ? false : await _favoriteProductRepository.CheckProductOnFavorite(itemAttribute.ProductId, request.UserId)
             };
             return result;
         }

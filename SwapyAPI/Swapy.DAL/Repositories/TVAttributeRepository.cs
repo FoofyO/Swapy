@@ -69,10 +69,11 @@ namespace Swapy.DAL.Repositories
 
         public async Task<TVAttribute> GetDetailByIdAsync(string productId)
         {
-            var item = await _context.TVAttributes.Include(tv => tv.Product)
+            var item = await _context.TVAttributes.Where(a => a.ProductId.Equals(productId))
+                                                  .Include(tv => tv.Product)
                                                     .ThenInclude(p => p.Images)
-                                                   .Include(x => x.Product)
-                                                    .ThenInclude(x => x.Category)
+                                                  .Include(tv => tv.Product)
+                                                    .ThenInclude(p => p.Category)
                                                   .Include(tv => tv.Product)
                                                     .ThenInclude(p => p.City)
                                                   .Include(tv => tv.Product)
@@ -86,7 +87,7 @@ namespace Swapy.DAL.Repositories
                                                   .Include(tv => tv.ScreenResolution)
                                                   .Include(tv => tv.ScreenDiagonal)
                                                   .Include(tv => tv.TVType)
-                                                  .FirstOrDefaultAsync(a => a.ProductId.Equals(productId));
+                                                  .FirstOrDefaultAsync();
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
             return item;
@@ -174,7 +175,7 @@ namespace Swapy.DAL.Repositories
 
             foreach (var item in result)
             {
-                item.IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(item.Id, userId);
+                item.IsFavorite = userId == null ? false : await _favoriteProductRepository.CheckProductOnFavorite(item.Id, userId);
             }
 
             return new ProductsResponseDTO<ProductResponseDTO>(result, count, (int)Math.Ceiling(Convert.ToDouble(count) / pageSize), maxPrice, minPrice);

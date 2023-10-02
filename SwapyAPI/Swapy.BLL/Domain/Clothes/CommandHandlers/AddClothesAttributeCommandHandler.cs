@@ -6,6 +6,7 @@ using Swapy.BLL.Services;
 using Swapy.Common.Entities;
 using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
+using System.Runtime.InteropServices;
 
 namespace Swapy.BLL.Domain.Clothes.CommandHandlers
 {
@@ -20,12 +21,12 @@ namespace Swapy.BLL.Domain.Clothes.CommandHandlers
 
         public AddClothesAttributeCommandHandler(UserManager<User> userManager, IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IClothesAttributeRepository clothesAttributeRepository)
         {
+            _userManager = userManager;
             _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
             _clothesAttributeRepository = clothesAttributeRepository;
-            _userManager = userManager;
         }
 
         public async Task<ClothesAttribute> Handle(AddClothesAttributeCommand request, CancellationToken cancellationToken)
@@ -37,6 +38,7 @@ namespace Swapy.BLL.Domain.Clothes.CommandHandlers
             await _productRepository.CreateAsync(product);
 
             ClothesAttribute clothesAttribute = new ClothesAttribute(request.IsNew, request.ClothesSeasonId, request.ClothesSizeId, request.ClothesBrandViewId, product.Id);
+            product.ClothesAttributeId = clothesAttribute.Id;
             await _clothesAttributeRepository.CreateAsync(clothesAttribute);
 
             if (request.Files.Count > 0) await _imageService.UploadProductImagesAsync(request.Files, product.Id);

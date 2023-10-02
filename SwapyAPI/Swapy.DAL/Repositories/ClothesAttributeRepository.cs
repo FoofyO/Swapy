@@ -158,7 +158,7 @@ namespace Swapy.DAL.Repositories
 
             foreach (var item in result)
             {
-                item.IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(item.Id, userId);
+                item.IsFavorite = userId == null ? false : await _favoriteProductRepository.CheckProductOnFavorite(item.Id, userId);
             }
 
             return new ProductsResponseDTO<ProductResponseDTO>(result, count, (int)Math.Ceiling(Convert.ToDouble(count) / pageSize), maxPrice, minPrice);
@@ -168,28 +168,28 @@ namespace Swapy.DAL.Repositories
         {
             var item = await _context.ClothesAttributes.Where(a => a.ProductId.Equals(productId))
                                                        .Include(c => c.Product)
-                                                       // .ThenInclude(p => p.Images)
-                                                       //.Include(x => x.Product)
-                                                       // .ThenInclude(x => x.Category)
-                                                       //.Include(c => c.Product)
-                                                       // .ThenInclude(p => p.City)
-                                                       //.Include(c => c.Product)
-                                                       // .ThenInclude(p => p.Currency)
-                                                       //.Include(a => a.Product)
-                                                       // .ThenInclude(p => p.User)
-                                                       //     .ThenInclude(u => u.ShopAttribute)
-                                                       //.Include(c => c.ClothesSize)
-                                                       //.Include(c => c.ClothesSeason)
-                                                       //.Include(c => c.ClothesBrandView)
-                                                       // .ThenInclude(cbv => cbv.ClothesBrand)
-                                                       //.Include(c => c.ClothesBrandView)
-                                                       // .ThenInclude(cbv => cbv.ClothesView)
-                                                       //     .ThenInclude(cv => cv.ClothesType)
-                                                       //.Include(c => c.ClothesBrandView)
-                                                       // .ThenInclude(cbv => cbv.ClothesView)
-                                                       //     .ThenInclude(cv => cv.Gender)
-                                                       // .Include(c => c.ClothesBrandView)
-                                                       //     .ThenInclude(cbv => cbv.ClothesView)
+                                                        .ThenInclude(p => p.Images)
+                                                       .Include(x => x.Product)
+                                                        .ThenInclude(x => x.Category)
+                                                       .Include(c => c.Product)
+                                                        .ThenInclude(p => p.City)
+                                                       .Include(c => c.Product)
+                                                        .ThenInclude(p => p.Currency)
+                                                       .Include(a => a.Product)
+                                                        .ThenInclude(p => p.User)
+                                                            .ThenInclude(u => u.ShopAttribute)
+                                                       .Include(c => c.ClothesSize)
+                                                       .Include(c => c.ClothesSeason)
+                                                       .Include(c => c.ClothesBrandView)
+                                                        .ThenInclude(cbv => cbv.ClothesBrand)
+                                                       .Include(c => c.ClothesBrandView)
+                                                        .ThenInclude(cbv => cbv.ClothesView)
+                                                            .ThenInclude(cv => cv.ClothesType)
+                                                       .Include(c => c.ClothesBrandView)
+                                                        .ThenInclude(cbv => cbv.ClothesView)
+                                                            .ThenInclude(cv => cv.Gender)
+                                                        .Include(c => c.ClothesBrandView)
+                                                            .ThenInclude(cbv => cbv.ClothesView)
                                                        .FirstOrDefaultAsync();
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");

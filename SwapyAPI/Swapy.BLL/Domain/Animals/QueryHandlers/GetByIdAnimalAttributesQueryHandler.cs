@@ -2,6 +2,7 @@
 using Swapy.BLL.Domain.Animals.Queries;
 using Swapy.Common.DTO.Animals.Responses;
 using Swapy.Common.DTO.Products.Responses;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Animals.QueryHandlers
@@ -29,24 +30,24 @@ namespace Swapy.BLL.Domain.Animals.QueryHandlers
             {
                 Id = animalAttribute.Id,
                 City = animalAttribute.Product.City.Name,
-                CityId = animalAttribute.Product.City.Id,
+                CityId = animalAttribute.Product.CityId,
                 Currency = animalAttribute.Product.Currency.Name,
-                CurrencyId = animalAttribute.Product.Currency.Id,
+                CurrencyId = animalAttribute.Product.CurrencyId,
                 CurrencySymbol = animalAttribute.Product.Currency.Symbol,
                 UserId = animalAttribute.Product.UserId,
                 FirstName = animalAttribute.Product.User.FirstName,
                 LastName = animalAttribute.Product.User.LastName,
                 PhoneNumber = animalAttribute.Product.User.PhoneNumber,
-                ShopId = animalAttribute.Product.User.ShopAttributeId,
-                Shop = animalAttribute.Product.User.ShopAttribute.ShopName,
+                ShopId = animalAttribute.Product.User.ShopAttributeId ?? string.Empty,
+                Shop = animalAttribute.Product.User.ShopAttribute?.ShopName ?? string.Empty,
                 UserType = animalAttribute.Product.User.Type,
-                ProductId = animalAttribute.Product.Id,
+                ProductId = animalAttribute.ProductId,
                 Title = animalAttribute.Product.Title,
                 Views = animalAttribute.Product.Views,
                 Price = animalAttribute.Product.Price,
-                Description = animalAttribute.Product.Description,
+                Description = animalAttribute.Product?.Description,
                 DateTime = animalAttribute.Product.DateTime,
-                IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(animalAttribute.Product.Id, request.UserId),
+                IsFavorite = request.UserId == null ? false : await _favoriteProductRepository.CheckProductOnFavorite(animalAttribute.ProductId, request.UserId),
                 Categories = categories,
                 IsDisable = animalAttribute.Product.IsDisable,
                 Images = animalAttribute.Product.Images.Select(i => i.Image).ToList(),

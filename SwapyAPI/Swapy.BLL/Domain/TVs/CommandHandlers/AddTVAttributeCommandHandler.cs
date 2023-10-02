@@ -20,12 +20,12 @@ namespace Swapy.BLL.Domain.TVs.CommandHandlers
 
         public AddTVAttributeCommandHandler(UserManager<User> userManager, IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ITVAttributeRepository tvAttributeRepository, ISubcategoryRepository subcategoryRepository)
         {
+            _userManager = userManager;
             _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _tvAttributeRepository = tvAttributeRepository;
             _subcategoryRepository = subcategoryRepository;
-            _userManager = userManager;
         }
 
         public async Task<TVAttribute> Handle(AddTVAttributeCommand request, CancellationToken cancellationToken)
@@ -37,6 +37,7 @@ namespace Swapy.BLL.Domain.TVs.CommandHandlers
             await _productRepository.CreateAsync(product);
 
             TVAttribute tvAttribute = new TVAttribute(request.IsNew, request.IsSmart, request.TVTypeId, request.TVBrandId, request.ScreenResolutionId, request.ScreenDiagonalId, product.Id);
+            product.TVAttributeId = tvAttribute.Id;
             await _tvAttributeRepository.CreateAsync(tvAttribute);
 
             if (request.Files.Count > 0) await _imageService.UploadProductImagesAsync(request.Files, product.Id);

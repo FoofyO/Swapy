@@ -70,9 +70,10 @@ namespace Swapy.DAL.Repositories
 
         public async Task<RealEstateAttribute> GetDetailByIdAsync(string productId)
         {
-            var item = await _context.RealEstateAttributes.Include(re => re.Product)
+            var item = await _context.RealEstateAttributes.Where(a => a.ProductId.Equals(productId))
+                                                          .Include(re => re.Product)
                                                             .ThenInclude(p => p.Images)
-                                                           .Include(x => x.Product)
+                                                          .Include(x => x.Product)
                                                             .ThenInclude(x => x.Category)
                                                           .Include(re => re.Product)
                                                             .ThenInclude(p => p.City)
@@ -84,7 +85,7 @@ namespace Swapy.DAL.Repositories
                                                             .ThenInclude(p => p.User)
                                                                 .ThenInclude(u => u.ShopAttribute)
                                                           .Include(re => re.RealEstateType)
-                                                          .FirstOrDefaultAsync(a => a.ProductId.Equals(productId));
+                                                          .FirstOrDefaultAsync();
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");
             return item;
@@ -181,7 +182,7 @@ namespace Swapy.DAL.Repositories
 
             foreach (var item in result)
             {
-                item.IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(item.Id, userId);
+                item.IsFavorite = userId == null ? false : await _favoriteProductRepository.CheckProductOnFavorite(item.Id, userId);
             }
 
             return new RealEstateAttributesResponseDTO(result, count, (int)Math.Ceiling(Convert.ToDouble(count) / pageSize), maxPrice, minPrice, maxArea, minArea, maxRooms, minRooms);

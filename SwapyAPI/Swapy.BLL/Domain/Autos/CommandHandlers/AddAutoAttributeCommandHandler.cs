@@ -20,12 +20,12 @@ namespace Swapy.BLL.Domain.Autos.CommandHandlers
 
         public AddAutoAttributeCommandHandler(UserManager<User> userManager, IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IAutoAttributeRepository autoAttributeRepository)
         {
+            _userManager = userManager;
             _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
             _autoAttributeRepository = autoAttributeRepository;
-            _userManager = userManager;
         }
 
         public async Task<AutoAttribute> Handle(AddAutoAttributeCommand request, CancellationToken cancellationToken)
@@ -37,6 +37,7 @@ namespace Swapy.BLL.Domain.Autos.CommandHandlers
             await _productRepository.CreateAsync(product);
 
             AutoAttribute autoAttribute = new AutoAttribute(request.Miliage, request.EngineCapacity, request.ReleaseYear, request.IsNew, request.FuelTypeId, request.AutoColorId, request.TransmissionTypeId, request.AutoModelId, product.Id);
+            product.AutoAttributeId = autoAttribute.Id;
             await _autoAttributeRepository.CreateAsync(autoAttribute);
 
             if (request.Files.Count > 0) await _imageService.UploadProductImagesAsync(request.Files, product.Id);

@@ -20,12 +20,12 @@ namespace Swapy.BLL.Domain.Animals.CommandHandlers
 
         public AddAnimalAttributeCommandHandler(UserManager<User> userManager, IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IAnimalAttributeRepository animalAttributeRepository)
         {
+            _userManager = userManager;
             _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
             _animalAttributeRepository = animalAttributeRepository;
-            _userManager = userManager;
         }
 
         public async Task<AnimalAttribute> Handle(AddAnimalAttributeCommand request, CancellationToken cancellationToken)
@@ -37,6 +37,7 @@ namespace Swapy.BLL.Domain.Animals.CommandHandlers
             await _productRepository.CreateAsync(product);
 
             AnimalAttribute animalAttribute = new AnimalAttribute(request.AnimalBreedId, product.Id);
+            product.AnimalAttributeId = animalAttribute.Id;
             await _animalAttributeRepository.CreateAsync(animalAttribute);
 
             if (request.Files.Count > 0) await _imageService.UploadProductImagesAsync(request.Files, product.Id);

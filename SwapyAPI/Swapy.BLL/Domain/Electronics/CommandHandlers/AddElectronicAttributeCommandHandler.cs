@@ -20,12 +20,12 @@ namespace Swapy.BLL.Domain.Electronics.CommandHandlers
 
         public AddElectronicAttributeCommandHandler(UserManager<User> userManager, IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IElectronicAttributeRepository electronicAttributeRepository)
         {
+            _userManager = userManager;
             _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
             _electronicAttributeRepository = electronicAttributeRepository;
-            _userManager = userManager;
         }
 
         public async Task<ElectronicAttribute> Handle(AddElectronicAttributeCommand request, CancellationToken cancellationToken)
@@ -37,6 +37,7 @@ namespace Swapy.BLL.Domain.Electronics.CommandHandlers
             await _productRepository.CreateAsync(product);
 
             ElectronicAttribute electronicAttribute = new ElectronicAttribute(request.IsNew, request.MemoryModelId, request.ModelColorId, product.Id);
+            product.ElectronicAttributeId = electronicAttribute.Id;
             await _electronicAttributeRepository.CreateAsync(electronicAttribute);
 
             if (request.Files.Count > 0) await _imageService.UploadProductImagesAsync(request.Files, product.Id);

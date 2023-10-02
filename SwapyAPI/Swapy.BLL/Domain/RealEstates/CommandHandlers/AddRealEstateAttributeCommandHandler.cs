@@ -21,12 +21,12 @@ namespace Swapy.BLL.Domain.RealEstates.CommandHandlers
 
         public AddRealEstateAttributeCommandHandler(UserManager<User> userManager, IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IRealEstateAttributeRepository realEstateAttributeRepository)
         {
+            _userManager = userManager;
             _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
             _realEstateAttributeRepository = realEstateAttributeRepository;
-            _userManager = userManager;
         }
 
         public async Task<RealEstateAttribute> Handle(AddRealEstateAttributeCommand request, CancellationToken cancellationToken)
@@ -37,8 +37,9 @@ namespace Swapy.BLL.Domain.RealEstates.CommandHandlers
             Product product = new Product(request.Title, request.Description, request.Price, request.UserId, request.CurrencyId, request.CategoryId, request.SubcategoryId, request.CityId);
             await _productRepository.CreateAsync(product);
 
-            RealEstateAttribute animalAttribute = new RealEstateAttribute(request.Area, request.Rooms, request.IsRent, request.RealEstateTypeId, product.Id);
-            await _realEstateAttributeRepository.CreateAsync(animalAttribute);
+            RealEstateAttribute realEstatesAttribute = new RealEstateAttribute(request.Area, request.Rooms, request.IsRent, request.RealEstateTypeId, product.Id);
+            product.RealEstateAttributeId = realEstatesAttribute.Id;
+            await _realEstateAttributeRepository.CreateAsync(realEstatesAttribute);
 
             if (request.Files.Count > 0) await _imageService.UploadProductImagesAsync(request.Files, product.Id);
             
@@ -59,7 +60,7 @@ namespace Swapy.BLL.Domain.RealEstates.CommandHandlers
             user.ProductsCount++;
             await _userManager.UpdateAsync(user);
 
-            return animalAttribute;
+            return realEstatesAttribute;
         }
     }
 }
