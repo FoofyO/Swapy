@@ -1,7 +1,7 @@
 <div class="header-account">
     <button *ngIf="authFacade.isAuthenticated()" title="Chats" class="header-link" (click)="transferToChats()">
         <i class="fa-solid fa-message">
-            <div class="new-message-icon"></div>
+            <div class="new-message-icon" *ngIf="hasUnreadMessages"></div>
         </i>
     </button>
 

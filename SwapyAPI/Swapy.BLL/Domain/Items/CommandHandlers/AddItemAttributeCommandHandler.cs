@@ -20,12 +20,12 @@ namespace Swapy.BLL.Domain.Items.CommandHandlers
 
         public AddItemAttributeCommandHandler(UserManager<User> userManager, IImageService imageService, IProductRepository productRepository, INotificationService notificationService, ISubcategoryRepository subcategoryRepository, IItemAttributeRepository itemAttributeRepository)
         {
+            _userManager = userManager;
             _imageService = imageService;
             _productRepository = productRepository;
             _notificationService = notificationService;
             _subcategoryRepository = subcategoryRepository;
             _itemAttributeRepository = itemAttributeRepository;
-            _userManager = userManager;
         }
 
         public async Task<ItemAttribute> Handle(AddItemAttributeCommand request, CancellationToken cancellationToken)
@@ -37,6 +37,7 @@ namespace Swapy.BLL.Domain.Items.CommandHandlers
             await _productRepository.CreateAsync(product);
 
             ItemAttribute itemAttribute = new ItemAttribute(request.IsNew, request.ItemTypeId, product.Id);
+            product.ItemAttributeId = itemAttribute.Id;
             await _itemAttributeRepository.CreateAsync(itemAttribute);
 
             if (request.Files.Count > 0) await _imageService.UploadProductImagesAsync(request.Files, product.Id);

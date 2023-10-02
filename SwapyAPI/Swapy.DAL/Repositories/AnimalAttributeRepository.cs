@@ -146,7 +146,7 @@ namespace Swapy.DAL.Repositories
 
             foreach (var item in result)
             {
-                item.IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(item.Id, userId);
+                item.IsFavorite = userId == null ? false : await _favoriteProductRepository.CheckProductOnFavorite(item.Id, userId);
             }
 
             return new ProductsResponseDTO<ProductResponseDTO>(result, count, (int)Math.Ceiling(Convert.ToDouble(count) / pageSize), maxPrice, minPrice);
@@ -167,6 +167,7 @@ namespace Swapy.DAL.Repositories
                                                         .ThenInclude(p => p.User)
                                                             .ThenInclude(u => u.ShopAttribute)
                                                       .Include(a => a.AnimalBreed)
+                                                        .ThenInclude(ab => ab.AnimalType)
                                                       .FirstOrDefaultAsync();
 
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {productId} id not found");

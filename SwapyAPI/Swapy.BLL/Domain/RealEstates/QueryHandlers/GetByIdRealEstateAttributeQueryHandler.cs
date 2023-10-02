@@ -2,6 +2,7 @@
 using Swapy.BLL.Domain.RealEstates.Queries;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.DTO.RealEstates.Responses;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.RealEstates.QueryHandlers
@@ -28,30 +29,30 @@ namespace Swapy.BLL.Domain.RealEstates.QueryHandlers
             {
                 Id = realEstateAttribute.Id,
                 City = realEstateAttribute.Product.City.Name,
-                CityId = realEstateAttribute.Product.City.Id,
+                CityId = realEstateAttribute.Product.CityId,
                 Currency = realEstateAttribute.Product.Currency.Name,
-                CurrencyId = realEstateAttribute.Product.Currency.Id,
+                CurrencyId = realEstateAttribute.Product.CurrencyId,
                 CurrencySymbol = realEstateAttribute.Product.Currency.Symbol,
                 UserId = realEstateAttribute.Product.UserId,
                 FirstName = realEstateAttribute.Product.User.FirstName,
                 LastName = realEstateAttribute.Product.User.LastName,
                 PhoneNumber = realEstateAttribute.Product.User.PhoneNumber,
-                ShopId = realEstateAttribute.Product.User.ShopAttributeId,
-                Shop = realEstateAttribute.Product.User.ShopAttribute.ShopName,
+                ShopId = realEstateAttribute.Product.User.ShopAttributeId ?? string.Empty,
+                Shop = realEstateAttribute.Product.User.ShopAttribute?.ShopName ?? string.Empty,
                 UserType = realEstateAttribute.Product.User.Type,
-                ProductId = realEstateAttribute.Product.Id,
+                ProductId = realEstateAttribute.ProductId,
                 Title = realEstateAttribute.Product.Title,
                 Views = realEstateAttribute.Product.Views,
                 IsDisable = realEstateAttribute.Product.IsDisable,
                 Price = realEstateAttribute.Product.Price,
-                Description = realEstateAttribute.Product.Description,
+                Description = realEstateAttribute.Product?.Description,
                 DateTime = realEstateAttribute.Product.DateTime,
                 Categories = categories,
                 Images = realEstateAttribute.Product.Images.Select(i => i.Image).ToList(),
                 Area = realEstateAttribute.Area,
                 Rooms = (int)realEstateAttribute.Rooms,
                 IsRent = realEstateAttribute.IsRent,
-                IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(realEstateAttribute.Product.Id, request.UserId)
+                IsFavorite = request.UserId == null ? false : await _favoriteProductRepository.CheckProductOnFavorite(realEstateAttribute.ProductId, request.UserId)
             };
             return result;
         }

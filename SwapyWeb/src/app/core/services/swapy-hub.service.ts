@@ -17,7 +17,7 @@ export class SwapyHubService {
 
         if(this.userId !== "") {
             this.hubConnection = new signalR.HubConnectionBuilder()
-            .configureLogging(signalR.LogLevel.Debug)
+            .configureLogging(signalR.LogLevel.None)
             .withUrl(`${environment.apiUrl}/swapyHub`, {
                 skipNegotiation: true,
                 transport: signalR.HttpTransportType.WebSockets,

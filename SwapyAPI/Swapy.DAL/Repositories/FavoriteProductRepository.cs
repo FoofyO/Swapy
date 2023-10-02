@@ -162,8 +162,12 @@ namespace Swapy.DAL.Repositories
 
         public async Task<bool> CheckProductOnFavorite(string productId, string userId)
         {
+            if (userId == null) return false;
+            
             var item = await _context.FavoriteProducts.Where(x => x.ProductId.Equals(productId) && x.UserId.Equals(userId)).FirstOrDefaultAsync();
+            
             if (item == null) return false;
+            
             return true;
         }
     }

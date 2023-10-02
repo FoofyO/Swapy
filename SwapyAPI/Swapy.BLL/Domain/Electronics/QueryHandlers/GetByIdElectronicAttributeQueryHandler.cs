@@ -2,6 +2,7 @@
 using Swapy.BLL.Domain.Electronics.Queries;
 using Swapy.Common.DTO.Electronics.Responses;
 using Swapy.Common.DTO.Products.Responses;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Electronics.QueryHandlers
@@ -29,28 +30,28 @@ namespace Swapy.BLL.Domain.Electronics.QueryHandlers
             {
                 Id = electronicAttribute.Id,
                 City = electronicAttribute.Product.City.Name,
-                CityId = electronicAttribute.Product.City.Id,
+                CityId = electronicAttribute.Product.CityId,
                 Currency = electronicAttribute.Product.Currency.Name,
-                CurrencyId = electronicAttribute.Product.Currency.Id,
+                CurrencyId = electronicAttribute.Product.CurrencyId,
                 CurrencySymbol = electronicAttribute.Product.Currency.Symbol,
                 UserId = electronicAttribute.Product.UserId,
                 FirstName = electronicAttribute.Product.User.FirstName,
                 LastName = electronicAttribute.Product.User.LastName,
                 PhoneNumber = electronicAttribute.Product.User.PhoneNumber,
-                ShopId = electronicAttribute.Product.User.ShopAttributeId,
-                Shop = electronicAttribute.Product.User.ShopAttribute.ShopName,
+                ShopId = electronicAttribute.Product.User.ShopAttributeId ?? string.Empty,
+                Shop = electronicAttribute.Product.User.ShopAttribute?.ShopName ?? string.Empty,
                 UserType = electronicAttribute.Product.User.Type,
-                ProductId = electronicAttribute.Product.Id,
+                ProductId = electronicAttribute.ProductId,
                 Title = electronicAttribute.Product.Title,
                 Views = electronicAttribute.Product.Views,
                 Price = electronicAttribute.Product.Price,
-                Description = electronicAttribute.Product.Description,
+                Description = electronicAttribute.Product?.Description,
                 DateTime = electronicAttribute.Product.DateTime,
                 Categories = categories,
                 IsDisable = electronicAttribute.Product.IsDisable,
                 Images = electronicAttribute.Product.Images.Select(i => i.Image).ToList(),
                 IsNew = electronicAttribute.IsNew,
-                IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(electronicAttribute.Product.Id, request.UserId),
+                IsFavorite = request.UserId == null ? false : await _favoriteProductRepository.CheckProductOnFavorite(electronicAttribute.ProductId, request.UserId),
                 ColorId = electronicAttribute.ModelColor.ColorId,
                 Color = electronicAttribute.ModelColor.Color.Name,
                 MemoryId = electronicAttribute.MemoryModel.MemoryId,

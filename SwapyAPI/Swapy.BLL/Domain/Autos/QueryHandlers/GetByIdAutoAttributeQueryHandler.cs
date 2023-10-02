@@ -2,6 +2,7 @@
 using Swapy.BLL.Domain.Autos.Queries;
 using Swapy.Common.DTO.Autos.Responses;
 using Swapy.Common.DTO.Products.Responses;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Autos.QueryHandlers
@@ -29,27 +30,27 @@ namespace Swapy.BLL.Domain.Autos.QueryHandlers
             {
                 Id = autoAttribute.Id,
                 City = autoAttribute.Product.City.Name,
-                CityId = autoAttribute.Product.City.Id,
+                CityId = autoAttribute.Product.CityId,
                 Currency = autoAttribute.Product.Currency.Name,
-                CurrencyId = autoAttribute.Product.Currency.Id,
+                CurrencyId = autoAttribute.Product.CurrencyId,
                 CurrencySymbol = autoAttribute.Product.Currency.Symbol,
                 UserId = autoAttribute.Product.UserId,
                 FirstName = autoAttribute.Product.User.FirstName,
                 LastName = autoAttribute.Product.User.LastName,
                 PhoneNumber = autoAttribute.Product.User.PhoneNumber,
-                ShopId = autoAttribute.Product.User.ShopAttributeId,
-                Shop = autoAttribute.Product.User.ShopAttribute.ShopName,
+                ShopId = autoAttribute.Product.User.ShopAttributeId ?? string.Empty,
+                Shop = autoAttribute.Product.User.ShopAttribute?.ShopName ?? string.Empty,
                 UserType = autoAttribute.Product.User.Type,
-                ProductId = autoAttribute.Product.Id,
+                ProductId = autoAttribute.ProductId,
                 Title = autoAttribute.Product.Title,
                 Views = autoAttribute.Product.Views,
                 Price = autoAttribute.Product.Price,
-                Description = autoAttribute.Product.Description,
+                Description = autoAttribute.Product?.Description,
                 DateTime = autoAttribute.Product.DateTime,
                 Categories = categories,
                 Images = autoAttribute.Product.Images.Select(i => i.Image).ToList(),
                 IsNew = autoAttribute.IsNew,
-                IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(autoAttribute.Product.Id, request.UserId),
+                IsFavorite = request.UserId == null ? false : await _favoriteProductRepository.CheckProductOnFavorite(autoAttribute.ProductId, request.UserId),
                 IsDisable = autoAttribute.Product.IsDisable,
                 Miliage = autoAttribute.Miliage,
                 EngineCapacity = autoAttribute.EngineCapacity,

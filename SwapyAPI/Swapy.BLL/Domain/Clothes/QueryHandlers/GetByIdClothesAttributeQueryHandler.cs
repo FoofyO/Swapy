@@ -2,6 +2,7 @@
 using Swapy.BLL.Domain.Clothes.Queries;
 using Swapy.Common.DTO.Clothes.Responses;
 using Swapy.Common.DTO.Products.Responses;
+using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
 
 namespace Swapy.BLL.Domain.Clothes.QueryHandlers
@@ -29,27 +30,27 @@ namespace Swapy.BLL.Domain.Clothes.QueryHandlers
             {
                 Id = clothesAttribute.Id,
                 City = clothesAttribute.Product.City.Name,
-                CityId = clothesAttribute.Product.City.Id,
+                CityId = clothesAttribute.Product.CityId,
                 Currency = clothesAttribute.Product.Currency.Name,
-                CurrencyId = clothesAttribute.Product.Currency.Id,
+                CurrencyId = clothesAttribute.Product.CurrencyId,
                 CurrencySymbol = clothesAttribute.Product.Currency.Symbol,
                 UserId = clothesAttribute.Product.UserId,
                 FirstName = clothesAttribute.Product.User.FirstName,
                 LastName = clothesAttribute.Product.User.LastName,
                 PhoneNumber = clothesAttribute.Product.User.PhoneNumber,
-                ShopId = clothesAttribute.Product.User.ShopAttributeId,
-                Shop = clothesAttribute.Product.User.ShopAttribute.ShopName,
+                ShopId = clothesAttribute.Product.User.ShopAttributeId ?? string.Empty,
+                Shop = clothesAttribute.Product.User.ShopAttribute?.ShopName ?? string.Empty,
                 UserType = clothesAttribute.Product.User.Type,
-                ProductId = clothesAttribute.Product.Id,
+                ProductId = clothesAttribute.ProductId,
                 Title = clothesAttribute.Product.Title,
                 Views = clothesAttribute.Product.Views,
                 Price = clothesAttribute.Product.Price,
-                Description = clothesAttribute.Product.Description,
+                Description = clothesAttribute.Product?.Description,
                 DateTime = clothesAttribute.Product.DateTime,
                 Categories = categories,
                 Images = clothesAttribute.Product.Images.Select(i => i.Image).ToList(),
                 IsNew = clothesAttribute.IsNew,
-                IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(clothesAttribute.Product.Id, request.UserId),
+                IsFavorite = request.UserId == null ? false : await _favoriteProductRepository.CheckProductOnFavorite(clothesAttribute.ProductId, request.UserId),
                 ClothesSizeId = clothesAttribute.ClothesSizeId,
                 ClothesSize = clothesAttribute.ClothesSize.Size,
                 IsShoe = clothesAttribute.ClothesSize.IsShoe,

@@ -175,7 +175,7 @@ namespace Swapy.DAL.Repositories
 
             foreach (var item in result)
             {
-                item.IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(item.Id, userId);
+                item.IsFavorite = userId == null ? false : await _favoriteProductRepository.CheckProductOnFavorite(item.Id, userId);
             }
 
             return new AutoAttributesResponseDTO(result, count, (int)Math.Ceiling(Convert.ToDouble(count) / pageSize), maxPrice, minPrice, maxMiliage, minMiliage, maxEngineCapacity, minEngineCapacity, olderReleaseYear, newerReleaseYear);

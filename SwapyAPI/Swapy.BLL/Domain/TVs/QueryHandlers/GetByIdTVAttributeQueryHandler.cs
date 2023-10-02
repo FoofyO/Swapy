@@ -3,9 +3,7 @@ using Swapy.BLL.Domain.TVs.Queries;
 using Swapy.Common.DTO.Products.Responses;
 using Swapy.Common.DTO.TVs.Responses;
 using Swapy.Common.Entities;
-using Swapy.Common.Models;
 using Swapy.DAL.Interfaces;
-using Swapy.DAL.Repositories;
 
 namespace Swapy.BLL.Domain.TVs.QueryHandlers
 {
@@ -32,28 +30,28 @@ namespace Swapy.BLL.Domain.TVs.QueryHandlers
             {
                 Id = tvAttribute.Id,
                 City = tvAttribute.Product.City.Name,
-                CityId = tvAttribute.Product.City.Id,
+                CityId = tvAttribute.Product.CityId,
                 Currency = tvAttribute.Product.Currency.Name,
-                CurrencyId = tvAttribute.Product.Currency.Id,
+                CurrencyId = tvAttribute.Product.CurrencyId,
                 CurrencySymbol = tvAttribute.Product.Currency.Symbol,
                 UserId = tvAttribute.Product.UserId,
                 FirstName = tvAttribute.Product.User.FirstName,
                 LastName = tvAttribute.Product.User.LastName,
                 PhoneNumber = tvAttribute.Product.User.PhoneNumber,
-                ShopId = tvAttribute.Product.User.ShopAttributeId,
-                Shop = tvAttribute.Product.User.ShopAttribute.ShopName,
+                ShopId = tvAttribute.Product.User.ShopAttributeId ?? string.Empty,
+                Shop = tvAttribute.Product.User.ShopAttribute?.ShopName ?? string.Empty,
                 UserType = tvAttribute.Product.User.Type,
-                ProductId = tvAttribute.Product.Id,
+                ProductId = tvAttribute.ProductId,
                 Title = tvAttribute.Product.Title,
                 Views = tvAttribute.Product.Views,
                 Price = tvAttribute.Product.Price,
-                Description = tvAttribute.Product.Description,
+                Description = tvAttribute.Product?.Description,
                 DateTime = tvAttribute.Product.DateTime,
                 IsDisable = tvAttribute.Product.IsDisable,
                 Categories = categories,
                 Images = tvAttribute.Product.Images.Select(i => i.Image).ToList(),
                 IsNew = tvAttribute.IsNew,
-                IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(tvAttribute.Product.Id, request.UserId),
+                IsFavorite = request.UserId == null ? false : await _favoriteProductRepository.CheckProductOnFavorite(tvAttribute.ProductId, request.UserId),
                 ISmart = tvAttribute.IsSmart,
                 TVBrandId = tvAttribute.TVBrandId,
                 TVBrand = tvAttribute.TVBrand.Name,
