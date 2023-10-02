@@ -7,11 +7,6 @@ namespace Swapy.API.Validators
     {
         public AddClothesAttributeValidator()
         {
-            RuleFor(clothes => clothes.IsNew)
-            .NotEmpty()
-                .WithMessage("IsNew field is required")
-            .WithErrorCode("InvalidIsNewFormat");
-
             RuleFor(clothes => clothes.ClothesSeasonId)
             .NotEmpty()
                 .WithMessage("ClothesSeasonId field is required")

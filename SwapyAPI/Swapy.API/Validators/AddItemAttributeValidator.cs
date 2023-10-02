@@ -7,11 +7,6 @@ namespace Swapy.API.Validators
     {
         public AddItemAttributeValidator()
         {
-            RuleFor(item => item.IsNew)
-            .NotEmpty()
-                .WithMessage("IsNew field is required")
-            .WithErrorCode("InvalidIsNewFormat");
-
             RuleFor(item => item.ItemTypeId)
             .NotEmpty()
                 .WithMessage("ItemTypeId field is required")

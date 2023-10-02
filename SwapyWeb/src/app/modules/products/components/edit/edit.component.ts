@@ -175,7 +175,7 @@ export class EditComponent implements OnInit {
           this.productApiService.getClothesSizes(this.selectedClothesTypeFilter == -1, this.clotheIsShoe),
           this.productApiService.getGenders(),
           this.productApiService.getClothesSeasons(),
-          this.productApiService.getClothesViews(this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? this.product.categories[this.product.categories.length - 1].id : null)
+          this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== 'undefined' ? this.selectedGenderId : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? this.product.categories[this.product.categories.length - 1].id : null)
         ]).subscribe(
           ([brands, clothesSizes, genders, clothesSeasons, clothesViews]: [Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[]]) => {
             this.brands = brands;
@@ -592,7 +592,7 @@ export class EditComponent implements OnInit {
   onSelectedGenderChange(): void {
     this.spinnerService.changeSpinnerState(true);
     forkJoin([
-      this.productApiService.getClothesViews(this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? this.product.categories[this.product.categories.length - 1].id : null)
+      this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== 'undefined' ? this.selectedGenderId : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? this.product.categories[this.product.categories.length - 1].id : null)
     ]).subscribe(
       ([clothesViews]: [Specification<string>[]]) => {
         this.clothesViews = clothesViews;

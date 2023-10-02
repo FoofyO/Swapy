@@ -1,5 +1,11 @@
 @import "/src/colors.scss";
 
+a {
+    text-decoration: none;
+    color: black;
+    height: 100%;
+}
+
 .shop-card {
     position: relative;
     overflow: hidden;

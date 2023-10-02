@@ -225,23 +225,23 @@
             <div id="clothes-type-filter" class="filter-container collapse"> 
                 <div class="radio-groups">
                     <div class="radio-group">
-                      <input id="clothes-type-radio-all" type="radio" name="in-clothes-type" [(ngModel)]="selectedClothesTypeFilter" (ngModelChange)="onChangeFilter()" [value]="0"/>
+                      <input id="clothes-type-radio-all" type="radio" name="in-clothes-type" [(ngModel)]="selectedClothesTypeFilter" (ngModelChange)="onSelectedClothesTypeChange()" [value]="0"/>
                       <label for="radio_all">All</label>
                     </div>
 
                     <div class="radio-group">
-                        <input id="clothes-type-radio-adult" type="radio" name="in-clothes-type" [(ngModel)]="selectedClothesTypeFilter" (ngModelChange)="onChangeFilter()" [value]="1"/>
+                        <input id="clothes-type-radio-adult" type="radio" name="in-clothes-type" [(ngModel)]="selectedClothesTypeFilter" (ngModelChange)="onSelectedClothesTypeChange()" [value]="1"/>
                         <label for="radio_yes">Adult</label>
                     </div>
                   
                     <div class="radio-group">
-                      <input id="clothes-type-radio-childish" type="radio" name="in-clothes-type" [(ngModel)]="selectedClothesTypeFilter" (ngModelChange)="onChangeFilter()" [value]="-1"/>
+                      <input id="clothes-type-radio-childish" type="radio" name="in-clothes-type" [(ngModel)]="selectedClothesTypeFilter" (ngModelChange)="onSelectedClothesTypeChange()" [value]="-1"/>
                       <label for="clothes-type-radio-childish">Childish</label>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="filter-wrapper" *ngIf="selectedCategoryType == 2">
+        <div class="filter-wrapper" *ngIf="selectedCategoryType == 2 && selectedSubcategoriesId.length > 0 && selectedSubcategoriesId[selectedSubcategoriesId.length - 1] != 'undefined'">
             <div dataWidget="clothes-size-filter" class="filter-title-container filter-title-container-collapse" (click)="filterBlockCollapse($event)">
                 <p>Clothes size</p>
                 <span class="filter-icon"><svg fill="#999" viewBox="0 0 444.819 444.819" width="1em" height="1em"><path d="M434.252 114.203l-21.409-21.416c-7.419-7.04-16.084-10.561-25.975-10.561-10.095 0-18.657 3.521-25.7 10.561L222.41 231.549 83.653 92.791c-7.042-7.04-15.606-10.561-25.697-10.561-9.896 0-18.559 3.521-25.979 10.561l-21.128 21.416C3.615 121.436 0 130.099 0 140.188c0 10.277 3.619 18.842 10.848 25.693l185.864 185.865c6.855 7.23 15.416 10.848 25.697 10.848 10.088 0 18.75-3.617 25.977-10.848l185.865-185.865c7.043-7.044 10.567-15.608 10.567-25.693.001-9.901-3.523-18.559-10.566-25.985z"></path></svg></span>
@@ -283,7 +283,7 @@
                 </div> 
             </div>
         </div>
-        <div class="filter-wrapper" *ngIf="selectedCategoryType == 2">
+        <div class="filter-wrapper" *ngIf="selectedCategoryType == 2 && selectedGenderId && selectedGenderId != 'undefined' && selectedClothesTypeFilter != 0 && selectedSubcategoriesId.length > 0 && selectedSubcategoriesId[selectedSubcategoriesId.length - 1] != 'undefined'">
             <div dataWidget="clothes-view-filter" class="filter-title-container filter-title-container-collapse" (click)="filterBlockCollapse($event)">
                 <p>Clothes view</p>
                 <span class="filter-icon"><svg fill="#999" viewBox="0 0 444.819 444.819" width="1em" height="1em"><path d="M434.252 114.203l-21.409-21.416c-7.419-7.04-16.084-10.561-25.975-10.561-10.095 0-18.657 3.521-25.7 10.561L222.41 231.549 83.653 92.791c-7.042-7.04-15.606-10.561-25.697-10.561-9.896 0-18.559 3.521-25.979 10.561l-21.128 21.416C3.615 121.436 0 130.099 0 140.188c0 10.277 3.619 18.842 10.848 25.693l185.864 185.865c6.855 7.23 15.416 10.848 25.697 10.848 10.088 0 18.75-3.617 25.977-10.848l185.865-185.865c7.043-7.044 10.567-15.608 10.567-25.693.001-9.901-3.523-18.559-10.566-25.985z"></path></svg></span>

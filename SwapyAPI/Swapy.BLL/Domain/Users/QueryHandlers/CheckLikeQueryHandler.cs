@@ -13,7 +13,6 @@ namespace Swapy.BLL.Domain.Users.QueryHandlers
 
         public async Task<bool> Handle(CheckLikeQuery request, CancellationToken cancellationToken)
         {
-            if(request.UserId.Equals(request.RecipientId)) throw new DuplicateValueException("The provided LikerId and RecepientId are the same");
             return await _userLikeRepository.CheckUserLikeAsync(request.UserId, request.RecipientId);
         }
     }

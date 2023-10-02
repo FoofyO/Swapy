@@ -225,10 +225,10 @@
                         </select>   
                     </div>
         
-                    <p class="information-title" *ngIf="((selectedCategoryType == 1 || selectedCategoryType == 3) && selectedBrandId !== undefined)">
+                    <p class="information-title" *ngIf="((selectedCategoryType == 1 || selectedCategoryType == 3) && selectedBrandId !== 'undefined')">
                         Model:
                     </p>
-                    <div class="select-container" *ngIf="(selectedCategoryType == 3 && selectedBrandId !== undefined)">
+                    <div class="select-container" *ngIf="((selectedCategoryType == 1 || selectedCategoryType == 3) && selectedBrandId !== 'undefined')">
                         <select class="form-select select-filter" [(ngModel)]="selectedModelId" (ngModelChange)="onSelectedModelChange()">
                             <option class="option" [value]="undefined">Unselected</option>
                             <option *ngFor="let model of models;" class="option" [value]="model.id">{{model.value}}</option>

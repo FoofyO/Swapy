@@ -26,7 +26,6 @@ export class SharedApiService {
       let url = animalTypeId ? `${this.apiUrl}/${this.animalsApiUrl}/Breeds?AnimalTypesId=${animalTypeId}` : `${this.apiUrl}/${this.animalsApiUrl}/Breeds`;
       return from(this.axiosInterceptorService.get(url)).pipe(
         map((response: AxiosResponse<any>) => {
-          console.log(`${this.apiUrl}/${this.animalsApiUrl}/Breeds/${animalTypeId}`);
           const breeds: Specification<string>[] = response.data.$values;
           return breeds;
         }),

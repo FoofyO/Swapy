@@ -51,7 +51,7 @@ namespace Swapy.BLL.Domain.Clothes.QueryHandlers
                 IsNew = clothesAttribute.IsNew,
                 IsFavorite = await _favoriteProductRepository.CheckProductOnFavorite(clothesAttribute.Product.Id, request.UserId),
                 ClothesSizeId = clothesAttribute.ClothesSizeId,
-                ClothesSize = clothesAttribute.ClothesSize.Name,
+                ClothesSize = clothesAttribute.ClothesSize.Size,
                 IsShoe = clothesAttribute.ClothesSize.IsShoe,
                 IsChild = clothesAttribute.ClothesSize.IsChild,
                 GenderId = clothesAttribute.ClothesBrandView.ClothesView.GenderId,

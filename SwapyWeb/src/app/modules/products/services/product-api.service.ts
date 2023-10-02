@@ -249,8 +249,8 @@ export class ProductApiService {
     url += categoryId != null ? `&CategoryId=${categoryId}` : '';
     url += subcategoryId != null ? `&SubcategoryId=${subcategoryId}` : '';
     url += cityId != null ? `&CityId=${cityId}` : '';
-    url += animalBreedsId != null ? animalBreedsId.map(value => `&AnimalBreedsId=${encodeURIComponent(value)}`).join("&") : '';
-    url += animalTypesId != null ? animalTypesId.map(value => `&AnimalTypesId=${encodeURIComponent(value)}`).join("&") : '';
+    url += animalBreedsId != null ? animalBreedsId.map(value => `&AnimalBreedsId=${encodeURIComponent(value)}`).join("") : '';
+    url += animalTypesId != null ? animalTypesId.map(value => `&AnimalTypesId=${encodeURIComponent(value)}`).join("") : '';
     return from(
     this.axiosInterceptorService.get(url)
     ).pipe(
@@ -310,13 +310,13 @@ export class ProductApiService {
     url += miliageMax != null ? `&MiliageMax=${miliageMax}` : '';
     url += engineCapacityMin != null ? `&EngineCapacityMin=${engineCapacityMin}` : '';
     url += engineCapacityMax != null ? `&EngineCapacityMax=${engineCapacityMax}` : '';
-    url += releaseYearOlder != null ? `&ReleaseYearOlder=${releaseYearOlder}` : '';
-    url += releaseYearNewer != null ? `&ReleaseYearNewer=${releaseYearNewer}` : '';
-    url += fuelTypesId != null ? fuelTypesId.map(value => `&FuelTypesId=${encodeURIComponent(value)}`).join("&") : '';
-    url += autoColorsId != null ? autoColorsId.map(value => `&AutoColorsId=${encodeURIComponent(value)}`).join("&") : '';
-    url += transmissionTypesId != null ? transmissionTypesId.map(value => `&TransmissionTypesId=${encodeURIComponent(value)}`).join("&") : '';
-    url += autoBrandsId != null ? autoBrandsId.map(value => `&AutoBrandsId=${encodeURIComponent(value)}`).join("&") : '';
-    url += autoTypesId != null ? autoTypesId.map(value => `&AutoTypesId=${encodeURIComponent(value)}`).join("&") : '';
+    url += releaseYearOlder != null ? `&ReleaseYearOlder=${releaseYearOlder.toISOString()}` : '';
+    url += releaseYearNewer != null ? `&ReleaseYearNewer=${releaseYearNewer.toISOString()}` : '';
+    url += fuelTypesId != null ? fuelTypesId.map(value => `&FuelTypesId=${encodeURIComponent(value)}`).join("") : '';
+    url += autoColorsId != null ? autoColorsId.map(value => `&AutoColorsId=${encodeURIComponent(value)}`).join("") : '';
+    url += transmissionTypesId != null ? transmissionTypesId.map(value => `&TransmissionTypesId=${encodeURIComponent(value)}`).join("") : '';
+    url += autoBrandsId != null ? autoBrandsId.map(value => `&AutoBrandsId=${encodeURIComponent(value)}`).join("") : '';
+    url += autoTypesId != null ? autoTypesId.map(value => `&AutoTypesId=${encodeURIComponent(value)}`).join("") : '';
     
     return from(
     this.axiosInterceptorService.get(url)
@@ -361,7 +361,8 @@ export class ProductApiService {
     clothesBrandsId: string[] | null = null,
     clothesViewsId: string[] | null = null,
     clothesTypesId: string[] | null = null,
-    clothesGendersId: string[] | null = null): Observable<PageResponse<Product>> 
+    clothesGendersId: string[] | null = null,
+    isChild: boolean | null = null): Observable<PageResponse<Product>> 
   {
     let url = `${this.apiUrl}/${this.clothesApiUrl}?Page=${page}&PageSize=${pageSize}`
     url += sortByPrice != null ? `&SortByPrice=${sortByPrice}` : '';
@@ -374,12 +375,13 @@ export class ProductApiService {
     url += subcategoryId != null ? `&SubcategoryId=${subcategoryId}` : '';
     url += cityId != null ? `&CityId=${cityId}` : '';
     url += isNew != null ? `&IsNew=${isNew}` : '';
-    url += clothesSeasonsId != null ? clothesSeasonsId.map(value => `&ClothesSeasonsId=${encodeURIComponent(value)}`).join("&") : '';
-    url += clothesSizesId != null ? clothesSizesId.map(value => `&ClothesSizesId=${encodeURIComponent(value)}`).join("&") : '';
-    url += clothesBrandsId != null ? clothesBrandsId.map(value => `&ClothesBrandsId=${encodeURIComponent(value)}`).join("&") : '';
-    url += clothesViewsId != null ? clothesViewsId.map(value => `&ClothesViewsId=${encodeURIComponent(value)}`).join("&") : '';
-    url += clothesTypesId != null ? clothesTypesId.map(value => `&ClothesTypesId=${encodeURIComponent(value)}`).join("&") : '';
-    url += clothesGendersId != null ? clothesGendersId.map(value => `&ClothesGendersId=${encodeURIComponent(value)}`).join("&") : '';
+    url += clothesSeasonsId != null ? clothesSeasonsId.map(value => `&ClothesSeasonsId=${encodeURIComponent(value)}`).join("") : '';
+    url += clothesSizesId != null ? clothesSizesId.map(value => `&ClothesSizesId=${encodeURIComponent(value)}`).join("") : '';
+    url += clothesBrandsId != null ? clothesBrandsId.map(value => `&ClothesBrandsId=${encodeURIComponent(value)}`).join("") : '';
+    url += clothesViewsId != null ? clothesViewsId.map(value => `&ClothesViewsId=${encodeURIComponent(value)}`).join("") : '';
+    url += clothesTypesId != null ? clothesTypesId.map(value => `&ClothesTypesId=${encodeURIComponent(value)}`).join("") : '';
+    url += clothesGendersId != null ? clothesGendersId.map(value => `&ClothesGendersId=${encodeURIComponent(value)}`).join("") : '';
+    url += isChild != null ? `&IsChild=${isChild}` : '';
 
     return from(
     this.axiosInterceptorService.get(url)
@@ -430,11 +432,11 @@ export class ProductApiService {
     url += subcategoryId != null ? `&SubcategoryId=${subcategoryId}` : '';
     url += cityId != null ? `&CityId=${cityId}` : '';
     url += isNew != null ? `&IsNew=${isNew}` : '';
-    url += memoriesId != null ? memoriesId.map(value => `&MemoriesId=${encodeURIComponent(value)}`).join("&") : '';
-    url += colorsId != null ? colorsId.map(value => `&ColorsId=${encodeURIComponent(value)}`).join("&") : '';
-    url += modelsId != null ? modelsId.map(value => `&ModelsId=${encodeURIComponent(value)}`).join("&") : '';
-    url += brandsId != null ? brandsId.map(value => `&BrandsId=${encodeURIComponent(value)}`).join("&") : '';
-    url += typesId != null ? typesId.map(value => `&TypesId=${encodeURIComponent(value)}`).join("&") : '';
+    url += memoriesId != null ? memoriesId.map(value => `&MemoriesId=${encodeURIComponent(value)}`).join("") : '';
+    url += colorsId != null ? colorsId.map(value => `&ColorsId=${encodeURIComponent(value)}`).join("") : '';
+    url += modelsId != null ? modelsId.map(value => `&ModelsId=${encodeURIComponent(value)}`).join("") : '';
+    url += brandsId != null ? brandsId.map(value => `&BrandsId=${encodeURIComponent(value)}`).join("") : '';
+    url += typesId != null ? typesId.map(value => `&TypesId=${encodeURIComponent(value)}`).join("") : '';
     return from(
     this.axiosInterceptorService.get(url)
     ).pipe(
@@ -480,7 +482,7 @@ export class ProductApiService {
     url += subcategoryId != null ? `&SubcategoryId=${subcategoryId}` : '';
     url += cityId != null ? `&CityId=${cityId}` : '';
     url += isNew != null ? `&IsNew=${isNew}` : '';
-    url += itemTypesId != null ? itemTypesId.map(value => `&ItemTypesId=${encodeURIComponent(value)}`).join("&") : '';
+    url += itemTypesId != null ? itemTypesId.map(value => `&ItemTypesId=${encodeURIComponent(value)}`).join("") : '';
     return from(
     this.axiosInterceptorService.get(url)
     ).pipe(
@@ -534,7 +536,7 @@ export class ProductApiService {
     url += areaMin != null ? `&AreaMin=${areaMin}` : '';
     url += roomsMin != null ? `&RoomsMin=${roomsMin}` : '';
     url += roomsMax != null ? `&RoomsMax=${roomsMax}` : '';
-    url += realEstateTypesId != null ? realEstateTypesId.map(value => `&RealEstateTypesId=${encodeURIComponent(value)}`).join("&") : '';
+    url += realEstateTypesId != null ? realEstateTypesId.map(value => `&RealEstateTypesId=${encodeURIComponent(value)}`).join("") : '';
 
     return from(
     this.axiosInterceptorService.get(url)
@@ -590,10 +592,10 @@ export class ProductApiService {
     url += cityId != null ? `&CityId=${cityId}` : '';
     url += isNew != null ? `&IsNew=${isNew}` : '';
     url += isSmart != null ? `&IsSmart=${isSmart}` : '';
-    url += tvTypesId != null ? tvTypesId.map(value => `&TvTypesId=${encodeURIComponent(value)}`).join("&") : '';
-    url += tvBrandsId != null ? tvBrandsId.map(value => `&TvBrandsId=${encodeURIComponent(value)}`).join("&") : '';
-    url += screenResolutionsId != null ? screenResolutionsId.map(value => `&ScreenResolutionsId=${encodeURIComponent(value)}`).join("&") : '';
-    url += screenDiagonalsId != null ? screenDiagonalsId.map(value => `&ScreenDiagonalsId=${encodeURIComponent(value)}`).join("&") : '';
+    url += tvTypesId != null ? tvTypesId.map(value => `&TvTypesId=${encodeURIComponent(value)}`).join("") : '';
+    url += tvBrandsId != null ? tvBrandsId.map(value => `&TvBrandsId=${encodeURIComponent(value)}`).join("") : '';
+    url += screenResolutionsId != null ? screenResolutionsId.map(value => `&ScreenResolutionsId=${encodeURIComponent(value)}`).join("") : '';
+    url += screenDiagonalsId != null ? screenDiagonalsId.map(value => `&ScreenDiagonalsId=${encodeURIComponent(value)}`).join("") : '';
 
     return from(
     this.axiosInterceptorService.get(url)
@@ -651,7 +653,8 @@ export class ProductApiService {
   }
 
   getAutoBrands(AutoTypesId: string[] | null): Observable<Specification<string>[]>{
-    let url = AutoTypesId ? `${this.apiUrl}/${this.autosApiUrl}/Brands/${AutoTypesId.join('&')}` : `${this.apiUrl}/${this.autosApiUrl}/Brands`;
+    AutoTypesId = AutoTypesId?.map(i => 'AutoTypesId=' + i) ? AutoTypesId?.map(i => 'AutoTypesId=' + i) : null;
+    let url = AutoTypesId ? `${this.apiUrl}/${this.autosApiUrl}/Brands?${AutoTypesId.join('&')}` : `${this.apiUrl}/${this.autosApiUrl}/Brands`;
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;
@@ -664,13 +667,15 @@ export class ProductApiService {
   }
 
   getAutoModels(AutoBrandsId: string[] | null, AutoTypesId: string[] | null): Observable<Specification<string>[]>{
-    let url = `${this.apiUrl}/${this.autosApiUrl}/Brands`;
+    let url = `${this.apiUrl}/${this.autosApiUrl}/Models`;
+    AutoBrandsId = AutoBrandsId?.map(i => 'AutoBrandsId=' + i) ? AutoBrandsId?.map(i => 'AutoBrandsId=' + i) : null;
+    AutoTypesId = AutoTypesId?.map(i => 'AutoTypesId=' + i) ? AutoTypesId?.map(i => 'AutoTypesId=' + i) : null;
     if(AutoBrandsId != null && AutoTypesId != null){
-      url += `?AutoBrandsId=${AutoBrandsId}&AutoTypesId=${AutoTypesId}`;
+      url += `?${AutoBrandsId.join('&')}&${AutoTypesId.join('&')}`;
     }
     else{
-      url += AutoBrandsId != null ? `?AutoBrandsId=${AutoBrandsId}` : '';
-      url += AutoTypesId != null ? `?AutoTypesId=${AutoTypesId}` : '';
+      url += AutoBrandsId != null ? `?${AutoBrandsId.join('&')}` : '';
+      url += AutoTypesId != null ? `?${AutoTypesId.join('&')}` : '';
     }
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
@@ -684,7 +689,8 @@ export class ProductApiService {
   }
 
   getClotheBrands(ClothesViewsId: string[] | null): Observable<Specification<string>[]>{
-    let url = ClothesViewsId ? `${this.apiUrl}/${this.clothesApiUrl}/Brands/${ClothesViewsId.join('&')}` : `${this.apiUrl}/${this.clothesApiUrl}/Brands`;
+    ClothesViewsId = ClothesViewsId?.map(i => 'ClothesViewsId=' + i) ? ClothesViewsId?.map(i => 'ClothesViewsId=' + i) : null;
+    let url = ClothesViewsId ? `${this.apiUrl}/${this.clothesApiUrl}/Brands?${ClothesViewsId.join('&')}` : `${this.apiUrl}/${this.clothesApiUrl}/Brands`;
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;
@@ -696,8 +702,9 @@ export class ProductApiService {
     );
   }
 
-  getElectronicBrands(ElectronicTypeId: string): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.electronicsApiUrl}/Brands/${ElectronicTypeId}`)).pipe(
+  getElectronicBrands(ElectronicTypeId: string | null): Observable<Specification<string>[]>{
+    console.log(ElectronicTypeId ? `${this.apiUrl}/${this.electronicsApiUrl}/Brands?ElectronicTypeId=${ElectronicTypeId}` : `${this.apiUrl}/${this.electronicsApiUrl}/Brands`);
+    return from(this.axiosInterceptorService.get(ElectronicTypeId ? `${this.apiUrl}/${this.electronicsApiUrl}/Brands?ElectronicTypeId=${ElectronicTypeId}` : `${this.apiUrl}/${this.electronicsApiUrl}/Brands`)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;
         return brands;
@@ -756,7 +763,7 @@ export class ProductApiService {
     );
   }
 
-  getClothesViews(GenderId: string | null = null, ClothesTypeId: string | null = null): Observable<Specification<string>[]>{
+  getClothesViews(IsChild: boolean | null = null, GenderId: string | null = null, ClothesTypeId: string | null = null): Observable<Specification<string>[]>{
     let url = `${this.apiUrl}/${this.clothesApiUrl}/Views`
     if(GenderId != null && ClothesTypeId != null){
       url += `?GenderId=${GenderId}&ClothesTypeId=${ClothesTypeId}`;
@@ -764,6 +771,9 @@ export class ProductApiService {
     else{
       url += GenderId != null ? `?GenderId=${GenderId}` : '';
       url += ClothesTypeId != null ? `?ClothesTypeId=${ClothesTypeId}` : '';
+    }
+    if (IsChild != null) {
+      url += (GenderId != null || ClothesTypeId != null) ? `&IsChild=${IsChild}` : `?IsChild=${IsChild}`;
     }
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
@@ -777,7 +787,7 @@ export class ProductApiService {
   }
 
   getElectronicMemories(ModelId: string | null = null): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.electronicsApiUrl}/Memories/${ModelId}`)).pipe(
+    return from(this.axiosInterceptorService.get(ModelId ? `${this.apiUrl}/${this.electronicsApiUrl}/Memories?ModelId=${ModelId}` : `${this.apiUrl}/${this.electronicsApiUrl}/Memories`)).pipe(
       map((response: AxiosResponse<any>) => {
         const electronicMemories: Specification<string>[] = response.data.$values;
         return electronicMemories;
@@ -789,7 +799,7 @@ export class ProductApiService {
   }
 
   getElectronicColors(ModelId: string | null = null): Observable<Specification<string>[]>{
-    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.electronicsApiUrl}/Colors/${ModelId}`)).pipe(
+    return from(this.axiosInterceptorService.get(ModelId ? `${this.apiUrl}/${this.electronicsApiUrl}/Colors?ModelId=${ModelId}` : `${this.apiUrl}/${this.electronicsApiUrl}/Colors`)).pipe(
       map((response: AxiosResponse<any>) => {
         const electronicColors: Specification<string>[] = response.data.$values;
         return electronicColors;
@@ -804,11 +814,14 @@ export class ProductApiService {
     let url = `${this.apiUrl}/${this.electronicsApiUrl}/Models`;
     if(ElectronicBrandsId != null && ElectronicTypeId != null){
       url += `?ElectronicTypeId=${ElectronicTypeId}`;
-      url += ElectronicBrandsId.map(value => `&ElectronicBrandsId=${encodeURIComponent(value)}`).join("&");
+      url += ElectronicBrandsId.map(value => `&ElectronicBrandsId=${encodeURIComponent(value)}`).join("");
     }
     else{
       url += ElectronicTypeId != null ? `?ElectronicTypeId=${ElectronicTypeId}` : '';
-      url += ElectronicBrandsId != null ? ElectronicBrandsId.map(value => `?ElectronicBrandsId=${encodeURIComponent(value)}`).join("&") : '';
+      if(ElectronicBrandsId != null){
+        url += "?";
+        url += ElectronicBrandsId.map(value => `ElectronicBrandsId=${encodeURIComponent(value)}`).join("&");
+      }
     }
     return from(this.axiosInterceptorService.get(url)).pipe(
       map((response: AxiosResponse<any>) => {
@@ -870,7 +883,7 @@ export class ProductApiService {
   }
 
   getMemoryModelId(memoryId: string, modelId: string): Observable<string>{
-    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.clothesApiUrl}/GetClothesBrandViewId?MemoryId=${memoryId}&ModelId=${modelId}`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.electronicsApiUrl}/GetMemoryModelId?MemoryId=${memoryId}&ModelId=${modelId}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const memoryModelId: string = response.data;
         return memoryModelId;
@@ -882,7 +895,7 @@ export class ProductApiService {
   }
 
   getModelColorId(colorId: string, modelId: string): Observable<string>{
-    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.clothesApiUrl}/GetClothesBrandViewId?ColorId=${colorId}&ModelId=${modelId}`)).pipe(
+    return from(this.axiosInterceptorService.get(`${this.apiUrl}/${this.electronicsApiUrl}/GetModelColorId?ColorId=${colorId}&ModelId=${modelId}`)).pipe(
       map((response: AxiosResponse<any>) => {
         const modelColorId: string = response.data;
         return modelColorId;
@@ -949,7 +962,7 @@ export class ProductApiService {
   }
 
   createRealEstate(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.post(`${this.apiUrl}/${this.itemsApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.post(`${this.apiUrl}/${this.realEstatesApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -960,7 +973,7 @@ export class ProductApiService {
   }
 
   createTv(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.post(`${this.apiUrl}/${this.itemsApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.post(`${this.apiUrl}/${this.tvsApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),

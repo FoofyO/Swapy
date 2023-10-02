@@ -31,6 +31,7 @@ namespace Swapy.BLL.Domain.Clothes.QueryHandlers
                                                                          request.ClothesViewsId,
                                                                          request.ClothesTypesId,
                                                                          request.ClothesGendersId,
+                                                                         request.IsChild,
                                                                          request.SortByPrice,
                                                                          request.ReverseSort);
         }

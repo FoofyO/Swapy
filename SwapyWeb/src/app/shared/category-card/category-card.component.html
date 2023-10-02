@@ -1,4 +1,7 @@
-<div class="category-card" (click)="moveToCategory()">
-  <img [src]="categoryImage" class="card category-card-image"/>
-  <p class="category-card-title">{{category.value}}</p>
-</div>
+<a routerLink="/products/search" [queryParams]="{ category: this.category.id }">
+  <div class="category-card">
+    <img [src]="categoryImage" class="card category-card-image"/>
+    <p class="category-card-title">{{category.value}}</p>
+  </div>
+</a>
+
