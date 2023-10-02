@@ -13,7 +13,6 @@ namespace Swapy.BLL.Domain.Users.QueryHandlers
 
         public async Task<bool> Handle(CheckSubscriptionQuery request, CancellationToken cancellationToken)
         {
-            if (request.UserId.Equals(request.RecipientId)) throw new DuplicateValueException("The provided Subscriber and RecepientId are the same");
             return await _userSubscriptionRepository.CheckUserSubscriptionAsync(request.UserId, request.RecipientId);
         }
     }

@@ -24,6 +24,7 @@ namespace Swapy.DAL.Interfaces
                                                                                List<string> clothesViewsId,
                                                                                List<string> clothesTypesId,
                                                                                List<string> clothesGendersId,
+                                                                               bool? isChild,
                                                                                bool? sortByPrice,
                                                                                bool? reverseSort);
     }

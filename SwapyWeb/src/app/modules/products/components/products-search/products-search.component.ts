@@ -94,7 +94,27 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
 
   brands!: CheckboxItem<Specification<string>>[];
 
-  clotheIsShoe: boolean = false;
+  private _clotheIsShoe: boolean = false;
+
+  get clotheIsShoe(): boolean  { return this._clotheIsShoe; }
+
+  set clotheIsShoe(value: boolean) {
+    this._clotheIsShoe = value;
+    forkJoin([
+      this.productApiService.getClothesSizes(this.selectedClothesTypeFilter == -1, this.clotheIsShoe)
+    ]).subscribe(
+      ([clothesSizes]: [Specification<string>[]]) => {
+        this.clothesSizes = clothesSizes.map(item => new CheckboxItem<Specification<string>>(item));
+        this.spinnerService.changeSpinnerState(false);
+        return;
+      },
+      error => {
+        console.error('Error fetching data:', error);
+        this.spinnerService.changeSpinnerState(false);
+        return;
+      }
+    );
+  }
 
   selectedClothesTypeFilter: number = 0;
 
@@ -164,7 +184,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           this.productApiService.getColors(),
           this.productApiService.getTransmissionTypes(),
           this.productApiService.getAutoBrands(this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] ? [this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1]] : null),
-          this.productApiService.getAutoModels(this.brands.filter(brand => brand.selected).map(brand => brand.value.id).length > 0 ? this.brands.filter(brand => brand.selected).map(brand => brand.value.id) : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? [this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1]] : null)
+          this.productApiService.getAutoModels(this.brands !== undefined ? (this.brands.filter(brand => brand.selected).map(brand => brand.value.id).length > 0 ? this.brands.filter(brand => brand.selected).map(brand => brand.value.id) : null) : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? [this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1]] : null)
         ]).subscribe(
           ([fuelTypes, colors, transmissionTypes, brands, models]: [Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[]]) => {
             this.fuelTypes = fuelTypes.map(item => new CheckboxItem<Specification<string>>(item));
@@ -191,7 +211,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           this.productApiService.getClothesSizes(this.selectedClothesTypeFilter == -1, this.clotheIsShoe),
           this.productApiService.getGenders(),
           this.productApiService.getClothesSeasons(),
-          this.productApiService.getClothesViews(this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
+          this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== 'undefined' ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
         ]).subscribe(
           ([brands, clothesSizes, genders, clothesSeasons, clothesViews]: [Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[]]) => {
             this.brands = brands.map(item => new CheckboxItem<Specification<string>>(item));
@@ -214,10 +234,10 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
       }
       case CategoryType.ElectronicsType: {
         forkJoin([
-          this.productApiService.getElectronicColors(this.selectedModelId !== undefined ? this.selectedModelId : null),
-          this.productApiService.getElectronicBrands(this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1]),
-          this.productApiService.getElectronicMemories(this.selectedModelId !== undefined ? this.selectedModelId : null),
-          this.productApiService.getElectronicModels(this.brands.filter(brand => brand.selected).map(brand => brand.value.id).length > 0 ? this.brands.filter(brand => brand.selected).map(brand => brand.value.id) : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
+          this.productApiService.getElectronicColors(this.selectedModelId !== 'undefined' ? this.selectedModelId : null),
+          this.productApiService.getElectronicBrands(this.selectedSubcategoriesId.length > 0 && this.selectedSubcategoriesId[this.selectedSubcategoriesId.length - 1] != 'undefined' ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null),
+          this.productApiService.getElectronicMemories(this.selectedModelId !== 'undefined' ? this.selectedModelId : null),
+          this.productApiService.getElectronicModels(this.brands !== undefined ? (this.brands.filter(brand => brand.selected).map(brand => brand.value.id).length > 0 ? this.brands.filter(brand => brand.selected).map(brand => brand.value.id) : null) : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
         ]).subscribe(
           ([colors, brands, memories, models]: [Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[]]) => {
             this.colors = colors.map(item => new CheckboxItem<Specification<string>>(item));
@@ -385,7 +405,6 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
                         }
 
                         this.subcategoriesHierarchy[++this.currentSubcategoryNesting] = response;     
-                        this.clotheIsShoe = this.subcategoriesHierarchy[index].find(item => item.id === this.selectedSubcategoriesId[index])?.subType === SubcategoryType.Shoe;
                       });
                       this.spinnerService.changeSpinnerState(false);
                       this.onChangeSubcategory(true)
@@ -680,7 +699,8 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           this.brands.filter(brand => brand.selected).length > 0 ? this.brands.filter(brand => brand.selected).map(brand => brand.value.id) : null,
           this.selectedClothesViewId !== 'undefined' ? [this.selectedClothesViewId] : null, 
           null, 
-          this.selectedGenderId !== 'undefined' ? [this.selectedGenderId] : null).subscribe((response: PageResponse<Product>) => { 
+          this.selectedGenderId !== 'undefined' ? [this.selectedGenderId] : null,
+          this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null).subscribe((response: PageResponse<Product>) => { 
           response.items.forEach(item => {
             if (Array.isArray(item.images)) {
               item.images = item.images.map((image) => `${environment.blobUrl}/product-images/${image}`);
@@ -1103,8 +1123,9 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         break;
       }
       case CategoryType.ClothesType: {
+        this.clotheIsShoe = this.subcategoriesHierarchy[this.subcategoriesHierarchy.length - 1].find(item => item.id === this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1])?.subType === SubcategoryType.Shoe;
         forkJoin([
-          this.productApiService.getClothesViews(this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null),
+          this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null),
         ]).subscribe(
           ([clothesViews]: [Specification<string>[]]) => {
             this.clothesViews = clothesViews;
@@ -1121,7 +1142,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
       }
       case CategoryType.ElectronicsType: {
         forkJoin([
-          this.productApiService.getElectronicBrands(this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1])
+          this.productApiService.getElectronicBrands(this.selectedSubcategoriesId.length > 0 && this.selectedSubcategoriesId[this.selectedSubcategoriesId.length - 1] != 'undefined' ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
         ]).subscribe(
           ([brands]: [Specification<string>[]]) => {
             let newBrands = brands.map(item => new CheckboxItem<Specification<string>>(item));
@@ -1164,8 +1185,8 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
     switch (this.selectedCategoryType) {
       case CategoryType.ElectronicsType: {
         forkJoin([
-          this.productApiService.getElectronicColors(this.selectedModelId !== undefined ? this.selectedModelId : null),
-          this.productApiService.getElectronicMemories(this.selectedModelId !== undefined ? this.selectedModelId : null)
+          this.productApiService.getElectronicColors(this.selectedModelId !== 'undefined' ? this.selectedModelId : null),
+          this.productApiService.getElectronicMemories(this.selectedModelId !== 'undefined' ? this.selectedModelId : null)
         ]).subscribe(
           ([colors, memories]: [Specification<string>[], Specification<string>[]]) => {
             let newColors = colors.map(item => new CheckboxItem<Specification<string>>(item));
@@ -1192,6 +1213,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         break;
       }
       default: {
+        this.spinnerService.changeSpinnerState(false);
         loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
         break;
       }
@@ -1250,7 +1272,28 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
   onSelectedGenderChange(loadProducts: boolean = false): void {
     this.spinnerService.changeSpinnerState(true);
     forkJoin([
-      this.productApiService.getClothesViews(this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
+      this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
+    ]).subscribe(
+      ([clothesViews]: [Specification<string>[]]) => {
+        this.clothesViews = clothesViews;
+        this.selectedClothesViewId = this.clothesViews.map(i => i.id).indexOf(this.selectedClothesViewId) !== -1 ? this.selectedClothesViewId : 'undefined';
+        this.spinnerService.changeSpinnerState(false);
+        this.onSelectedClothesViewChange(loadProducts);
+        return;
+      },
+      error => {
+        console.error('Error fetching data:', error);
+        this.spinnerService.changeSpinnerState(false);
+        loadProducts ? this.loadSuitableProducts(true) : this.onChangeFilter();
+        return;
+      }
+    );
+  }
+
+  onSelectedClothesTypeChange(loadProducts: boolean = false): void {
+    this.spinnerService.changeSpinnerState(true);
+    forkJoin([
+      this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
     ]).subscribe(
       ([clothesViews]: [Specification<string>[]]) => {
         this.clothesViews = clothesViews;

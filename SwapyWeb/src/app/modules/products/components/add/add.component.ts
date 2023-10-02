@@ -79,7 +79,27 @@ export class AddComponent implements OnInit {
   brands!: Specification<string>[];
   selectedBrandId!: string;
 
-  clotheIsShoe: boolean = false;
+  private _clotheIsShoe: boolean = false;
+
+  get clotheIsShoe(): boolean  { return this._clotheIsShoe; }
+
+  set clotheIsShoe(value: boolean) {
+    this._clotheIsShoe = value;
+    forkJoin([
+      this.productApiService.getClothesSizes(this.selectedClothesTypeFilter == -1, this.clotheIsShoe)
+    ]).subscribe(
+      ([clothesSizes]: [Specification<string>[]]) => {
+        this.clothesSizes = clothesSizes;
+        this.spinnerService.changeSpinnerState(false);
+        return;
+      },
+      error => {
+        console.error('Error fetching data:', error);
+        this.spinnerService.changeSpinnerState(false);
+        return;
+      }
+    );
+  }
 
   selectedClothesTypeFilter: number = 0;
 
@@ -178,7 +198,7 @@ export class AddComponent implements OnInit {
           this.productApiService.getClothesSizes(this.selectedClothesTypeFilter == -1, this.clotheIsShoe),
           this.productApiService.getGenders(),
           this.productApiService.getClothesSeasons(),
-          this.productApiService.getClothesViews(this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
+          this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== 'undefined' ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
         ]).subscribe(
           ([brands, clothesSizes, genders, clothesSeasons, clothesViews]: [Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[]]) => {
             this.brands = brands;
@@ -345,7 +365,6 @@ export class AddComponent implements OnInit {
     this.sharedApiService.GetSubcategoriesBySubcategoryAsync(this.selectedSubcategoriesId[index]).subscribe(
       (response: CategoryNode[]) => {
         this.subcategoriesHierarchy[++this.currentSubcategoryNesting] = response;     
-        this.clotheIsShoe = this.subcategoriesHierarchy[index].find(item => item.id === this.selectedSubcategoriesId[index])?.subType === SubcategoryType.Shoe;
         this.onChangeSubcategory();
         this.spinnerService.changeSpinnerState(false);
       }
@@ -354,6 +373,7 @@ export class AddComponent implements OnInit {
 
   onChangeSubcategory(): void {
     this.spinnerService.changeSpinnerState(true);
+    this.clotheIsShoe = this.subcategoriesHierarchy[this.subcategoriesHierarchy.length - 1].find(item => item.id === this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1])?.subType === SubcategoryType.Shoe;
     switch(this.selectedCategoryType){
       case CategoryType.AnimalsType: {
         this.sharedApiService.getBreeds(this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null).subscribe((response : Specification<string>[]) => {
@@ -384,7 +404,7 @@ export class AddComponent implements OnInit {
       }
       case CategoryType.ClothesType: {
         forkJoin([
-          this.productApiService.getClothesViews(this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null),
+          this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== 'undefined' ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null),
         ]).subscribe(
           ([clothesViews]: [Specification<string>[]]) => {
             this.clothesViews = clothesViews;
@@ -421,9 +441,9 @@ export class AddComponent implements OnInit {
   }
 
   onSelectedModelChange(): void {
-    this.spinnerService.changeSpinnerState(true);
     switch (this.selectedCategoryType) {
       case CategoryType.ElectronicsType: {
+        this.spinnerService.changeSpinnerState(true);
         forkJoin([
           this.productApiService.getElectronicColors(this.selectedModelId !== undefined ? this.selectedModelId : null),
           this.productApiService.getElectronicMemories(this.selectedModelId !== undefined ? this.selectedModelId : null)
@@ -495,7 +515,27 @@ export class AddComponent implements OnInit {
   onSelectedGenderChange(): void {
     this.spinnerService.changeSpinnerState(true);
     forkJoin([
-      this.productApiService.getClothesViews(this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
+      this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== 'undefined' ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
+    ]).subscribe(
+      ([clothesViews]: [Specification<string>[]]) => {
+        this.clothesViews = clothesViews;
+        this.selectedClothesViewId = this.clothesViews.map(i => i.id).indexOf(this.selectedClothesViewId) !== -1 ? this.selectedClothesViewId : 'undefined';
+        this.spinnerService.changeSpinnerState(false);
+        this.onSelectedClothesViewChange();
+        return;
+      },
+      error => {
+        console.error('Error fetching data:', error);
+        this.spinnerService.changeSpinnerState(false);
+        return;
+      }
+    );
+  }
+
+  onSelectedClothesTypeChange(): void {
+    this.spinnerService.changeSpinnerState(true);
+    forkJoin([
+      this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== 'undefined' ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
     ]).subscribe(
       ([clothesViews]: [Specification<string>[]]) => {
         this.clothesViews = clothesViews;
@@ -562,12 +602,14 @@ export class AddComponent implements OnInit {
     const regex = /^[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}$/;
     const titleRegex = /^[A-ZА-ЯƏÜÖĞİŞÇ][A-ZА-ЯƏÜÖĞİŞÇa-zа-яəüöğışç0-9\s'""':;,.\(\)\*\-_]{2,127}$/;
 
+    alert(this.price);
+
     this.errorText = this.selectedTitle.trim().length === 0 ? "Title must not be empty" :
     this.selectedTitle.length > 128 || this.selectedTitle.length < 3 ? "Title must be at least 3 characters and no more than 128" :
     !titleRegex.test(this.selectedTitle) ? "Invalid title" :
     this.selectedDescription.length > 500 ? "Description must be no more than 500 characters" :
     !regex.test(this.selectedCategoryId) ? "Category field is required" :
-    !this.subcategoriesHierarchy[this.currentSubcategoryNesting - 1].find(s => s.id.toLowerCase() === this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1].toLowerCase())?.isFinal ? "You can't select an intermediate subcategory" :
+    this.selectedSubcategoriesId.length <= 0 || (!this.selectedSubcategoriesId[this.selectedSubcategoriesId.length - 1]) || this.selectedSubcategoriesId[this.selectedSubcategoriesId.length - 1] == 'undefined' || (!this.subcategoriesHierarchy[this.currentSubcategoryNesting - 1].find(s => s.id.toLowerCase() === this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1].toLowerCase())?.isFinal) ? "You can't select an intermediate subcategory" :
     !regex.test(this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1]) ? "Wrong subcategory" :
     !regex.test(this.selectedCityId) ? "Wrong city" : 
     this.price < 0 ? "Price cannot be negative" : 
@@ -640,7 +682,7 @@ export class AddComponent implements OnInit {
 
         formData.append("Miliage", `${this.miliage}`); 
         formData.append("EngineCapacity", `${this.engineCapacity}`); 
-        formData.append("ReleaseYear", `${new Date(this.releaseYear, 0, 1)}`); 
+        formData.append("ReleaseYear", `${new Date(this.releaseYear, 0, 1).toISOString()}`); 
         formData.append("IsNew", `${this.selectedIsNewFilter === 1}`); 
         formData.append("FuelTypeId", `${this.selectedFuelTypeId}`); 
         formData.append("AutoColorId", `${this.selectedColorId}`); 

@@ -46,10 +46,14 @@ namespace Swapy.DAL.Repositories
 
         public async Task<IEnumerable<ClothesBrand>> GetByClothesViewsAsync(IEnumerable<string> clothesViewsId)
         {
-            return await _context.ClothesBrands.Include(x => x.ClothesBrandsViews)
-                          .Where(x => clothesViewsId == null || clothesViewsId.Intersect(x.ClothesBrandsViews.Select(x => x.ClothesViewId)).Any())
-                          .OrderBy(x => x.Name)
-                          .ToListAsync();
+            var query = _context.ClothesBrands.Include(x => x.ClothesBrandsViews).AsQueryable();
+
+            if (clothesViewsId != null)
+            {
+                query = query.Where(x => x.ClothesBrandsViews.Any(cbv => clothesViewsId.Contains(cbv.ClothesViewId)));
+            }
+
+            return await query.OrderBy(x => x.Name).ToListAsync();
         }
     }
 }

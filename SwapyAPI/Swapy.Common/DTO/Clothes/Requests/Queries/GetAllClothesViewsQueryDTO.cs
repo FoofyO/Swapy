@@ -2,7 +2,8 @@
 {
     public class GetAllClothesViewsQueryDTO
     {
-        public string GenderId { get; set; }
-        public string ClothesTypeId { get; set; }
+        public bool? IsChild { get; set; }
+        public string? GenderId { get; set; }
+        public string? ClothesTypeId { get; set; }
     }
 }

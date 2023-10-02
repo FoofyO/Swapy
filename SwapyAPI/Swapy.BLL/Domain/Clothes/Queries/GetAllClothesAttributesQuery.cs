@@ -12,5 +12,6 @@ namespace Swapy.BLL.Domain.Clothes.Queries
         public List<string>? ClothesViewsId { get; set; }
         public List<string>? ClothesTypesId { get; set; }
         public List<string>? ClothesGendersId { get; set; }
+        public bool? IsChild { get; set; }
     }
 }

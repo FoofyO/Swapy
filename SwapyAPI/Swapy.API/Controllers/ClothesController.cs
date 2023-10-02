@@ -285,6 +285,7 @@ namespace Swapy.API.Controllers
                     ClothesBrandsId = dto.ClothesBrandsId,
                     ClothesGendersId = dto.ClothesGendersId,
                     ClothesSeasonsId = dto.ClothesSeasonsId,
+                    IsChild = dto.IsChild
                 };
 
                 var result = await _mediator.Send(query);
@@ -418,6 +419,7 @@ namespace Swapy.API.Controllers
             {
                 var query = new GetAllClothesViewsQuery()
                 {
+                    IsChild = dto.IsChild,
                     GenderId = dto.GenderId,
                     ClothesTypeId = dto.ClothesTypeId,
                 };

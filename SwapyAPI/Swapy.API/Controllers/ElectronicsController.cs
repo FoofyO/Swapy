@@ -417,10 +417,10 @@ namespace Swapy.API.Controllers
             }
         }
 
-        [HttpGet("Brands/{ElectronicTypeId}")]
+        [HttpGet("Brands")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllElectronicBrandsAsync([FromRoute] GetAllElectronicBrandsQueryDTO dto)
+        public async Task<IActionResult> GetAllElectronicBrandsAsync([FromQuery] GetAllElectronicBrandsQueryDTO dto)
         {
             try
             {

@@ -136,14 +136,18 @@ namespace Swapy.DAL.Repositories
 
         public async Task<IEnumerable<CategoryTreeResponseDTO>> GetSiblings(string subcategoryId)
         {
-            var currentSubcategory = await GetByIdAsync(subcategoryId);
+            var currentSubcategory = await _context.Subcategories.FindAsync(subcategoryId);
 
-            if (currentSubcategory.ParentSubcategoryId == null) 
+            if (currentSubcategory == null) 
             {
                 return _context.Categories.AsEnumerable()
                                           .Select(s => new CategoryTreeResponseDTO(s.Id, s.Type, null, s.Name, false, null, null))
                                           .OrderBy(s => s.Value)
                                           .ToList();
+            }
+            else if(currentSubcategory.ParentSubcategoryId == null)
+            {
+                return await GetByCategoryAsync(currentSubcategory.CategoryId);
             }
             else
             {

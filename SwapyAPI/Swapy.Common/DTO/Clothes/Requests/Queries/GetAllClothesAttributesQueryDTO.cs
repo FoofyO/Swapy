@@ -12,5 +12,6 @@ namespace Swapy.Common.DTO.Clothes.Requests.Queries
         public List<string>? ClothesViewsId { get; set; }
         public List<string>? ClothesTypesId { get; set; }
         public List<string>? ClothesGendersId { get; set; }
+        public bool? IsChild { get; set; }
     }
 }

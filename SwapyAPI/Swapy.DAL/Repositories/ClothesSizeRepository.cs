@@ -40,12 +40,17 @@ namespace Swapy.DAL.Repositories
 
         public async Task<IEnumerable<ClothesSize>> GetAllAsync()
         {
-            return await _context.ClothesSizes.OrderBy(x => x.Name).ToListAsync();
+            return await _context.ClothesSizes.OrderBy(x => x.Size).ToListAsync();
         }
 
         public async Task<IEnumerable<ClothesSize>> GetByChildAndShoeAsync(bool isChild, bool isShoe)
         {
-            return await _context.ClothesSizes.Where(cs => (cs.IsChild == isChild) && (cs.IsShoe == isShoe)).OrderBy(x => x.Name).ToListAsync();
+            var result = await _context.ClothesSizes
+                .Where(cs => (cs.IsChild == isChild) && (cs.IsShoe == isShoe))
+                .OrderBy(x => x.Size)
+                .ToListAsync();
+
+            return result;
         }
     }
 }

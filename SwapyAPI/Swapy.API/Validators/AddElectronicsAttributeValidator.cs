@@ -7,11 +7,6 @@ namespace Swapy.API.Validators
     {
         public AddElectronicsAttributeValidator()
         {
-            RuleFor(electrionics => electrionics.IsNew)
-            .NotEmpty()
-                .WithMessage("IsNew field is required")
-            .WithErrorCode("InvalidIsNewFormat");
-
             RuleFor(electrionics => electrionics.MemoryModelId)
             .NotEmpty()
                 .WithMessage("MemoryModelId field is required")

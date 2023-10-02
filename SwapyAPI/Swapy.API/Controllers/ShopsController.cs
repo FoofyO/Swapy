@@ -59,6 +59,10 @@ namespace Swapy.API.Controllers
                 var result = await _mediator.Send(query);
                 return Ok(result);
             }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the request: " + ex.Message);

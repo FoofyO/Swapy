@@ -8,25 +8,16 @@ namespace Swapy.API.Validators
         public AddAutoAttributeValidator()
         {
             RuleFor(auto => auto.Miliage)
-            .NotEmpty()
-                .WithMessage("Miliage field is required")
-            .GreaterThan(0)
+            .GreaterThan(-1)
                 .WithMessage("Miliage field must be non-negative")
             .WithErrorCode("InvalidMiliageFormat");
 
             RuleFor(auto => auto.EngineCapacity)
-            .NotEmpty()
-                .WithMessage("EngineCapacity field is required")
-            .GreaterThan(0)
+            .GreaterThan(-1)
                 .WithMessage("EngineCapacity field must be non-negative")
             .LessThanOrEqualTo(18200)
                 .WithMessage("EngineCapacity field must be less than or equal to 18200")
             .WithErrorCode("InvalidEngineCapacityFormat");
-
-            RuleFor(auto => auto.IsNew)
-            .NotEmpty()
-                .WithMessage("IsNew field is required")
-            .WithErrorCode("InvalidIsNewFormat");
 
             RuleFor(auto => auto.ReleaseYear)
             .NotEmpty()
