@@ -27,7 +27,7 @@ namespace Swapy.BLL.Domain.TVs.CommandHandlers
             if (!request.UserId.Equals(product.UserId)) throw new NoAccessException("No access to update this product");
 
             if (!string.IsNullOrEmpty(request.Title)) product.Title = request.Title;
-            if (!string.IsNullOrEmpty(request.Description)) product.Description = request.Description;
+            product.Description = request.Description;
             if (request.Price != null) product.Price = (decimal)request.Price;
             if (!string.IsNullOrEmpty(request.CurrencyId)) product.CurrencyId = request.CurrencyId;
             if (!string.IsNullOrEmpty(request.CategoryId)) product.CategoryId = request.CategoryId;
@@ -43,9 +43,9 @@ namespace Swapy.BLL.Domain.TVs.CommandHandlers
             if (!string.IsNullOrEmpty(request.ScreenDiagonalId)) tvAttribute.ScreenDiagonalId = request.ScreenDiagonalId;
             await _tvAttributeRepository.UpdateAsync(tvAttribute);
 
-            if (request.OldPaths.Count > 0) await _imageService.RemoveProductImagesAsync(request.OldPaths, request.ProductId);
+            if (request.OldPaths?.Count != null && request.OldPaths.Count > 0) await _imageService.RemoveProductImagesAsync(request.OldPaths, request.ProductId);
 
-            if (request.NewFiles.Count > 0) await _imageService.UploadProductImagesAsync(request.NewFiles, request.ProductId);
+            if (request.NewFiles?.Count != null && request.NewFiles.Count > 0) await _imageService.UploadProductImagesAsync(request.NewFiles, request.ProductId);
 
             return Unit.Value;
         }

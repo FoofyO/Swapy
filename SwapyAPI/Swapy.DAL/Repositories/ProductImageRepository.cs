@@ -2,6 +2,7 @@
 using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
+using System.Data.SqlTypes;
 
 namespace Swapy.DAL.Repositories
 {
@@ -45,7 +46,7 @@ namespace Swapy.DAL.Repositories
 
         public async Task<ProductImage> GetByPath(string path, string productId)
         {
-            return await _context.ProductImages.Where(p => p.ProductId.Equals(productId) && p.Image.Equals(path))
+            return await _context.ProductImages.Where(p => p.ProductId.Equals(productId) && p.Image.Equals(path.Substring(path.LastIndexOf('/') + 1)))
                                                .FirstOrDefaultAsync();
         }
     }

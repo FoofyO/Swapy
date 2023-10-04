@@ -215,6 +215,36 @@ namespace Swapy.API.Controllers
             }
         }
 
+        [HttpGet("GetProductSubcategory/{ProductId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetProductSubcategoryAsync([FromRoute] GetProductSubcategoryQueryDTO dto)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var query = new GetProductSubcategoryQuery()
+                {
+                    ProductId = dto.ProductId,
+                };
+
+                var result = await _mediator.Send(query);
+                return Ok(result);
+            }
+            catch (NoAccessException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request: " + ex.Message);
+            }
+        }
 
         [HttpPatch("Views/{ProductId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

@@ -5,7 +5,7 @@ namespace Swapy.Common.DTO.TVs.Responses
     public class TVAttributeResponseDTO : AttributeResponseDTO
     {
         public bool IsNew { get; set; }
-        public bool ISmart { get; set; }
+        public bool IsSmart { get; set; }
         public string TVBrandId { get; set; }
         public string TVBrand { get; set; }
         public string TVTypeId { get; set; }

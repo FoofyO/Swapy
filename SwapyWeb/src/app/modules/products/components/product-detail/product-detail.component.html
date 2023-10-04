@@ -131,7 +131,7 @@
             </tr>
             <tr class="information" *ngIf="productCategoryType == 1">
               <th>Release year:</th>
-              <td>{{product.releaseYear}}</td>
+              <td>{{product.releaseYear | date:'Y'}}</td>
             </tr>
             <tr class="information" *ngIf="productCategoryType == 1">
               <th>Fuel type:</th>

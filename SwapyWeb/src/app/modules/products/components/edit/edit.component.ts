@@ -11,6 +11,8 @@ import { CurrencyResponse } from 'src/app/core/models/currency-response.interfac
 import { AuthFacadeService } from 'src/app/modules/auth/services/auth-facade.service';
 import { environment } from 'src/environments/environment';
 import { HttpStatusCode } from 'axios';
+import { ProductSubcategory } from '../../models/product-subcategory-response.interface';
+import { SubcategoryType } from 'src/app/core/enums/subcategory-type.enum';
 
 @Component({
   selector: 'app-edit',
@@ -72,7 +74,27 @@ export class EditComponent implements OnInit {
   brands!: Specification<string>[];
   selectedBrandId!: string;
 
-  clotheIsShoe: boolean = false;
+  private _clotheIsShoe: boolean = false;
+
+  get clotheIsShoe(): boolean  { return this._clotheIsShoe; }
+
+  set clotheIsShoe(value: boolean) {
+    this._clotheIsShoe = value;
+    forkJoin([
+      this.productApiService.getClothesSizes(this.selectedClothesTypeFilter == -1, this.clotheIsShoe)
+    ]).subscribe(
+      ([clothesSizes]: [Specification<string>[]]) => {
+        this.clothesSizes = clothesSizes;
+        this.spinnerService.changeSpinnerState(false);
+        return;
+      },
+      error => {
+        console.error('Error fetching data:', error);
+        this.spinnerService.changeSpinnerState(false);
+        return;
+      }
+    );
+  }
 
   selectedClothesTypeFilter: number = 0;
 
@@ -117,7 +139,7 @@ export class EditComponent implements OnInit {
 
   selectedTitle: string = "";
 
-  selectedDescription: string = "";
+  selectedDescription: string | null = null;
 
   newSelectedImages: File[] = [];
 
@@ -134,10 +156,11 @@ export class EditComponent implements OnInit {
     this.clearSelectionsInAdditionalFilters();
     switch(value){
       case CategoryType.AnimalsType: {
-        this.sharedApiService.getBreeds(this.product.categories[this.product.categories.length - 1].id ? this.product.categories[this.product.categories.length - 1].id : null).subscribe((response : Specification<string>[]) => {
+        this.sharedApiService.getBreeds(this.productSubcategory?.Id ? this.productSubcategory?.Id : null).subscribe((response : Specification<string>[]) => {
           this.breeds = response;
           this._selectedCategoryType = value;
           this.spinnerService.changeSpinnerState(false);
+          this.loadProductDetailByCategory();
           return;
         })
         break;
@@ -147,8 +170,8 @@ export class EditComponent implements OnInit {
           this.productApiService.getFuelTypes(),
           this.productApiService.getColors(),
           this.productApiService.getTransmissionTypes(),
-          this.productApiService.getAutoBrands(this.product.categories[this.product.categories.length - 1].id ? [this.product.categories[this.product.categories.length - 1].id] : null),
-          this.productApiService.getAutoModels(this.selectedBrandId !== 'undefined' ? [this.selectedBrandId] : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? [this.product.categories[this.product.categories.length - 1].id] : null)
+          this.productApiService.getAutoBrands(this.productSubcategory?.Id ? [this.productSubcategory?.Id] : null),
+          this.productApiService.getAutoModels(this.selectedBrandId !== 'undefined' ? [this.selectedBrandId] : null, this.productSubcategory?.Id ? [this.productSubcategory?.Id] : null)
         ]).subscribe(
           ([fuelTypes, colors, transmissionTypes, brands, models]: [Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[]]) => {
             this.fuelTypes = fuelTypes;
@@ -158,6 +181,7 @@ export class EditComponent implements OnInit {
             this.models = models;
             this._selectedCategoryType = value;
             this.spinnerService.changeSpinnerState(false);
+            this.loadProductDetailByCategory();
             return;
           },
           error => {
@@ -175,7 +199,7 @@ export class EditComponent implements OnInit {
           this.productApiService.getClothesSizes(this.selectedClothesTypeFilter == -1, this.clotheIsShoe),
           this.productApiService.getGenders(),
           this.productApiService.getClothesSeasons(),
-          this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== 'undefined' ? this.selectedGenderId : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? this.product.categories[this.product.categories.length - 1].id : null)
+          this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== 'undefined' ? this.selectedGenderId : null, this.productSubcategory?.Id ? this.productSubcategory?.Id : null)
         ]).subscribe(
           ([brands, clothesSizes, genders, clothesSeasons, clothesViews]: [Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[]]) => {
             this.brands = brands;
@@ -185,6 +209,7 @@ export class EditComponent implements OnInit {
             this.clothesViews = clothesViews;
             this._selectedCategoryType = value;
             this.spinnerService.changeSpinnerState(false);
+            this.loadProductDetailByCategory();
             return;
           },
           error => {
@@ -199,9 +224,9 @@ export class EditComponent implements OnInit {
       case CategoryType.ElectronicsType: {
         forkJoin([
           this.productApiService.getElectronicColors(this.selectedModelId !== undefined ? this.selectedModelId : null),
-          this.productApiService.getElectronicBrands(this.product.categories[this.product.categories.length - 1].id),
+          this.productApiService.getElectronicBrands(this.productSubcategory?.Id ? this.productSubcategory?.Id : null),
           this.productApiService.getElectronicMemories(this.selectedModelId !== undefined ? this.selectedModelId : null),
-          this.productApiService.getElectronicModels(this.selectedBrandId !== 'undefined' ? [this.selectedBrandId] : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? this.product.categories[this.product.categories.length - 1].id : null)
+          this.productApiService.getElectronicModels(this.selectedBrandId !== 'undefined' ? [this.selectedBrandId] : null, this.productSubcategory?.Id ? this.productSubcategory?.Id : null)
         ]).subscribe(
           ([colors, brands, memories, models]: [Specification<string>[], Specification<string>[], Specification<string>[], Specification<string>[]]) => {
             this.colors = colors;
@@ -210,6 +235,7 @@ export class EditComponent implements OnInit {
             this.models = models;
             this._selectedCategoryType = value;
             this.spinnerService.changeSpinnerState(false);
+            this.loadProductDetailByCategory();
             return;
           },
           error => {
@@ -224,12 +250,14 @@ export class EditComponent implements OnInit {
       case CategoryType.ItemsType: {
         this._selectedCategoryType = value;
         this.spinnerService.changeSpinnerState(false);
+        this.loadProductDetailByCategory();
         return;
         break;
       }
       case CategoryType.RealEstatesType: {
         this._selectedCategoryType = value;
         this.spinnerService.changeSpinnerState(false);
+        this.loadProductDetailByCategory();
         return;
         break;
       }
@@ -247,6 +275,7 @@ export class EditComponent implements OnInit {
             this.screenDiagonals = screenDiagonals;
             this._selectedCategoryType = value;
             this.spinnerService.changeSpinnerState(false);
+            this.loadProductDetailByCategory();
             return;
           },
           error => {
@@ -266,6 +295,8 @@ export class EditComponent implements OnInit {
       }
     }
   }
+
+  productSubcategory!: ProductSubcategory;
 
   productId!: string;
   product!: any;
@@ -307,9 +338,11 @@ export class EditComponent implements OnInit {
         this.selectedCurrencySymbol = currencies[0]?.symbol;
         this.cities = cities;
 
-        this.productApiService.GetProductCategoryType(this.productId).subscribe(
+        this.productApiService.GetProductSubcategory(this.productId).subscribe(
           (result) => {
-            this.selectedCategoryType = result.value;
+            this.productSubcategory = new ProductSubcategory(result.Id, result.Name, result.Type, result.CategoryId, result.SubType);
+            this.clotheIsShoe = this.productSubcategory.SubType === SubcategoryType.Shoe;
+            this.selectedCategoryType = this.productSubcategory.Type;
           },
           (error) => {
             if(error.response.status === HttpStatusCode.NotFound){
@@ -367,10 +400,12 @@ export class EditComponent implements OnInit {
             this.selectedColorId = result.colorId;
             this.selectedTransmissionTypeId = result.transmissionTypeId;
             this.selectedBrandId = result.autoBrandId;
+            this.selectedModelId = result.autoModelId;
             this.selectedIsNewFilter = result.isNew ? 1 : -1;
             this.miliage = result.miliage;
             this.engineCapacity = result.engineCapacity;
-            this.releaseYear = result.releaseYear.getFullYear();
+            this.releaseYear = new Date(result.releaseYear).getFullYear();
+            this.onSelectedBrandChange();
           },
           (error) => {
             if(error.response.status === HttpStatusCode.NotFound){
@@ -399,6 +434,8 @@ export class EditComponent implements OnInit {
             this.selectedClothesViewId = result.clothesViewId;
             this.selectedIsNewFilter = result.isNew ? 1 : -1;
             this.selectedClothesTypeFilter = result.isChild ? -1 : 1;
+            this.onSelectedClothesTypeChange();
+            this.onSelectedGenderChange();
           },
           (error) => {
             if(error.response.status === HttpStatusCode.NotFound){
@@ -425,6 +462,7 @@ export class EditComponent implements OnInit {
             this.selectedMemoryId = result.memoryId;
             this.selectedModelId = result.modelId;
             this.selectedIsNewFilter = result.isNew ? 1 : -1;
+            this.onSelectedBrandChange();
           },
           (error) => {
             if(error.response.status === HttpStatusCode.NotFound){
@@ -518,9 +556,9 @@ export class EditComponent implements OnInit {
   generateRange(count: number): number[] { return Array.from({length: count}, (_, i) => i + 1); }
 
   onSelectedModelChange(): void {
-    this.spinnerService.changeSpinnerState(true);
     switch (this.selectedCategoryType) {
       case CategoryType.ElectronicsType: {
+        this.spinnerService.changeSpinnerState(true);
         forkJoin([
           this.productApiService.getElectronicColors(this.selectedModelId !== undefined ? this.selectedModelId : null),
           this.productApiService.getElectronicMemories(this.selectedModelId !== undefined ? this.selectedModelId : null)
@@ -549,7 +587,7 @@ export class EditComponent implements OnInit {
     switch (this.selectedCategoryType) {
       case CategoryType.AutosType: {
         forkJoin([
-          this.productApiService.getAutoModels(this.selectedBrandId !== 'undefined' ? [this.selectedBrandId] : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? [this.product.categories[this.product.categories.length - 1].id] : null)
+          this.productApiService.getAutoModels(this.selectedBrandId !== 'undefined' ? [this.selectedBrandId] : null, this.productSubcategory?.Id ? [this.productSubcategory?.Id] : null)
         ]).subscribe(
           ([models]: [Specification<string>[]]) => {
             this.models = models;
@@ -566,7 +604,7 @@ export class EditComponent implements OnInit {
       }
       case CategoryType.ElectronicsType: {
         forkJoin([
-          this.productApiService.getElectronicModels(this.selectedBrandId !== 'undefined' ? [this.selectedBrandId] : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? this.product.categories[this.product.categories.length - 1].id : null)
+          this.productApiService.getElectronicModels(this.selectedBrandId !== 'undefined' ? [this.selectedBrandId] : null, this.productSubcategory?.Id ? this.productSubcategory?.Id : null)
         ]).subscribe(
           ([models]: [Specification<string>[]]) => {
             this.models = models;
@@ -592,7 +630,27 @@ export class EditComponent implements OnInit {
   onSelectedGenderChange(): void {
     this.spinnerService.changeSpinnerState(true);
     forkJoin([
-      this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== 'undefined' ? this.selectedGenderId : null, this.product.categories[this.product.categories.length - 1].id !== undefined ? this.product.categories[this.product.categories.length - 1].id : null)
+      this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== 'undefined' ? this.selectedGenderId : null, this.productSubcategory?.Id ? this.productSubcategory?.Id : null)
+    ]).subscribe(
+      ([clothesViews]: [Specification<string>[]]) => {
+        this.clothesViews = clothesViews;
+        this.selectedClothesViewId = this.clothesViews.map(i => i.id).indexOf(this.selectedClothesViewId) !== -1 ? this.selectedClothesViewId : 'undefined';
+        this.spinnerService.changeSpinnerState(false);
+        this.onSelectedClothesViewChange();
+        return;
+      },
+      error => {
+        console.error('Error fetching data:', error);
+        this.spinnerService.changeSpinnerState(false);
+        return;
+      }
+    );
+  }
+
+  onSelectedClothesTypeChange(): void {
+    this.spinnerService.changeSpinnerState(true);
+    forkJoin([
+      this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== 'undefined' ? this.selectedGenderId : null, this.productSubcategory?.Id ? this.productSubcategory?.Id : null)
     ]).subscribe(
       ([clothesViews]: [Specification<string>[]]) => {
         this.clothesViews = clothesViews;
@@ -662,7 +720,7 @@ export class EditComponent implements OnInit {
     this.errorText = this.selectedTitle.trim().length === 0 ? "Title must not be empty" :
     this.selectedTitle.length > 128 || this.selectedTitle.length < 3 ? "Title must be at least 3 characters and no more than 128" :
     !titleRegex.test(this.selectedTitle) ? "Invalid title" :
-    this.selectedDescription.length > 500 ? "Description must be no more than 500 characters" :
+    this.selectedDescription && this.selectedDescription?.length > 500 ? "Description must be no more than 500 characters" :
     !regex.test(this.selectedCityId) ? "Wrong city" : 
     this.price < 0 ? "Price cannot be negative" : 
     !regex.test(this.selectedCurrencyId) ? "Wrong currency" : null;
@@ -679,11 +737,11 @@ export class EditComponent implements OnInit {
     let formData = new FormData();
     formData.append("ProductId", this.productId);
     formData.append("Title", this.selectedTitle);
-    formData.append("Description", this.selectedDescription);
+    if (this.selectedDescription) { formData.append("Description", this.selectedDescription); }
     formData.append("Price", this.price.toString());
     formData.append("CurrencyId", this.selectedCurrencyId);
     formData.append("CategoryId", this.product.categories[0].id);
-    formData.append("SubcategoryId", this.product.categories[this.product.categories.length - 1].id);
+    formData.append("SubcategoryId", this.productSubcategory.Id);
     formData.append("CityId", this.selectedCityId);
     this.imagesToRemove.forEach(x => {
       formData.append("OldPaths", x)
@@ -736,9 +794,12 @@ export class EditComponent implements OnInit {
 
         if(this.errorText != null) { this.spinnerService.changeSpinnerState(false); return; }
 
+        var tempReleaseYearDate: Date =  new Date();
+        tempReleaseYearDate.setFullYear(this.releaseYear, 0, 1);
+
         formData.append("Miliage", `${this.miliage}`); 
         formData.append("EngineCapacity", `${this.engineCapacity}`); 
-        formData.append("ReleaseYear", `${new Date(this.releaseYear, 0, 1)}`); 
+        formData.append("ReleaseYear", `${tempReleaseYearDate.toISOString()}`); 
         formData.append("IsNew", `${this.selectedIsNewFilter === 1}`);
         formData.append("FuelTypeId", `${this.selectedFuelTypeId}`);  
         formData.append("AutoColorId", `${this.selectedColorId}`); 
@@ -871,7 +932,7 @@ export class EditComponent implements OnInit {
         if(this.errorText != null) { this.spinnerService.changeSpinnerState(false); return; }
 
         formData.append("IsNew", `${this.selectedIsNewFilter === 1}`); 
-        formData.append("ItemTypeId", `${this.product.categories[this.product.categories.length - 1].id}`); 
+        formData.append("ItemTypeId", `${this.productSubcategory?.Id ? this.productSubcategory?.Id : null}`); 
 
         this.productApiService.updateItem(formData).subscribe(
           (result) => {this.spinnerService.changeSpinnerState(false);this.isUpdatedSuccessful = true;},
@@ -906,7 +967,7 @@ export class EditComponent implements OnInit {
         formData.append("Area", `${this.area}`); 
         formData.append("Rooms", `${this.rooms}`); 
         formData.append("IsRent", `${this.selectedIsRentFilter === 1}`); 
-        formData.append("RealEstateTypeId", `${this.product.categories[this.product.categories.length - 1].id}`); 
+        formData.append("RealEstateTypeId", `${this.productSubcategory?.Id ? this.productSubcategory?.Id : null}`); 
 
         this.productApiService.updateRealEstate(formData).subscribe(
           (result) => {this.spinnerService.changeSpinnerState(false);this.isUpdatedSuccessful = true;},
