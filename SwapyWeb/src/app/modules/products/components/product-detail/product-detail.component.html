@@ -226,7 +226,7 @@
             <div class="price-box" *ngIf="product"><p class="price">{{product.price}} <span class="currency">{{product.currency}}</span></p></div>
             <p class="seller-information-box-loading" *ngIf="!product"></p>
             <div class="seller-information-box" *ngIf="product">
-                <p class="seller-name">{{product.sellerName}}</p>  
+                <a class="seller-name" [routerLink]="[product.userType == 0 ? '/users/' : '/shops/', product.userId]">{{product.sellerName}}</a>  
                 <button class="button" (click)="copyToClipboard($event)" *ngIf="!isMe">
                     <i class="fa-solid fa-phone"></i>
                     &nbsp;{{product.phoneNumber}}

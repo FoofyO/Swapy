@@ -152,7 +152,7 @@ namespace Swapy.DAL.Repositories
 
             if(!chat.BuyerId.Equals(userId) && !chat.Product.UserId.Equals(userId)) throw new NoAccessException($"Invalid UserId");
 
-            return !chat.Messages.FirstOrDefault().SenderId.Equals(userId);
+            return chat.Messages.Count > 0 ? !chat.Messages.FirstOrDefault().SenderId.Equals(userId) : false;
         }
 
         public async Task UpdateChatState(string chatId, bool value)

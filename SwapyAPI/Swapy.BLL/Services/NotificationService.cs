@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Interfaces;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
@@ -13,15 +14,13 @@ namespace Swapy.BLL.Services
         private readonly UserManager<User> _userManager;
         private readonly ICityRepository _cityRepository;
         private readonly ICurrencyRepository _currencyRepository;
-        private readonly IShopAttributeRepository _shopRepository;
         private readonly IUserSubscriptionRepository _userSubscriptionRepository;
 
-        public NotificationService(UserManager<User> userManager, ICityRepository cityRepository, ICurrencyRepository currencyRepository, IShopAttributeRepository shopRepository, IEmailService emailService, IUserSubscriptionRepository userSubscriptionRepository)
+        public NotificationService(UserManager<User> userManager, ICityRepository cityRepository, ICurrencyRepository currencyRepository, IEmailService emailService, IUserSubscriptionRepository userSubscriptionRepository)
         {
             _userManager = userManager;
             _emailService = emailService;
             _cityRepository = cityRepository;
-            _shopRepository = shopRepository;
             _currencyRepository = currencyRepository;
             _userSubscriptionRepository = userSubscriptionRepository;
         }
@@ -29,13 +28,11 @@ namespace Swapy.BLL.Services
         public async Task Notificate(NotificationModel model)
         {
             var sellerName = string.Empty;
-            var user = await _userManager.FindByIdAsync(model.UserId);
+            var user = await _userManager.Users.Where(u => u.Id == model.UserId)
+                                               .Include(u => u.ShopAttribute)
+                                               .FirstOrDefaultAsync();
 
-            if (user.Type == UserType.Shop)
-            {
-                var shop = await _shopRepository.GetByUserIdAsync(model.UserId);
-                sellerName = shop.ShopName;
-            }
+            if (user.Type == UserType.Shop) sellerName = user.ShopAttribute.ShopName;
             else sellerName = user.FirstName + " " + user.LastName;
 
             var city = await _cityRepository.GetLocalizeByIdAsync(model.CityId);
