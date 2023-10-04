@@ -39,7 +39,7 @@ export class ChatHubService {
 
     if(this.userId !== "") {
         this.hubConnection = new signalR.HubConnectionBuilder()
-            .configureLogging(signalR.LogLevel.Debug)
+            .configureLogging(signalR.LogLevel.None)
             .withUrl(`${environment.apiUrl}/chatHub`, {
                 skipNegotiation: true,
                 transport: signalR.HttpTransportType.WebSockets,
@@ -68,7 +68,6 @@ export class ChatHubService {
 
   receiveMessages() {
     this.hubConnection.on('ReceiveMessage', (data: ChatMessageModel) => {
-      console.log(window.location.href);
       if(window.location.href.includes('chats')) {
         this.chatDetail.receiveMessage(data);
         this.chatList.receiveMessage(data);

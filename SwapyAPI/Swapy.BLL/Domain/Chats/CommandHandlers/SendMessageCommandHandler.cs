@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Swapy.BLL.Domain.Chats.Commands;
 using Swapy.BLL.Hubs;
 using Swapy.BLL.Interfaces;
@@ -42,7 +43,8 @@ namespace Swapy.BLL.Domain.Chats.CommandHandlers
 
             //Chat Hub Logic
             var recepient = await _chatRepository.GetChatRecepientIdAsync(request.ChatId, request.UserId);
-            
+
+            var tmp = ChatHub.GetConnectedClients();
             var chatRecepient = ChatHub.GetConnectedClients().FirstOrDefault(c => c.UserId.Equals(recepient.Id));
             var chatSender = ChatHub.GetConnectedClients().FirstOrDefault(c => c.UserId.Equals(message.SenderId));
 
@@ -52,7 +54,10 @@ namespace Swapy.BLL.Domain.Chats.CommandHandlers
 
             if (chatRecepient != null) 
             {
-                var sender = await _userManager.FindByIdAsync(request.UserId);
+                var sender = await _userManager.Users.Where(u => u.Id == request.UserId)
+                                                     .Include(u => u.ShopAttribute)
+                                                     .FirstOrDefaultAsync();
+
                 var senderName = sender.Type == UserType.Seller ? $"{sender.FirstName} {sender.LastName}" : sender.ShopAttribute.ShopName;
                 model.SenderName = senderName;
 

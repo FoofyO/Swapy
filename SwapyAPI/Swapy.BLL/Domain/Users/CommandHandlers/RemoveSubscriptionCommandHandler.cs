@@ -26,7 +26,7 @@ namespace Swapy.BLL.Domain.Users.CommandHandlers
 
 
             var user = await _userManager.FindByIdAsync(request.RecipientId);
-            user.SubscriptionsCount++;
+            user.SubscriptionsCount--;
             await _userSubscriptionRepository.DeleteAsync(userSubscription);
 
             return Unit.Value;

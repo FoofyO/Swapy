@@ -14,16 +14,31 @@ namespace Swapy.BLL.Domain.Chats.QueryHandlers
 
         public async Task<ChatsResponseDTO> Handle(GetAllSellerChatsQuery request, CancellationToken cancellationToken)
         {
-            var chats = (await _chatRepository.GetAllSellerChatsAsync(request.UserId)).Select(x => new ChatResponseDTO()
+            var chats = new List<ChatResponseDTO>();
+
+            foreach (var chat in await _chatRepository.GetAllSellerChatsAsync(request.UserId))
             {
-                ChatId = x.Id,
-                Logo = x.Buyer.Logo,
-                IsReaded = x.Messages.FirstOrDefault().SenderId.Equals(request.UserId) ? true : x.IsReaded,
-                Title = x.Buyer.Type == UserType.Seller ? $"{x.Buyer.FirstName} {x.Buyer.LastName}" : x.Buyer.ShopAttribute.ShopName,
-                LastMessage = x.Messages.FirstOrDefault()?.Text == null ? "📎 Photo" : x.Messages.FirstOrDefault()?.Text,
-                Image = x.Product.Images.FirstOrDefault()?.Image == null ? "default-product-image.png" : x.Product.Images.FirstOrDefault()?.Image,
-                LastMessageDateTime = x.Messages.FirstOrDefault()?.DateTime,
-            });
+                var tmpChat = new ChatResponseDTO();
+                tmpChat.ChatId = chat.Id;
+                tmpChat.Logo = chat.Buyer.Logo;
+                tmpChat.Title = chat.Buyer.Type == UserType.Seller ? $"{chat.Buyer.FirstName} {chat.Buyer.LastName}" : chat.Buyer.ShopAttribute.ShopName;
+                tmpChat.Image = chat.Product.Images.FirstOrDefault()?.Image == null ? "default-product-image.png" : chat.Product.Images.FirstOrDefault()?.Image;
+
+                if (chat.Messages == null || chat.Messages.Count == 0)
+                {
+                    tmpChat.IsReaded = true;
+                    tmpChat.LastMessage = string.Empty;
+                    tmpChat.LastMessageDateTime = null;
+                }
+                else
+                {
+                    tmpChat.IsReaded = chat.Messages.FirstOrDefault().SenderId.Equals(request.UserId) ? true : chat.IsReaded;
+                    tmpChat.LastMessage = chat.Messages.FirstOrDefault()?.Text == null ? "📎 Photo" : chat.Messages.FirstOrDefault()?.Text;
+                    tmpChat.LastMessageDateTime = chat.Messages.FirstOrDefault()?.DateTime;
+                }
+
+                chats.Add(tmpChat);
+            }
 
             return new ChatsResponseDTO(chats, chats.Count());
         }
