@@ -29,7 +29,7 @@ namespace Swapy.BLL.Domain.Clothes.CommandHandlers
             if (!request.UserId.Equals(product.UserId)) throw new NoAccessException("No access to update this product");
 
             if (!string.IsNullOrEmpty(request.Title)) product.Title = request.Title;
-            if (!string.IsNullOrEmpty(request.Description)) product.Description = request.Description;
+            product.Description = request.Description;
             if (request.Price != null) product.Price = (decimal)request.Price;
             if (!string.IsNullOrEmpty(request.CurrencyId)) product.CurrencyId = request.CurrencyId;
             if (!string.IsNullOrEmpty(request.CategoryId)) product.CategoryId = request.CategoryId;

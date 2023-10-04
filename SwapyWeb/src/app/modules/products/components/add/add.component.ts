@@ -602,8 +602,6 @@ export class AddComponent implements OnInit {
     const regex = /^[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}$/;
     const titleRegex = /^[A-ZА-ЯƏÜÖĞİŞÇ][A-ZА-ЯƏÜÖĞİŞÇa-zа-яəüöğışç0-9\s'""':;,.\(\)\*\-_]{2,127}$/;
 
-    alert(this.price);
-
     this.errorText = this.selectedTitle.trim().length === 0 ? "Title must not be empty" :
     this.selectedTitle.length > 128 || this.selectedTitle.length < 3 ? "Title must be at least 3 characters and no more than 128" :
     !titleRegex.test(this.selectedTitle) ? "Invalid title" :
@@ -680,9 +678,12 @@ export class AddComponent implements OnInit {
 
         if(this.errorText != null) { this.spinnerService.changeSpinnerState(false); return; }
 
+        var tempReleaseYearDate: Date =  new Date();
+        tempReleaseYearDate.setFullYear(this.releaseYear, 0, 1);
+
         formData.append("Miliage", `${this.miliage}`); 
         formData.append("EngineCapacity", `${this.engineCapacity}`); 
-        formData.append("ReleaseYear", `${new Date(this.releaseYear, 0, 1).toISOString()}`); 
+        formData.append("ReleaseYear", `${tempReleaseYearDate.toISOString()}`); 
         formData.append("IsNew", `${this.selectedIsNewFilter === 1}`); 
         formData.append("FuelTypeId", `${this.selectedFuelTypeId}`); 
         formData.append("AutoColorId", `${this.selectedColorId}`); 

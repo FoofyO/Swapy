@@ -5,6 +5,7 @@ using Swapy.Common.Entities;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
+using System.Linq;
 
 namespace Swapy.DAL.Repositories
 {
@@ -84,6 +85,17 @@ namespace Swapy.DAL.Repositories
             var item = await _context.Products.Where(a => a.Id.Equals(id))
                                     .Include(p => p.Subcategory)
                                     .Select(p => new SpecificationResponseDTO<CategoryType>(p.CategoryId, p.Subcategory.Type))
+                                    .FirstOrDefaultAsync();
+
+            if (item == null) throw new NotFoundException($"no category found for {GetType().Name.Split("Repository")[0]} with {id} id");
+            return item;
+        }
+
+        public async Task<ProductSubcategoryResponseDTO> GetProductSubcategoryAsync(string id)
+        {
+            var item = await _context.Products.Where(a => a.Id.Equals(id))
+                                    .Include(p => p.Subcategory)
+                                    .Select(p => new ProductSubcategoryResponseDTO(p.Subcategory.Id, p.Subcategory.Name, p.Subcategory.Type, p.CategoryId, p.Subcategory.SubType))
                                     .FirstOrDefaultAsync();
 
             if (item == null) throw new NotFoundException($"no category found for {GetType().Name.Split("Repository")[0]} with {id} id");

@@ -18,6 +18,7 @@ import { UserType } from 'src/app/core/enums/user-type.enum';
 import { AutoResponse } from '../models/auto-response.interface';
 import { RealEstateResponse } from '../models/real-estate-response.interface';
 import { AxiosInterceptorService } from 'src/app/core/services/axios-interceptor.service';
+import { ProductSubcategory } from '../models/product-subcategory-response.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -154,6 +155,19 @@ export class ProductApiService {
       map((response: AxiosResponse<any>) => {
         const category: Specification<CategoryType> = response.data;
         return category;
+      }),
+      catchError((error: AxiosError) => {
+        throw error;
+      })
+    );
+  }
+
+  GetProductSubcategory(productId : string): Observable<ProductSubcategory>{
+    let url = `${this.apiUrl}/${this.productsApiUrl}/GetProductSubcategory/${productId}`
+    return from(this.axiosInterceptorService.get(url)).pipe(
+      map((response: AxiosResponse<any>) => {
+        const productSubcategory: ProductSubcategory  = new ProductSubcategory(response.data.id, response.data.name, response.data.type, response.data.categoryId, response.data.subType);
+        return productSubcategory;
       }),
       catchError((error: AxiosError) => {
         throw error;
@@ -1039,7 +1053,7 @@ export class ProductApiService {
   }
 
   updateRealEstate(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.put(`${this.apiUrl}/${this.itemsApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.put(`${this.apiUrl}/${this.realEstatesApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),
@@ -1050,7 +1064,7 @@ export class ProductApiService {
   }
 
   updateTv(data: FormData): Observable<void>{
-    return from(this.axiosInterceptorService.put(`${this.apiUrl}/${this.itemsApiUrl}`, data)).pipe(
+    return from(this.axiosInterceptorService.put(`${this.apiUrl}/${this.tvsApiUrl}`, data)).pipe(
       map((response: AxiosResponse<any>) => {
         return response.data;
       }),

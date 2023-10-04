@@ -165,12 +165,12 @@
                     </p>
                     <div class="radio-groups" *ngIf="selectedCategoryType == 2">
                         <div class="radio-group">
-                          <input id="clothes-type-radio-adult" type="radio" name="in-clothes-type" [(ngModel)]="selectedClothesTypeFilter" [value]="1"/>
+                          <input id="clothes-type-radio-adult" type="radio" name="in-clothes-type" [(ngModel)]="selectedClothesTypeFilter" (ngModelChange)="onSelectedClothesTypeChange()" [value]="1"/>
                           <label for="clothes-type-radio-adult">Adult</label>
                         </div>
                       
                         <div class="radio-group">
-                          <input id="clothes-type-radio-childish" type="radio" name="in-clothes-type" [(ngModel)]="selectedClothesTypeFilter" [value]="-1"/>
+                          <input id="clothes-type-radio-childish" type="radio" name="in-clothes-type" [(ngModel)]="selectedClothesTypeFilter" (ngModelChange)="onSelectedClothesTypeChange()" [value]="-1"/>
                           <label for="clothes-type-radio-childish">Childish</label>
                         </div>
                     </div>
@@ -205,10 +205,10 @@
                         </select>   
                     </div>
         
-                    <p class="information-title" *ngIf="(selectedCategoryType == 2 && selectedGenderId !== undefined)">
+                    <p class="information-title" *ngIf="selectedCategoryType == 2 && selectedGenderId && selectedGenderId != 'undefined' && selectedClothesTypeFilter != 0 && productSubcategory?.Id && productSubcategory.Id != 'undefined'">
                         Clothes view:
                     </p>
-                    <div class="select-container" *ngIf="(selectedCategoryType == 2 && selectedGenderId !== undefined)">
+                    <div class="select-container" *ngIf="selectedCategoryType == 2 && selectedGenderId && selectedGenderId != 'undefined' && selectedClothesTypeFilter != 0 && productSubcategory?.Id && productSubcategory.Id != 'undefined'">
                         <select class="form-select select-filter" [(ngModel)]="selectedClothesViewId" (ngModelChange)="onSelectedClothesViewChange()">
                             <option class="option" [value]="undefined">Unselected</option>
                             <option *ngFor="let clothesView of clothesViews;" class="option" [value]="clothesView.id">{{clothesView.value}}</option>

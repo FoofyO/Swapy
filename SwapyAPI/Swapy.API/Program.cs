@@ -298,6 +298,7 @@ namespace Swapy.API
             builder.Services.AddTransient<IRequestHandler<GetUserDataQuery, UserDataResponseDTO>, GetUserDataQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetUserSubscriptionsQuery, IEnumerable<Subscription>>, GetUserSubscriptionsQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetProductCategoryTypeQuery, SpecificationResponseDTO<CategoryType>>, GetProductCategoryTypeQueryHandler>();
+            builder.Services.AddTransient<IRequestHandler<GetProductSubcategoryQuery, ProductSubcategoryResponseDTO>, GetProductSubcategoryQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<GetTemporaryChatQuery, DetailChatResponseDTO>, GetTemporaryChatQueryHandler>();
             builder.Services.AddTransient<IRequestHandler<IncrementProductViewsCommand, Unit>, IncrementProductViewsCommandHandler>();
             builder.Services.AddTransient<IRequestHandler<LoginCommand, AuthResponseDTO>, LoginCommandHandler>();

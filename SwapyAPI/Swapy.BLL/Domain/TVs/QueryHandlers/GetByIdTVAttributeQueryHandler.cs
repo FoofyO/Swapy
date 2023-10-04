@@ -52,7 +52,7 @@ namespace Swapy.BLL.Domain.TVs.QueryHandlers
                 Images = tvAttribute.Product.Images.Select(i => i.Image).ToList(),
                 IsNew = tvAttribute.IsNew,
                 IsFavorite = request.UserId == null ? false : await _favoriteProductRepository.CheckProductOnFavorite(tvAttribute.ProductId, request.UserId),
-                ISmart = tvAttribute.IsSmart,
+                IsSmart = tvAttribute.IsSmart,
                 TVBrandId = tvAttribute.TVBrandId,
                 TVBrand = tvAttribute.TVBrand.Name,
                 TVTypeId = tvAttribute.TVTypeId,

@@ -10,6 +10,7 @@ namespace Swapy.DAL.Interfaces
         Task IncrementViewsAsync(string id);
         Task<int> GetProductCountForShopAsync(string userId);
         Task<SpecificationResponseDTO<CategoryType>> GetProductCategoryTypeAsync(string id);
+        Task<ProductSubcategoryResponseDTO> GetProductSubcategoryAsync(string id);
         Task<ProductsResponseDTO<ProductResponseDTO>> GetAllFilteredAsync(int page,
                                                                           int pageSize,
                                                                           string userId,
