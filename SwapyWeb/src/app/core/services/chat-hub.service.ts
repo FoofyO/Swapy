@@ -39,12 +39,12 @@ export class ChatHubService {
 
     if(this.userId !== "") {
         this.hubConnection = new signalR.HubConnectionBuilder()
-            .configureLogging(signalR.LogLevel.None)
-            .withUrl(`${environment.apiUrl}/chatHub`, {
-                skipNegotiation: true,
-                transport: signalR.HttpTransportType.WebSockets,
-                accessTokenFactory: () => this.userId
-            })
+        .configureLogging(signalR.LogLevel.Debug)
+        .withUrl(`${environment.apiUrl}/chatHub`, {
+            skipNegotiation: true,
+            transport: signalR.HttpTransportType.WebSockets,
+            accessTokenFactory: () => this.userId
+        })
         .build();
     }
 

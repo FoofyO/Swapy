@@ -43,7 +43,10 @@ export class LoginComponent {
         await this.authFacade.login(this.loginForm.value);
         this.router.navigate(["/"]);
         
-        if(!this.chatHub.isConnected()) this.chatHub.configureHubConnection();
+        if(!this.chatHub.isConnected()) { 
+          this.chatHub.configureHubConnection();
+          this.chatHub.receiveMessages();
+        }
 
         this.spinnerService.changeSpinnerState(false);
       }

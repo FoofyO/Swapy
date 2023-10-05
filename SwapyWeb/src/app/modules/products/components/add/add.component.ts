@@ -671,6 +671,7 @@ export class AddComponent implements OnInit {
         this.engineCapacity < 0 ? "Engine capacity cannot be negative" :
         this.engineCapacity > 18200 ? "Engine capacity cannot be more than 18200" :
         this.releaseYear < 0 ? "Release year cannot be negative" :
+        !regex.test(this.selectedBrandId) ? "Brand field is required" :
         !regex.test(this.selectedFuelTypeId) ? "Fuel type field is required" : 
         !regex.test(this.selectedColorId) ? "Color field is required" : 
         !regex.test(this.selectedTransmissionTypeId) ? "Wrong transmission type" : 
@@ -714,12 +715,12 @@ export class AddComponent implements OnInit {
         break;
       }
       case CategoryType.ClothesType: {
-        this.errorText = this.selectedIsNewFilter === 0 ? "Is new field is required" :
-        !regex.test(this.selectedBrandId) ? "Brand field is required" :
-        this.selectedClothesTypeFilter === 0 ? "Clothes type field is required" :
-        !regex.test(this.selectedClothesSizeId) ? "Clothes size field is required" : 
-        !regex.test(this.selectedGenderId) ? "Gender field is required" :
-        !regex.test(this.selectedClothesSeasonId) ? "Clothes season field is required" : 
+        this.errorText = this.selectedIsNewFilter === 0 ? "Is new field is required" : 
+        this.selectedClothesTypeFilter === 0 ? "Clothes type field is required" : 
+        !regex.test(this.selectedGenderId) ? "Gender field is required" : 
+        !regex.test(this.selectedClothesSeasonId) ? "Clothes season field is required" :  
+        !regex.test(this.selectedBrandId) ? "Brand field is required" : 
+        !regex.test(this.selectedClothesSizeId) ? "Clothes size field is required" :  
         !regex.test(this.selectedClothesViewId) ? "Clothes view field is required" : null;
 
         if(this.errorText != null) { this.spinnerService.changeSpinnerState(false); return; }
@@ -764,11 +765,11 @@ export class AddComponent implements OnInit {
         break;
       }
       case CategoryType.ElectronicsType: {
-        this.errorText = this.selectedIsNewFilter === 0 ? "Is new field is required" :
-        !regex.test(this.selectedColorId) ? "Color field is required" : 
-        !regex.test(this.selectedBrandId) ? "Brand field is required" : 
-        !regex.test(this.selectedMemoryId) ? "Memory field is required" :
-        !regex.test(this.selectedModelId) ? "Model field is required" :  null;
+        this.errorText = this.selectedIsNewFilter === 0 ? "Is new field is required" : 
+        !regex.test(this.selectedBrandId) ? "Brand field is required" :  
+        !regex.test(this.selectedModelId) ? "Model field is required" :  
+        !regex.test(this.selectedColorId) ? "Color field is required" :  
+        !regex.test(this.selectedMemoryId) ? "Memory field is required" : null;
 
         if(this.errorText != null) { this.spinnerService.changeSpinnerState(false); return; }
 
