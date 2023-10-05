@@ -112,8 +112,8 @@ namespace Swapy.DAL.Repositories
                     (memoriesId == null || memoriesId.Contains(x.MemoryModel.MemoryId)) &&
                     (colorsId == null || colorsId.Contains(x.ModelColor.ColorId)) &&
                     (modelsId == null || modelsId.Contains(x.MemoryModel.ModelId)) &&
-                    (brandsId == null && modelsId != null || brandsId.Contains(x.MemoryModel.Model.ElectronicBrandType.ElectronicBrandId)) &&
-                    (typesId == null && modelsId != null || typesId.Contains(x.MemoryModel.Model.ElectronicBrandType.ElectronicTypeId)))
+                    (!(brandsId != null && modelsId == null) || brandsId.Contains(x.MemoryModel.Model.ElectronicBrandType.ElectronicBrandId)) &&
+                    (!(typesId != null && modelsId == null) || typesId.Contains(x.MemoryModel.Model.ElectronicBrandType.ElectronicTypeId)))
                 .Include(e => e.Product)
                     .ThenInclude(p => p.Images)
                 .Include(a => a.Product)
