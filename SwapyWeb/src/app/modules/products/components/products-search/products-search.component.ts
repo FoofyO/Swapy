@@ -174,6 +174,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           this.breeds = response.map(breed => new CheckboxItem<Specification<string>>(breed));
           this._selectedCategoryType = value;
           this.spinnerService.changeSpinnerState(false);
+          this.loadSuitableProducts(true);
           return;
         })
         break;
@@ -194,6 +195,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             this.models = models;
             this._selectedCategoryType = value;
             this.spinnerService.changeSpinnerState(false);
+            this.loadSuitableProducts(true);
             return;
           },
           error => {
@@ -221,6 +223,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             this.clothesViews = clothesViews;
             this._selectedCategoryType = value;
             this.spinnerService.changeSpinnerState(false);
+            this.loadSuitableProducts(true);
             return;
           },
           error => {
@@ -246,6 +249,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             this.models = models;
             this._selectedCategoryType = value;
             this.spinnerService.changeSpinnerState(false);
+            this.loadSuitableProducts(true);
             return;
           },
           error => {
@@ -260,12 +264,14 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
       case CategoryType.ItemsType: {
         this._selectedCategoryType = value;
         this.spinnerService.changeSpinnerState(false);
+        this.loadSuitableProducts(true);
         return;
         break;
       }
       case CategoryType.RealEstatesType: {
         this._selectedCategoryType = value;
         this.spinnerService.changeSpinnerState(false);
+        this.loadSuitableProducts(true);
         return;
         break;
       }
@@ -283,6 +289,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             this.screenDiagonals = screenDiagonals.map(item => new CheckboxItem<Specification<number>>(item));
             this._selectedCategoryType = value;
             this.spinnerService.changeSpinnerState(false);
+            this.loadSuitableProducts(true);
             return;
           },
           error => {
@@ -304,6 +311,8 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
   }
 
   isUpdateProductsButtonDisabled: boolean = true;
+
+  isCategoryChanged: boolean = false;
 
   constructor(private productsSearchService: ProductsSearchService, private productApiService: ProductApiService, private sharedApiService : SharedApiService, private spinnerService: SpinnerService, private route: ActivatedRoute) {
     this.productsSearchService.setCategoryTreeComponent(this);
@@ -372,9 +381,6 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
                 this.loadSuitableProducts(true);
                 return;
               }
-              else{
-                this.selectedCategoryType = this.categories.find(c => c.id.toLowerCase() === this.selectedCategoryId.toLowerCase())?.type;
-              }
               this.sharedApiService.GetSubcategoriesByCategoryAsync(this.selectedCategoryId).subscribe(
                 (response: CategoryNode[]) => {
                   this.subcategoriesHierarchy[++this.currentSubcategoryNesting] = response;
@@ -415,7 +421,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
                       this.selectedSubcategoriesId.splice(-this.currentSubcategoryNesting);
                       this.currentSubcategoryNesting = 0;
                       this.spinnerService.changeSpinnerState(false);
-                      this.onChangeSubcategory(true)
+                      this.selectedCategoryType = this.categories.find(c => c.id.toLowerCase() === this.selectedCategoryId.toLowerCase())?.type;
                       return;
                     }
                   );
@@ -442,7 +448,6 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             (response: CategoryNode[]) => {
               this.subcategoriesHierarchy[++this.currentSubcategoryNesting] = response;
               this.spinnerService.changeSpinnerState(false);
-              this.loadSuitableProducts(true);
               return;
             }
           );       
@@ -524,6 +529,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
   }
 
   loadSuitableProducts(isNewRequest: boolean = false): void {
+    this.isCategoryChanged = false;
     this.spinnerService.changeSpinnerState(true);
     this.isUpdateProductsButtonDisabled = true;
     this.isLoadingProducts = true;
@@ -597,6 +603,12 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         this.minRooms = this.roomsSliderOptions.floor;
         this.maxRooms = this.roomsSliderOptions.ceil;
 
+        var tempOlderReleaseYearDate: Date =  new Date();
+        tempOlderReleaseYearDate.setFullYear(this.olderReleaseYear, 0, 1);
+        var tempNewerReleaseYearDate: Date =  new Date();
+        tempNewerReleaseYearDate.setFullYear(this.newerReleaseYear + 1, 0, 1);
+        tempNewerReleaseYearDate.setDate(tempNewerReleaseYearDate.getDate() - 1);
+
         this.productApiService.getFilteredAutos(
           this.currentPage, 
           this.pageSize, 
@@ -614,8 +626,8 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           !Number.isNaN(this.maxMiliage) ? this.maxMiliage : null, 
           !Number.isNaN(this.minEngineCapacity) ? this.minEngineCapacity : null, 
           !Number.isNaN(this.maxEngineCapacity) ? this.maxEngineCapacity : null, 
-          !Number.isNaN(this.olderReleaseYear) ? new Date(this.olderReleaseYear, 0, 1) : null, 
-          !Number.isNaN(this.newerReleaseYear) ? new Date(this.newerReleaseYear, 12, 0) : null, 
+          !Number.isNaN(this.olderReleaseYear) ? tempOlderReleaseYearDate : null, 
+          !Number.isNaN(this.newerReleaseYear) ? tempNewerReleaseYearDate : null, 
           this.fuelTypes.filter(fuelType => fuelType.selected).length > 0 ? this.fuelTypes.filter(fuelType => fuelType.selected).map(fuelType => fuelType.value.id) : null, 
           this.colors.filter(color => color.selected).length > 0 ? this.colors.filter(color => color.selected).map(color => color.value.id) : null, 
           this.transmissionTypes.filter(transmissionType => transmissionType.selected).length > 0 ? this.transmissionTypes.filter(transmissionType => transmissionType.selected).map(transmissionType => transmissionType.value.id) : null, 
@@ -625,6 +637,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
               item.images = item.images.map((image) => `${environment.blobUrl}/product-images/${image}`);
             }
           });
+          console.log(response);
           this.suitableProductsCount = response.count;
           this.allPages = response.allPages;
           this.priceSliderOptions = {
@@ -642,7 +655,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             step: 1
           };
           this.minMiliage = !Number.isNaN(this.minMiliage) ? this.minMiliage : this.miliageSliderOptions.floor;
-          this.maxMiliage = !Number.isNaN(this.maxMiliage) ? this.maxPrice : this.miliageSliderOptions.ceil;
+          this.maxMiliage = !Number.isNaN(this.maxMiliage) ? this.maxMiliage : this.miliageSliderOptions.ceil;
           this.engineCapacitySliderOptions = {
             floor: response.minEngineCapacity, 
             ceil: response.maxEngineCapacity, 
@@ -651,8 +664,8 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           this.minEngineCapacity = !Number.isNaN(this.minEngineCapacity) ? this.minEngineCapacity : this.engineCapacitySliderOptions.floor;
           this.maxEngineCapacity = !Number.isNaN(this.maxEngineCapacity) ? this.maxEngineCapacity : this.engineCapacitySliderOptions.ceil;
           this.releaseYearSliderOptions = {
-            floor: response.olderReleaseYear, 
-            ceil: response.newerReleaseYear, 
+            floor: response.newerReleaseYear, 
+            ceil: response.olderReleaseYear, 
             step: 1
           };
           this.olderReleaseYear = !Number.isNaN(this.olderReleaseYear) ? this.olderReleaseYear : this.releaseYearSliderOptions.floor;
@@ -1028,6 +1041,14 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
   }
 
   onSelectCategoryChange(): void {
+    this.isCategoryChanged = true;
+    this.priceSliderOptions = {
+      floor: NaN, 
+      ceil: NaN, 
+      step: 1
+    };
+    this.minPrice = NaN;
+    this.maxPrice = NaN;
     this.subcategoriesHierarchy.splice(-this.currentSubcategoryNesting - 1);
     this.selectedSubcategoriesId.splice(-this.currentSubcategoryNesting);
     this.currentSubcategoryNesting = -1;
@@ -1059,13 +1080,13 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
       this.currentSubcategoryNesting = index;
     }
     if(this.selectedSubcategoriesId[index] == undefined || this.selectedSubcategoriesId[index] == 'undefined'){
-      this.onChangeSubcategory();
+      if(!this.isCategoryChanged) { this.onChangeSubcategory(); }
       return;
     }
 
     if(this.subcategoriesHierarchy[index].find(item => item.id === this.selectedSubcategoriesId[index])?.isFinal){
       ++this.currentSubcategoryNesting;
-      this.onChangeSubcategory();
+      if(!this.isCategoryChanged) { this.onChangeSubcategory(); }
       return;
     }
     this.spinnerService.changeSpinnerState(true);
@@ -1073,7 +1094,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
       (response: CategoryNode[]) => {
         this.subcategoriesHierarchy[++this.currentSubcategoryNesting] = response;     
         this.clotheIsShoe = this.subcategoriesHierarchy[index].find(item => item.id === this.selectedSubcategoriesId[index])?.subType === SubcategoryType.Shoe;
-        this.onChangeSubcategory();
+        if(!this.isCategoryChanged) { this.onChangeSubcategory(); }
         this.spinnerService.changeSpinnerState(false);
       },
       (error) => {

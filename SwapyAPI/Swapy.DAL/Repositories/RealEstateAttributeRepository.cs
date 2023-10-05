@@ -113,7 +113,7 @@ namespace Swapy.DAL.Repositories
         {
             if (page < 1 || pageSize < 1) throw new ArgumentException($"Page and page size parameters must be greater than one.");
 
-            List<SpecificationResponseDTO<string>> sequenceOfSubcategories = subcategoryId == null ? new() : (await _subcategoryRepository.GetSequenceOfSubcategories(subcategoryId)).ToList();
+            List<SpecificationResponseDTO<string>> sequenceOfSubcategories = subcategoryId == null ? new() : (await _subcategoryRepository.GetAllChildsOfSubcategory(subcategoryId)).ToList();
 
             var query = _context.RealEstateAttributes.Include(re => re.Product)
                                                         .ThenInclude(p => p.Currency)
@@ -134,7 +134,7 @@ namespace Swapy.DAL.Repositories
                     (roomsMax == null || x.Rooms <= roomsMax) &&
                     (title == null || x.Product.Title.Contains(title)) &&
                     (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
-                    (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
+                    (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(x.Product.SubcategoryId)) &&
                     (cityId == null || x.Product.CityId.Equals(cityId)) &&
                     (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
                     x.Product.IsDisable.Equals(false) &&
@@ -164,7 +164,7 @@ namespace Swapy.DAL.Repositories
                  .Take(pageSize)
                  .ToList();
 
-            var result = query.Select(x => new ProductResponseDTO()
+            var result = list.Select(x => new ProductResponseDTO()
             {
                 Id = x.ProductId,
                 Title = x.Product.Title,

@@ -104,7 +104,7 @@ namespace Swapy.DAL.Repositories
 
             var list = await query.Where(x => (title == null || x.Product.Title.Contains(title)) &&
                     (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
-                    (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
+                    (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(x.Product.SubcategoryId)) &&
                     (cityId == null || x.Product.CityId.Equals(cityId)) &&
                     (otherUserId == null ? !x.Product.UserId.Equals(userId) : x.Product.UserId.Equals(otherUserId)) &&
                     (isNew == null || x.IsNew == isNew) &&
