@@ -197,6 +197,7 @@ export class ProductDetailComponent implements OnInit, AfterViewInit  {
       case CategoryType.ClothesType: {
         this.productApiService.GetClothesDetail(this.productId as string).subscribe(
           (result) => {
+            console.log(result);
             result.images = result.images && result.images.length > 0 ? result.images.map(i => environment.blobUrl + '/product-images/' + i) : [environment.blobUrl + '/product-images/default-product-image.png'];
             this.product = result;
             this.productCategoryType = category.value;

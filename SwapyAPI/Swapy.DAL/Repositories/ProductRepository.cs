@@ -135,7 +135,7 @@ namespace Swapy.DAL.Repositories
 
             if (isDisableResult && (string.IsNullOrEmpty(userId) && string.IsNullOrEmpty(otherUserId))) throw new NoAccessException("No access to get disabled products");
 
-            List<SpecificationResponseDTO<string>> sequenceOfSubcategories = subcategoryId == null ? new() :(await _subcategoryRepository.GetSequenceOfSubcategories(subcategoryId)).ToList();
+            List<SpecificationResponseDTO<string>> sequenceOfSubcategories = subcategoryId == null ? new() : (await _subcategoryRepository.GetAllChildsOfSubcategory(subcategoryId)).ToList();
 
             var query = _context.Products.Include(p => p.Currency)
                                          .AsQueryable();
@@ -145,7 +145,7 @@ namespace Swapy.DAL.Repositories
 
             var list = await query.Where(x => (title == null || x.Title.Contains(title)) &&
                                      (categoryId == null || x.CategoryId.Equals(categoryId)) &&
-                                     (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(subcategoryId)) &&
+                                     (subcategoryId == null ? true : sequenceOfSubcategories.Select(x => x.Id).Contains(x.SubcategoryId)) &&
                                      (cityId == null || x.CityId.Equals(cityId)) &&
                                      (otherUserId == null ? !x.UserId.Equals(userId) : x.UserId.Equals(otherUserId)) &&
                                      (isDisable == null || !x.UserId.Equals(userId) ? x.IsDisable == false : x.IsDisable.Equals(isDisable)))

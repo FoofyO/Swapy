@@ -181,5 +181,28 @@ namespace Swapy.DAL.Repositories
 
             return result.Select(s => new SpecificationResponseDTO<string>(s.Id, s.Name)).ToList();
         }
+
+        public async Task<IEnumerable<SpecificationResponseDTO<string>>> GetAllChildsOfSubcategory(string subcategoryId)
+        {
+            var selectedSubcategory = _context.Subcategories.Include(s => s.ChildSubcategories).FirstOrDefault(s => s.Id.Equals(subcategoryId));
+            if (selectedSubcategory != null && selectedSubcategory.ChildSubcategories.Count() <= 0)
+            {
+                var result = new List<SpecificationResponseDTO<string>>();
+                result.Add(new SpecificationResponseDTO<string>(selectedSubcategory.Id, selectedSubcategory.Name));
+                return result;
+            }
+            var subtree = new List<SpecificationResponseDTO<string>>();
+            foreach (var childSubcategory in selectedSubcategory.ChildSubcategories)
+            {
+                subtree.AddRange(await GetAllChildsOfSubcategory(childSubcategory.Id));
+            }
+
+            if(subtree.Count > 0)
+            {
+                return subtree;
+            }
+            return null;
+        }
+
     }
 }
