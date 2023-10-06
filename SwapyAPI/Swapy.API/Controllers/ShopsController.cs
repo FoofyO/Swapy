@@ -8,6 +8,8 @@ using Swapy.Common.DTO.Shops.Requests;
 using System.Security.Claims;
 using Swapy.API.Validators;
 using System.Text;
+using Swapy.Common.Attributes;
+using Swapy.Common.Entities;
 
 namespace Swapy.API.Controllers
 {
@@ -70,6 +72,7 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("{UserId}")]
+        [Check]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -77,7 +80,12 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetByIdShopQuery() { UserId = dto.UserId});
+                var query = new GetByIdShopQuery()
+                {
+                    UserId = dto.UserId,
+                    SenderId = (string)HttpContext.Items["Check"],
+                };
+                var result = await _mediator.Send(query);
                 return Ok(result);
             }
             catch (NotFoundException ex)

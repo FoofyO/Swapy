@@ -13,6 +13,7 @@ import { HttpStatusCode } from 'axios';
 import { Specification } from 'src/app/core/models/specification';
 import { CategoryType } from 'src/app/core/enums/category-type.enum';
 import { environment } from 'src/environments/environment';
+import { SpinnerService } from 'src/app/shared/spinner/spinner.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -33,7 +34,7 @@ export class ProductDetailComponent implements OnInit, AfterViewInit  {
   isNotFoundProducts: boolean = false;
   isMe: boolean = false;
 
-  constructor(private authFacade : AuthFacadeService , private sharedApiService : SharedApiService, private productApiService : ProductApiService, private route: ActivatedRoute, private router: Router, private changeDetectorRef : ChangeDetectorRef) {
+  constructor(private authFacade : AuthFacadeService , private sharedApiService : SharedApiService, private productApiService : ProductApiService, private route: ActivatedRoute, private router: Router, private changeDetectorRef : ChangeDetectorRef, private spinnerService: SpinnerService) {
     this.productId = this.route.snapshot.paramMap.get('id');
   }
 
@@ -350,9 +351,14 @@ export class ProductDetailComponent implements OnInit, AfterViewInit  {
   }
 
   removeProduct() : void {
+    this.spinnerService.changeSpinnerState(true);
     this.productApiService.removeProduct(this.product.productId).subscribe(
-      (response) => {window.history.back();},
+      (response) => { 
+        this.spinnerService.changeSpinnerState(false);
+        window.history.back(); 
+      },
       (error) => {
+        this.spinnerService.changeSpinnerState(false);
         if(error.response.status === HttpStatusCode.Unauthorized){
           this.authFacade.logout();
           this.router.navigateByUrl('auth/login');

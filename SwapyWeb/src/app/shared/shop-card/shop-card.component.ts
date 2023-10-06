@@ -12,9 +12,10 @@ export class ShopCardComponent implements OnInit {
 
   @Input() shop!: Shop;
 
-  constructor(private router: Router) { }
-
+  constructor(private router: Router) {}
+  
   ngOnInit(): void {
+    this.shop.logo = `${environment.blobUrl}/logos/${this.shop.logo}`;
   }
 
   shopLogoLoadError(event: any) {

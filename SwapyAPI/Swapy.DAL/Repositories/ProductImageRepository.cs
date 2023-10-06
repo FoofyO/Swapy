@@ -49,5 +49,10 @@ namespace Swapy.DAL.Repositories
             return await _context.ProductImages.Where(p => p.ProductId.Equals(productId) && p.Image.Equals(path.Substring(path.LastIndexOf('/') + 1)))
                                                .FirstOrDefaultAsync();
         }
+
+        public async Task<IEnumerable<ProductImage>> GetAllByProductId(string productId)
+        {
+            return await _context.ProductImages.Where(p => p.ProductId.Equals(productId)).ToListAsync();
+        }
     }
 }

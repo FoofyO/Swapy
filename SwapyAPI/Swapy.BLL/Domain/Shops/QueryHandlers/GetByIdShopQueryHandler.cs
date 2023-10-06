@@ -15,7 +15,7 @@ namespace Swapy.BLL.Domain.Shops.QueryHandlers
         {
             var shop = await _shopAttributeRepository.GetByUserIdAsync(request.UserId);
             
-            await _shopAttributeRepository.IncrementViewsAsync(shop.Id);
+            if(request.SenderId != null && !request.SenderId.Equals(shop.UserId)) await _shopAttributeRepository.IncrementViewsAsync(shop.Id);
 
             return new ShopDetailResponseDTO()
             {

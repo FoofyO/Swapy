@@ -13,5 +13,6 @@ namespace Swapy.DAL.Interfaces
         Task<bool> TryReadMessage(string userId, string chatId);
         Task UpdateChatState(string chatId, bool value);
         Task<IEnumerable<Chat>> GetAllChatsAsync(string userId);
+        Task DeleteChatsByProductId(string productId);
     }
 }

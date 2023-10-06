@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Swapy.BLL.Interfaces;
 using Swapy.Common.Entities;
 using Swapy.DAL.Interfaces;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Swapy.BLL.Services
 {
@@ -132,6 +133,15 @@ namespace Swapy.BLL.Services
                 var productImage = new ProductImage(imageName, productId);
                 await _productImageRepository.CreateAsync(productImage);
             }
+        }
+
+        public async Task RemoveAllProductImagesAsync(string productId)
+        {
+            foreach (var image in await _productImageRepository.GetAllByProductId(productId))
+            {
+                await RemoveImageFromBlob(image.Image, "product-images");
+                await _productImageRepository.DeleteAsync(image);
+            } 
         }
 
         public async Task RemoveProductImagesAsync(List<string> paths, string productId)

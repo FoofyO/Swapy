@@ -183,5 +183,15 @@ namespace Swapy.DAL.Repositories
 
             return chats;
         }
+
+        public async Task DeleteChatsByProductId(string productId)
+        {
+            var chats = await _context.Chats.Where(c => c.ProductId.Equals(productId)).ToListAsync();
+
+            foreach (var chat in chats)
+            {
+                await DeleteAsync(chat);
+            }
+        }
     }
 }
