@@ -14,11 +14,11 @@ namespace Swapy.BLL.Domain.Shops.CommandHandlers
         {
             var shop = await _shopAttributeRepository.GetByUserIdAsync(request.UserId);
 
-            if (!string.IsNullOrEmpty(request.Slogan)) shop.Slogan = request.Slogan;
-            if (!string.IsNullOrEmpty(request.Location)) shop.Location = request.Location;
+            shop.Slogan = request.Slogan;
+            shop.Location = request.Location;
+            shop.Description = request.Description;
             if (!string.IsNullOrEmpty(request.ShopName)) shop.ShopName = request.ShopName;
             if (!string.IsNullOrEmpty(request.WorkDays)) shop.WorkDays = request.WorkDays;
-            if (!string.IsNullOrEmpty(request.Description)) shop.Description = request.Description;
             if (request.EndWorkTime != null) shop.EndWorkTime = request.EndWorkTime;
             if (request.StartWorkTime != null) shop.StartWorkTime = request.StartWorkTime;
 

@@ -413,7 +413,9 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
                         this.subcategoriesHierarchy[++this.currentSubcategoryNesting] = response;     
                       });
                       this.spinnerService.changeSpinnerState(false);
-                      this.onChangeSubcategory(true)
+
+                      this.onChangeSubcategory(true);
+
                       return;
                     },
                     error => {
@@ -421,7 +423,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
                       this.selectedSubcategoriesId.splice(-this.currentSubcategoryNesting);
                       this.currentSubcategoryNesting = 0;
                       this.spinnerService.changeSpinnerState(false);
-                      this.selectedCategoryType = this.categories.find(c => c.id.toLowerCase() === this.selectedCategoryId.toLowerCase())?.type;
+                      this.onSelectCategoryChange();
                       return;
                     }
                   );
@@ -956,8 +958,8 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           this.suitableProductsCount = response.count;
           this.allPages = response.allPages;
           this.priceSliderOptions = {
-            floor: response.minPrice, 
-            ceil: response.maxPrice, 
+            floor: response.maxPrice, 
+            ceil: response.minPrice, 
             step: 1
           };
           this.route.queryParams.subscribe(params => {
@@ -1115,11 +1117,11 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             selected: this.breeds.find(oldItem => oldItem.value.id === newItem.value.id)?.selected || newItem.selected
           }));
           this.spinnerService.changeSpinnerState(false);
-          loadProducts ? this.loadSuitableProducts(true) : this.onChangeFilter();
+          loadProducts ? this.onSelectCategoryChange() : this.onChangeFilter();
         },
         (error) => {
           this.spinnerService.changeSpinnerState(false);
-          loadProducts ? this.loadSuitableProducts(true) : this.onChangeFilter();
+          loadProducts ? this.onSelectCategoryChange() : this.onChangeFilter();
         })
         break;
       }
@@ -1138,7 +1140,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           },
           (error) => {
             this.spinnerService.changeSpinnerState(false);
-            loadProducts ? this.loadSuitableProducts(true) : this.onChangeFilter();
+            loadProducts ? this.onSelectCategoryChange() : this.onChangeFilter();
           }
         );
         break;
@@ -1156,7 +1158,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           },
           error => {
             this.spinnerService.changeSpinnerState(false);
-            loadProducts ? this.loadSuitableProducts(true) : this.onChangeFilter();
+            loadProducts ? this.onSelectCategoryChange() : this.onChangeFilter();
           }
         );
         break;
@@ -1176,14 +1178,14 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           },
           error => {
             this.spinnerService.changeSpinnerState(false);
-            loadProducts ? this.loadSuitableProducts(true) : this.onChangeFilter();
+            loadProducts ? this.onSelectCategoryChange() : this.onChangeFilter();
           }
         );
         break;
       }
       default: {
         this.spinnerService.changeSpinnerState(false);
-        loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
+        loadProducts ? this.onSelectCategoryChange() :this.onChangeFilter();
       }
     }
   }

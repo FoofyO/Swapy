@@ -125,11 +125,11 @@ export class ShopGeneralComponent implements OnInit {
           var data = new FormData();
           data.append("Logo", this.sendData.logo);
           data.append("Banner", this.sendData.banner);
-          data.append("Slogan", this.sendData.slogan);
-          data.append("Location", this.sendData.location);
+          if(this.sendData.slogan && this.sendData.slogan.trim().length > 0) data.append("Slogan", this.sendData.slogan);
+          if(this.sendData.location && this.sendData.location.trim().length > 0) data.append("Location", this.sendData.location);
           data.append("ShopName", this.sendData.shopName);
           data.append("WorkDays", this.sendData.workDays);
-          data.append("Description", this.sendData.description);
+          if(this.sendData.description && this.sendData.description.trim().length > 0) data.append("Description", this.sendData.description);
           data.append("PhoneNumber", this.sendData.phoneNumber);
           if(this.sendData.endWorkTime) data.append("EndWorkTime", this.sendData?.endWorkTime?.toString());
           if(this.sendData.startWorkTime) data.append("StartWorkTime", this.sendData?.startWorkTime?.toString());
