@@ -177,10 +177,10 @@
                         </div>
                     </div>
         
-                    <p class="information-title" *ngIf="selectedCategoryType == 2 && selectedSubcategoriesId.length > 0 && selectedSubcategoriesId[selectedSubcategoriesId.length - 1] != 'undefined'">
+                    <p class="information-title" *ngIf="selectedCategoryType == 2 && selectedSubcategoriesId.length > 0 && selectedSubcategoriesId[selectedSubcategoriesId.length - 1] != 'undefined' && selectedClothesTypeFilter != 0">
                         Clothes size:
                     </p>
-                    <div class="select-container" *ngIf="selectedCategoryType == 2 && selectedSubcategoriesId.length > 0 && selectedSubcategoriesId[selectedSubcategoriesId.length - 1] != 'undefined'">
+                    <div class="select-container" *ngIf="selectedCategoryType == 2 && selectedSubcategoriesId.length > 0 && selectedSubcategoriesId[selectedSubcategoriesId.length - 1] != 'undefined' && selectedClothesTypeFilter != 0">
                         <select class="form-select select-filter" [(ngModel)]="selectedClothesSizeId">
                             <option class="option" [value]="undefined">Unselected</option>
                             <option *ngFor="let clothesSize of clothesSizes;" class="option" [value]="clothesSize.id">{{clothesSize.value}}</option>

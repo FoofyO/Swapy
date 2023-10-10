@@ -85,6 +85,7 @@ export class EditComponent implements OnInit {
     ]).subscribe(
       ([clothesSizes]: [Specification<string>[]]) => {
         this.clothesSizes = clothesSizes;
+        this.selectedClothesSizeId = this.clothesSizes.map(x => x.id).includes(this.selectedClothesSizeId) ? this.selectedClothesSizeId : 'undefined';
         this.spinnerService.changeSpinnerState(false);
         return;
       },
@@ -650,9 +651,12 @@ export class EditComponent implements OnInit {
   onSelectedClothesTypeChange(): void {
     this.spinnerService.changeSpinnerState(true);
     forkJoin([
-      this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== 'undefined' ? this.selectedGenderId : null, this.productSubcategory?.Id ? this.productSubcategory?.Id : null)
+      this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== 'undefined' ? this.selectedGenderId : null, this.productSubcategory?.Id ? this.productSubcategory?.Id : null),
+      this.productApiService.getClothesSizes(this.selectedClothesTypeFilter == -1, this.clotheIsShoe)
     ]).subscribe(
-      ([clothesViews]: [Specification<string>[]]) => {
+      ([clothesViews, clothesSizes]: [Specification<string>[], Specification<string>[]]) => {
+        this.clothesSizes = clothesSizes;
+        this.selectedClothesSizeId = this.clothesSizes.map(x => x.id).includes(this.selectedClothesSizeId) ? this.selectedClothesSizeId : 'undefined';
         this.clothesViews = clothesViews;
         this.selectedClothesViewId = this.clothesViews.map(i => i.id).indexOf(this.selectedClothesViewId) !== -1 ? this.selectedClothesViewId : 'undefined';
         this.spinnerService.changeSpinnerState(false);

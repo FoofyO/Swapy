@@ -14,11 +14,6 @@ namespace Swapy.API.Validators
                .WithMessage("Area field must be non-negative or null")
            .WithErrorCode("InvalidAreaFormat");
 
-            RuleFor(realEstate => realEstate.IsRent)
-            .NotEmpty()
-                .WithMessage("IsRent field is required")
-            .WithErrorCode("InvalidIsRentFormat");
-
             RuleFor(realEstate => realEstate.RealEstateTypeId)
             .NotEmpty()
                 .WithMessage("RealEstateTypeId field is required")

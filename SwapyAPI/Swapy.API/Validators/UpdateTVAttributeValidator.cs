@@ -7,16 +7,6 @@ namespace Swapy.API.Validators
     {
         public UpdateTVAttributeValidator()
         {
-            RuleFor(tv => tv.IsNew)
-            .NotEmpty()
-                .WithMessage("IsNew field is required")
-            .WithErrorCode("InvalidIsNewFormat");
-
-            RuleFor(tv => tv.IsSmart)
-            .NotEmpty()
-                .WithMessage("IsSmart field is required")
-            .WithErrorCode("InvalidIsSmartFormat");
-
             RuleFor(tv => tv.TvTypeId)
             .NotEmpty()
                 .WithMessage("TVTypeId field is required")
