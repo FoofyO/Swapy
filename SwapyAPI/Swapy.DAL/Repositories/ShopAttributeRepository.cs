@@ -43,6 +43,7 @@ namespace Swapy.DAL.Repositories
         {
             var item = await _context.ShopAttributes.Include(s => s.User).FirstOrDefaultAsync(s => s.UserId.Equals(userId));
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {userId} id not found");
+            if (item.User.EmailConfirmed == false) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {userId} id not found");
             return item;
         }        
 
@@ -50,6 +51,7 @@ namespace Swapy.DAL.Repositories
         {
             var item = await _context.ShopAttributes.Include(s => s.User).FirstOrDefaultAsync(s => s.Id.Equals(id));
             if (item == null) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
+            if (item.User.EmailConfirmed == false) throw new NotFoundException($"{GetType().Name.Split("Repository")[0]} with {id} id not found");
             return item;
         }
 
@@ -65,6 +67,7 @@ namespace Swapy.DAL.Repositories
             var query = _context.ShopAttributes.Where(s => title == null || s.ShopName.Contains(title))
                                                .Include(s => s.User)
                                                 .ThenInclude(u => u.Products)
+                                               .Where(s => s.User.EmailConfirmed == true)
                                                .AsQueryable();
 
             var count = await query.CountAsync();

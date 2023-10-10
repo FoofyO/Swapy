@@ -18,6 +18,7 @@ namespace Swapy.BLL.Domain.Users.QueryHandlers
             var user = await _userManager.FindByIdAsync(request.UserId);
 
             if (user == null) throw new NotFoundException($"UserId {request.UserId} not found");
+            if (user.EmailConfirmed == false) throw new NotFoundException($"UserId {request.UserId} not found");
 
             return new UserResponseDTO()
             {
