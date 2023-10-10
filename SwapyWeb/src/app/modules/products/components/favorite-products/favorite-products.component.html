@@ -1,7 +1,7 @@
 <div class="favorites-product-section-container">
     <div class="product-section" *ngIf="!isNotFoundProducts">
       <div class="product-section-table-of-contents">
-        <p>Products</p>
+        <p>Favorite products</p>
         <select class="form-select select-filter" [(ngModel)]="selectedFilter" (ngModelChange)="onSelectFilterChange()">
           <option class="option" value="1">Newest first</option>
           <option class="option" value="2">Oldest first</option>
