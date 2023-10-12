@@ -1,30 +1,28 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.BLL.Interfaces;
 using Swapy.Common.Entities;
 using Swapy.Common.Enums;
 using Swapy.Common.Exceptions;
 using Swapy.DAL.Interfaces;
-using System.Web;
 
 namespace Swapy.BLL.Domain.Auth.CommandHandlers
 {
     public class UserRegistrationCommandHandler : IRequestHandler<UserRegistrationCommand, Unit>
     {
         private readonly IEmailService _emailService;
-        private readonly IConfiguration _configuration;
         private readonly UserManager<User> _userManager;
+        private readonly IKeyVaultService _keyVaultService;
         private readonly IUserTokenService _userTokenService;
         private readonly IUserTokenRepository _userTokenRepository;
 
-        public UserRegistrationCommandHandler(IConfiguration configuration, IEmailService emailService, UserManager<User> userManager, IUserTokenService userTokenService, IUserTokenRepository userTokenRepository)
+        public UserRegistrationCommandHandler(IEmailService emailService, UserManager<User> userManager, IKeyVaultService keyVaultService, IUserTokenService userTokenService, IUserTokenRepository userTokenRepository)
         {
             _emailService = emailService;
-            _configuration = configuration;
             _userManager = userManager;
+            _keyVaultService = keyVaultService;
             _userTokenService = userTokenService;
             _userTokenRepository = userTokenRepository;
         }
@@ -59,8 +57,8 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
             await _userTokenRepository.CreateAsync(new UserToken(accessToken, refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
 
             var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            confirmationToken = HttpUtility.HtmlEncode(confirmationToken);
-            var callbackUrl = new UriBuilder(_configuration["WebUrl"]);
+            var webUrl = await _keyVaultService.GetSecretValue("Web-Url");
+            var callbackUrl = new UriBuilder(webUrl);
             callbackUrl.Path = "/auth/verify-email";
             callbackUrl.Query = $"userid={user.Id}&token={confirmationToken}";
             await _emailService.SendConfirmationEmailAsync(user.Email, callbackUrl.Uri.ToString());

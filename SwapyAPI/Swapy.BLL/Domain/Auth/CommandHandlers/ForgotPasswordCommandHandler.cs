@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Swapy.BLL.Domain.Auth.Commands;
 using Swapy.BLL.Interfaces;
 using Swapy.Common.Entities;
@@ -12,14 +11,14 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
     public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordCommand, Unit>
     {
         private readonly IEmailService _emailService;
-        private readonly IConfiguration _configuration;
         private readonly UserManager<User> _userManager;
+        private readonly IKeyVaultService _keyVaultService;
 
-        public ForgotPasswordCommandHandler(UserManager<User> userManager, IEmailService emailService, IConfiguration configuration)
+        public ForgotPasswordCommandHandler(IEmailService emailService, UserManager<User> userManager, IKeyVaultService keyVaultService)
         {
-            _userManager = userManager;
             _emailService = emailService;
-            _configuration = configuration;
+            _userManager = userManager;
+            _keyVaultService = keyVaultService;
         }
 
         public async Task<Unit> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
@@ -32,7 +31,8 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
             resetToken = HttpUtility.HtmlEncode(resetToken);
-            var callbackUrl = new UriBuilder(_configuration["WebUrl"]);
+            var webUrl = await _keyVaultService.GetSecretValue("Web-Url");
+            var callbackUrl = new UriBuilder(webUrl);
             callbackUrl.Path = "/auth/reset-password";
             callbackUrl.Query = $"userid={user.Id}&token={resetToken}";
             await _emailService.SendForgotPasswordAsync(user.Email, callbackUrl.Uri.ToString());
