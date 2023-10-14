@@ -1,5 +1,9 @@
 export const environment = {
   production: true,
+  //Debug Api URL
+  //apiUrl: "https://localhost:7083",
+  
+  //Release Api URL
   apiUrl: "https://swapyapi.azurewebsites.net",
   animalsApiUrl: "api/v1/Products/Animals",
   authApiUrl: "api/v1/Auth",

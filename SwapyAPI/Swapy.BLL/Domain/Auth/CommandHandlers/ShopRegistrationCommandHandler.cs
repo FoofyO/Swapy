@@ -16,17 +16,13 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
         private readonly IEmailService _emailService;
         private readonly UserManager<User> _userManager;
         private readonly IKeyVaultService _keyVaultService;
-        private readonly IUserTokenService _userTokenService;
-        private readonly IUserTokenRepository _userTokenRepository;
         private readonly IShopAttributeRepository _shopAttributeRepository;
 
-        public ShopRegistrationCommandHandler(IEmailService emailService, UserManager<User> userManager, IKeyVaultService keyVaultService, IUserTokenService userTokenService, IUserTokenRepository userTokenRepository, IShopAttributeRepository shopAttributeRepository)
+        public ShopRegistrationCommandHandler(IEmailService emailService, UserManager<User> userManager, IKeyVaultService keyVaultService, IShopAttributeRepository shopAttributeRepository)
         {
             _emailService = emailService;
             _userManager = userManager;
             _keyVaultService = keyVaultService;
-            _userTokenService = userTokenService;
-            _userTokenRepository = userTokenRepository;
             _shopAttributeRepository = shopAttributeRepository;
         }
 
@@ -55,9 +51,6 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
                 Banner = "default-shop-banner"
             };
             
-            var refreshToken = await _userTokenService.GenerateRefreshToken();
-            var accessToken = await _userTokenService.GenerateJwtToken(user.Id, user.Email, user.FirstName, user.LastName);
-            
             user.UserName = user.Id.Replace("-", "");
             
             var result = await _userManager.CreateAsync(user, request.Password);
@@ -65,9 +58,6 @@ namespace Swapy.BLL.Domain.Auth.CommandHandlers
 
             user.ShopAttributeId = shop.Id;
             await _shopAttributeRepository.CreateAsync(shop);
-
-            user.UserTokenId = refreshToken;
-            await _userTokenRepository.CreateAsync(new UserToken(accessToken, refreshToken, DateTime.UtcNow.AddDays(30), user.Id));
 
             var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             confirmationToken = HttpUtility.HtmlEncode(confirmationToken);
