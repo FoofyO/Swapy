@@ -304,6 +304,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
       default: {
         this._selectedCategoryType = undefined;
         this.spinnerService.changeSpinnerState(false);
+        this.loadSuitableProducts(true);
         return;
         break;
       }
