@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: "https://localhost:7083",
+  apiUrl: "https://swapyapi.azurewebsites.net",
   animalsApiUrl: "api/v1/Products/Animals",
   authApiUrl: "api/v1/Auth",
   autosApiUrl: "api/v1/Products/Autos",
