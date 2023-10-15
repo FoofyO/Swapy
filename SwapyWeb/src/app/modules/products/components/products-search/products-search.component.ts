@@ -959,8 +959,8 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           this.suitableProductsCount = response.count;
           this.allPages = response.allPages;
           this.priceSliderOptions = {
-            floor: response.maxPrice, 
-            ceil: response.minPrice, 
+            floor: response.minPrice, 
+            ceil: response.maxPrice, 
             step: 1
           };
           this.route.queryParams.subscribe(params => {
