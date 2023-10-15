@@ -122,8 +122,8 @@ namespace Swapy.DAL.Repositories
                                                 .ThenInclude(p => p.Currency)
                                              .AsQueryable();
 
-            decimal maxPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).FirstOrDefaultAsync();
-            decimal minPrice = await query.Select(x => x.Product.Price).OrderBy(p => p).LastOrDefaultAsync();
+            decimal? minPrice = currencyId == null ? null : Math.Floor((await query.ToListAsync()).Select(x => _currencyConverterService.Convert(x.Product.Currency.Name, _currencyRepository.GetById(currencyId).Name, x.Product.Price)).OrderBy(p => p).FirstOrDefault());
+            decimal? maxPrice = currencyId == null ? null : Math.Ceiling((await query.ToListAsync()).Select(x => _currencyConverterService.Convert(x.Product.Currency.Name, _currencyRepository.GetById(currencyId).Name, x.Product.Price)).OrderBy(p => p).LastOrDefault());
 
             var list = await query.Where(x => (title == null || x.Product.Title.Contains(title)) &&
                     (categoryId == null || x.Product.CategoryId.Equals(categoryId)) &&
