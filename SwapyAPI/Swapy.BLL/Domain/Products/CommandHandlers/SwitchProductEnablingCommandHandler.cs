@@ -25,7 +25,7 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
             product.IsDisable = !product.IsDisable;
             await _productRepository.UpdateAsync(product);
 
-            if(!product.IsDisable)
+            if(product.IsDisable)
             {
                 await _favoriteProductRepository.RemoveFavoriteByProductId(product.Id);
             }
