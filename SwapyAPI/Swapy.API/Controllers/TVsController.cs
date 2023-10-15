@@ -311,7 +311,7 @@ namespace Swapy.API.Controllers
             try
             {
                 var result = await _mediator.Send(new GetByIdTVAttributeQuery() {
-                    UserId = (string)HttpContext.Items["Check"],
+                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                     ProductId = dto.ProductId,
                 });
                 return Ok(result);

@@ -9,7 +9,6 @@ using System.Security.Claims;
 using Swapy.API.Validators;
 using System.Text;
 using Swapy.Common.Attributes;
-using Swapy.Common.Entities;
 
 namespace Swapy.API.Controllers
 {

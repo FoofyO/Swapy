@@ -322,7 +322,7 @@ namespace Swapy.API.Controllers
             {
                 var query = new GetByIdAutoAttributeQuery()
                 {
-                    UserId = (string)HttpContext.Items["Check"],
+                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                     ProductId = dto.ProductId,
                 };
 

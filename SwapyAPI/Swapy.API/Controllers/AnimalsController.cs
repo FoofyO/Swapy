@@ -290,7 +290,6 @@ namespace Swapy.API.Controllers
         }
 
         [HttpGet("{ProductId}")]
-        [Check]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -300,8 +299,8 @@ namespace Swapy.API.Controllers
             {
                 var query = new GetByIdAnimalAttributeQuery()
                 {
-                    UserId = (string)HttpContext.Items["Check"],
-                    ProductId = dto.ProductId,
+                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                    ProductId = dto.ProductId
                 };
                 var result = await _mediator.Send(query);
                 return Ok(result);

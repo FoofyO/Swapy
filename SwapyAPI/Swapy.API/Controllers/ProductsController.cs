@@ -192,7 +192,6 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var query = new GetProductCategoryTypeQuery()
                 {
                     ProductId = dto.ProductId,

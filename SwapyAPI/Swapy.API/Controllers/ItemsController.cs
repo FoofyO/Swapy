@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swapy.API.Validators;
 using Swapy.BLL.Domain.Items.Commands;
 using Swapy.BLL.Domain.Items.Queries;
+using Swapy.Common.Attributes;
 using Swapy.Common.DTO.Items.Requests.Commands;
 using Swapy.Common.DTO.Items.Requests.Queries;
 using Swapy.Common.DTO.Products.Requests.Queries;
@@ -299,9 +300,10 @@ namespace Swapy.API.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetByIdItemAttributeQuery() {
-                    UserId = (string)HttpContext.Items["Check"],
-                    ProductId = dto.ProductId,
+                var result = await _mediator.Send(new GetByIdItemAttributeQuery()
+                {
+                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                    ProductId = dto.ProductId
                 });
                 return Ok(result);
             }

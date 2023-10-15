@@ -7,6 +7,7 @@ using Swapy.BLL.Domain.Clothes.Queries;
 using Swapy.Common.DTO.Clothes.Requests.Commands;
 using Swapy.Common.DTO.Clothes.Requests.Queries;
 using Swapy.Common.DTO.Products.Requests.Queries;
+using Swapy.Common.Entities;
 using Swapy.Common.Exceptions;
 using System.Security.Claims;
 using System.Text;
@@ -311,7 +312,7 @@ namespace Swapy.API.Controllers
             {
                 var query = new GetByIdClothesAttributeQuery()
                 {
-                    UserId = (string)HttpContext.Items["Check"],
+                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                     ProductId = dto.ProductId,
                 };
                 var result = await _mediator.Send(query);
