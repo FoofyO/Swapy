@@ -40,7 +40,7 @@ export class AuthComponent implements OnInit, AfterViewInit{
     this.categoryTreeService.toggleAnimation();
   }
 
-  transferToProfile(): void{
+  transferToProfile(): void {
     this.router.navigate([this.authFacade.isAuthenticated() ? ('/' + (this.authFacade.getUserType() === UserType.Shop ? 'shops' : 'users') + '/' + this.authFacade.getUserId()) : '/auth/login']);
   }
 

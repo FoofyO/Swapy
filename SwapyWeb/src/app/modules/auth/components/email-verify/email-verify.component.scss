@@ -5,13 +5,18 @@ $trans-time: 300ms;
 
 .email-verify-container {
     height: 100%;
-    display: flex;
+    margin: auto;
+    display: grid;
+    max-width: 35rem;
     user-select: none;
     align-items: center;
+    padding-bottom: 5rem;
     justify-content: center;
+    grid-template-columns: 1fr;
     
     .custom-card {
-        width: 35rem;
+        display: grid;
+        max-width: 35rem;
         background-color: $additional;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         

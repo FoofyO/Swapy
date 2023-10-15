@@ -11,13 +11,18 @@ $checkbox-border: #D1D6EE;
 
 .registration-container {
     height: 100%;
-    display: flex;
+    margin: auto;
+    display: grid;
+    max-width: 35rem;
     user-select: none;
     align-items: center;
+    padding-bottom: 5rem;
     justify-content: center;
+    grid-template-columns: 1fr;
     
     .custom-card {
-        width: 35rem;
+        display: grid;
+        max-width: 35rem;
         background-color: $additional;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         
@@ -349,6 +354,12 @@ $checkbox-border: #D1D6EE;
                     }
 
                     @media (min-width: 363px) { margin-left: 0.2rem; }
+                }
+            }
+
+            .custom-card-subtitle {
+                @media (max-width: 570px) {
+                    font-size: 0.9rem;
                 }
             }
         }

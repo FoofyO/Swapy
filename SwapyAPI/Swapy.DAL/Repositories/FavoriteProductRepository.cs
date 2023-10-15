@@ -170,5 +170,13 @@ namespace Swapy.DAL.Repositories
             
             return true;
         }
+
+        public async Task RemoveFavoriteByProductId(string productId)
+        {
+            foreach (var product in await _context.FavoriteProducts.Where(f => f.ProductId.Equals(productId)).ToListAsync())
+            {
+                await DeleteAsync(product);
+            }
+        }
     }
 }

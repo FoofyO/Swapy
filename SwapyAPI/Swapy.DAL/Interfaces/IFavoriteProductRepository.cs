@@ -21,5 +21,7 @@ namespace Swapy.DAL.Interfaces
                                                                           string productId,
                                                                           bool? sortByPrice,
                                                                           bool? reverseSort);
+
+        Task RemoveFavoriteByProductId(string productId);
     }
 }

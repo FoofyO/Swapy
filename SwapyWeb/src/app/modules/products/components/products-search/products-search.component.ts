@@ -319,7 +319,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
     this.productsSearchService.setCategoryTreeComponent(this);
     this.spinnerService.changeSpinnerState(true);
   }
-
+  
   ngOnInit(): void {
     this.spinnerService.changeSpinnerState(true);
     this.minPrice = this.priceSliderOptions.floor;
@@ -357,22 +357,21 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
           this.maxPrice = params['maxPrice'] ? params['maxPrice'] : this.maxPrice;
           this.selectedCityId = params['city'] ? params['city'] : this.selectedCityId;
         });
-
+        
         let sentCategory : string | undefined;
         this.route.queryParams.subscribe(params => {
           sentCategory = params['category'];
         });
-
+        
         let sentSubcategory : string | undefined;
         this.route.queryParams.subscribe(params => {
           sentSubcategory = params['subcategory'];
         });
-
+        
         if(sentSubcategory != undefined){
           this.sharedApiService.getSubcategoryPath(sentSubcategory).subscribe(
             (mainResponse: Specification<string>[]) => {
               this.selectedCategoryId = mainResponse.shift()?.id as string;
-
               this.subcategoriesHierarchy.splice(-this.currentSubcategoryNesting - 1);
               this.selectedSubcategoriesId.splice(-this.currentSubcategoryNesting);
               this.currentSubcategoryNesting = -1;
@@ -401,17 +400,18 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
                       results.forEach(result => {
                         const index = result.index;
                         const response = result.response;
-
+                        
                         if(this.selectedSubcategoriesId[index] == undefined || this.selectedSubcategoriesId[index] == 'undefined'){
                           return;
                         }
                     
+                        
                         if(this.subcategoriesHierarchy[index].find(item => item.id === this.selectedSubcategoriesId[index])?.isFinal){
                           ++this.currentSubcategoryNesting;
                           return;
                         }
-
-                        this.subcategoriesHierarchy[++this.currentSubcategoryNesting] = response;     
+                        
+                        this.subcategoriesHierarchy[++this.currentSubcategoryNesting] = response;
                       });
                       this.spinnerService.changeSpinnerState(false);
 
@@ -1043,7 +1043,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onSelectCategoryChange(): void {
+  onSelectCategoryChange(clearSubcategories: boolean = true): void {
     this.isCategoryChanged = true;
     this.priceSliderOptions = {
       floor: NaN, 
@@ -1052,9 +1052,11 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
     };
     this.minPrice = NaN;
     this.maxPrice = NaN;
-    this.subcategoriesHierarchy.splice(-this.currentSubcategoryNesting - 1);
-    this.selectedSubcategoriesId.splice(-this.currentSubcategoryNesting);
-    this.currentSubcategoryNesting = -1;
+    if(clearSubcategories) {
+      this.subcategoriesHierarchy.splice(-this.currentSubcategoryNesting - 1);
+      this.selectedSubcategoriesId.splice(-this.currentSubcategoryNesting);
+      this.currentSubcategoryNesting = -1;
+    }
     if(this.selectedCategoryId == 'undefined'){
       this.selectedCategoryType = undefined;
       this.onChangeFilter();
@@ -1064,16 +1066,19 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
       this.selectedCategoryType = this.categories.find(c => c.id.toLowerCase() === this.selectedCategoryId.toLowerCase())?.type;
       this.onChangeFilter();
     }
-    this.spinnerService.changeSpinnerState(true);
-    this.sharedApiService.GetSubcategoriesByCategoryAsync(this.selectedCategoryId).subscribe(
-      (response: CategoryNode[]) => {
-        this.subcategoriesHierarchy[++this.currentSubcategoryNesting] = response;
-        this.spinnerService.changeSpinnerState(false);
-      },
-      (error) => {
-        this.spinnerService.changeSpinnerState(false);
-      }
-    );
+
+    if(clearSubcategories) {
+      this.spinnerService.changeSpinnerState(true);
+      this.sharedApiService.GetSubcategoriesByCategoryAsync(this.selectedCategoryId).subscribe(
+        (response: CategoryNode[]) => {
+          this.subcategoriesHierarchy[++this.currentSubcategoryNesting] = response;
+          this.spinnerService.changeSpinnerState(false);
+        },
+        (error) => {
+          this.spinnerService.changeSpinnerState(false);
+        }
+      );
+    }
   }
 
   onSelectSubcategoryChange(index: number): void {
@@ -1109,20 +1114,21 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
 
   onChangeSubcategory(loadProducts: boolean = false): void {
     this.spinnerService.changeSpinnerState(true);
-    switch(this.selectedCategoryType){
+    var tempType = this.categories.find(c => c.id.toLowerCase() === this.selectedCategoryId.toLowerCase())?.type
+    switch(tempType){
       case CategoryType.AnimalsType: {
         this.sharedApiService.getBreeds(this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null).subscribe((response : Specification<string>[]) => {
           let newBreeds = response.map(item => new CheckboxItem<Specification<string>>(item));
-          this.breeds = newBreeds.map(newItem => ({
+          this.breeds = this.breeds ? newBreeds.map(newItem => ({
             ...newItem,
             selected: this.breeds.find(oldItem => oldItem.value.id === newItem.value.id)?.selected || newItem.selected
-          }));
+          })) : newBreeds;
           this.spinnerService.changeSpinnerState(false);
-          loadProducts ? this.onSelectCategoryChange() : this.onChangeFilter();
+          loadProducts ? this.onSelectCategoryChange(false) : this.onChangeFilter();
         },
         (error) => {
           this.spinnerService.changeSpinnerState(false);
-          loadProducts ? this.onSelectCategoryChange() : this.onChangeFilter();
+          loadProducts ? this.onSelectCategoryChange(false) : this.onChangeFilter();
         })
         break;
       }
@@ -1132,16 +1138,16 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         ]).subscribe(
           ([brands]: [Specification<string>[]]) => {
             let newBrands = brands.map(item => new CheckboxItem<Specification<string>>(item));
-            this.brands = newBrands.map(newItem => ({
+            this.brands = this.brands ? newBrands.map(newItem => ({
               ...newItem,
               selected: this.brands.find(oldItem => oldItem.value.id === newItem.value.id)?.selected || newItem.selected
-            }));
+            })) : newBrands;
             this.spinnerService.changeSpinnerState(false);
-            this.onSelectedBrandChange(loadProducts);
+            this.onSelectedBrandChange(loadProducts, true);
           },
           (error) => {
             this.spinnerService.changeSpinnerState(false);
-            loadProducts ? this.onSelectCategoryChange() : this.onChangeFilter();
+            loadProducts ? this.onSelectCategoryChange(false) : this.onChangeFilter();
           }
         );
         break;
@@ -1155,11 +1161,11 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             this.clothesViews = clothesViews;
             this.selectedClothesViewId = this.clothesViews.map(i => i.id).indexOf(this.selectedClothesViewId) !== -1 ? this.selectedClothesViewId : 'undefined';
             this.spinnerService.changeSpinnerState(false);
-            this.onSelectedClothesViewChange(loadProducts);
+            this.onSelectedClothesViewChange(loadProducts, true);
           },
           error => {
             this.spinnerService.changeSpinnerState(false);
-            loadProducts ? this.onSelectCategoryChange() : this.onChangeFilter();
+            loadProducts ? this.onSelectCategoryChange(false) : this.onChangeFilter();
           }
         );
         break;
@@ -1170,23 +1176,23 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         ]).subscribe(
           ([brands]: [Specification<string>[]]) => {
             let newBrands = brands.map(item => new CheckboxItem<Specification<string>>(item));
-            this.brands = newBrands.map(newItem => ({
+            this.brands = this.brands ? newBrands.map(newItem => ({
               ...newItem,
               selected: this.brands.find(oldItem => oldItem.value.id === newItem.value.id)?.selected || newItem.selected
-            }));
+            })) : newBrands;
             this.spinnerService.changeSpinnerState(false);
-            this.onSelectedBrandChange(loadProducts);
+            this.onSelectedBrandChange(loadProducts, true);
           },
           error => {
             this.spinnerService.changeSpinnerState(false);
-            loadProducts ? this.onSelectCategoryChange() : this.onChangeFilter();
+            loadProducts ? this.onSelectCategoryChange(false) : this.onChangeFilter();
           }
         );
         break;
       }
       default: {
         this.spinnerService.changeSpinnerState(false);
-        loadProducts ? this.onSelectCategoryChange() :this.onChangeFilter();
+        loadProducts ? this.onSelectCategoryChange(false) :this.onChangeFilter();
       }
     }
   }
@@ -1204,9 +1210,11 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
     if(loadProducts){ this.loadSuitableProducts(true); } 
   }
 
-  onSelectedModelChange(loadProducts: boolean = false): void {
+  onSelectedModelChange(loadProducts: boolean = false, changeSubcategory: boolean = false): void {
     this.spinnerService.changeSpinnerState(true);
-    switch (this.selectedCategoryType) {
+    var tempType: CategoryType | undefined = changeSubcategory ? this.categories.find(c => c.id.toLowerCase() === this.selectedCategoryId.toLowerCase())?.type : this.selectedCategoryType;
+
+    switch (tempType) {
       case CategoryType.ElectronicsType: {
         forkJoin([
           this.productApiService.getElectronicColors(this.selectedModelId !== 'undefined' ? this.selectedModelId : null),
@@ -1214,17 +1222,17 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         ]).subscribe(
           ([colors, memories]: [Specification<string>[], Specification<string>[]]) => {
             let newColors = colors.map(item => new CheckboxItem<Specification<string>>(item));
-            this.colors = newColors.map(newItem => ({
+            this.colors = this.colors ? newColors.map(newItem => ({
               ...newItem,
               selected: this.colors.find(oldItem => oldItem.value.id === newItem.value.id)?.selected || newItem.selected
-            }));
+            })) : newColors;
             let newMemories = memories.map(item => new CheckboxItem<Specification<string>>(item));
-            this.memories = newMemories.map(newItem => ({
+            this.memories = this.memories ? newMemories.map(newItem => ({
               ...newItem,
               selected: this.memories.find(oldItem => oldItem.value.id === newItem.value.id)?.selected || newItem.selected
-            }));
+            })) : newMemories;
             this.spinnerService.changeSpinnerState(false);
-            loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
+            loadProducts ? changeSubcategory ? this.onSelectCategoryChange(false) : this.loadSuitableProducts(true) : this.onChangeFilter();
             return;
           },
           error => {
@@ -1238,15 +1246,17 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
       }
       default: {
         this.spinnerService.changeSpinnerState(false);
-        loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
+        loadProducts ? changeSubcategory ? this.onSelectCategoryChange(false) : this.loadSuitableProducts(true) : this.onChangeFilter();
         break;
       }
     }
   }
 
-  onSelectedBrandChange(loadProducts: boolean = false): void {
+  onSelectedBrandChange(loadProducts: boolean = false, changeSubcategory: boolean = false): void {
     this.spinnerService.changeSpinnerState(true);
-    switch (this.selectedCategoryType) {
+    var tempType: CategoryType | undefined = changeSubcategory ? this.categories.find(c => c.id.toLowerCase() === this.selectedCategoryId.toLowerCase())?.type : this.selectedCategoryType;
+
+    switch (tempType) {
       case CategoryType.AutosType: {
         forkJoin([
           this.productApiService.getAutoModels(this.brands.filter(brand => brand.selected).length > 0 ? this.brands.filter(brand => brand.selected).map(brand => brand.value.id) : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? [this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1]] : null)
@@ -1255,7 +1265,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             this.models = models;
             this.selectedModelId = this.models.map(i => i.id).indexOf(this.selectedModelId) !== -1 ? this.selectedModelId : 'undefined';
             this.spinnerService.changeSpinnerState(false);
-            loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
+            loadProducts ? changeSubcategory ? this.onSelectCategoryChange(false) : this.loadSuitableProducts(true) : this.onChangeFilter();
           },
           (error) => {
             console.error('Error fetching data:', error);
@@ -1274,26 +1284,27 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
             this.models = models;
             this.selectedModelId = this.models.map(i => i.id).indexOf(this.selectedModelId) !== -1 ? this.selectedModelId : 'undefined';
             this.spinnerService.changeSpinnerState(false);
-            this.onSelectedModelChange(loadProducts);
+            this.onSelectedModelChange(loadProducts, changeSubcategory);
             return;
           },
           error => {
             console.error('Error fetching data:', error);
             this.spinnerService.changeSpinnerState(false);
-            loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
+            loadProducts ? this.loadSuitableProducts(true) : this.onChangeFilter();
             return;
           }
-        );
-        break;
-      }
-      default: {
-        this.spinnerService.changeSpinnerState(false);
-        loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
+          );
+          break;
+        }
+        default: {
+          this.spinnerService.changeSpinnerState(false);
+          loadProducts ? changeSubcategory ? this.onSelectCategoryChange(false) : this.loadSuitableProducts(true) : this.onChangeFilter();
+        //loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
       }
     }
   }
 
-  onSelectedGenderChange(loadProducts: boolean = false): void {
+  onSelectedGenderChange(loadProducts: boolean = false, changeSubcategory: boolean = false): void {
     this.spinnerService.changeSpinnerState(true);
     forkJoin([
       this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
@@ -1302,7 +1313,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         this.clothesViews = clothesViews;
         this.selectedClothesViewId = this.clothesViews.map(i => i.id).indexOf(this.selectedClothesViewId) !== -1 ? this.selectedClothesViewId : 'undefined';
         this.spinnerService.changeSpinnerState(false);
-        this.onSelectedClothesViewChange(loadProducts);
+        this.onSelectedClothesViewChange(loadProducts, changeSubcategory);
         return;
       },
       error => {
@@ -1314,7 +1325,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
     );
   }
 
-  onSelectedClothesTypeChange(loadProducts: boolean = false): void {
+  onSelectedClothesTypeChange(loadProducts: boolean = false, changeSubcategory: boolean = false): void {
     this.spinnerService.changeSpinnerState(true);
     forkJoin([
       this.productApiService.getClothesViews(this.selectedClothesTypeFilter != 0 ? this.selectedClothesTypeFilter == -1 : null, this.selectedGenderId !== undefined ? this.selectedGenderId : null, this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] !== undefined ? this.selectedSubcategoriesId[this.currentSubcategoryNesting - 1] : null)
@@ -1323,7 +1334,7 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
         this.clothesViews = clothesViews;
         this.selectedClothesViewId = this.clothesViews.map(i => i.id).indexOf(this.selectedClothesViewId) !== -1 ? this.selectedClothesViewId : 'undefined';
         this.spinnerService.changeSpinnerState(false);
-        this.onSelectedClothesViewChange(loadProducts);
+        this.onSelectedClothesViewChange(loadProducts, changeSubcategory);
         return;
       },
       error => {
@@ -1335,19 +1346,19 @@ export class ProductsSearchComponent implements OnInit, AfterViewInit {
     );
   }
 
-  onSelectedClothesViewChange(loadProducts: boolean = false): void {
+  onSelectedClothesViewChange(loadProducts: boolean = false, changeSubcategory: boolean = false): void {
     this.spinnerService.changeSpinnerState(true);
     forkJoin([
       this.productApiService.getClotheBrands(this.selectedClothesViewId !== 'undefined' ? [this.selectedClothesViewId] : null),
     ]).subscribe(
       ([brands]: [Specification<string>[]]) => {
         let newBrands = brands.map(item => new CheckboxItem<Specification<string>>(item));
-        this.brands = newBrands.map(newItem => ({
+        this.brands = this.brands ? newBrands.map(newItem => ({
           ...newItem,
           selected: this.brands.find(oldItem => oldItem.value.id === newItem.value.id)?.selected || newItem.selected
-        }));
+        })) : newBrands;
         this.spinnerService.changeSpinnerState(false);
-        loadProducts ? this.loadSuitableProducts(true) :this.onChangeFilter();
+        loadProducts ? changeSubcategory ? this.onSelectCategoryChange(false) : this.loadSuitableProducts(true) : this.onChangeFilter();
         return;
       },
       error => {

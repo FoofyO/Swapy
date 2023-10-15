@@ -717,7 +717,6 @@ export class ProductApiService {
   }
 
   getElectronicBrands(ElectronicTypeId: string | null): Observable<Specification<string>[]>{
-    console.log(ElectronicTypeId ? `${this.apiUrl}/${this.electronicsApiUrl}/Brands?ElectronicTypeId=${ElectronicTypeId}` : `${this.apiUrl}/${this.electronicsApiUrl}/Brands`);
     return from(this.axiosInterceptorService.get(ElectronicTypeId ? `${this.apiUrl}/${this.electronicsApiUrl}/Brands?ElectronicTypeId=${ElectronicTypeId}` : `${this.apiUrl}/${this.electronicsApiUrl}/Brands`)).pipe(
       map((response: AxiosResponse<any>) => {
         const brands: Specification<string>[] = response.data.$values;

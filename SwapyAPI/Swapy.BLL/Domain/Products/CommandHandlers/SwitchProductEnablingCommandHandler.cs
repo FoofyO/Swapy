@@ -8,8 +8,13 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
     public class SwitchProductEnablingCommandHandler : IRequestHandler<SwitchProductEnablingCommand, Unit>
     {
         private readonly IProductRepository _productRepository;
-        
-        public SwitchProductEnablingCommandHandler(IProductRepository productRepository) => _productRepository = productRepository;
+        private readonly IFavoriteProductRepository _favoriteProductRepository;
+
+        public SwitchProductEnablingCommandHandler(IProductRepository productRepository, IFavoriteProductRepository favoriteProductRepository)
+        {
+            _productRepository = productRepository;
+            _favoriteProductRepository = favoriteProductRepository;
+        }
 
         public async Task<Unit> Handle(SwitchProductEnablingCommand request, CancellationToken cancellationToken)
         {
@@ -19,6 +24,11 @@ namespace Swapy.BLL.Domain.Products.CommandHandlers
 
             product.IsDisable = !product.IsDisable;
             await _productRepository.UpdateAsync(product);
+
+            if(!product.IsDisable)
+            {
+                await _favoriteProductRepository.RemoveFavoriteByProductId(product.Id);
+            }
 
             return Unit.Value;
         }
